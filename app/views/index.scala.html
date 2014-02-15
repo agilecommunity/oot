@@ -1,0 +1,28 @@
+@(message: String, menuItems: List[MenuItem], dailyMenus: List[DailyMenu])
+
+@main("Welcome to Play") {
+
+    @message
+
+    @menuItems.size <br/>
+    @for(obj <- menuItems) {
+        @obj.id
+        @obj.shop_name
+        @obj.item_name
+        <br/>
+    }
+
+    @dailyMenus.size <br/>
+    @for(obj <- dailyMenus) {
+        @obj.id /
+        @obj.menu_date /
+        @obj.status <br>
+
+        @for(detailItem <- obj.detailItems) {
+          @detailItem.id
+          @detailItem.menuItem.shop_name /
+          @detailItem.menuItem.item_name /
+          <br/>
+        }
+    }
+}
