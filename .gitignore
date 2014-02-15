@@ -1,0 +1,14 @@
+logs
+project/project
+project/target
+target
+tmp
+.history
+.cache
+.target
+.idea
+.idea_modules
+.classpath
+.project
+RUNNING_PID
+.settings
