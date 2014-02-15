@@ -2,15 +2,18 @@ package models;
 
 import java.math.BigDecimal;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
-import play.data.validation.*;
 
 /**
  * Lunch entity managed by Ebean
  */
-@Entity 
+@Entity
 public class MenuItem extends Model {
 
     private static final long serialVersionUID = 1L;
@@ -18,7 +21,7 @@ public class MenuItem extends Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
-    
+
     @Constraints.Required
     public String category;
 
@@ -26,7 +29,7 @@ public class MenuItem extends Model {
     public String shop_name;
 
     @Constraints.Required
-    public String item_name;
+    public String name;
 
     @Constraints.Required
     public BigDecimal price_on_order;
@@ -36,7 +39,7 @@ public class MenuItem extends Model {
     /**
      * Generic query helper for entity Lunch with id Long
      */
-    public static Finder<Long,MenuItem> find = new Finder<Long,MenuItem>(Long.class, MenuItem.class); 
+    public static Finder<Long,MenuItem> find = new Finder<Long,MenuItem>(Long.class, MenuItem.class);
 
 }
 

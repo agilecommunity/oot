@@ -1,0 +1,5 @@
+- !!models.DailyMenuItem
+    dailyMenu:  !!models.DailyMenu
+                  id: 1
+    menuItem:   !!models.MenuItem
+                  id: 1

@@ -8,7 +8,7 @@
     @for(obj <- menuItems) {
         @obj.id
         @obj.shop_name
-        @obj.item_name
+        @obj.name
         <br/>
     }
 
@@ -21,7 +21,7 @@
         @for(detailItem <- obj.detailItems) {
           @detailItem.id
           @detailItem.menuItem.shop_name /
-          @detailItem.menuItem.item_name /
+          @detailItem.menuItem.name /
           <br/>
         }
     }

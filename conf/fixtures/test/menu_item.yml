@@ -1,0 +1,6 @@
+- !!models.MenuItem
+    category:        bento
+    shop_name:       艦これ
+    name:            五月雨
+    price_on_order:  1050
+    item_image_path: bento/艦これ/五月雨.png

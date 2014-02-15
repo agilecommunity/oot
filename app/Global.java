@@ -7,16 +7,22 @@ import models.DailyMenuItem;
 import models.MenuItem;
 import play.Application;
 import play.GlobalSettings;
+import play.Play;
 
 public class Global extends GlobalSettings  {
 
     @Override
     public void onStart(Application app) {
+
+        if(Play.isTest()) { // テストモードの場合はfixtureを読むようにしているので何もしない
+            return;
+        }
+
         if(MenuItem.find.findRowCount() == 0) {
             MenuItem item = new MenuItem();
             item.category = "bento";
             item.shop_name = "MooMoo Shop";
-            item.item_name = "MooMoo Pizza";
+            item.name = "MooMoo Pizza";
             item.price_on_order = new BigDecimal("2130");
             item.item_image_path = "/data/lunch/images/1-1.png";
             item.save();

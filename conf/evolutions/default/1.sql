@@ -2,11 +2,12 @@
 
 # --- !Ups
 
+// メニューに出す品
 create table menu_item (
   id                     bigint not null,       // --- ID
   category               varchar(10) not null,  // --- カテゴリ (bento=弁当, side=デザートやサラダ)
   shop_name              varchar(255) not null, // --- 店名
-  item_name              varchar(255) not null, // --- 名前
+  name                   varchar(255) not null, // --- 名前
   price_on_order         decimal(10) not null,  // --- 注文価格
   item_image_path        varchar(1024),         // --- 画像のファイルパス
 
@@ -16,6 +17,7 @@ create table menu_item (
   constraint pk_menu_item primary key (id)
 );
 
+// 日々のメニュー
 create table daily_menu (
   id                     bigint not null,  // --- ID
   menu_date              date not null,    // --- 日付
@@ -27,6 +29,7 @@ create table daily_menu (
   constraint pk_daily_menu primary key (id)
 );
 
+// 日々のメニューで注文できる品
 create table daily_menu_item (
   id               bigint not null,  // --- ID
   daily_menu_id    bigint not null,  // --- メニューID

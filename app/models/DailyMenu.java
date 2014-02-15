@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import play.db.ebean.Model;
 
 /**
  * DailyLunchMenu entity managed by Ebean
  */
-@Entity 
+@Entity
 public class DailyMenu extends Model {
 
     private static final long serialVersionUID = 1L;
@@ -25,10 +30,10 @@ public class DailyMenu extends Model {
     public String status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dailyMenu")
-    public List<DailyMenuItem> detailItems = new ArrayList<DailyMenuItem>();    
-    
+    public List<DailyMenuItem> detailItems = new ArrayList<DailyMenuItem>();
+
     /**
      * Generic query helper for entity Lunch with id Long
      */
-    public static Finder<Long,DailyMenu> find = new Finder<Long,DailyMenu>(Long.class, DailyMenu.class); 
+    public static Finder<Long,DailyMenu> find = new Finder<Long,DailyMenu>(Long.class, DailyMenu.class);
 }
