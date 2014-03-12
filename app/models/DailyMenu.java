@@ -29,8 +29,8 @@ public class DailyMenu extends Model {
 
     public String status;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dailyMenu")
-    public List<DailyMenuItem> detailItems = new ArrayList<DailyMenuItem>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_menu")
+    public List<DailyMenuItem> detail_items = new ArrayList<DailyMenuItem>();
 
     /**
      * Generic query helper for entity Lunch with id Long

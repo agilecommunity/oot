@@ -1,18 +1,18 @@
 - !!models.DailyMenuItem
-    dailyMenu: !!models.DailyMenu
+    daily_menu: !!models.DailyMenu
                   id: 1
-    menuItem:  !!models.MenuItem
+    menu_item:  !!models.MenuItem
                   id: 1
 
 - !!models.DailyMenuItem
-    dailyMenu: !!models.DailyMenu
+    daily_menu: !!models.DailyMenu
                   id: 1
-    menuItem:  !!models.MenuItem
+    menu_item:  !!models.MenuItem
                   id: 2
 
 - !!models.DailyMenuItem
-    dailyMenu: !!models.DailyMenu
+    daily_menu: !!models.DailyMenu
                   id: 2
-    menuItem:  !!models.MenuItem
+    menu_item:  !!models.MenuItem
                   id: 1
 
