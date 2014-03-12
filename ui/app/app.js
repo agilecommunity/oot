@@ -9,6 +9,7 @@ app.config(['$routeProvider',
         $routeProvider
             .when('/', {
                   templateUrl: '/views/signin'
+                , controller:  'SigninController'
             })
             .when('/order', {
                   templateUrl: '/views/order'
@@ -16,5 +17,11 @@ app.config(['$routeProvider',
             .otherwise({
                 redirectTo: '/'
             });
+    }]);
+
+app.controller('SigninController', ['$scope', '$location', function($scope, $location) {
+        $scope.signin = function() {
+            $location.path("/order");
+        };
     }]);
 
