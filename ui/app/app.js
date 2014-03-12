@@ -2,6 +2,7 @@
 
 var app = angular.module('oot', [
               'ngRoute'
+            , 'ui.bootstrap'
             ]);
 
 app.config(['$routeProvider',
@@ -13,6 +14,7 @@ app.config(['$routeProvider',
             })
             .when('/order', {
                   templateUrl: '/views/order'
+                , controller:  'OrderController'
             })
             .otherwise({
                 redirectTo: '/'
@@ -22,6 +24,13 @@ app.config(['$routeProvider',
 app.controller('SigninController', ['$scope', '$location', function($scope, $location) {
         $scope.signin = function() {
             $location.path("/order");
+        };
+    }])
+    .controller('OrderController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+        $scope.showSideDishes = function() {
+            $modal.open({
+                  templateUrl: 'views/side-dishes'
+            });
         };
     }]);
 
