@@ -1,0 +1,244 @@
+
+/*
+    http://www.irasutoya.com/
+ */
+
+*{
+	font-family: Meiryo;
+}
+body{
+	margin: 0px;
+	border: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.message {
+	margin: 1em;
+}
+
+.page-header{
+	border-top: solid 5px #92D13D;
+	background-image: url('/assets/images/common/syoukadou_obentou.png');
+	background-repeat: no-repeat;
+	background-position: left top;
+	background-size: contain;
+}
+
+.page-header h1{
+	margin-left: 90px;
+	vertical-align: middle;
+	float: left;
+}
+
+.page-header .right-ctrl {
+	margin: 0.5em;
+	float: right;
+}
+.page-header .right-ctrl > div{
+	float: left;
+}
+.page-header .right-ctrl .user-name{
+	margin-right: 1.5em;
+	line-height: 33px;
+}
+.page-header .right-ctrl .logout{
+	background-color: #92D13D;
+
+	background: -moz-linear-gradient(top, #92D13D, #70af1b);
+	background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+	font-size: 0.8em;
+	color: white;
+	padding: 0.5em 1em;
+	width: 80px;
+	text-align: center;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.content-header {
+	background-color: #92D13D;
+
+	background: -moz-linear-gradient(top, #92D13D, #70af1b);
+	background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+	color: white;
+	padding: 0.5em 1em;
+	font-size: 2em;
+}
+
+
+.content .day .day-header {
+	background-color: #92D13D;
+
+	background: -moz-linear-gradient(top, #92D13D, #70af1b);
+	background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+	color: white;
+	padding: 0.5em 1em;
+	font-size: 2em;
+}
+
+.content .day .day-header .date{
+	float: left;
+}
+.content .day .day-header .small-total{
+	float: right;
+}
+
+.choose-list{
+	margin-bottom: 4em;
+}
+.choose-list .menu{
+	margin: 0.5em;
+	padding: 0.5em;
+	border: solid 4px #DDDDDD;
+	border-radius: 10px;
+	width: 295px;
+	float: left;
+	cursor: pointer;
+}
+.choose-list .menu.selected{
+	border-color: #D21F45;
+}
+.selected .food-name{
+	background-color: #F3BFD6;
+}
+
+.page-footer {
+	background-color: #454545;
+}
+.page-footer {
+	background-color: #343434;
+	color: white;
+	margin-top: 2em;
+	padding: 1em;
+	text-align: center;
+}
+.page-footer > div{
+	margin: 0.5em;
+}
+
+.food-name {
+	background-color: #dcf0c1;
+	margin: auto -0.6em;
+	font-size: 1.3em;
+	padding: 0.4em;
+}
+
+.food-image {
+	text-align: center;
+	margin: 0.5em 0em;
+	position: relative;
+}
+.food-image .pop-rt{
+	position: absolute;
+	right: -30px;
+	top: -30px;
+}
+.food-image .pop-lt{
+	position: absolute;
+	left: -30px;
+	top: -30px;
+}
+
+
+
+.food-price{
+	font-size: 1.5em;
+	text-align: right;
+}
+
+.button{
+	background-color: #92D13D;
+
+	background: -moz-linear-gradient(top, #92D13D, #70af1b);
+	background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+
+	color: white;
+	padding: 0.5em 1em;
+	width: 160px;
+	text-align: center;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+
+.other-page {
+	margin: 1em;
+}
+.other-page .button{
+	float: left;
+
+}
+.other-page .other-info {
+	padding: 0.5em 1em;
+	float: left;
+}
+
+.login-form {
+	margin: 1em;
+	text-align: center;
+}
+.login-form input{
+	font-size: 1.5em;
+	width: 600px;
+}
+.login-form .button{
+	margin: 1em auto 0px;
+}
+
+/*
+   172   bde38a
+   204   dcf0c1
+*/
+
+
+
+.order-management .title {
+	margin: 0.5em;
+	font-size: 1.5em;
+}
+.order-management .day {
+	margin: 0.5em;
+}
+.order-management .date {
+	float: left;
+}
+.order-management .order-summary {
+	float: left;
+}
+.order-management .order-summary table{
+	border-collapse: collapse;
+}
+.order-management .order-summary th,
+.order-management .order-summary td {
+	border: solid 1px #DDDDDD;
+	padding: 0.5em;
+}
+.order-management .order-summary .count,
+.order-management .order-summary .price {
+	text-align: right;
+}
+.order-management .commands {
+	width: 450px;
+	float: left;
+}
+.order-management .button {
+	float: left;
+	margin: 0.5em;
+	width: 100px;
+}
+
+
+.divider {
+	padding: 0.2em 1em;
+	margin: 0.5em -0.5em;
+	font-size: 1.5em;
+	background-color: #dcf0c1;
+}
+

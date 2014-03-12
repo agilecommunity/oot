@@ -1,15 +1,25 @@
-@(title: String)(content: Html)
-
+@()
 <!DOCTYPE html>
-
-<html>
-    <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
-    </head>
-    <body>
-        @content
-    </body>
+<html ng-app="oot">
+	<head>
+		<meta charset="utf-8">
+		<title>美味しいお弁当が食べたい！</title>
+		<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+		<link rel="stylesheet" href="@routes.Assets.at("stylesheets/common.css")">
+	</head>
+	<body ng-cloak>
+        <div class="page-header">
+            <h1>美味しいお弁当を食べたい！</h1>
+            <div class="clear"></div>
+        </div>
+        <div ng-view></div>
+		<div class="page-footer">
+			<div class="copyright">サイト開発者 : NES アジャイルコミュニティ</div>
+			<div class="powered-by">使用 F/W :  Play Framework 2.0</div>
+		</div>
+        <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/angular-route.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
+        <script src="@routes.UIScripts.at("app.js")"></script>
+	</body>
 </html>

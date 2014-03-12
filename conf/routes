@@ -1,11 +1,10 @@
 # Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
 
-# Home page
-GET     /                           controllers.Application.index()
+GET     /assets/*file               controllers.Assets.at(path = "/public", file)
+GET     /views/*file                controllers.UIViews.at(path = "/ui/app/views", file)
+GET     /ng/*file                   controllers.UIScripts.at(path = "/ui/app", file)
 
-GET     /daily_menus.:format        controllers.DailyMenus.index(format)
+# Root
+GET     /                           controllers.Application.index(path = "")
+GET     /*path                      controllers.Application.index(path)
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)

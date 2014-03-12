@@ -1,17 +1,12 @@
 package controllers;
 
-import play.mvc.*;
-
-import views.html.*;
-
-import models.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class Application extends Controller {
-
-    public static Result index() {
-        return ok(index.render("Your new application is ready."
-                , MenuItem.find.findList()
-                , DailyMenu.find.findList()));
-    }
-
+  
+  public static Result index(String path) {
+    return ok(views.html.main.render());
+  }
+  
 }
