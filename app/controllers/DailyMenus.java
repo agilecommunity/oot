@@ -9,7 +9,7 @@ import play.mvc.Result;
 
 public class DailyMenus extends Controller {
 
-    public static Result index(String format) {
+    public static Result index() {
     List<DailyMenu> menus = DailyMenu.find.findList();
         return ok(Json.toJson(menus));
     }
