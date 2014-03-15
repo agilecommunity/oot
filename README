@@ -1,5 +1,17 @@
 # 美味しいお弁当を食べたい
 
+## 想定している環境
+
+ * Play Framework 2.2.x
+ * AngularJS 1.2.14
+
+## 実行方法
+
+```
+git clone https://github.com/nobiinu-and/oot
+play run
+```
+
 ## 命名規則
 
 クラス名   : CamelCase
@@ -11,6 +23,31 @@
 
 API名      : spinal-case
 
+## 脆弱性対策
+
+### CSRF
+
+Cookieトークンを使ってチェックする
+Cookieトークンの名前は AngularJS に準拠する
+
+ * Play: CookieにXSRF-TOKENを付与
+ * AngularJS: CookieからXSRF-TOKENを取り出し、HTTPヘッダにX-XSRF-TOKENを付与
+ * Play: XSRF-TOKENと、X-XSRF-TOKENの値を使って検証
+
+ * Play Framework側
+   * @AddCSRFToken, @RequireCSRFCheck4Ng アノテーションを利用する。
+   * Globalオブジェクトのフィルタで付与する方法もあるが、TOKENのhttpOnlyがTrueになってしまい、AngularJSが参照できなくなるためそちらは利用しない
+   * トークンの設定
+     * Application.confで設定
+   * クライアントからの応答の検証
+     * HTTPヘッダのX-XSRF-TOKENからトークンを取得し、チェックを行うよう、カスタムのフィルタを作成する
+       * @RequireCSRFCheck4Ng を付与すれば自動的に行う
+ * AngularJS側
+   * 何もしない。
+
+ * [3分で分かるAngularJSセキュリティ - teppeis blog](http://teppeis.hatenablog.com/entry/2013/12/angularjs-security)
+ * [PHPのイタい入門書を読んでAjaxのXSSについて検討した(3)～JSON等の想定外読み出しによる攻撃～ - ockeghem(徳丸浩)の日記](http://d.hatena.ne.jp/ockeghem/20110907/p1)
+ * [JavaCsrf](http://www.playframework.com/documentation/2.2.x/JavaCsrf)
 
 ## AngularJS の参考情報
 
@@ -30,5 +67,5 @@ API名      : spinal-case
 
 ### TIPS
 
- * [AngularJSでロード中に評価前のマークアップを表示させない方法 - Qiita](http://qiita.com/emalock/items/da681b7ba6a3828835f5) 
+ * [AngularJSでロード中に評価前のマークアップを表示させない方法 - Qiita](http://qiita.com/emalock/items/da681b7ba6a3828835f5)
 

@@ -6,6 +6,7 @@ libraryDependencies ++= Seq(
     javaJdbc
   , javaEbean
   , cache
+  , filters
   , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
 )
 
