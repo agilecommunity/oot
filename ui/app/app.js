@@ -1,9 +1,20 @@
 'use strict';
 
+angular.module('OotServices', [])
+    .factory('User', ['$http', '$rootScope', function($http, $rootScope) {
+        return {
+            login: function() {
+                alert("login");
+                }
+            };
+    }]);
+
 var app = angular.module('oot', [
               'ngRoute'
             , 'ui.bootstrap'
+            , 'OotServices'
             ]);
+
 
 app.config(['$routeProvider',
     function($routeProvider) {
@@ -21,8 +32,9 @@ app.config(['$routeProvider',
             });
     }]);
 
-app.controller('SigninController', ['$scope', '$location', function($scope, $location) {
+app.controller('SigninController', ['$scope', '$location', 'User', function($scope, $location, User) {
         $scope.signin = function() {
+            User.login();
             $location.path("/order");
         };
     }])
