@@ -1,0 +1,8 @@
+- !!models.LocalUser
+    id:         demo@foo.baa
+    provider:   userpass
+    email:      demo@foo.baa
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    first_name: アジャコ
+    last_name:  アジャイル
+    is_admin:   false
