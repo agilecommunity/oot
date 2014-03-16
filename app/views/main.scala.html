@@ -1,22 +1,25 @@
 @()
 <!DOCTYPE html>
 <html ng-app="oot">
-	<head>
-		<meta charset="utf-8">
-		<title>美味しいお弁当が食べたい！</title>
-		<link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
-		<link rel="stylesheet" href="@routes.Assets.at("stylesheets/common.css")">
-	</head>
-	<body ng-cloak>
+    <head>
+        <meta charset="utf-8">
+        <title>美味しいお弁当が食べたい！</title>
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/common.css")">
+    </head>
+    <body ng-cloak>
         <div class="page-header">
             <h1>美味しいお弁当を食べたい！</h1>
             <div class="clear"></div>
         </div>
         <div ng-view></div>
-		<div class="page-footer">
-			<div class="copyright">サイト開発者 : NES アジャイルコミュニティ</div>
-			<div class="powered-by">使用 F/W :  Play Framework 2.0</div>
-		</div>
+        <div class="page-footer">
+            <div class="copyright">サイト開発者 : NES アジャイルコミュニティ</div>
+            <div class="powered-by">使用 F/W :  Play Framework 2.0</div>
+        </div>
+        <div class="user-info">
+        {{$root.current_user.last_name}} {{$root.current_user.first_name}}
+        </div>
         <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/angular-route.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")"></script>
@@ -24,5 +27,5 @@
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/ui-bootstrap-tpls-0.10.0.min.js")"></script>
         <script src="@routes.UIScripts.at("app.js")"></script>
-	</body>
+    </body>
 </html>

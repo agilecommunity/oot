@@ -28,9 +28,11 @@ angular.module('OotServices', [])
                     , data: parameter
                 })
                 .success(function(data, status, header){
+                    $rootScope.current_user = data;
                     success();
                 })
                 .error(function(data, status, header){
+                    $rootScope.current_user = null;
                     error(status);
                 });
             }

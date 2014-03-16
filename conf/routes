@@ -6,6 +6,7 @@ GET     /ng/*file                   controllers.UIScripts.at(path = "/ui/app", f
 
 # Api
 GET     /api/daily_menus            controllers.DailyMenus.index()
+GET     /api/users/me               controllers.Users.showMe()
 
 # Root
 GET     /                           controllers.Application.index(path = "")
