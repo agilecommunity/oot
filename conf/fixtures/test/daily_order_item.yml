@@ -1,5 +1,5 @@
-- !!models.DailyMenuItem
-    daily_menu:  !!models.DailyMenu
+- !!models.DailyOrderItem
+    daily_order: !!models.DailyOrder
                   id: 1
     menu_item:   !!models.MenuItem
                   id: 1

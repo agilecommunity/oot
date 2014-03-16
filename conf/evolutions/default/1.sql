@@ -53,7 +53,7 @@ drop table if exists menu_item;
 
 drop table if exists daily_menu;
 
-drop table if exists daily_menu_detail;
+drop table if exists daily_menu_item;
 
 SET REFERENTIAL_INTEGRITY TRUE;
 

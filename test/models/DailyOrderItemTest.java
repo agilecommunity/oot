@@ -17,7 +17,7 @@ import play.test.WithApplication;
 import com.avaje.ebean.Ebean;
 
 @RunWith(JUnit4.class)
-public class DailyMenuItemTest extends WithApplication {
+public class DailyOrderItemTest extends WithApplication {
 
      @Before
      public void setUp() {
@@ -29,12 +29,13 @@ public class DailyMenuItemTest extends WithApplication {
      }
 
      @Test
-     public void daily_menuは親となるDailyMenuオブジェクトを返すこと() {
+     public void daily_orderは親となるDailyOrderオブジェクトを返すこと() {
          Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_menu.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_menu_item.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
 
-         assertThat(DailyMenuItem.find.byId(1L).daily_menu).isNotNull();
-         assertThat(DailyMenuItem.find.byId(1L).daily_menu.menu_date).isEqualTo("2014-02-10");
+
+         assertThat(DailyOrderItem.find.byId(1L).daily_order).isNotNull();
+         assertThat(DailyOrderItem.find.byId(1L).daily_order.order_date).isEqualTo("2014-02-10");
     }
 }
