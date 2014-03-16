@@ -3,16 +3,21 @@
 ## 想定している環境
 
  * Play Framework 2.2.x
- * AngularJS 1.2.14
+ * Java 1.7.x
 
 ## 実行方法
+
+以下を実行後、 http://localhost:9000/ にアクセス
+
 
 ```
 git clone https://github.com/nobiinu-and/oot
 play run
-```
 
-## 命名規則
+
+## 開発情報
+
+### 命名規則
 
 クラス名   : CamelCase
 メソッド名 : lowerCamelCase
@@ -23,9 +28,18 @@ play run
 
 API名      : spinal-case
 
-## 脆弱性対策
+### 認証
 
-### CSRF
+SecureSocialを利用
+現在は userpass しか対応させていない
+
+ * 本家: [SecureSocial - Authentication for Play Framework Applications](http://securesocial.ws/)
+ * インストール: [SecureSocial導入しました。（導入までのチュートリアル） | Noriaki Horiuchi Tech Blog](http://tech.noriakihoriuchi.com/securesocialdao-ru-shimashita-dao-ru-madenochiyutoriaru)
+ * Serviceの実装: [playframework - Play SecureSocial Persistance with Java - Stack Overflow](http://stackoverflow.com/questions/16093023/play-securesocial-persistance-with-java)
+
+### 脆弱性対策
+
+#### CSRF
 
 Cookieトークンを使ってチェックする
 Cookieトークンの名前は AngularJS に準拠する
@@ -49,23 +63,23 @@ Cookieトークンの名前は AngularJS に準拠する
  * [PHPのイタい入門書を読んでAjaxのXSSについて検討した(3)～JSON等の想定外読み出しによる攻撃～ - ockeghem(徳丸浩)の日記](http://d.hatena.ne.jp/ockeghem/20110907/p1)
  * [JavaCsrf](http://www.playframework.com/documentation/2.2.x/JavaCsrf)
 
-## AngularJS の参考情報
+### AngularJS の参考情報
 
-### 仕組み
+#### 仕組み
 
  * [AngularJSを使ったWebアプリのアーキテクチャ設計 - Qiita](http://qiita.com/zoetro/items/46d2a8b57f2645bb5033)
  * [AngularJSのMVWパターンを理解する - Qiita](http://qiita.com/zoetro/items/a45dbc18bb2b22e944b2)
 
-### ガイド
+#### ガイド
 
  * [AngularJS: Developer Guide: Angular Services: Using $location](http://docs.angularjs.org/guide/dev_guide.services.$location)
 
-### 拡張
+#### 拡張
 
  * UI作るのが便利になるBootstrap
    [Angular directives for Bootstrap](http://angular-ui.github.io/bootstrap/)
 
-### TIPS
+#### TIPS
 
  * [AngularJSでロード中に評価前のマークアップを表示させない方法 - Qiita](http://qiita.com/emalock/items/da681b7ba6a3828835f5)
 
