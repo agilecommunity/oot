@@ -69,18 +69,23 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                     $location.path("/order");
                 }
                 , function(status){
-                    alert("login error status:" + status);
+                    alert("サインインに失敗しました。 status:" + status);
                 });
         };
     }])
-    .controller('OrderController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+    .controller('OrderController', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {
 
-        $http.get('/api/daily_menus').success(function(data) {
+        $http.get('/api/daily_menus')
+        .success(function(data) {
             $scope.daily_menus = data;
 
             angular.forEach($scope.daily_menus, function(daily_menu) {
                 daily_menu.menu_date = jQuery.format.date(new Date(daily_menu.menu_date), 'yyyy/MM/dd (ddd)');
             });
+        })
+        .error(function(data, status, header){
+            alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。status:" + status);
+            $location.path("/");
         });
 
         $scope.showSideDishes = function() {
