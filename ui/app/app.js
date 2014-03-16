@@ -15,7 +15,8 @@ angular.module('OotServices', [])
                 return !($rootScope.current_user === null);
             }
 
-          , login: function(username, password, success, error) {
+          // ユーザ名、パスワードで認証を行う
+          , signin: function(username, password, callback) {
                 var parameter = {};
                 parameter.username = username;
                 parameter.password = password;
@@ -29,13 +30,28 @@ angular.module('OotServices', [])
                 })
                 .success(function(data, status, header){
                     $rootScope.current_user = data;
-                    success();
+                    callback['success']();
                 })
                 .error(function(data, status, header){
                     $rootScope.current_user = null;
-                    error(status);
+                    callback['error'](status);
                 });
             }
+
+          // 取得しているトークンで認証情報を所得してみる
+          , re_signin: function(callback) {
+
+              $http.get("/api/users/me")
+              .success(function(data, status, header){
+                  $rootScope.current_user = data;
+                  callback['success']();
+              })
+              .error(function(data, status, header){
+                  $rootScope.current_user = null;
+                  callback['error']();
+              })
+          }
+
         };
     }]);
 
@@ -64,13 +80,14 @@ app.config(['$routeProvider',
 
 app.controller('SigninController', ['$scope', '$location', 'User', function($scope, $location, User) {
         $scope.signin = function() {
-            User.login($scope.user.email, $scope.user.password
-                , function(){
+            User.signin($scope.user.email, $scope.user.password, {
+                  success: function(){
                     $location.path("/order");
                 }
-                , function(status){
+                , error: function(status){
                     alert("サインインに失敗しました。 status:" + status);
-                });
+                }
+            });
         };
     }])
     .controller('OrderController', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {
@@ -94,3 +111,32 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             });
         };
     }]);
+
+app.run(function($rootScope, $http, $location, User){
+    // ブラウザのリロード対策
+    $rootScope.$on('$locationChangeStart', function(ev, next, current) {
+
+        var nextParam = jQuery('<a>', { href: next } )[0];
+
+        // サインイン画面の場合は何もしない
+        if (nextParam.pathname === "/" && (nextParam.hash === "#/" || nextParam.hash === "")) {
+            return;
+        }
+
+        // すでに認証済みの場合は何もしない
+        if (User.is_signed_in()) {
+            return;
+        }
+
+        // 現在持っているトークンを使って再認証する
+        User.re_signin({
+              success: function() {
+                  // 何もしない
+              }
+            , error: function() {
+                ev.preventDefault();
+                $location.path("/");
+            }
+        });
+    });
+});
