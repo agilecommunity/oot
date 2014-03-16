@@ -1,17 +1,13 @@
 
-import com.avaje.ebean.Ebean;
-
-import java.math.BigDecimal;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import models.DailyMenu;
-import models.DailyMenuItem;
 import models.MenuItem;
 import play.Application;
 import play.GlobalSettings;
-import play.libs.Yaml;
 import play.Play;
+import play.libs.Yaml;
+
+import com.avaje.ebean.Ebean;
 
 public class Global extends GlobalSettings  {
 
@@ -27,6 +23,7 @@ public class Global extends GlobalSettings  {
                 Ebean.save((List) Yaml.load("fixtures/dev/menu_item.yml"));
                 Ebean.save((List) Yaml.load("fixtures/dev/daily_menu.yml"));
                 Ebean.save((List) Yaml.load("fixtures/dev/daily_menu_item.yml"));
+                Ebean.save((List) Yaml.load("fixtures/dev/local_user.yml"));
             }
         }
 
