@@ -8,6 +8,7 @@ libraryDependencies ++= Seq(
   , cache
   , filters
   , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
+  , "ws.securesocial" %% "securesocial" % "2.1.3"
 )
 
 play.Project.playJavaSettings
