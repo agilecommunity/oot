@@ -9,12 +9,13 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
+import filters.RequireCSRFCheck4Ng;
 
 public class Users extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.Users");
 
-    //@RequireCSRFCheck4Ng()
+    @RequireCSRFCheck4Ng()
     @SecureSocial.UserAwareAction
     public static Result showMe() {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
