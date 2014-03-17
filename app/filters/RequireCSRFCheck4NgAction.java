@@ -13,28 +13,35 @@ import scala.Option;
 
 public class RequireCSRFCheck4NgAction extends Action<RequireCSRFCheck4Ng> {
 
+    Logger.ALogger logger = Logger.of("application.filters.RequireCSRFCheck4NgAction");
+
     private final String tokenName = CSRFConf$.MODULE$.TokenName();
     private final Option<String> cookieName = CSRFConf$.MODULE$.CookieName();
     private final CSRFAction$ CSRFAction = CSRFAction$.MODULE$;
     private final TokenProvider tokenProvider = CSRFConf$.MODULE$.defaultTokenProvider();
     @Override
     public F.Promise<SimpleResult> call(Http.Context ctx) throws Throwable {
+
+        logger.debug(String.format("call requestHeader:%s", ctx._requestHeader().toString()));
+
         RequestHeader request = ctx._requestHeader();
 
         if (CSRFAction.checkCsrfBypass(request)) {
-            Logger.debug("bypassed");
+            logger.debug("bypassed");
             return delegate.call(ctx);
         }
 
         Option<String> headerToken = CSRFAction.getTokenFromHeader(request, tokenName, cookieName);
 
         if (!headerToken.isDefined()) {
+            logger.debug("CSRF token by Server not found");
             return F.Promise.pure((SimpleResult) forbidden("CSRF token by Server not found"));
         }
 
         Option<String> ngToken = request.headers().get("X-XSRF-TOKEN");
 
         if (!ngToken.isDefined()) {
+            logger.debug("CSRF token by AngularJS not found");
             return F.Promise.pure((SimpleResult) forbidden("CSRF token by AngularJS not found"));
         }
 
@@ -42,6 +49,7 @@ public class RequireCSRFCheck4NgAction extends Action<RequireCSRFCheck4Ng> {
             return delegate.call(ctx);
         }
 
+        logger.debug("CSRF tokens don't match");
         return F.Promise.pure((SimpleResult) forbidden("CSRF tokens don't match"));
     }
 }

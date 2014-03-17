@@ -6,7 +6,12 @@ GET     /ng/*file                   controllers.UIScripts.at(path = "/ui/app", f
 
 # Api
 GET     /api/daily_menus            controllers.DailyMenus.index()
+
 GET     /api/users/me               controllers.Users.showMe()
+
+GET     /api/daily-orders/mine      controllers.DailyOrders.showMine()
+POST    /api/daily-orders           controllers.DailyOrders.create()
+#PUT     /api/daily-orders/:id       controllers.DailyOrders.update(id)
 
 # Root
 GET     /                           controllers.Application.index(path = "")
