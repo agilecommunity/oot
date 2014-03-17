@@ -7,6 +7,8 @@ import static play.test.Helpers.*;
 import java.util.Date;
 import java.util.List;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import models.DailyOrder;
 import models.DailyOrderItem;
 
@@ -14,7 +16,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import play.Logger;
 import play.api.libs.json.JsValue;
@@ -27,7 +28,7 @@ import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
 
-@RunWith(JUnit4.class)
+@RunWith(JUnitParamsRunner.class)
 public class DailyOrdersTest extends WithApplication {
 
     Logger.ALogger logger = Logger.of("application.controllers.DailyOrdersTest");
@@ -50,7 +51,7 @@ public class DailyOrdersTest extends WithApplication {
 
          StringBuilder builder = new StringBuilder();
          builder.append("[");
-         builder.append("{\"user_id\": \"demo@foo.baa\"");
+         builder.append("{ \"user_id\": \"demo@foo.baa\"");
          builder.append(", \"order_date\":1391871600000");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
@@ -58,14 +59,7 @@ public class DailyOrdersTest extends WithApplication {
 
          JsValue json = Json.parse(builder.toString());
 
-         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
-         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
-
-         Result result = route(fakeRequest(POST, "/api/daily-orders")
-                                 .withJsonBody(json)
-                                 .withCookies(fake_cookie)
-                                 .withHeader("X-XSRF-TOKEN", token)
-                                 .withSession("XSRF-TOKEN", token));
+         Result result = callCreate(builder.toString());
 
          assertThat(status(result)).isEqualTo(OK);
 
@@ -77,4 +71,34 @@ public class DailyOrdersTest extends WithApplication {
          assertThat(order_item.menu_item.name).isEqualTo("たっぷりサーモン丼");
      }
 
+
+     @Test
+     @Parameters({
+           "[{ }]"
+         , "[{ \"user_id\":\"hoge\" }]"
+         , "[{ \"user_id\":\"demo@foo.baa\" }]"
+         , "[{ \"order_date\":1391871600000 }]"
+     })
+     public void createはJsonの内容が不正であった場合400_BadRequestを返す(String jsonString) {
+         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
+
+         Result result = callCreate(jsonString);
+
+         assertThat(status(result)).isEqualTo(BAD_REQUEST);
+     }
+
+     private Result callCreate(String jsonString) {
+
+         JsValue json = Json.parse(jsonString);
+         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
+         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+
+         Result result = route(fakeRequest(POST, "/api/daily-orders")
+                                 .withJsonBody(json)
+                                 .withCookies(fake_cookie)
+                                 .withHeader("X-XSRF-TOKEN", token)
+                                 .withSession("XSRF-TOKEN", token));
+
+         return result;
+     }
 }

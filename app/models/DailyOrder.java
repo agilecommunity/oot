@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
+import play.data.validation.Validation;
 import play.db.ebean.Model;
+
+import com.avaje.ebean.validation.NotNull;
 
 @Entity
 public class DailyOrder extends Model {
@@ -24,14 +29,29 @@ public class DailyOrder extends Model {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    @NotNull
     public Date order_date;
 
-    @OneToOne(cascade=CascadeType.REFRESH) // 参照のみだからREFRESHでいいはず
-    @JoinColumn(name="user_id")
+    @OneToOne(cascade=CascadeType.REFRESH, optional = false) // 参照のみだからREFRESHでいいはず
+    @JoinColumn(name="user_id", nullable = false)
     public LocalUser local_user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_order")
     public List<DailyOrderItem> detail_items = new ArrayList<DailyOrderItem>();
+
+    @Transient
+    public Collection errors;
+
+    public Boolean is_valid() {
+
+        if (local_user == null) { // なぜかValidateでチェックしてくれないので独自にやる
+            return false;
+        }
+
+        errors = Validation.getValidator().validate(this);
+
+        return errors.size() == 0;
+    }
 
     public static Finder<Long,DailyOrder> find = new Finder<Long,DailyOrder>(Long.class, DailyOrder.class);
 

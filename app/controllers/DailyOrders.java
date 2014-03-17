@@ -48,14 +48,28 @@ public class DailyOrders extends Controller {
         JsonNode json = request().body().asJson();
         JsonNode root_node = json.get(0);
 
-        String user_id = root_node.findPath("user_id").textValue();
-        Date order_date = new Date(root_node.findPath("order_date").asLong());
+        String user_id = root_node.findPath("user_id").asText();
+
+        if (user_id.isEmpty()) {
+            logger.debug("create user_id is empty");
+            return badRequest();
+        }
+
+        String order_dateStr = root_node.findPath("order_date").asText();
+
+        if (order_dateStr.isEmpty()) {
+            logger.debug("create order_date is empty");
+            return badRequest();
+        }
+
+        Date order_date = new Date(Long.parseLong(order_dateStr));
 
         logger.debug(String.format("create user_id:%s order_date:%s", user_id, order_date));
 
         DailyOrder order = DailyOrder.find_by(order_date, user_id);
 
         if (order != null) {
+            logger.debug("create order found");
             return ok(Json.toJson(order));
         }
 
@@ -87,6 +101,11 @@ public class DailyOrders extends Controller {
             order.detail_items.add(order_item);
         }
 
+
+        if (!order.is_valid()) {
+            logger.debug("create object has some errors.");
+            return badRequest();
+        }
 
         logger.debug(String.format("create order.local_user.id:%s", order.local_user.id));
         logger.debug(String.format("create order.order_date:%s", order.order_date));
