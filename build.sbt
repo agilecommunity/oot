@@ -11,6 +11,7 @@ libraryDependencies ++= Seq(
   , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
   , "ws.securesocial" %% "securesocial" % "2.1.3"
   , "pl.pragmatists" % "JUnitParams" % "1.0.2"
+  , "com.google.code.gson" % "gson" % "2.2.4"
 )
 
 play.Project.playJavaSettings

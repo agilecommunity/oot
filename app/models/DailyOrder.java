@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
+import play.Logger;
 import play.data.validation.Validation;
 import play.db.ebean.Model;
 
@@ -22,6 +23,8 @@ import com.avaje.ebean.validation.NotNull;
 
 @Entity
 public class DailyOrder extends Model {
+
+    Logger.ALogger logger = Logger.of("application.models.DailyOrder");
 
     private static final long serialVersionUID = 1L;
 
@@ -45,10 +48,18 @@ public class DailyOrder extends Model {
     public Boolean is_valid() {
 
         if (local_user == null) { // なぜかValidateでチェックしてくれないので独自にやる
+            logger.debug("is_valid local_user is null");
+            return false;
+        }
+
+        if (order_date == null) { // なぜかValidateでチェックしてくれないので独自にやる
+            logger.debug("is_valid order_date is null");
             return false;
         }
 
         errors = Validation.getValidator().validate(this);
+
+        logger.debug(String.format("is_valid errors:%s", errors.toString()));
 
         return errors.size() == 0;
     }

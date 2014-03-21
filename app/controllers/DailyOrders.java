@@ -1,13 +1,8 @@
 package controllers;
 
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import models.DailyOrder;
-import models.DailyOrderItem;
-import models.LocalUser;
-import models.MenuItem;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -17,6 +12,7 @@ import securesocial.core.java.SecureSocial;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.Gson;
 
 import filters.RequireCSRFCheck4Ng;
 
@@ -46,61 +42,10 @@ public class DailyOrders extends Controller {
         logger.debug("create");
 
         JsonNode json = request().body().asJson();
-        JsonNode root_node = json.get(0);
 
-        String user_id = root_node.findPath("user_id").asText();
+        Gson gson = utils.gson.OotGsonGenerator.create();
 
-        if (user_id.isEmpty()) {
-            logger.debug("create user_id is empty");
-            return badRequest();
-        }
-
-        String order_dateStr = root_node.findPath("order_date").asText();
-
-        if (order_dateStr.isEmpty()) {
-            logger.debug("create order_date is empty");
-            return badRequest();
-        }
-
-        Date order_date = new Date(Long.parseLong(order_dateStr));
-
-        logger.debug(String.format("create user_id:%s order_date:%s", user_id, order_date));
-
-        DailyOrder order = DailyOrder.find_by(order_date, user_id);
-
-        if (order != null) {
-            logger.debug("create order found");
-            return ok(Json.toJson(order));
-        }
-
-        order = new DailyOrder();
-        order.local_user = LocalUser.find.byId(user_id);
-        order.order_date = order_date;
-
-        JsonNode detail_items = root_node.path("detail_items");
-
-        Iterator<JsonNode> ite = detail_items.elements();
-
-        while (ite.hasNext()) {
-            JsonNode detail_item = ite.next();
-
-            JsonNode menu_item = detail_item.path("menu_item");
-
-            if (menu_item == null) {
-                logger.debug("create menu_item not found. skip node");
-                continue;
-            }
-
-            Long menu_item_id = menu_item.path("id").asLong();
-
-            logger.debug(String.format("create menu_item_id: %d", menu_item_id));
-
-            DailyOrderItem order_item = new DailyOrderItem();
-            order_item.menu_item = MenuItem.find.byId(menu_item_id);
-
-            order.detail_items.add(order_item);
-        }
-
+        DailyOrder order = gson.fromJson(json.get(0).toString(), DailyOrder.class);
 
         if (!order.is_valid()) {
             logger.debug("create object has some errors.");

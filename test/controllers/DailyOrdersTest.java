@@ -51,7 +51,7 @@ public class DailyOrdersTest extends WithApplication {
 
          StringBuilder builder = new StringBuilder();
          builder.append("[");
-         builder.append("{ \"user_id\": \"demo@foo.baa\"");
+         builder.append("{ \"local_user\":{\"id\": \"demo@foo.baa\"}");
          builder.append(", \"order_date\":1391871600000");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
@@ -73,12 +73,7 @@ public class DailyOrdersTest extends WithApplication {
 
 
      @Test
-     @Parameters({
-           "[{ }]"
-         , "[{ \"user_id\":\"hoge\" }]"
-         , "[{ \"user_id\":\"demo@foo.baa\" }]"
-         , "[{ \"order_date\":1391871600000 }]"
-     })
+     @Parameters(method = "illegal_json_data")
      public void createはJsonの内容が不正であった場合400_BadRequestを返す(String jsonString) {
          Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
 
@@ -100,5 +95,16 @@ public class DailyOrdersTest extends WithApplication {
                                  .withSession("XSRF-TOKEN", token));
 
          return result;
+     }
+
+     private Object[] illegal_json_data() {
+         return JUnitParamsRunner.$(
+                   JUnitParamsRunner.$("[{ }]")
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"} }]")
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":1391871600000 }]")
+                 , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")
+                 , JUnitParamsRunner.$("[{ \"order_date\":\"aaa\" }]")
+                 );
+
      }
 }
