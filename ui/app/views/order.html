@@ -13,7 +13,7 @@
                 <div class="clear"></div>
             </div>
             <div class="choose-list page1">
-                <div class="menu" ng-repeat="item in daily_menu.detail_items">
+                <div ng-repeat="item in daily_menu.detail_items" class="menu" ng-class="{'selected':item.selected}" ng-click="order(daily_menu, item);">
                     <div class="shop-name">{{item.menu_item.shop_name}}</div>
                     <div class="food-name">{{item.menu_item.name}}</div>
                     <div class="food-image"><img src="assets/images/{{item.menu_item.item_image_path}}"></div>

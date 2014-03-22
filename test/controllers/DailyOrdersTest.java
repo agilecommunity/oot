@@ -88,7 +88,7 @@ public class DailyOrdersTest extends WithApplication {
          Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
-         Result result = route(fakeRequest(POST, "/api/daily-orders")
+         Result result = route(fakeRequest(POST, "/api/daily-orders/mine")
                                  .withJsonBody(json)
                                  .withCookies(fake_cookie)
                                  .withHeader("X-XSRF-TOKEN", token)
@@ -99,11 +99,12 @@ public class DailyOrdersTest extends WithApplication {
 
      private Object[] illegal_json_data() {
          return JUnitParamsRunner.$(
-                   JUnitParamsRunner.$("[{ }]")
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"} }]")
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":1391871600000 }]")
-                 , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")
-                 , JUnitParamsRunner.$("[{ \"order_date\":\"aaa\" }]")
+                   JUnitParamsRunner.$("[{ }]") // 空のリクエスト
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"} }]") // 必須項目(order_date)なし
+                 , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")              // 必須項目(local_user)なし
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":1391871600000 }]") // 存在しないユーザ
+                 , JUnitParamsRunner.$("[{ \"order_date\":\"aaa\" }]") // 存在しない日付
+                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"demo@foo.baa\"}, \"order_date\":1391871600000 }") // 配列でない
                  );
 
      }

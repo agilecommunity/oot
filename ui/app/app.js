@@ -11,7 +11,11 @@ angular.module('OotServices', ['ngResource'])
 
         return {
 
-            is_signed_in: function() {
+            current_user: function() {
+               return $rootScope.current_user;
+            }
+
+          , is_signed_in: function() {
                 return !($rootScope.current_user === null);
             }
 
@@ -61,12 +65,35 @@ angular.module('OotServices', ['ngResource'])
                 , isArray: true
                 , transformResponse: function(data, headersGetter){
                     // 日付がLongでくるので、読める形に変換する
-                    var menus = angular.fromJson(data);
-                    angular.forEach(menus, function(daily_menu) {
-                        daily_menu.menu_date = new Date(daily_menu.menu_date);
+                    var list = angular.fromJson(data);
+                    angular.forEach(list, function(item) {
+                        item.menu_date = new Date(item.menu_date);
                     });
-                    return menus;
+                    return list;
                 }
+            }
+        });
+    }])
+    .factory('DailyOrder', ['$resource', function($resource){
+        return $resource('/api/daily-orders/mine/:id', {id: "@id"}, {
+            query: {
+                method: "GET"
+              , isArray: true
+              , transformResponse: function(data, headersGetter){
+                  // 日付がLongでくるので、読める形に変換する
+                  var list = angular.fromJson(data);
+                  angular.forEach(list, function(item) {
+                      item.order_date = new Date(item.order_date);
+                  });
+                  return list;
+              }
+            }
+            , create: {
+                  method: "POST"
+            }
+            , update: {
+                  method: "PUT"
+                , isArray: false
             }
         });
     }]);
@@ -78,7 +105,6 @@ var app = angular.module('oot', [
             , 'ui.bootstrap'
             , 'OotServices'
             ]);
-
 
 app.config(['$routeProvider',
     function($routeProvider) {
@@ -96,6 +122,43 @@ app.config(['$routeProvider',
             });
     }]);
 
+app.filter('getByMenuDate', function() {
+        return function(input, filter_date) {
+            var target = null;
+            input.some(function(item) {
+                if (item.menu_date.valueOf() == filter_date.valueOf()) {
+                    target = item;
+                }
+                return target != null;
+            });
+            return target;
+        }
+    })
+    .filter('getByOrderDate', function() {
+        return function(input, filter_date) {
+            var target = null;
+            input.some(function(item) {
+                if (item.order_date.valueOf() == filter_date.valueOf()) {
+                    target = item;
+                }
+                return target != null;
+            });
+            return target;
+        }
+    })
+    .filter('getById', function() {
+        return function(input, filter_id) {
+            var target = null;
+            input.some(function(item) {
+                if (item.id == filter_id) {
+                    target = item;
+                }
+                return target != null;
+            });
+            return target;
+        }
+    });
+
 app.controller('SigninController', ['$scope', '$location', 'User', function($scope, $location, User) {
         $scope.signin = function() {
             User.signin($scope.user.email, $scope.user.password, {
@@ -108,14 +171,65 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             });
         };
     }])
-    .controller('OrderController', ['$scope', '$modal', '$location', 'DailyMenu', function($scope, $modal, $location, DailyMenu) {
+    .controller('OrderController', ['$scope', '$modal', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder'
+                                 , function($scope, $modal, $location, $filter, User, DailyMenu, DailyOrder) {
 
         $scope.daily_menus = DailyMenu.query({}
-            , function(response){}  // 成功時
+            , function(response){ // 成功時
+
+                $scope.daily_orders = DailyOrder.query({}
+                , function(response){ // 成功時
+                    angular.forEach(response, function(order){
+                        var menu = $filter('getByMenuDate')($scope.daily_menus, order.order_date);
+                        if (menu != null) {
+                            var item = $filter('getById')(menu.detail_items, order.detail_items[0].menu_item.id);
+                            if (item != null) {
+                                item.selected = true;
+                            }
+                        }
+                    });
+
+                }
+                , function(response){   // 失敗時
+                    alert("注文データが取得できませんでした。サインイン画面に戻ります。");
+                    $location.path("/");
+                });
+
+            }
             , function(response){   // 失敗時
-                alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。status:" + response.status);
+                alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。");
                 $location.path("/");
             });
+
+        $scope.order = function(daily_menu, daily_menu_item) {
+
+            var new_state = daily_menu_item.selected != true;
+            angular.forEach(daily_menu.detail_items, function(item) {
+                item.selected = false;
+            });
+            daily_menu_item.selected = new_state;
+
+            var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
+
+            if (order != null) {
+                if (new_state === true) {
+                    order.detail_items = [{menu_item: daily_menu_item}];
+                    order.$update();
+                } else {
+                    order.$delete();
+                }
+            } else {
+                var new_order = new DailyOrder();
+                new_order.order_date = daily_menu.menu_date.getTime();
+                new_order.local_user = User.current_user();
+                new_order.detail_items = [{menu_item: daily_menu_item}];
+
+                DailyOrder.create({}, [new_order]);
+            }
+
+            $scope.daily_orders = DailyOrder.query();
+
+        };
 
         $scope.showSideDishes = function() {
             $modal.open({
@@ -123,8 +237,6 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             });
         };
 
-        $scope.order = function(daily_menu, daily_item) {
-        };
     }]);
 
 app.run(function($rootScope, $http, $location, User){

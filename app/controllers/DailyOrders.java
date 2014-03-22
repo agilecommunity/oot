@@ -37,18 +37,30 @@ public class DailyOrders extends Controller {
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result create() {
+    public static Result createMine() {
 
         logger.debug("create");
 
         JsonNode json = request().body().asJson();
 
+        logger.debug(String.format("create request-body:%s", request().body().toString()));
+
         Gson gson = utils.gson.OotGsonGenerator.create();
+
+        if (!json.has(0)) {
+            logger.debug("create invalid json format");
+            return badRequest();
+        }
 
         DailyOrder order = gson.fromJson(json.get(0).toString(), DailyOrder.class);
 
         if (!order.is_valid()) {
             logger.debug("create object has some errors.");
+            return badRequest();
+        }
+
+        if (DailyOrder.find_by(order.order_date, order.local_user.id) != null) {
+            logger.debug("create object already exists");
             return badRequest();
         }
 

@@ -10,7 +10,7 @@ GET     /api/daily-menus            controllers.DailyMenus.index()
 GET     /api/users/me               controllers.Users.showMe()
 
 GET     /api/daily-orders/mine      controllers.DailyOrders.showMine()
-POST    /api/daily-orders           controllers.DailyOrders.create()
+POST    /api/daily-orders/mine      controllers.DailyOrders.createMine()
 #PUT     /api/daily-orders/:id       controllers.DailyOrders.update(id)
 
 # Root
