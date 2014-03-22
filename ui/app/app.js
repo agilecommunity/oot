@@ -4,7 +4,7 @@ var transform = function(data){
     return jQuery.param(data);
 }
 
-angular.module('OotServices', [])
+angular.module('OotServices', ['ngResource'])
     .factory('User', ['$http', '$rootScope', function($http, $rootScope) {
 
         $rootScope.current_user = null;
@@ -53,10 +53,28 @@ angular.module('OotServices', [])
           }
 
         };
+    }])
+    .factory('DailyMenu', ['$resource', function($resource){
+        return $resource('/api/daily-menus', {}, {
+            query: {
+                  method: "GET"
+                , isArray: true
+                , transformResponse: function(data, headersGetter){
+                    // 日付がLongでくるので、読める形に変換する
+                    var menus = angular.fromJson(data);
+                    angular.forEach(menus, function(daily_menu) {
+                        daily_menu.menu_date = new Date(daily_menu.menu_date);
+                    });
+                    return menus;
+                }
+            }
+        });
     }]);
+
 
 var app = angular.module('oot', [
               'ngRoute'
+            , 'ngResource'
             , 'ui.bootstrap'
             , 'OotServices'
             ]);
@@ -90,25 +108,22 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             });
         };
     }])
-    .controller('OrderController', ['$scope', '$http', '$modal', '$location', function($scope, $http, $modal, $location) {
+    .controller('OrderController', ['$scope', '$modal', '$location', 'DailyMenu', function($scope, $modal, $location, DailyMenu) {
 
-        $http.get('/api/daily_menus')
-        .success(function(data) {
-            $scope.daily_menus = data;
-
-            angular.forEach($scope.daily_menus, function(daily_menu) {
-                daily_menu.menu_date = jQuery.format.date(new Date(daily_menu.menu_date), 'yyyy/MM/dd (ddd)');
+        $scope.daily_menus = DailyMenu.query({}
+            , function(response){}  // 成功時
+            , function(response){   // 失敗時
+                alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。status:" + response.status);
+                $location.path("/");
             });
-        })
-        .error(function(data, status, header){
-            alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。status:" + status);
-            $location.path("/");
-        });
 
         $scope.showSideDishes = function() {
             $modal.open({
                   templateUrl: 'views/side-dishes'
             });
+        };
+
+        $scope.order = function(daily_menu, daily_item) {
         };
     }]);
 
