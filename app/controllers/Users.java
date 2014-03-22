@@ -20,6 +20,11 @@ public class Users extends Controller {
     public static Result showMe() {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
+        if (user == null) {
+            logger.warn("current user not found");
+            return unauthorized();
+        }
+
         logger.debug(String.format("showMe user.email:%s", user.email().get()));
 
         List<LocalUser> local_users = LocalUser.find.where().eq("email", user.email().get()).findList();
