@@ -74,8 +74,10 @@ public class DailyOrdersTest extends WithApplication {
 
      @Test
      @Parameters(method = "illegal_json_data")
-     public void createはJsonの内容が不正であった場合400_BadRequestを返す(String jsonString) {
+     public void createはJsonの内容が不正であった場合400_BadRequestを返すこと(String jsonString) {
          Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
 
          Result result = callCreate(jsonString);
 
@@ -101,9 +103,11 @@ public class DailyOrdersTest extends WithApplication {
          return JUnitParamsRunner.$(
                    JUnitParamsRunner.$("[{ }]") // 空のリクエスト
                  , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"} }]") // 必須項目(order_date)なし
-                 , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")              // 必須項目(local_user)なし
+                 , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")             // 必須項目(local_user)なし
                  , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":1391871600000 }]") // 存在しないユーザ
                  , JUnitParamsRunner.$("[{ \"order_date\":\"aaa\" }]") // 存在しない日付
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"}, \"order_date\":1391958000000 }]") // 登録済みの注文
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"bob@foo.baa\"}, \"order_date\":1391871600000 }]") // ユーザが異なる
                  , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"demo@foo.baa\"}, \"order_date\":1391871600000 }") // 配列でない
                  );
 

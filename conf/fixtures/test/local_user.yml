@@ -6,3 +6,12 @@
     first_name: アジャコ
     last_name:  アジャイル
     is_admin:   false
+
+- !!models.LocalUser
+    id:         bob@foo.baa
+    provider:   userpass
+    email:      bob@foo.baa
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    first_name: ボブ
+    last_name:  アジャイル
+    is_admin:   false

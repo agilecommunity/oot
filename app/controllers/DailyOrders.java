@@ -8,6 +8,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
 
 import com.avaje.ebean.ExpressionList;
@@ -23,7 +24,10 @@ public class DailyOrders extends Controller {
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showMine() {
-        ExpressionList<DailyOrder> query = DailyOrder.find.where();
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+
+        ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
+
 
         if (request().queryString().containsKey("order_date")) {
             query.eq("order_date", request().queryString().get("order_date"));
@@ -56,6 +60,13 @@ public class DailyOrders extends Controller {
 
         if (!order.is_valid()) {
             logger.debug("create object has some errors.");
+            return badRequest();
+        }
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+
+        if (!order.local_user.id.equals(user.identityId().userId())) {
+            logger.debug(String.format("create cant create others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
             return badRequest();
         }
 
