@@ -9,23 +9,28 @@
         <div class="day" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
             <div class="day-header">
                 <div class="date">{{daily_menu.menu_date | date: 'yyyy/MM/dd (EEE)'}}</div>
-                <div class="small-total">当日合計: 530円</div>
+                <div class="small-total">当日合計: xxx円</div>
                 <div class="clear"></div>
             </div>
             <div class="choose-list page1">
-                <div ng-repeat="item in daily_menu.detail_items" class="menu" ng-class="{'ordered':item.ordered}" ng-click="order(daily_menu, item);">
-                    <div class="shop-name">{{item.menu_item.shop_name}}</div>
-                    <div class="food-name">{{item.menu_item.name}}</div>
-                    <div class="food-image"><img src="assets/images/{{item.menu_item.item_image_path}}"></div>
-                    <div class="food-price">{{item.menu_item.price_on_order}}円</div>
+                <div ng-show="daily_menu.detail_items.length == 0" >
+                    <p class="no-data">選択できるお弁当がありません。</p>
                 </div>
+                <div ng-show="daily_menu.detail_items.length > 0" >
+                    <div ng-repeat="item in daily_menu.detail_items" class="menu" ng-class="{'ordered':item.ordered}" ng-click="order(daily_menu, item);">
+                        <div class="shop-name">{{item.menu_item.shop_name}}</div>
+                        <div class="food-name">{{item.menu_item.name}}</div>
+                        <div class="food-image"><img src="assets/images/{{item.menu_item.item_image_path}}"></div>
+                        <div class="food-price">{{item.menu_item.price_on_order}}円</div>
+                    </div>
 
-                <div class="clear"></div>
-
-                <div class="other-page">
-                    <div class="button" ng-click="showSideDishes();">サラダを選ぶ</div>
-                    <div class="other-info">サラダは注文していません。</div>
                     <div class="clear"></div>
+
+                    <div class="other-page">
+                        <div class="button" ng-click="showSideDishes();">サラダを選ぶ</div>
+                        <div class="other-info">サラダは注文していません。</div>
+                        <div class="clear"></div>
+                    </div>
                 </div>
             </div>
         </div>

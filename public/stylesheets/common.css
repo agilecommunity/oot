@@ -248,3 +248,15 @@ body{
     background-color: #dcf0c1;
 }
 
+.no-data {
+    margin: 1.5em;
+    padding: 1.0em;
+    font-size: larger;
+    color:#b94a48;
+    background-color:#f2dede;
+    border-color:#eed3d7;
+
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+}
