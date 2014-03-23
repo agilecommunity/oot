@@ -17,11 +17,11 @@
     shop_name:       有楽町八百屋
     name:            八品目のサラダ
     price_on_order:  230
-    item_image_path: sarad.jpg
+    item_image_path: sarad.png
 
 - !!models.MenuItem
     category:        side
     shop_name:       有楽町フルーツ屋
     name:            カットフルーツ盛り合わせ
     price_on_order:  280
-    item_image_path: sarad.jpg
+    item_image_path: sarad.png

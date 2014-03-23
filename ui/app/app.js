@@ -155,18 +155,6 @@ app.filter(                                        // フィルタの定義。�
             });
             return target;
         }
-    })
-    .filter('getById', function() {                // idによる検索
-        return function(input, filter_id) {
-            var target = null;
-            input.some(function(item) {
-                if (item.id == filter_id) {
-                    target = item;
-                }
-                return target != null;
-            });
-            return target;
-        }
     });
 
 app.controller('SigninController', ['$scope', '$location', 'User', function($scope, $location, User) {
@@ -205,12 +193,6 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
 
             // メニューの注文状況を切り替える
             var new_state = daily_menu_item.ordered != true;
-
-            // その日のメニューの注文状況をリセットする
-            angular.forEach(daily_menu.detail_items, function(item) {
-                item.ordered = false;
-            });
-            // 注文状況を反映する
             daily_menu_item.ordered = new_state;
 
             // 注文オブジェクトがあるかどうかを調べる
@@ -222,9 +204,17 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             };
 
             if (order != null) {
-                // あった場合は更新する
                 if (new_state === true) {
-                    order.detail_items = [{menu_item: daily_menu_item}];
+                    order.detail_items.push({menu_item: daily_menu_item.menu_item});
+                } else {
+                    var work = order.detail_items.filter(function(item, index){
+                        return (item.menu_item.id !== daily_menu_item.menu_item.id);
+                    });
+                    order.detail_items = work;
+                }
+
+                // あった場合は更新する
+                if (order.detail_items.length > 0) {
                     order.$update({}, reload_orders);
                 } else {
                     order.$delete({}, reload_orders);
@@ -234,7 +224,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 var new_order = new DailyOrder();
                 new_order.order_date = daily_menu.menu_date.getTime();
                 new_order.local_user = User.current_user();
-                new_order.detail_items = [{menu_item: daily_menu_item}];
+                new_order.detail_items = [{menu_item: daily_menu_item.menu_item}];
 
                 DailyOrder.create({}, [new_order], reload_orders);
             }
@@ -258,10 +248,13 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             angular.forEach($scope.daily_orders, function(order){
                 var menu = $filter('getByMenuDate')($scope.daily_menus, order.order_date);
                 if (menu != null) {
-                    var item = $filter('getById')(menu.detail_items, order.detail_items[0].menu_item.id);
-                    if (item != null) {
-                        item.ordered = true;
-                    }
+                    angular.forEach(order.detail_items, function(o_d_item){
+                        angular.forEach(menu.detail_items, function(m_d_item){
+                            if (o_d_item.menu_item.id === m_d_item.menu_item.id) {
+                                m_d_item.ordered = true;
+                            }
+                        });
+                    });
                 }
             });
         }

@@ -12,6 +12,12 @@
 
 - !!models.DailyMenuItem
     daily_menu: !!models.DailyMenu
+                  id: 1
+    menu_item:  !!models.MenuItem
+                  id: 3
+
+- !!models.DailyMenuItem
+    daily_menu: !!models.DailyMenu
                   id: 2
     menu_item:  !!models.MenuItem
                   id: 1
