@@ -184,15 +184,6 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
 
                 $scope.daily_orders = DailyOrder.query({}
                 , function(response){ // 成功時
-                    angular.forEach(response, function(order){
-                        var menu = $filter('getByMenuDate')($scope.daily_menus, order.order_date);
-                        if (menu != null) {
-                            var item = $filter('getById')(menu.detail_items, order.detail_items[0].menu_item.id);
-                            if (item != null) {
-                                item.selected = true;
-                            }
-                        }
-                    });
                 }
                 , function(response){   // 失敗時
                     alert("注文データが取得できませんでした。サインイン画面に戻ります。");
@@ -205,7 +196,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 $location.path("/");
             });
 
-        $scope.order = function(daily_menu, daily_menu_item) {
+        $scope.order = function(daily_menu, daily_menu_item) { // イベントハンドラ
 
             // メニューの注文状況を切り替える
             var new_state = daily_menu_item.selected != true;
@@ -243,11 +234,35 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
 
         };
 
-        $scope.showSideDishes = function() {
+        $scope.showSideDishes = function() { // イベントハンドラ
             $modal.open({
                   templateUrl: 'views/side-dishes'
             });
         };
+
+        // メニューに注文状況を反映する
+        var applyOrdered = function() {
+            // メニューの注文状況をリセットする
+            angular.forEach($scope.daily_menus, function(menu){
+                angular.forEach(menu.detail_items, function(item){
+                    item.selected = false;
+                })
+            });
+            // 注文を見ながらメニューの注文状況を変更する
+            angular.forEach($scope.daily_orders, function(order){
+                var menu = $filter('getByMenuDate')($scope.daily_menus, order.order_date);
+                if (menu != null) {
+                    var item = $filter('getById')(menu.detail_items, order.detail_items[0].menu_item.id);
+                    if (item != null) {
+                        item.selected = true;
+                    }
+                }
+            });
+        }
+
+        // メニュー、または注文の内容が変わった場合は、メニューの注文状況を反映しなおす
+        $scope.$watchCollection("daily_menus", applyOrdered);
+        $scope.$watchCollection("daily_orders", applyOrdered);
 
     }]);
 
