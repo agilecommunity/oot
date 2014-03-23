@@ -216,13 +216,18 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             // 注文オブジェクトがあるかどうかを調べる
             var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
 
+            var reload_orders = function(request) {
+                // 念のためサーバから最新の注文を取得する
+                $scope.daily_orders = DailyOrder.query();
+            };
+
             if (order != null) {
                 // あった場合は更新する
                 if (new_state === true) {
                     order.detail_items = [{menu_item: daily_menu_item}];
-                    order.$update();
+                    order.$update({}, reload_orders);
                 } else {
-                    order.$delete();
+                    order.$delete({}, reload_orders);
                 }
             } else {
                 // ない場合は新しく作る
@@ -231,12 +236,8 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 new_order.local_user = User.current_user();
                 new_order.detail_items = [{menu_item: daily_menu_item}];
 
-                DailyOrder.create({}, [new_order]);
+                DailyOrder.create({}, [new_order], reload_orders);
             }
-
-            // 念のためサーバから最新の注文を取得する
-            $scope.daily_orders = DailyOrder.query();
-
         };
 
         $scope.showSideDishes = function() { // イベントハンドラ
