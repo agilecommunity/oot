@@ -101,7 +101,7 @@ body{
     float: left;
     cursor: pointer;
 }
-.choose-list .menu.selected{
+.choose-list .menu.ordered{
     border-color: #D21F45;
 }
 .selected .food-name{

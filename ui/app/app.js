@@ -199,14 +199,14 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
         $scope.order = function(daily_menu, daily_menu_item) { // イベントハンドラ
 
             // メニューの注文状況を切り替える
-            var new_state = daily_menu_item.selected != true;
+            var new_state = daily_menu_item.ordered != true;
 
             // その日のメニューの注文状況をリセットする
             angular.forEach(daily_menu.detail_items, function(item) {
-                item.selected = false;
+                item.ordered = false;
             });
             // 注文状況を反映する
-            daily_menu_item.selected = new_state;
+            daily_menu_item.ordered = new_state;
 
             // 注文オブジェクトがあるかどうかを調べる
             var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
@@ -245,7 +245,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             // メニューの注文状況をリセットする
             angular.forEach($scope.daily_menus, function(menu){
                 angular.forEach(menu.detail_items, function(item){
-                    item.selected = false;
+                    item.ordered = false;
                 })
             });
             // 注文を見ながらメニューの注文状況を変更する
@@ -254,7 +254,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 if (menu != null) {
                     var item = $filter('getById')(menu.detail_items, order.detail_items[0].menu_item.id);
                     if (item != null) {
-                        item.selected = true;
+                        item.ordered = true;
                     }
                 }
             });
