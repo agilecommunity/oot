@@ -66,7 +66,7 @@ public class DailyOrders extends Controller {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         if (!order.local_user.id.equals(user.identityId().userId())) {
-            logger.debug(String.format("create cant create others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
+            logger.warn(String.format("create cant create others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
             return badRequest();
         }
 
@@ -82,5 +82,31 @@ public class DailyOrders extends Controller {
 
         return ok(Json.toJson(order));
     }
+
+    @RequireCSRFCheck4Ng()
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result deleteMine(Long id) {
+
+        logger.debug(String.format("deleteMine id: %s", id));
+
+        DailyOrder order = DailyOrder.find.byId(id);
+
+        if (order == null) {
+            logger.debug("deleteMine object not found");
+            return ok();
+        }
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+
+        if (!order.local_user.id.equals(user.identityId().userId())) {
+            logger.warn(String.format("deleteMine cant delete others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
+            return badRequest();
+        }
+
+        order.delete();
+
+        return ok();
+    }
+
 
 }

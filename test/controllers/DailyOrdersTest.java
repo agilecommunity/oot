@@ -43,7 +43,7 @@ public class DailyOrdersTest extends WithApplication {
      }
 
      @Test
-     public void createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
+     public void createMineは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
          Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
          Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
@@ -59,7 +59,7 @@ public class DailyOrdersTest extends WithApplication {
 
          JsValue json = Json.parse(builder.toString());
 
-         Result result = callCreate(builder.toString());
+         Result result = callCreateMine(builder.toString());
 
          assertThat(status(result)).isEqualTo(OK);
 
@@ -74,17 +74,36 @@ public class DailyOrdersTest extends WithApplication {
 
      @Test
      @Parameters(method = "illegal_json_data")
-     public void createはJsonの内容が不正であった場合400_BadRequestを返すこと(String jsonString) {
+     public void createMineはJsonの内容が不正であった場合400_BadRequestを返すこと(String jsonString) {
          Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
          Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
          Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
 
-         Result result = callCreate(jsonString);
+         Result result = callCreateMine(jsonString);
 
          assertThat(status(result)).isEqualTo(BAD_REQUEST);
      }
 
-     private Result callCreate(String jsonString) {
+     @Test
+     public void deleteMineは指定したIDのDailyOrderオブジェクトを削除すること() {
+         Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
+
+         assertThat(DailyOrder.find.findRowCount()).isEqualTo(1);
+
+         Result result = callDeleteMine(1L);
+
+         assertThat(status(result)).isEqualTo(OK);
+
+         DailyOrder order = DailyOrder.find.byId(1L);
+
+         assertThat(order).isNull();
+
+     }
+
+     private Result callCreateMine(String jsonString) {
 
          JsValue json = Json.parse(jsonString);
          Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
@@ -92,6 +111,19 @@ public class DailyOrdersTest extends WithApplication {
 
          Result result = route(fakeRequest(POST, "/api/daily-orders/mine")
                                  .withJsonBody(json)
+                                 .withCookies(fake_cookie)
+                                 .withHeader("X-XSRF-TOKEN", token)
+                                 .withSession("XSRF-TOKEN", token));
+
+         return result;
+     }
+
+     private Result callDeleteMine(Long id) {
+
+         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
+         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+
+         Result result = route(fakeRequest(DELETE, String.format("/api/daily-orders/mine/%d", id))
                                  .withCookies(fake_cookie)
                                  .withHeader("X-XSRF-TOKEN", token)
                                  .withSession("XSRF-TOKEN", token));
