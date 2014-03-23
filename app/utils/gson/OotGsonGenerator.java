@@ -52,7 +52,7 @@ public class OotGsonGenerator {
                     java.util.Date deserialized = null;
                     try {
                         deserialized = new java.util.Date(p1.getAsLong());
-                    } catch ( java.lang.NumberFormatException ex) {
+                    } catch ( java.lang.NumberFormatException nfEx) {
                         deserialized = null;
                     }
 

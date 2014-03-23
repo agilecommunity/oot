@@ -36,6 +36,10 @@ public class DailyOrdersTest extends WithApplication {
      @Before
      public void setUp() {
          start(fakeApplication(inMemoryDatabase()));
+         Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
+         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
      }
 
      @After
@@ -44,11 +48,6 @@ public class DailyOrdersTest extends WithApplication {
 
      @Test
      public void createMineは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
-         Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
-
          StringBuilder builder = new StringBuilder();
          builder.append("[");
          builder.append("{ \"local_user\":{\"id\": \"demo@foo.baa\"}");
@@ -75,10 +74,6 @@ public class DailyOrdersTest extends WithApplication {
      @Test
      @Parameters(method = "illegal_json_data")
      public void createMineはJsonの内容が不正であった場合400_BadRequestを返すこと(String jsonString) {
-         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
-
          Result result = callCreateMine(jsonString);
 
          assertThat(status(result)).isEqualTo(BAD_REQUEST);
@@ -86,11 +81,6 @@ public class DailyOrdersTest extends WithApplication {
 
      @Test
      public void deleteMineは指定したIDのDailyOrderオブジェクトを削除すること() {
-         Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
-
          assertThat(DailyOrder.find.findRowCount()).isEqualTo(1);
 
          Result result = callDeleteMine(1L);
@@ -101,6 +91,29 @@ public class DailyOrdersTest extends WithApplication {
 
          assertThat(order).isNull();
 
+     }
+
+     @Test
+     public void updateMineは指定したIDのDailyOrderオブジェクトを更新すること() {
+         StringBuilder builder = new StringBuilder();
+         builder.append("{ \"id\":1");
+         builder.append(", \"order_date\":1391958000000");
+         builder.append(", \"local_user\":{\"id\": \"demo@foo.baa\"}");
+         builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
+         builder.append("}");
+
+         JsValue json = Json.parse(builder.toString());
+
+         Result result = callUpdateMine(1L, builder.toString());
+
+         assertThat(status(result)).isEqualTo(OK);
+
+         DailyOrder order = DailyOrder.find.byId(1L);
+         assertThat(order.local_user.first_name).isEqualTo("アジャコ");
+
+         assertThat(order.detail_items.size()).isEqualTo(1);
+         DailyOrderItem order_item = order.detail_items.get(0);
+         assertThat(order_item.menu_item.name).isEqualTo("たっぷりサーモン丼");
      }
 
      private Result callCreateMine(String jsonString) {
@@ -124,6 +137,21 @@ public class DailyOrdersTest extends WithApplication {
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(DELETE, String.format("/api/daily-orders/mine/%d", id))
+                                 .withCookies(fake_cookie)
+                                 .withHeader("X-XSRF-TOKEN", token)
+                                 .withSession("XSRF-TOKEN", token));
+
+         return result;
+     }
+
+     private Result callUpdateMine(Long id, String jsonString) {
+
+         JsValue json = Json.parse(jsonString);
+         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
+         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+
+         Result result = route(fakeRequest(PUT, String.format("/api/daily-orders/mine/%d", id))
+                                 .withJsonBody(json, PUT)  // PUTがないとPOSTしてしまうらしい(バグか?)
                                  .withCookies(fake_cookie)
                                  .withHeader("X-XSRF-TOKEN", token)
                                  .withSession("XSRF-TOKEN", token));

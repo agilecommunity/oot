@@ -98,6 +98,11 @@ angular.module('OotServices', ['ngResource'])
             , update: {                // 更新
                   method: "PUT"
                 , isArray: false
+                , transformRequest: function(data, headersGetter){
+                    // 日付を数値に変換する
+                    data.order_date = data.order_date.getTime();
+                    return angular.toJson(data);
+                }
             }
         });
     }]);

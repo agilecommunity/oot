@@ -12,7 +12,7 @@ GET     /api/users/me               controllers.Users.showMe()
 GET     /api/daily-orders/mine      controllers.DailyOrders.showMine()
 POST    /api/daily-orders/mine      controllers.DailyOrders.createMine()
 DELETE  /api/daily-orders/mine/:id  controllers.DailyOrders.deleteMine(id: Long)
-#PUT     /api/daily-orders/:id       controllers.DailyOrders.update(id)
+PUT     /api/daily-orders/mine/:id  controllers.DailyOrders.updateMine(id: Long)
 
 # Root
 GET     /                           controllers.Application.index(path = "")
