@@ -5,7 +5,7 @@ var transform = function(data){
 }
 
 angular.module('OotServices', ['ngResource'])
-    .factory('User', ['$http', '$rootScope', function($http, $rootScope) {
+    .factory('User', ['$http', '$rootScope', function($http, $rootScope) {  // ユーザ認証を行うサービス
 
         $rootScope.current_user = null;
 
@@ -58,13 +58,17 @@ angular.module('OotServices', ['ngResource'])
 
         };
     }])
-    .factory('DailyMenu', ['$resource', function($resource){
-        return $resource('/api/daily-menus', {}, {
-            query: {
+    .factory('DailyMenu', ['$resource', function($resource){  // 日々のメニューを扱うサービス
+                                                   // ここだけ丁寧に解説
+        return $resource(                          // RESTのAPIを簡単に扱える$resourceサービスを利用する
+              '/api/daily-menus/:id'               // APIのURL。:idは変数 query,createなど必要のないときは使われない
+            , {id: "@id"}, {                       // :idを@idにマッピングする。@はオブジェクトのプロパティを意味するので、
+                                                   // DailyMenuオブジェクトのプロパティ"id"の値が使われる
+              query: {                             // queryはオブジェクト全件を取り出す
                   method: "GET"
-                , isArray: true
-                , transformResponse: function(data, headersGetter){
-                    // 日付がLongでくるので、読める形に変換する
+                , isArray: true                    // 結果が配列になる場合は必ずtrueにする(でないと、エラーが発生する)
+                , transformResponse: function(data, headersGetter){  // 結果を変換したい場合はtransformResponseを使う
+                    // 日付が数字でくるとDateに変換されないので、こちらで変換する
                     var list = angular.fromJson(data);
                     angular.forEach(list, function(item) {
                         item.menu_date = new Date(item.menu_date);
@@ -74,13 +78,13 @@ angular.module('OotServices', ['ngResource'])
             }
         });
     }])
-    .factory('DailyOrder', ['$resource', function($resource){
+    .factory('DailyOrder', ['$resource', function($resource){  // 日々の注文を扱うサービス
         return $resource('/api/daily-orders/mine/:id', {id: "@id"}, {
             query: {
                 method: "GET"
               , isArray: true
               , transformResponse: function(data, headersGetter){
-                  // 日付がLongでくるので、読める形に変換する
+                  // 日付が数字でくるとDateに変換されないので、こちらで変換する
                   var list = angular.fromJson(data);
                   angular.forEach(list, function(item) {
                       item.order_date = new Date(item.order_date);
@@ -88,10 +92,10 @@ angular.module('OotServices', ['ngResource'])
                   return list;
               }
             }
-            , create: {
+            , create: {                // 新規作成
                   method: "POST"
             }
-            , update: {
+            , update: {                // 更新
                   method: "PUT"
                 , isArray: false
             }
@@ -99,30 +103,31 @@ angular.module('OotServices', ['ngResource'])
     }]);
 
 
-var app = angular.module('oot', [
-              'ngRoute'
+var app = angular.module('oot', [  // アプリケーションの定義
+              'ngRoute'            // 依存するサービスを指定する
             , 'ngResource'
             , 'ui.bootstrap'
-            , 'OotServices'
+            , 'OotServices'        // 自分が作ったサービス
             ]);
 
-app.config(['$routeProvider',
+app.config(['$routeProvider',      // ルーティングの定義
     function($routeProvider) {
         $routeProvider
-            .when('/', {
-                  templateUrl: '/views/signin'
-                , controller:  'SigninController'
+            .when('/', {                           // AngularJS上でのパス
+                  templateUrl: '/views/signin'     // 利用するビュー
+                , controller:  'SigninController'  // 利用するコントローラー
             })
             .when('/order', {
                   templateUrl: '/views/order'
                 , controller:  'OrderController'
             })
-            .otherwise({
-                redirectTo: '/'
+            .otherwise({                           // その他のパスが指定された場合
+                redirectTo: '/'                    // "/"に飛ぶ
             });
     }]);
 
-app.filter('getByMenuDate', function() {
+app.filter(                                        // フィルタの定義。コントローラーらサービスで利用できる
+        'getByMenuDate', function() {              // menu_dateによる検索(フィルタとして定義するのが正しいのか疑問)
         return function(input, filter_date) {
             var target = null;
             input.some(function(item) {
@@ -134,7 +139,7 @@ app.filter('getByMenuDate', function() {
             return target;
         }
     })
-    .filter('getByOrderDate', function() {
+    .filter('getByOrderDate', function() {         // order_dateによる検索
         return function(input, filter_date) {
             var target = null;
             input.some(function(item) {
@@ -146,7 +151,7 @@ app.filter('getByMenuDate', function() {
             return target;
         }
     })
-    .filter('getById', function() {
+    .filter('getById', function() {                // idによる検索
         return function(input, filter_id) {
             var target = null;
             input.some(function(item) {
@@ -188,7 +193,6 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                             }
                         }
                     });
-
                 }
                 , function(response){   // 失敗時
                     alert("注文データが取得できませんでした。サインイン画面に戻ります。");
@@ -203,15 +207,21 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
 
         $scope.order = function(daily_menu, daily_menu_item) {
 
+            // メニューの注文状況を切り替える
             var new_state = daily_menu_item.selected != true;
+
+            // その日のメニューの注文状況をリセットする
             angular.forEach(daily_menu.detail_items, function(item) {
                 item.selected = false;
             });
+            // 注文状況を反映する
             daily_menu_item.selected = new_state;
 
+            // 注文オブジェクトがあるかどうかを調べる
             var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
 
             if (order != null) {
+                // あった場合は更新する
                 if (new_state === true) {
                     order.detail_items = [{menu_item: daily_menu_item}];
                     order.$update();
@@ -219,6 +229,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                     order.$delete();
                 }
             } else {
+                // ない場合は新しく作る
                 var new_order = new DailyOrder();
                 new_order.order_date = daily_menu.menu_date.getTime();
                 new_order.local_user = User.current_user();
@@ -227,6 +238,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 DailyOrder.create({}, [new_order]);
             }
 
+            // 念のためサーバから最新の注文を取得する
             $scope.daily_orders = DailyOrder.query();
 
         };
