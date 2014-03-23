@@ -9,7 +9,7 @@
         <div class="day" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
             <div class="day-header">
                 <div class="date">{{daily_menu.menu_date | date: 'yyyy/MM/dd (EEE)'}}</div>
-                <div class="small-total">当日合計: xxx円</div>
+                <div class="small-total">当日合計: {{totalPriceOfTheDay(daily_menu.menu_date)}}円</div>
                 <div class="clear"></div>
             </div>
             <div class="choose-list page1">

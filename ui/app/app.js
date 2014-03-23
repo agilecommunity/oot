@@ -79,7 +79,7 @@ angular.module('OotServices', ['ngResource'])
         });
     }])
     .factory('DailyOrder', ['$resource', function($resource){  // 日々の注文を扱うサービス
-        return $resource('/api/daily-orders/mine/:id', {id: "@id"}, {
+        var DailyOrder = $resource('/api/daily-orders/mine/:id', {id: "@id"}, {
             query: {
                 method: "GET"
               , isArray: true
@@ -105,6 +105,16 @@ angular.module('OotServices', ['ngResource'])
                 }
             }
         });
+
+        DailyOrder.prototype.total_price = function() {
+            var price = 0;
+            angular.forEach(this.detail_items, function(item){
+                price += item.menu_item.price_on_order;
+            });
+            return price;
+        }
+
+        return DailyOrder;
     }]);
 
 
@@ -234,6 +244,14 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             $modal.open({
                   templateUrl: 'views/side-dishes'
             });
+        };
+
+        $scope.totalPriceOfTheDay = function(target_date) {
+            var order = $filter('getByOrderDate')($scope.daily_orders, target_date);
+            if (order != null) {
+                return order.total_price();
+            }
+            return 0;
         };
 
         // メニューに注文状況を反映する
