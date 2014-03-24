@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   , "ws.securesocial" %% "securesocial" % "2.1.3"
   , "pl.pragmatists" % "JUnitParams" % "1.0.2"
   , "com.google.code.gson" % "gson" % "2.2.4"
+  , "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
 )
 
 play.Project.playJavaSettings
