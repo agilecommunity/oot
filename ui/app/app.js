@@ -10,7 +10,6 @@ angular.module('OotServices', ['ngResource'])
         $rootScope.current_user = null;
 
         return {
-
             current_user: function() {
                return $rootScope.current_user;
             }
@@ -135,6 +134,10 @@ app.config(['$routeProvider',      // ルーティングの定義
             .when('/order', {
                   templateUrl: '/views/order'
                 , controller:  'OrderController'
+            })
+            .when('/admin/index', {
+                  templateUrl: '/views/admin/index'
+                , controller:  'AdminIndexController'
             })
             .otherwise({                           // その他のパスが指定された場合
                 redirectTo: '/'                    // "/"に飛ぶ
@@ -281,7 +284,12 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
         $scope.$watchCollection("daily_menus", applyOrdered);
         $scope.$watchCollection("daily_orders", applyOrdered);
 
+    }])
+    .controller('AdminIndexController', ['$scope', '$location', 'User', 'DailyMenu', 'DailyOrder'
+                               , function($scope,   $location,   User,   DailyMenu,   DailyOrder) {
+
     }]);
+
 
 app.run(function($rootScope, $http, $location, User){
     // ブラウザのリロード対策

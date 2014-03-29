@@ -215,6 +215,7 @@ body{
 .order-management .date {
     float: left;
 }
+
 .order-management .order-summary {
     float: left;
 }
@@ -230,14 +231,17 @@ body{
 .order-management .order-summary .price {
     text-align: right;
 }
+
 .order-management .commands {
     width: 450px;
     float: left;
+
 }
 .order-management .button {
     float: left;
     margin: 0.5em;
     width: 100px;
+    list-style-type: none;
 }
 
 
