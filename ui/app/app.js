@@ -4,15 +4,47 @@ var transform = function(data){
     return jQuery.param(data);
 }
 
+var UserRoles = {  // ロール
+    public: 1, // 001
+    user:   2, // 010
+    admin:  4  // 100
+};
+
+var AccessLevels = {  // ページのアクセスレベル
+    public: UserRoles.public | // 111
+            UserRoles.user   |
+            UserRoles.admin,
+    anon:   UserRoles.public,  // 001
+    user:   UserRoles.user |   // 110
+            UserRoles.admin,
+    admin:  UserRoles.admin    // 100
+};
+
 angular.module('OotServices', ['ngResource'])
     .factory('User', ['$http', '$rootScope', function($http, $rootScope) {  // ユーザ認証を行うサービス
 
         $rootScope.current_user = null;
 
-        return {
+        var User = {
             current_user: function() {
-               return $rootScope.current_user;
+                return $rootScope.current_user;
             }
+
+          , is_accessible: function(access, user) {
+                if (access === AccessLevels.anon || access === AccessLevels.public) {
+                    return true;
+                }
+
+                if (access === AccessLevels.user && user !== null) {
+                    return true;
+                }
+
+                if (access === AccessLevels.admin && user !== null && user.is_admin === true) {
+                    return true;
+                }
+
+                return false;
+          }
 
           , is_signed_in: function() {
                 return !($rootScope.current_user === null);
@@ -53,9 +85,10 @@ angular.module('OotServices', ['ngResource'])
                   $rootScope.current_user = null;
                   callback['error']();
               })
-          }
-
+            }
         };
+
+        return User;
     }])
     .factory('DailyMenu', ['$resource', function($resource){  // 日々のメニューを扱うサービス
                                                    // ここだけ丁寧に解説
@@ -124,20 +157,23 @@ var app = angular.module('oot', [  // アプリケーションの定義
             , 'OotServices'        // 自分が作ったサービス
             ]);
 
-app.config(['$routeProvider',      // ルーティングの定義
+app.config(['$routeProvider',     // ルーティングの定義
     function($routeProvider) {
         $routeProvider
             .when('/', {                           // AngularJS上でのパス
                   templateUrl: '/views/signin'     // 利用するビュー
                 , controller:  'SigninController'  // 利用するコントローラー
+                , access:      AccessLevels.anon   // アクセス権
             })
             .when('/order', {
                   templateUrl: '/views/order'
                 , controller:  'OrderController'
+                , access:      AccessLevels.user
             })
             .when('/admin/index', {
                   templateUrl: '/views/admin/index'
                 , controller:  'AdminIndexController'
+                , access:      AccessLevels.admin
             })
             .otherwise({                           // その他のパスが指定された場合
                 redirectTo: '/'                    // "/"に飛ぶ
@@ -291,20 +327,34 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
     }]);
 
 
-app.run(function($rootScope, $http, $location, User){
+app.run(["$rootScope", "$location", "$route", "$http", "User",
+ function($rootScope,   $location,   $route,   $http,   User){
+
     // ブラウザのリロード対策
     $rootScope.$on('$locationChangeStart', function(ev, next, current) {
 
         var nextParam = jQuery('<a>', { href: next } )[0];
 
-        // サインイン画面の場合は何もしない
+        // 移動先のパスを確定
+        var next_path = nextParam.hash.substring(1);
         if (nextParam.pathname === "/" && (nextParam.hash === "#/" || nextParam.hash === "")) {
-            return;
+            next_path = "/";
         }
 
-        // すでに認証済みの場合は何もしない
+        // ルートの情報を取得
+        var route = $route.routes[next_path];
+
+        // すでに認証済みの場合
         if (User.is_signed_in()) {
-            return;
+
+            // アクセスチェック
+            if (User.is_accessible(route.access, User.current_user()) === true) {
+                return;
+            } else {
+                alert("ページにアクセスできる権限がありません");
+                ev.preventDefault();
+                return;
+            }
         }
 
         // 現在持っているトークンを使って再認証する
@@ -318,4 +368,4 @@ app.run(function($rootScope, $http, $location, User){
             }
         });
     });
-});
+}]);
