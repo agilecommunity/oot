@@ -5,7 +5,8 @@ GET     /views/*file                controllers.UIViews.at(path = "/ui/app/views
 GET     /ng/*file                   controllers.UIScripts.at(path = "/ui/app", file)
 
 # Api
-GET     /api/daily-menus            controllers.DailyMenus.index()
+GET     /api/daily-menus                       controllers.DailyMenus.index()
+GET     /api/daily-menus/menu_date/:menu_date  controllers.DailyMenus.showByMenuDate(menu_date)
 
 GET     /api/users/me               controllers.Users.showMe()
 

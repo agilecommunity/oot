@@ -36,4 +36,14 @@ public class DailyMenu extends Model {
      * Generic query helper for entity Lunch with id Long
      */
     public static Finder<Long,DailyMenu> find = new Finder<Long,DailyMenu>(Long.class, DailyMenu.class);
+
+    public static DailyMenu find_by(Date menu_date) {
+        List<DailyMenu> candidate = DailyMenu.find.where().eq("menu_date", menu_date).findList();
+
+        if (candidate.size() != 1) {
+            return null;
+        }
+
+        return candidate.get(0);
+    }
 }
