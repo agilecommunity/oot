@@ -23,7 +23,7 @@
                         <tr ng-repeat="checkitem in checklist">
                             <td></td>
                             <td>{{checkitem.user_name}}</td>
-                            <td class="order-status" ng-repeat="order_status in checkitem.order_statuses | orderBy:'menu_id'">{{order_status["ordered"] | checkmark}}</td>
+                            <td class="order-status" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{checkitem.order_statuses[item.menu_item.id].ordered | checkmark}}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -171,14 +171,6 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
             return price;
         };
 
-        DailyOrder.prototype.is_ordered = function(menu_item) {
-            var candidates = this.detail_items.filter(function(detail_item){
-                return detail_item.menu_item.id == menu_item.id;
-            });
-
-            return (candidates.length > 0)
-        };
-
         return DailyOrder;
     }])
     .factory('RouteFinder', ['$route', '$location',  // $routeを見つけ出すサービス
@@ -459,11 +451,11 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 checklist_item['user_name'] = order.local_user.last_name + " " + order.local_user.first_name;
                 var order_statuses = [];
 
-                angular.forEach($scope.daily_menu.detail_items, function(item){
+                angular.forEach(order.detail_items, function(item){
                     var order_status = [];
                     order_status['menu_id'] = item.menu_item.id;
-                    order_status['ordered'] = order.is_ordered(item.menu_item);
-                    order_statuses.push(order_status);
+                    order_status['ordered'] = true;
+                    order_statuses[item.menu_item.id] = order_status;
                 });
                 checklist_item['order_statuses'] = order_statuses;
                 checklist.push(checklist_item);
