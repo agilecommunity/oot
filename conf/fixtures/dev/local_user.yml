@@ -3,7 +3,16 @@
     provider:   userpass
     email:      demo@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
-    first_name: 一般ユーザ
+    first_name: 一般ユーザ1
+    last_name:  アジャコ
+    is_admin:   false
+
+- !!models.LocalUser
+    id:         demo2@foo.baa
+    provider:   userpass
+    email:      demo2@foo.baa
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    first_name: 一般ユーザ2
     last_name:  アジャコ
     is_admin:   false
 
@@ -15,3 +24,4 @@
     first_name: 管理者
     last_name:  アジャコ
     is_admin:   true
+
