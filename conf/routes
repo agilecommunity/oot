@@ -15,6 +15,8 @@ POST    /api/daily-orders/mine      controllers.DailyOrders.createMine()
 DELETE  /api/daily-orders/mine/:id  controllers.DailyOrders.deleteMine(id: Long)
 PUT     /api/daily-orders/mine/:id  controllers.DailyOrders.updateMine(id: Long)
 
+GET     /api/daily-orders/order_date/:order_date  controllers.DailyOrders.showByOrderDate(order_date)
+
 # Root
 GET     /                           controllers.Application.index(path = "")
 

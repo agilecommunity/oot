@@ -120,18 +120,32 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
         return DailyMenu;
     }])
     .factory('DailyOrder', ['$resource', function($resource){  // 日々の注文を扱うサービス
+
+        var transformResponse = function(data, headersGetter){
+            if (data === "") {
+                return [];
+            }
+
+            // 日付が数字でくるとDateに変換されないので、こちらで変換する
+            var list = angular.fromJson(data);
+            angular.forEach(list, function(item) {
+                item.order_date = new Date(item.order_date);
+            });
+            return list;
+        };
+
         var DailyOrder = $resource('/api/daily-orders/mine/:id', {id: "@id"}, {
-            query: {
+            getByOrderDate: {
+                method: "GET"
+              , url: "/api/daily-orders/order_date/:order_date"
+              , params: {order_date: "@order_date"}
+              , isArray: true
+              , transformResponse: transformResponse
+            }
+            , query: {
                 method: "GET"
               , isArray: true
-              , transformResponse: function(data, headersGetter){
-                  // 日付が数字でくるとDateに変換されないので、こちらで変換する
-                  var list = angular.fromJson(data);
-                  angular.forEach(list, function(item) {
-                      item.order_date = new Date(item.order_date);
-                  });
-                  return list;
-              }
+              , transformResponse: transformResponse
             }
             , create: {                // 新規作成
                   method: "POST"
@@ -153,7 +167,15 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
                 price += item.menu_item.price_on_order;
             });
             return price;
-        }
+        };
+
+        DailyOrder.prototype.is_ordered = function(menu_item) {
+            var candidates = this.detail_items.filter(function(detail_item){
+                return detail_item.menu_item.id == menu_item.id;
+            });
+
+            return (candidates.length > 0)
+        };
 
         return DailyOrder;
     }])
@@ -281,6 +303,11 @@ app.filter(                                        // フィルタの定義。�
             });
             return target;
         }
+    })
+    .filter('checkmark', function() {
+        return function(input) {
+            return input ? '○' : '';
+        };
     });
 
 app.controller('SigninController', ['$scope', '$location', 'User', function($scope, $location, User) {
@@ -418,11 +445,45 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
     }])
     .controller('AdminChecklistController', ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyMenu', 'DailyOrder'
                                    , function($scope,   $location,   $routeParams,   $filter,   User,   DailyMenu,   DailyOrder) {
+
+        var create_checklist = function() {
+
+            var checklist = [];
+
+            angular.forEach($scope.daily_orders, function(order){
+                var checklist_item = [];
+                checklist_item['user_name'] = order.local_user.last_name + " " + order.local_user.first_name;
+                var order_statuses = [];
+                angular.forEach($scope.daily_menu.detail_items, function(item){
+                    var order_status = [];
+                    order_status['menu_id'] = item.menu_item.id;
+                    order_status['ordered'] = order.is_ordered(item.menu_item);
+                    order_statuses.push(order_status);
+                });
+                checklist_item['order_statuses'] = order_statuses;
+                checklist.push(checklist_item);
+            });
+
+            $scope.checklist = checklist;
+        };
+
+
         $scope.menu_date = Date.parse($routeParams["menu_date"]);
 
-        $scope.daily_menu = DailyMenu.getByMenuDate({menu_date: $filter('date')($scope.menu_date, 'yyyy-MM-dd')}
+        var param_date = $filter('date')($scope.menu_date, 'yyyy-MM-dd');
+        $scope.daily_menu = DailyMenu.getByMenuDate({menu_date: param_date}
             , function(response){
-
+                $scope.daily_orders = DailyOrder.getByOrderDate({order_date: param_date}
+                    , function(response) {
+                        create_checklist();
+                    }
+                    , function(response) {
+                        if (response.status === 404) {
+                            return;
+                        } else {
+                            alert("注文のデータが取得できませんでした。");
+                        }
+                    });
             }
             , function(response){
                 if (response.status === 404) {

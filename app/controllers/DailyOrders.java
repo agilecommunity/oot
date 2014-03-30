@@ -1,5 +1,7 @@
 package controllers;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import models.DailyOrder;
@@ -10,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
+import utils.controller.ParameterConverter;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,6 +39,28 @@ public class DailyOrders extends Controller {
         List<DailyOrder> orders = query.findList();
 
         return ok(Json.toJson(orders));
+    }
+
+    @RequireCSRFCheck4Ng()
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result showByOrderDate(String order_date_str) {
+
+        Date order_date;
+        try {
+            order_date = ParameterConverter.convertDateFrom(order_date_str);
+        } catch (ParseException e) {
+            logger.debug(String.format("showByOrderDate parse error order_date_str: %s", order_date_str));
+            return badRequest();
+        }
+
+        List<DailyOrder> list = DailyOrder.find_by(order_date);
+
+        if (list == null || list.size() == 0) {
+            logger.debug(String.format("showByOrderDate order not found order_date_str:%s", order_date_str));
+            return notFound();
+        }
+
+        return ok(Json.toJson(list));
     }
 
     @RequireCSRFCheck4Ng()

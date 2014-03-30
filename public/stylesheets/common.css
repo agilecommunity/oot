@@ -11,6 +11,8 @@ body{
     border: none;
 }
 
+th.count,
+th.price,
 td.count,
 td.price {
     text-align: right;
@@ -263,4 +265,11 @@ td.price {
 }
 .checklist .item-name {
     border-top: none;
+    border-bottom: none;
+}
+.checklist .price {
+    border-top: none;
+}
+.checklist .order-status {
+    text-align: center;
 }

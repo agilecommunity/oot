@@ -75,4 +75,8 @@ public class DailyOrder extends Model {
 
         return candidate.get(0);
     }
+
+    public static List<DailyOrder> find_by(Date order_date) {
+        return DailyOrder.find.where().eq("order_date", order_date).findList();
+    }
 }

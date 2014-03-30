@@ -4,18 +4,28 @@
                 <p class="no-data">メニューにお弁当がありません。</p>
             </div>
 
-            <div ng-show="daily_menu.detail_items != null && daily_menu.detail_items.length >= 0">
+            <div ng-show="daily_menu.detail_items != null && daily_menu.detail_items.length > 0">
                 <table class="table table-bordered table-condensed checklist">
                     <thead>
                         <tr>
-                            <th rowspan=2>チェック</th>
-                            <th rowspan=2>氏名</th>
-                            <th class="shop-name" ng-repeat="item in daily_menu.detail_items">{{item.menu_item.shop_name}}</th>
+                            <th rowspan=3>チェック</th>
+                            <th rowspan=3>氏名</th>
+                            <th class="shop-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.shop_name}}</th>
                         </tr>
                         <tr>
-                            <th class="item-name" ng-repeat="item in daily_menu.detail_items">{{item.menu_item.name}}</th>
+                            <th class="item-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.name}}</th>
+                        </tr>
+                        <tr>
+                            <th class="price" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.price_on_order}}円</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr ng-repeat="checkitem in checklist">
+                            <td></td>
+                            <td>{{checkitem.user_name}}</td>
+                            <td class="order-status" ng-repeat="order_status in checkitem.order_statuses | orderBy:'menu_id'">{{order_status["ordered"] | checkmark}}</td>
+                        </tr>
+                    </tbody>
                 </table>
              </div>
         </div>

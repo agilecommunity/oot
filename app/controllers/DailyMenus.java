@@ -1,8 +1,6 @@
 package controllers;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +10,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.java.SecureSocial;
+import utils.controller.ParameterConverter;
 import filters.RequireCSRFCheck4Ng;
 
 public class DailyMenus extends Controller {
@@ -29,10 +28,9 @@ public class DailyMenus extends Controller {
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByMenuDate(String menu_date_str) {
 
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date menu_date;
         try {
-            menu_date = format.parse(menu_date_str);
+            menu_date = ParameterConverter.convertDateFrom(menu_date_str);
         } catch (ParseException e) {
             logger.debug(String.format("showByMenuDate parse error menu_date_str:%s", menu_date_str));
             return badRequest();
