@@ -11,6 +11,11 @@ body{
     border: none;
 }
 
+td.count,
+td.price {
+    text-align: right;
+}
+
 .clear {
     clear: both;
 }
@@ -152,7 +157,7 @@ body{
     text-align: right;
 }
 
-.button{
+.button {
     background-color: #92D13D;
 
     background: -moz-linear-gradient(top, #92D13D, #70af1b);
@@ -166,7 +171,6 @@ body{
     border-radius: 5px;
     cursor: pointer;
 }
-
 
 .other-page {
     margin: 1em;
@@ -190,13 +194,6 @@ body{
     margin: 1em;
     text-align: center;
 }
-.login-form input{
-    font-size: 1.5em;
-    width: 600px;
-}
-.login-form .button{
-    margin: 1em auto 0px;
-}
 
 /*
    172   bde38a
@@ -212,35 +209,27 @@ body{
 .order-management .day {
     margin: 0.5em;
 }
-.order-management .date {
-    float: left;
-}
 
 .order-management .order-summary {
+    width: 350px;
+    margin-left:10px;
     float: left;
-}
-.order-management .order-summary table{
-    border-collapse: collapse;
 }
 .order-management .order-summary th,
 .order-management .order-summary td {
-    border: solid 1px #DDDDDD;
     padding: 0.5em;
-}
-.order-management .order-summary .count,
-.order-management .order-summary .price {
-    text-align: right;
 }
 
 .order-management .commands {
-    width: 450px;
     float: left;
-
+    margin-left:10px;
+    padding-left:0px;
+    width: 570px;
 }
-.order-management .button {
+.order-management .commands li {
     float: left;
     margin: 0.5em;
-    width: 100px;
+    width: 160px;
     list-style-type: none;
 }
 

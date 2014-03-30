@@ -208,7 +208,7 @@ app.filter(                                        // フィルタの定義。�
 
 app.controller('SigninController', ['$scope', '$location', 'User', function($scope, $location, User) {
         $scope.signin = function() {
-            User.signin($scope.user.email, $scope.user.password, {
+            User.signin($scope.user_email, $scope.user_password, {
                   success: function(){
                     $location.path("/order");
                 }
@@ -323,6 +323,15 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
     }])
     .controller('AdminIndexController', ['$scope', '$location', 'User', 'DailyMenu', 'DailyOrder'
                                , function($scope,   $location,   User,   DailyMenu,   DailyOrder) {
+
+        $scope.daily_menus = DailyMenu.query({}
+        , function(response){ // 成功時
+            // 何もしない
+        }
+        , function(response){   // 失敗時
+            alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。");
+            $location.path("/");
+        });
 
     }]);
 
