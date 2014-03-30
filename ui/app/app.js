@@ -111,6 +111,12 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
                             return list;
                         }
                       }
+                    , queryByStatus: {
+                          method: "GET"
+                        , url: "/api/daily-menus/status/:status"
+                        , params: {status: "@status"}
+                        , isArray: true
+                    }
                     , getByMenuDate: {
                           method: "GET"
                         , url: "/api/daily-menus/menu_date/:menu_date"
@@ -322,7 +328,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
     .controller('OrderController', ['$scope', '$modal', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder'
                                  , function($scope, $modal, $location, $filter, User, DailyMenu, DailyOrder) {
 
-        $scope.daily_menus = DailyMenu.query({}
+        $scope.daily_menus = DailyMenu.queryByStatus({status: "open"}
             , function(response){ // 成功時
 
                 $scope.daily_orders = DailyOrder.query({}

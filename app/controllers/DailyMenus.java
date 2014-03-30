@@ -26,6 +26,13 @@ public class DailyMenus extends Controller {
 
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result indexByStatus(String status) {
+        List<DailyMenu> menus = DailyMenu.find.where().eq("status", status).findList();
+        return ok(Json.toJson(menus));
+    }
+
+    @RequireCSRFCheck4Ng()
+    @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByMenuDate(String menu_date_str) {
 
         Date menu_date;
