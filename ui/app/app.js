@@ -20,7 +20,7 @@ var AccessLevels = {  // ページのアクセスレベル
     admin:  UserRoles.admin    // 100
 };
 
-angular.module('OotServices', ['ngResource'])
+angular.module('OotServices', ['ngResource', 'ngRoute'])
     .factory('User', ['$http', '$rootScope', function($http, $rootScope) {  // ユーザ認証を行うサービス
 
         $rootScope.current_user = null;
@@ -147,6 +147,68 @@ angular.module('OotServices', ['ngResource'])
         }
 
         return DailyOrder;
+    }])
+    .factory('RouteFinder', ['$route', '$location',  // $routeを見つけ出すサービス
+                      function($route,   $location){
+        // angular-route.jsからコピー
+        var inherit = function (parent, extra) {
+            return angular.extend(new (angular.extend(function() {}, {prototype:parent}))(), extra);
+        };
+
+        /**
+         * @param on {string} current url
+         * @param route {Object} route regexp to match the url against
+         * @return {?Object}
+         *
+         * @description
+         * Check if the route matches the current url.
+         *
+         * Inspired by match in
+         * visionmedia/express/lib/router/router.js.
+         */
+        var switchRouteMatcher = function(on, route) {
+          var keys = route.keys,
+              params = {};
+
+          if (!route.regexp) return null;
+
+          var m = route.regexp.exec(on);
+          if (!m) return null;
+
+          for (var i = 1, len = m.length; i < len; ++i) {
+            var key = keys[i - 1];
+
+            var val = 'string' == typeof m[i]
+                  ? decodeURIComponent(m[i])
+                  : m[i];
+
+            if (key && val) {
+              params[key.name] = val;
+            }
+          }
+          return params;
+        };
+
+        return {
+            /**
+             * @returns {Object} the current active route, by matching it against the URL
+             */
+            parseRoute : function() {
+              // Match a route
+              var params, match;
+              angular.forEach($route.routes, function(route, path) {
+                if (!match && (params = switchRouteMatcher($location.path(), route))) {
+                  match = inherit(route, {
+                    params: angular.extend({}, $location.search(), params),
+                    pathParams: params});
+                  match.$$route = route;
+                }
+              });
+              // No route matched; fallback to "otherwise" route
+              return match || routes[null] && inherit(routes[null], {params: {}, pathParams:{}});
+            }
+        };
+
     }]);
 
 
@@ -174,6 +236,12 @@ app.config(['$routeProvider',     // ルーティングの定義
                   templateUrl: '/views/admin/index'
                 , controller:  'AdminIndexController'
                 , access:      AccessLevels.admin
+            })
+            .when('/admin/checklist/menu_date/:menu_date', {
+                  templateUrl: '/views/admin/checklist'
+                , controller:  'AdminChecklistController'
+                , access:      AccessLevels.admin
+                , reloadOnSearch: false
             })
             .otherwise({                           // その他のパスが指定された場合
                 redirectTo: '/'                    // "/"に飛ぶ
@@ -321,8 +389,8 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
         $scope.$watchCollection("daily_orders", applyOrdered);
 
     }])
-    .controller('AdminIndexController', ['$scope', '$location', 'User', 'DailyMenu', 'DailyOrder'
-                               , function($scope,   $location,   User,   DailyMenu,   DailyOrder) {
+    .controller('AdminIndexController', ['$scope', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder'
+                               , function($scope,   $location,   $filter,   User,   DailyMenu,   DailyOrder) {
 
         $scope.daily_menus = DailyMenu.query({}
         , function(response){ // 成功時
@@ -333,25 +401,27 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             $location.path("/");
         });
 
+        $scope.showChecklist = function(daily_menu) {
+            $location
+                .path("/admin/checklist/menu_date/" + $filter('date')(daily_menu.menu_date, 'yyyy-MM-dd'));
+        };
+
+    }])
+    .controller('AdminChecklistController', ['$scope', '$location', '$routeParams', 'User', 'DailyMenu', 'DailyOrder'
+                                   , function($scope,   $location,   $routeParams,   User,   DailyMenu,   DailyOrder) {
+        $scope.menu_date = Date.parse($routeParams["menu_date"]);
+
     }]);
 
 
-app.run(["$rootScope", "$location", "$route", "$http", "User",
- function($rootScope,   $location,   $route,   $http,   User){
+app.run(["$rootScope", "$location", "User", "RouteFinder",
+ function($rootScope,   $location,   User,   RouteFinder){
 
     // ブラウザのリロード対策
     $rootScope.$on('$locationChangeStart', function(ev, next, current) {
 
-        var nextParam = jQuery('<a>', { href: next } )[0];
-
-        // 移動先のパスを確定
-        var next_path = nextParam.hash.substring(1);
-        if (nextParam.pathname === "/" && (nextParam.hash === "#/" || nextParam.hash === "")) {
-            next_path = "/";
-        }
-
         // ルートの情報を取得
-        var route = $route.routes[next_path];
+        var route = RouteFinder.parseRoute().$$route;
 
         // すでに認証済みの場合
         if (User.is_signed_in()) {
