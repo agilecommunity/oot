@@ -31,10 +31,12 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
             }
 
           , is_accessible: function(access, user) {
+                // 誰でもアクセス可能な場合は、true
                 if (access === AccessLevels.anon || access === AccessLevels.public) {
                     return true;
                 }
 
+                // サインインが必要な場合は、userオブジェクトがnullでなければOK
                 if (access === AccessLevels.user && user !== null) {
                     return true;
                 }
@@ -180,8 +182,7 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
         return DailyOrder;
     }])
     .factory('RouteFinder', ['$route', '$location',  // $routeを見つけ出すサービス
-                      function($route,   $location){
-        // angular-route.jsからコピー
+                     function($route,   $location){  // angular-route.jsからコピーしたもの
         var inherit = function (parent, extra) {
             return angular.extend(new (angular.extend(function() {}, {prototype:parent}))(), extra);
         };
@@ -446,14 +447,18 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
     .controller('AdminChecklistController', ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyMenu', 'DailyOrder'
                                    , function($scope,   $location,   $routeParams,   $filter,   User,   DailyMenu,   DailyOrder) {
 
+        // チェックリストに使うデータの作成
         var create_checklist = function() {
 
             var checklist = [];
 
+            // その日注文しているユーザごとに姓名と、注文状況を調査する
             angular.forEach($scope.daily_orders, function(order){
+
                 var checklist_item = [];
                 checklist_item['user_name'] = order.local_user.last_name + " " + order.local_user.first_name;
                 var order_statuses = [];
+
                 angular.forEach($scope.daily_menu.detail_items, function(item){
                     var order_status = [];
                     order_status['menu_id'] = item.menu_item.id;
@@ -466,7 +471,6 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
 
             $scope.checklist = checklist;
         };
-
 
         $scope.menu_date = Date.parse($routeParams["menu_date"]);
 
