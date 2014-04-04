@@ -1,5 +1,67 @@
 'use strict';
 
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+if (!Array.prototype.some) {
+    Array.prototype.some = function(fun /*, thisArg */)
+    {
+        'use strict';
+
+        if (this === void 0 || this === null)
+            throw new TypeError();
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (typeof fun !== 'function')
+            throw new TypeError();
+
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+        for (var i = 0; i < len; i++)
+        {
+            if (i in t && fun.call(thisArg, t[i], i, t))
+                return true;
+        }
+
+        return false;
+    };
+}
+
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+if (!Array.prototype.filter)
+{
+    Array.prototype.filter = function(fun /*, thisArg */)
+    {
+        "use strict";
+
+        if (this === void 0 || this === null)
+            throw new TypeError();
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (typeof fun !== "function")
+            throw new TypeError();
+
+        var res = [];
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+        for (var i = 0; i < len; i++)
+        {
+            if (i in t)
+            {
+                var val = t[i];
+
+                // NOTE: Technically this should Object.defineProperty at
+                //       the next index, as push can be affected by
+                //       properties on Object.prototype and Array.prototype.
+                //       But that method's new, and collisions should be
+                //       rare, so use the more-compatible alternative.
+                if (fun.call(thisArg, val, i, t))
+                    res.push(val);
+            }
+        }
+
+        return res;
+    };
+}
+
 var transform = function(data){
     return jQuery.param(data);
 }
@@ -98,7 +160,7 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
             // 日付が数字でくるとDateに変換されないので、こちらで変換する
             var list = angular.fromJson(data);
             angular.forEach(list, function(item) {
-                item.menu_date = new Date(item.menu_date);
+                item.menu_date = new moment(item.menu_date);
             });
             return list;
         };
@@ -109,9 +171,9 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
                 , {id: "@id"}                          // :idを@idにマッピングする。@はオブジェクトのプロパティを意味するので、
                 , {                                    // DailyMenuオブジェクトのプロパティ"id"の値が使われる
                       query: {                         // queryはオブジェクト全件を取り出す
-                          method: "GET"
-                        , isArray: true                    // 結果が配列になる場合は必ずtrueにする(でないと、エラーが発生する)
-                        , transformResponse: transformResponse
+                            method: "GET", isArray: true                    // 結果が配列になる場合は必ずtrueにする(でないと、エラーが発生する)
+                          , transformResponse: transformResponse
+                          , cache: false
                       }
                     , queryByStatus: {
                           method: "GET"
@@ -125,6 +187,7 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
                         , url: "/api/daily-menus/menu_date/:menu_date"
                         , params: {menu_date: "@menu_date"}
                         , isArray: false
+                        , cache: false
                       }
                 });
 
@@ -140,23 +203,25 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
             // 日付が数字でくるとDateに変換されないので、こちらで変換する
             var list = angular.fromJson(data);
             angular.forEach(list, function(item) {
-                item.order_date = new Date(item.order_date);
+                item.order_date = moment(item.order_date);
             });
             return list;
         };
 
         var DailyOrder = $resource('/api/daily-orders/mine/:id', {id: "@id"}, {
             getByOrderDate: {
-                method: "GET"
-              , url: "/api/daily-orders/order_date/:order_date"
-              , params: {order_date: "@order_date"}
-              , isArray: true
-              , transformResponse: transformResponse
+                  method: "GET"
+                , url: "/api/daily-orders/order_date/:order_date"
+                , params: {order_date: "@order_date"}
+                , isArray: true
+                , transformResponse: transformResponse
+                , cache: false
             }
             , query: {
-                method: "GET"
-              , isArray: true
-              , transformResponse: transformResponse
+                  method: "GET"
+                , isArray: true
+                , transformResponse: transformResponse
+                , cache: false
             }
             , create: {                // 新規作成
                   method: "POST"
@@ -166,7 +231,7 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
                 , isArray: false
                 , transformRequest: function(data, headersGetter){
                     // 日付を数値に変換する
-                    data.order_date = data.order_date.getTime();
+                    data.order_date = data.order_date.unix() * 1000;
                     return angular.toJson(data);
                 }
             }
@@ -244,7 +309,6 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
 
     }]);
 
-
 var app = angular.module('oot', [  // アプリケーションの定義
               'ngRoute'            // 依存するサービスを指定する
             , 'ngResource'
@@ -252,8 +316,8 @@ var app = angular.module('oot', [  // アプリケーションの定義
             , 'OotServices'        // 自分が作ったサービス
             ]);
 
-app.config(['$routeProvider',     // ルーティングの定義
-    function($routeProvider) {
+app.config(['$routeProvider', '$httpProvider',     // ルーティングの定義
+    function($routeProvider,      $httpProvider) {
         $routeProvider
             .when('/', {                           // AngularJS上でのパス
                   templateUrl: '/views/signin'     // 利用するビュー
@@ -366,10 +430,9 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
                 if (new_state === true) {
                     order.detail_items.push({menu_item: daily_menu_item.menu_item});
                 } else {
-                    var work = order.detail_items.filter(function(item, index){
+                    order.detail_items = order.detail_items.filter(function (item, index) {
                         return (item.menu_item.id !== daily_menu_item.menu_item.id);
                     });
-                    order.detail_items = work;
                 }
 
                 // あった場合は更新する
@@ -381,7 +444,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             } else {
                 // ない場合は新しく作る
                 var new_order = new DailyOrder();
-                new_order.order_date = daily_menu.menu_date.getTime();
+                new_order.order_date = daily_menu.menu_date.unix() * 1000;
                 new_order.local_user = User.current_user();
                 new_order.detail_items = [{menu_item: daily_menu_item.menu_item}];
 
@@ -445,7 +508,7 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
 
         $scope.showChecklist = function(daily_menu) {
             $location
-                .path("/admin/checklist/menu_date/" + $filter('date')(daily_menu.menu_date, 'yyyy-MM-dd'));
+                .path("/admin/checklist/menu_date/" + daily_menu.menu_date.format('YYYY-MM-DD'));
         };
 
     }])
@@ -477,9 +540,9 @@ app.controller('SigninController', ['$scope', '$location', 'User', function($sco
             $scope.checklist = checklist;
         };
 
-        $scope.menu_date = Date.parse($routeParams["menu_date"]);
+        $scope.menu_date = moment($routeParams["menu_date"]);
 
-        var param_date = $filter('date')($scope.menu_date, 'yyyy-MM-dd');
+        var param_date = $scope.menu_date.format('YYYY-MM-DD');
         $scope.daily_menu = DailyMenu.getByMenuDate({menu_date: param_date}
             , function(response){
                 $scope.daily_orders = DailyOrder.getByOrderDate({order_date: param_date}

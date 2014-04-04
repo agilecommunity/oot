@@ -273,3 +273,8 @@ td.price {
 .checklist .order-status {
     text-align: center;
 }
+
+// AngularJS—p
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}

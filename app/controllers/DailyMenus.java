@@ -20,20 +20,28 @@ public class DailyMenus extends Controller {
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result index() {
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
         List<DailyMenu> menus = DailyMenu.find.findList();
+
         return ok(Json.toJson(menus));
     }
 
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result indexByStatus(String status) {
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
         List<DailyMenu> menus = DailyMenu.find.where().eq("status", status).findList();
+
         return ok(Json.toJson(menus));
     }
 
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByMenuDate(String menu_date_str) {
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
 
         Date menu_date;
         try {

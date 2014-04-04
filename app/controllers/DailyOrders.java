@@ -27,6 +27,9 @@ public class DailyOrders extends Controller {
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showMine() {
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
@@ -44,6 +47,8 @@ public class DailyOrders extends Controller {
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByOrderDate(String order_date_str) {
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
 
         Date order_date;
         try {
@@ -69,6 +74,8 @@ public class DailyOrders extends Controller {
     public static Result createMine() {
 
         logger.debug("create");
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
 
         JsonNode json = request().body().asJson();
 
@@ -114,6 +121,8 @@ public class DailyOrders extends Controller {
 
         logger.debug(String.format("deleteMine id: %s", id));
 
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
         DailyOrder order = DailyOrder.find.byId(id);
 
         if (order == null) {
@@ -139,6 +148,8 @@ public class DailyOrders extends Controller {
     public static Result updateMine(Long id) {
 
         logger.debug(String.format("update id: %s", id));
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
 
         if (DailyOrder.find.byId(id) == null) {
             logger.debug("update object doesnt exist");

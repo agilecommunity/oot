@@ -3,7 +3,7 @@
 
             <div class="order-management">
                 <div class="day" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
-                    <h3>{{daily_menu.menu_date | date: 'yyyy/MM/dd (EEE)'}}</h3>
+                    <h3>{{daily_menu.menu_date.format('YYYY/MM/DD (ddd)')}}</h3>
                      <table class="table table-bordered order-summary">
                          <thead>
                              <tr>

@@ -1,5 +1,5 @@
     <div class="content">
-        <div class="content-header">チェック表 {{menu_date | date: 'yyyy/MM/dd (EEE)'}}</div>
+        <div class="content-header">チェック表 {{menu_date.format('YYYY/MM/DD (ddd)')}}</div>
             <div ng-show="daily_menu.detail_items == null || daily_menu.detail_items.length === 0">
                 <p class="no-data">メニューにお弁当がありません。</p>
             </div>

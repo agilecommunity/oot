@@ -18,6 +18,8 @@ public class Users extends Controller {
     @RequireCSRFCheck4Ng()
     @SecureSocial.UserAwareAction
     public static Result showMe() {
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         if (user == null) {
