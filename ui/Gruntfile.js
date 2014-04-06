@@ -28,6 +28,11 @@ module.exports = function (grunt) {
                     , '<%= conf.components %>/angular-resource/angular-resource.min.js'
                     , '<%= conf.components %>/angular-route/angular-route.min.js'
                 ]
+            }, ieshim: {
+                dest: '<%= conf.dist.javascripts %>/ie-shim.min.js', src: [
+                    '<%= conf.components %>/json2/json2.js'
+                    , '<%= conf.components %>/es5-shim/es5-shim.min.js'
+                ]
             }
         }, copy: {
             javascripts: {
@@ -35,7 +40,7 @@ module.exports = function (grunt) {
                 , flatten: true
                 , src: [
                     '<%= conf.components %>/bootstrap/dist/js/bootstrap.min.js'
-                    , '<%= conf.components %>/jQuery/jquery.min.js'
+                    , '<%= conf.components %>/jquery/jquery.min.js'
                     , '<%= conf.components %>/moment/min/moment-with-langs.min.js'
                     , '<%= conf.javascripts %>/app.js'
                 ], expand: true

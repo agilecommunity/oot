@@ -20,13 +20,11 @@
         <div class="user-info" ng-cloak>
         {{$root.current_user.last_name}} {{$root.current_user.first_name}}
         </div>
-        <!--[if lte IE 7]>
-            <script src="/path/to/json2.js"></script>
-        <![endif]-->
         <script src="@routes.Assets.at("javascripts/moment-with-langs.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/angular.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/jquery.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/app.js")"></script>
+        <script src="@routes.Assets.at("javascripts/ie-shim.min.js")"></script>
     </body>
 </html>
