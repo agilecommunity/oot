@@ -23,11 +23,12 @@ module.exports = function (grunt) {
             options: {
                 separator: ';'
             }, angular: {
-                src: [
+                dest: '<%= conf.dist.javascripts %>/angular.min.js'
+                , src: [
                     '<%= conf.components %>/angular/angular.min.js'
                     , '<%= conf.components %>/angular-resource/angular-resource.min.js'
                     , '<%= conf.components %>/angular-route/angular-route.min.js'
-                ], dest: '<%= conf.dist.javascripts %>/angular.min.js'
+                ]
             }
         }
     });
