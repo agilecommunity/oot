@@ -2,7 +2,6 @@
 
 GET     /assets/*file               controllers.Assets.at(path = "/public", file)
 GET     /views/*file                controllers.UIViews.at(path = "/ui/app/views", file)
-GET     /ng/*file                   controllers.UIScripts.at(path = "/ui/app", file)
 
 # Api
 GET     /api/daily-menus                       controllers.DailyMenus.index()
