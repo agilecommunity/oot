@@ -275,7 +275,6 @@ angular.module('OotServices', ['ngResource', 'ngRoute'])
 var app = angular.module('oot', [  // アプリケーションの定義
     'ngRoute'            // 依存するサービスを指定する
     , 'ngResource'
-    , 'ui.bootstrap'
     , 'OotServices'        // 自分が作ったサービス
 ]);
 
@@ -347,8 +346,8 @@ app.controller('SigninController', ['$scope', '$location', 'User', function ($sc
         });
     };
 }])
-    .controller('OrderController', ['$scope', '$modal', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder'
-        , function ($scope, $modal, $location, $filter, User, DailyMenu, DailyOrder) {
+    .controller('OrderController', ['$scope', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder'
+        , function ($scope, $location, $filter, User, DailyMenu, DailyOrder) {
 
             $scope.daily_menus = DailyMenu.queryByStatus({status: "open"}
                 , function (response) { // 成功時
@@ -407,12 +406,6 @@ app.controller('SigninController', ['$scope', '$location', 'User', function ($sc
 
                     DailyOrder.create({}, [new_order], reload_orders);
                 }
-            };
-
-            $scope.showSideDishes = function () { // イベントハンドラ
-                $modal.open({
-                    templateUrl: 'views/side-dishes'
-                });
             };
 
             $scope.totalPriceOfTheDay = function (target_date) {
