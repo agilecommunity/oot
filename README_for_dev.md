@@ -38,7 +38,7 @@ Windows Installerを選べばよし。入れると一緒にnpmも入る。
 
 ## 設計
 
-## 命名規則
+### 命名規則
 
 クラス名   : CamelCase
 メソッド名 : lowerCamelCase
