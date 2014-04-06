@@ -14,3 +14,4 @@ RUNNING_PID
 .settings
 *.db
 README.html
+*/**/bower_components
