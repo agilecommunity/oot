@@ -36,7 +36,7 @@ Windows Installerを選べばよし。入れると一緒にnpmも入る。
 
 でインストール完了。
 
-## 設計
+## 規則
 
 ### 命名規則
 
@@ -50,7 +50,7 @@ Windows Installerを選べばよし。入れると一緒にnpmも入る。
 API名      : spinal-case
 
 
-## 実装
+## 設計, 実装
 
 ### 認証
 
