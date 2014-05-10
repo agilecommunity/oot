@@ -15,9 +15,7 @@
 #### msysgit
 
 [Downloads - msysgit - Git for Windows - Google Project Hosting](http://code.google.com/p/msysgit/downloads/list)  
-msysGit-fullinstall-x.x.x-preview... を選んでおけば大丈夫そう。  
-Git-x.x.x-preview... を選んでも良さそうだが、そちらは試したことがない。
-
+Git-x.x.x-preview... を選んで大丈夫。
 
 #### Play Framework
 
