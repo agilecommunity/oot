@@ -50,7 +50,7 @@ public class DailyOrdersTest extends WithApplication {
      public void createMineは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("[");
-         builder.append("{ \"local_user\":{\"id\": \"demo@foo.baa\"}");
+         builder.append("{ \"local_user\":{\"id\": \"steve@foo.baa\"}");
          builder.append(", \"order_date\":1391871600000");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
@@ -62,8 +62,8 @@ public class DailyOrdersTest extends WithApplication {
 
          assertThat(status(result)).isEqualTo(OK);
 
-         DailyOrder order = DailyOrder.find_by(new Date(1391871600000L), "demo@foo.baa");
-         assertThat(order.local_user.first_name).isEqualTo("アジャコ");
+         DailyOrder order = DailyOrder.find_by(new Date(1391871600000L), "steve@foo.baa");
+         assertThat(order.local_user.first_name).isEqualTo("スティーブ");
 
          assertThat(order.detail_items.size()).isEqualTo(1);
          DailyOrderItem order_item = order.detail_items.get(0);
@@ -98,7 +98,7 @@ public class DailyOrdersTest extends WithApplication {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"id\":1");
          builder.append(", \"order_date\":1391958000000");
-         builder.append(", \"local_user\":{\"id\": \"demo@foo.baa\"}");
+         builder.append(", \"local_user\":{\"id\": \"steve@foo.baa\"}");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
 
@@ -109,7 +109,7 @@ public class DailyOrdersTest extends WithApplication {
          assertThat(status(result)).isEqualTo(OK);
 
          DailyOrder order = DailyOrder.find.byId(1L);
-         assertThat(order.local_user.first_name).isEqualTo("アジャコ");
+         assertThat(order.local_user.first_name).isEqualTo("スティーブ");
 
          assertThat(order.detail_items.size()).isEqualTo(1);
          DailyOrderItem order_item = order.detail_items.get(0);
@@ -119,7 +119,7 @@ public class DailyOrdersTest extends WithApplication {
      private Result callCreateMine(String jsonString) {
 
          JsValue json = Json.parse(jsonString);
-         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
+         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.baa");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(POST, "/api/daily-orders/mine")
@@ -133,7 +133,7 @@ public class DailyOrdersTest extends WithApplication {
 
      private Result callDeleteMine(Long id) {
 
-         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
+         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.baa");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(DELETE, String.format("/api/daily-orders/mine/%d", id))
@@ -147,7 +147,7 @@ public class DailyOrdersTest extends WithApplication {
      private Result callUpdateMine(Long id, String jsonString) {
 
          JsValue json = Json.parse(jsonString);
-         Cookie fake_cookie = utils.Utils.fakeCookie("demo@foo.baa");
+         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.baa");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(PUT, String.format("/api/daily-orders/mine/%d", id))
@@ -162,13 +162,13 @@ public class DailyOrdersTest extends WithApplication {
      private Object[] illegal_json_data() {
          return JUnitParamsRunner.$(
                    JUnitParamsRunner.$("[{ }]") // 空のリクエスト
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"} }]") // 必須項目(order_date)なし
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"steve@foo.baa\"} }]") // 必須項目(order_date)なし
                  , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")             // 必須項目(local_user)なし
                  , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":1391871600000 }]") // 存在しないユーザ
                  , JUnitParamsRunner.$("[{ \"order_date\":\"aaa\" }]") // 存在しない日付
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"demo@foo.baa\"}, \"order_date\":1391958000000 }]") // 登録済みの注文
+                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"steve@foo.baa\"}, \"order_date\":1391958000000 }]") // 登録済みの注文
                  , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"bob@foo.baa\"}, \"order_date\":1391871600000 }]") // ユーザが異なる
-                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"demo@foo.baa\"}, \"order_date\":1391871600000 }") // 配列でない
+                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"steve@foo.baa\"}, \"order_date\":1391871600000 }") // 配列でない
                  );
 
      }

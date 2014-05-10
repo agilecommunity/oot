@@ -1,9 +1,9 @@
 - !!models.LocalUser
-    id:         demo@foo.baa
+    id:         steve@foo.baa
     provider:   userpass
-    email:      demo@foo.baa
+    email:      steve@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
-    first_name: アジャコ
+    first_name: スティーブ
     last_name:  アジャイル
     is_admin:   false
 
@@ -15,3 +15,13 @@
     first_name: ボブ
     last_name:  アジャイル
     is_admin:   false
+
+- !!models.LocalUser
+    id:         melissa@foo.baa
+    provider:   userpass
+    email:      melissa@foo.baa
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    first_name: メリッサ
+    last_name:  アジャコ
+    is_admin:   true
+

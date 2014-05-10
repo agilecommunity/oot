@@ -1,5 +1,5 @@
 - !!models.DailyOrder
     order_date:  2014-02-10
     local_user:  !!models.LocalUser
-                  id: demo@foo.baa
+                  id: steve@foo.baa
 

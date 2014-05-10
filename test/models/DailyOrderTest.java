@@ -37,7 +37,7 @@ public class DailyOrderTest extends WithApplication {
 
 
          assertThat(DailyOrder.find.byId(1L).local_user).isNotNull();
-         assertThat(DailyOrder.find.byId(1L).local_user.id).isEqualTo("demo@foo.baa");
-         assertThat(DailyOrder.find.byId(1L).local_user.first_name).isEqualTo("アジャコ");
+         assertThat(DailyOrder.find.byId(1L).local_user.id).isEqualTo("steve@foo.baa");
+         assertThat(DailyOrder.find.byId(1L).local_user.first_name).isEqualTo("スティーブ");
     }
 }
