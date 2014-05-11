@@ -1,5 +1,5 @@
-define(['app'],
-function (app) {
+define(['angular'],
+function (angular) {
     "use strict";
 
     var filters = angular.module('MyFilters', []);
