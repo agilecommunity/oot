@@ -22,6 +22,9 @@ public class Users extends Controller {
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
+        logger.debug(String.format("Cookie ID: %s", request().cookie("id")));
+        logger.debug(String.format("Cookie XSRF-TOKEN: %s", request().cookie("XSRF-TOKEN")));
+
         if (user == null) {
             logger.warn("current user not found");
             return unauthorized();
