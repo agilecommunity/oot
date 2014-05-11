@@ -1,0 +1,27 @@
+{
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "templates" : {
+        "cleverLinks"     : false,
+        "monospaceLinks"  : false,
+        "default"         : {
+            "outputSourceFiles" : true
+        },
+        "systemName"      : "美味しいお弁当を食べたい！",
+        "footer"          : "",
+        "copyright"       : "Developed by NES Agile Community",
+        "navType"         : "vertical",
+        "theme"           : "united",
+        "linenums"        : true,
+        "collapseSymbols" : false,
+        "inverseNav"      : true
+    },
+    "markdown"  : {
+        "parser"   : "gfm",
+        "hardwrap" : true
+    },
+    "opts": {
+        "template": "node_modules/grunt-jsdoc/node_modules/ink-docstrap/template"
+    }
+}
