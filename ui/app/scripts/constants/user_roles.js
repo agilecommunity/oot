@@ -1,5 +1,7 @@
 define([],
 function () {
+    "use strict";
+
     var UserRoles = {  // ロール
             public: 1, // 001
             user: 2, // 010

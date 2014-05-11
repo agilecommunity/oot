@@ -1,5 +1,6 @@
 define(['app'],
 function (app) {
+    "use strict";
 
     return app.filter('getByMenuDate', function () {              // menu_dateによる検索(フィルタとして定義するのが正しいのか疑問)
         return function (input, filter_date) {

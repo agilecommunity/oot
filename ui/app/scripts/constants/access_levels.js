@@ -1,5 +1,7 @@
 define(['constants/user_roles'],
 function (UserRoles) {
+    "use strict";
+
     var AccessLevels = {  // ページのアクセスレベル
         public: UserRoles.public | // 111
             UserRoles.user |

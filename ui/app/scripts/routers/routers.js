@@ -5,6 +5,7 @@ define(['app',
 function (app,
           UserRoles,
           AccessLevels) {
+    "use strict";
 
     return app.config(
         ['$routeProvider', '$httpProvider',     // ルーティングの定義
