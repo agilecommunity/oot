@@ -1,7 +1,7 @@
 define(['jquery',
         'angular',
         'moment',
-        'constants/access_levels',
+        'constants/access-levels',
         'angular.resource',
         'angular.route'],
 function ($,

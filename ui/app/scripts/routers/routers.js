@@ -1,6 +1,6 @@
 define(['app',
-        'constants/user_roles',
-        'constants/access_levels',
+        'constants/user-roles',
+        'constants/access-levels',
         'controllers/controllers'],
 function (app,
           UserRoles,
