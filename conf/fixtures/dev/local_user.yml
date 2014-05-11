@@ -1,25 +1,25 @@
 - !!models.LocalUser
-    id:         demo@foo.baa
+    id:         user1@foo.baa
     provider:   userpass
-    email:      demo@foo.baa
+    email:      user1@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     first_name: 一般ユーザ1
     last_name:  アジャコ
     is_admin:   false
 
 - !!models.LocalUser
-    id:         demo2@foo.baa
+    id:         user2@foo.baa
     provider:   userpass
-    email:      demo2@foo.baa
+    email:      user2@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     first_name: 一般ユーザ2
     last_name:  アジャコ
     is_admin:   false
 
 - !!models.LocalUser
-    id:         admin@foo.baa
+    id:         admin1@foo.baa
     provider:   userpass
-    email:      admin@foo.baa
+    email:      admin1@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     first_name: 管理者
     last_name:  アジャコ
