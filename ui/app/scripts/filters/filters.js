@@ -2,7 +2,9 @@ define(['app'],
 function (app) {
     "use strict";
 
-    return app.filter('getByMenuDate', function () {              // menu_dateによる検索(フィルタとして定義するのが正しいのか疑問)
+    var filters = angular.module('MyFilters', []);
+
+    filters.filter('getByMenuDate', function () {              // menu_dateによる検索(フィルタとして定義するのが正しいのか疑問)
         return function (input, filter_date) {
             var target = null;
             input.some(function (item) {
@@ -13,8 +15,9 @@ function (app) {
             });
             return target;
         };
-    })
-    .filter('getByOrderDate', function () {         // order_dateによる検索
+    });
+
+    filters.filter('getByOrderDate', function () {         // order_dateによる検索
         return function (input, filter_date) {
             var target = null;
             input.some(function (item) {
@@ -25,10 +28,13 @@ function (app) {
             });
             return target;
         };
-    })
-    .filter('checkmark', function () {
+    });
+
+    filters.filter('checkmark', function () {
         return function (input) {
             return input ? '○' : '';
         };
     });
+
+    return filters;
 });

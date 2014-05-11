@@ -4,7 +4,8 @@ define(['jquery',
         'angular.resource',
         'angular.route',
         'services/services',
-        'controllers/controllers'],
+        'controllers/controllers',
+        'filters/filters'],
 function ($,
           angular,
           moment) {
@@ -14,8 +15,9 @@ function ($,
             [  // アプリケーションの定義
                'ngRoute',            // 依存するサービスを指定する
                'ngResource',
-               'MyServices',         // 自前のサービス
-               'MyControllers'       // 自前のコントローラ
+               'MyServices',
+               'MyControllers',
+               'MyFilters'
             ]
     );
 

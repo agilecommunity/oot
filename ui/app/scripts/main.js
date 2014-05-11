@@ -1,8 +1,7 @@
 define(['jquery',
         'angular',
         'app',
-        'routers/routers',
-        'filters/filters'],
+        'routers/routers'],
 function ($,
           angular,
           app) {
