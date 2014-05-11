@@ -5,11 +5,11 @@
             </div>
 
             <div ng-show="daily_menu.detail_items != null && daily_menu.detail_items.length > 0">
-                <table class="table table-bordered table-condensed checklist">
+                <table class="table table-bordered table-condensed checklist" id="checklist">
                     <thead>
                         <tr>
-                            <th rowspan=3>チェック</th>
-                            <th rowspan=3>氏名</th>
+                            <th class="check-status" rowspan=3>チェック</th>
+                            <th class="user-name" rowspan=3>氏名</th>
                             <th class="shop-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.shop_name}}</th>
                         </tr>
                         <tr>

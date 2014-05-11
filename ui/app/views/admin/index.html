@@ -2,7 +2,7 @@
         <div class="content-header">管理インデックス</div>
 
             <div class="order-management">
-                <div class="day" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
+                <div class="day" id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
                     <h3>{{daily_menu.menu_date.format('YYYY/MM/DD (ddd)')}}</h3>
                      <table class="table table-bordered order-summary">
                          <thead>
@@ -33,7 +33,7 @@
                          </tfoot>
                      </table>
                     <ul class="commands">
-                        <li><button class="btn btn-success button" disabled>メニュー選択</button></li>
+                        <li><button class="btn btn-success button"  disabled>メニュー選択</button></li>
                         <li><button class="btn btn-success button" disabled>表示編集</button></li>
                         <li><button class="btn btn-success button" disabled>注文締切</button></li>
                         <li><button class="btn btn-success button" disabled>確認票</button></li>

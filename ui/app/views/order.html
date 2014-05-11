@@ -6,10 +6,10 @@
                 <li>このサービスは、みなさまの善意の協力により成り立っています。みなさまのご協力に感謝します。</li>
             </ul>
         </div>
-        <div class="day" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
+        <div class="day" id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
             <div class="day-header">
                 <div class="date">{{daily_menu.menu_date.format('YYYY/MM/DD (ddd)')}}</div>
-                <div class="small-total">当日合計: {{totalPriceOfTheDay(daily_menu.menu_date)}}円</div>
+                <div class="small-total">当日合計: <span class="price">{{totalPriceOfTheDay(daily_menu.menu_date)}}円</span></div>
                 <div class="clear"></div>
             </div>
             <div class="choose-list page1">
