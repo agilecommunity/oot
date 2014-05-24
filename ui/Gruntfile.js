@@ -45,6 +45,31 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/json2/json2.js',
                     '<%= conf.components %>/es5-shim/es5-shim.min.js'
                 ]
+            },
+            filters: {
+                dest: '<%= conf.dist.javascripts %>/filters/filters.js',
+                src: [
+                    '<%= conf.javascripts %>/filters/_intro',
+                    '<%= conf.javascripts %>/filters/[a-z]*.js',
+                    '<%= conf.javascripts %>/filters/_outro'
+                ],
+            },
+            controllers: {
+                dest: '<%= conf.dist.javascripts %>/controllers/controllers.js',
+                src: [
+                    '<%= conf.javascripts %>/controllers/_intro',
+                    '<%= conf.javascripts %>/controllers/**/[a-z]*.js',
+                    '<%= conf.javascripts %>/controllers/_outro'
+                ],
+            },
+            services: {
+                dest: '<%= conf.dist.javascripts %>/services/services.js',
+                src: [
+                    '<%= conf.javascripts %>/services/_intro',
+                    '<%= conf.javascripts %>/services/_helpers.js',
+                    '<%= conf.javascripts %>/services/**/[a-z]*.js',
+                    '<%= conf.javascripts %>/services/_outro'
+                ],
             }
         },
         copy: {
@@ -75,7 +100,11 @@ module.exports = function (grunt) {
             javascriptsSubDirectories: {
                 dest: '<%= conf.dist.javascripts %>',
                 cwd: '<%= conf.javascripts %>/',
-                src: ['**'],
+                src: [
+                    'constants/*.js',
+                    'helpers/*.js',
+                    'routers/*.js'
+                ],
                 expand: true
             },
             stylesheets: {
@@ -106,7 +135,12 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-            all: ['Gruntfile.js', '<%= conf.javascripts %>/*.js', '<%= conf.javascripts %>/*/*.js']
+            all: [
+                'Gruntfile.js',
+                '<%= conf.javascripts %>/**/*.js',
+                '!<%= conf.javascripts %>/**/_intro.js',
+                '!<%= conf.javascripts %>/**/_outro.js'
+            ]
         }
     });
 

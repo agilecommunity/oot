@@ -1,0 +1,11 @@
+define(['jquery',
+        'angular',
+        'moment',
+        'angular.resource',
+        'angular.route'],
+function ($,
+          angular,
+          moment) {
+    "use strict";
+
+    var controllers = angular.module('MyControllers', []);

@@ -1,4 +1,4 @@
-define(['constants/user_roles'],
+define(['constants/user-roles'],
 function (UserRoles) {
     "use strict";
 
