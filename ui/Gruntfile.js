@@ -82,9 +82,11 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/angular/angular.min.js',
                     '<%= conf.components %>/angular-resource/angular-resource.min.js',
                     '<%= conf.components %>/angular-route/angular-route.min.js',
+                    '<%= conf.components %>/angular-sanitize/angular-sanitize.min.js',
                     '<%= conf.components %>/bootstrap/dist/js/bootstrap.min.js',
                     '<%= conf.components %>/moment/min/moment-with-langs.min.js',
                     '<%= conf.components %>/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+                    '<%= conf.components %>/holderjs/holder.js',
                     '<%= conf.components %>/html5shiv/dist/html5shiv.js',
                     '<%= conf.components %>/respond/dest/respond.min.js'
                 ],
@@ -113,7 +115,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= conf.components %>/bootstrap/dist/css/bootstrap.min.css',
                     '<%= conf.components %>/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-                    '<%= conf.stylesheets %>/main.css'
+                    '<%= conf.stylesheets %>/common.css'
                 ],
                 expand: true
             }, fonts: {

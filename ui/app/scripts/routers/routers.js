@@ -27,6 +27,11 @@ function (app,
             controller: 'AdminIndexController',
             access: AccessLevels.admin
         })
+        .when('/admin/daily-menus/new', {
+            templateUrl: '/views/admin/daily-menu/new',
+            controller: 'DailyMenuNewController',
+            access: AccessLevels.admin
+        })
         .when('/admin/checklist/menu_date/:menu_date', {
             templateUrl: '/views/admin/checklist',
             controller: 'AdminChecklistController',

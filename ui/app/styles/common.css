@@ -52,6 +52,8 @@ td.price {
     background-repeat: no-repeat;
     background-position: left top;
     background-size: contain;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .page-header h1{
@@ -60,31 +62,6 @@ td.price {
     float: left;
 }
 
-.page-header .right-ctrl {
-    margin: 0.5em;
-    float: right;
-}
-.page-header .right-ctrl > div{
-    float: left;
-}
-.page-header .right-ctrl .user-name{
-    margin-right: 1.5em;
-    line-height: 33px;
-}
-.page-header .right-ctrl .logout{
-    background-color: #92D13D;
-
-    background: -moz-linear-gradient(top, #92D13D, #70af1b);
-    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
-
-    font-size: 0.8em;
-    color: white;
-    padding: 0.5em 1em;
-    width: 80px;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
-}
 
 .content-header {
     background-color: #92D13D;
@@ -129,9 +106,24 @@ td.price {
     float: left;
     cursor: pointer;
 }
-.choose-list .menu.ordered{
+
+.choose-list .menu.ordered {
     border-color: #D21F45;
 }
+
+.menu-list .menu {
+    border: solid 2px #DDDDDD;
+    border-radius: 3px;
+}
+
+.menu-list .menu.selected {
+    border-color: #D21F45;
+}
+
+.menu-list .menu .thumbnail {
+    margin-bottom: 5px;
+}
+
 .selected .food-name{
     background-color: #F3BFD6;
 }

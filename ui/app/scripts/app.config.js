@@ -5,6 +5,7 @@ require.config({
         angular : 'components/angular.min',
         "angular.resource" : 'components/angular-resource.min',
         "angular.route" : 'components/angular-route.min',
+        "angular.sanitize": "components/angular-sanitize.min",
         bootstrap : 'components/bootstrap.min',
         'moment' : 'components/moment-with-langs.min',
         'datetimepicker' : 'components/bootstrap-datetimepicker.min'
@@ -22,6 +23,10 @@ require.config({
             exports: "angular"
         },
         "angular.route": {
+            deps: ["angular"],
+            exports: "angular"
+        },
+        "angular.sanitize": {
             deps: ["angular"],
             exports: "angular"
         },
