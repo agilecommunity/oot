@@ -1,32 +1,34 @@
     <div class="content">
-        <div class="content-header">チェック表 {{menu_date.format('YYYY/MM/DD (ddd)')}}</div>
-            <div ng-show="daily_menu.detail_items == null || daily_menu.detail_items.length === 0">
-                <p class="no-data">メニューにお弁当がありません。</p>
-            </div>
+        <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
 
-            <div ng-show="daily_menu.detail_items != null && daily_menu.detail_items.length > 0">
-                <table class="table table-bordered table-condensed checklist" id="checklist">
-                    <thead>
-                        <tr>
-                            <th class="check-status" rowspan=3>チェック</th>
-                            <th class="user-name" rowspan=3>氏名</th>
-                            <th class="shop-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.shop_name}}</th>
-                        </tr>
-                        <tr>
-                            <th class="item-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.name}}</th>
-                        </tr>
-                        <tr>
-                            <th class="price" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.price_on_order}}円</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="checkitem in checklist">
-                            <td></td>
-                            <td>{{checkitem.user_name}}</td>
-                            <td class="order-status" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{checkitem.order_statuses[item.menu_item.id].ordered | checkmark}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-             </div>
+        <div class="content-header">チェック表 {{menu_date.format('YYYY/MM/DD (ddd)')}}</div>
+
+        <div ng-show="daily_menu.detail_items == null || daily_menu.detail_items.length === 0">
+            <p class="no-data">メニューにお弁当がありません。</p>
         </div>
+
+        <div ng-show="daily_menu.detail_items != null && daily_menu.detail_items.length > 0">
+            <table class="table table-bordered table-condensed checklist" id="checklist">
+                <thead>
+                    <tr>
+                        <th class="check-status" rowspan=3>チェック</th>
+                        <th class="user-name" rowspan=3>氏名</th>
+                        <th class="shop-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.shop_name}}</th>
+                    </tr>
+                    <tr>
+                        <th class="item-name" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.name}}</th>
+                    </tr>
+                    <tr>
+                        <th class="price" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{item.menu_item.price_on_order}}円</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="checkitem in checklist">
+                        <td></td>
+                        <td>{{checkitem.user_name}}</td>
+                        <td class="order-status" ng-repeat="item in daily_menu.detail_items | orderBy:'menu_item.id'">{{checkitem.order_statuses[item.menu_item.id].ordered | checkmark}}</td>
+                    </tr>
+                </tbody>
+            </table>
+         </div>
     </div>
