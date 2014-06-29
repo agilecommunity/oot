@@ -1,9 +1,9 @@
     <div class="content">
         <div class="message">
             <ul>
-                <li><span style="color:red">商品をクリックすると、注文登録します。</span>キャンセルは、もう１回押してください。終了は、そのままウインドウ閉じてください。</li>
-                <li>むやみに商品を連打しないでください。<span style="color:red">1クリックで注文・取消を実行</span>します。</li>
-                <li>このサービスは、みなさまの善意の協力により成り立っています。みなさまのご協力に感謝します。</li>
+                <li><span style="color:red;font-size:1.5em;">商品をクリックするだけで、すぐに注文登録</span>します。「確定」ボタンは必要ありません。</li>
+                <li>終了は、そのままウインドウを閉じるだけです。</li>
+                <li>キャンセルは、もう１回商品をクリックしてください。</li>
             </ul>
         </div>
         <div class="day" id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
@@ -22,6 +22,7 @@
                         <div class="food-name">{{item.menu_item.name}}</div>
                         <div class="food-image"><img src="assets/images/{{item.menu_item.item_image_path}}"></div>
                         <div class="food-price">{{item.menu_item.price_on_order}}円</div>
+                        <div class="ordered-mark"></div>
                     </div>
 
                     <div class="clear"></div>
