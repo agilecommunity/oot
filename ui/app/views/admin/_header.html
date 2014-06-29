@@ -1,0 +1,11 @@
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">管理インデックス</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li ng-class="{'active':isActive('/admin/index')}"><a ng-click="showAdminIndex();">メニュー一覧</a></li>
+            <li ng-class="{'active':isActive('/admin/daily-menus/new')}"><a ng-click="showCreateOrderMenu();">メニュー作成</a></li>
+        </ul>
+    </div>
+</nav>

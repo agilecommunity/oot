@@ -81,12 +81,4 @@ angular.module('MyControllers')
         }
     };
 
-    $scope.showAdminIndex = function () {
-        $location.path("/admin/index");
-    };
-
-    $scope.showCreateOrderMenu = function () {
-        $location.path("/admin/daily-menus/new");
-    };
-
 }]);
