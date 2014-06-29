@@ -18,5 +18,12 @@ angular.module('MyControllers')
         $location.path("/admin/checklist/menu_date/" + daily_menu.menu_date.format('YYYY-MM-DD'));
     };
 
+    $scope.showAdminIndex = function () {
+        $location.path("/admin/index");
+    };
+
+    $scope.showCreateOrderMenu = function () {
+        $location.path("/admin/daily-menus/new");
+    };
 }]);
 
