@@ -7,6 +7,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-notify');
 
     // configurable paths
     var appConfig = {
@@ -143,6 +144,9 @@ module.exports = function (grunt) {
                 '!<%= conf.javascripts %>/**/_intro.js',
                 '!<%= conf.javascripts %>/**/_outro.js'
             ]
+        },
+        notify: {
+
         }
     });
 
@@ -152,5 +156,5 @@ module.exports = function (grunt) {
        'copy'
     ]);
 
-    grunt.registerTask('default', ['dev', 'watch']);
+    grunt.registerTask('default', ['dev', 'watch', 'notify']);
 };

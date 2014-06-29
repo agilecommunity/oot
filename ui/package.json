@@ -9,7 +9,8 @@
     "grunt-contrib-watch": "^0.5.0",
     "less": "^1.7.0",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-jsdoc": "^0.5.4"
+    "grunt-jsdoc": "^0.5.4",
+    "grunt-notify": "^0.3.0"
   },
   "engines": {
     "node": ">=0.10.0"
