@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.avaje.ebean.validation.NotNull;
+import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 /**
@@ -25,8 +27,12 @@ public class DailyMenu extends Model {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    @NotNull
+    @Constraints.Required
     public Date menu_date;
 
+    @NotNull
+    @Constraints.Required
     public String status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_menu")
@@ -45,5 +51,11 @@ public class DailyMenu extends Model {
         }
 
         return candidate.get(0);
+    }
+
+    public static List<DailyMenu> find_between(Date menu_date_from, Date menu_date_to) {
+        List<DailyMenu> items = DailyMenu.find.where().ge("menu_date", menu_date_from).le("menu_date", menu_date_to).findList();
+
+        return items;
     }
 }
