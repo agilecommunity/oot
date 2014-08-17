@@ -55,33 +55,45 @@ angular.module('MyControllers')
         }
     );
 
-    // メニューを取得する
-    var param_menu_date = "2014/05/26-2014/05/30";
-    DailyMenu.query({"menu_date": param_menu_date},
-        function (response) {  // 成功した時
-            $scope.daily_menus = [];
-            for(var i=0; i<5; i++) {
-                var currentDate = moment("2014/05/26").add("days", i);
-                var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
+    // 日付を変更する
+    var changeMenuDate = function(target) {
+        $scope.menu_date_begin = moment(target).startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
+        $scope.menu_date_end = moment($scope.menu_date_begin).add("days", 5);
+        $scope.current_daily_menu = new DailyMenu();
 
-                var menu = null;
-                if (menuIndex === -1) {
-                    menu = new DailyMenu({ menu_date: currentDate, detail_items: [] });
-                } else {
-                    menu = response[menuIndex];
+        var param_menu_date = $scope.menu_date_begin.format("YYYY/MM/DD") + "-" + $scope.menu_date_end.format("YYYY/MM/DD");
+        DailyMenu.query({"menu_date": param_menu_date},
+            function (response) {
+                $scope.daily_menus = [];
+                for(var i=0; i<5; i++) {
+                    var currentDate = moment($scope.menu_date_begin).add("days", i);
+                    var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
+
+                    var menu = null;
+                    if (menuIndex === -1) {
+                        menu = new DailyMenu({ menu_date: currentDate, detail_items: [] });
+                    } else {
+                        menu = response[menuIndex];
+                    }
+
+                    $scope.daily_menus.push(menu);
                 }
-
-                $scope.daily_menus.push(menu);
-            }
-            $scope.current_daily_menu = $scope.daily_menus[0];
-        },
-        function (response) { // 失敗した時
-            alert("データが取得できませんでした。サインイン画面に戻ります。");
-            $location.path("/");
-        });
+                $scope.current_daily_menu = $scope.daily_menus[0];
+            },
+            function (response) {
+                alert("データが取得できませんでした。サインイン画面に戻ります。");
+                $location.path("/");
+            });
+    };
 
     // カレンダーの初期化
     $("#datetimepicker").datetimepicker({pickTime: false, daysOfWeekDisabled: [0,6]});
+    $("#datetimepicker").on("dp.change",function (e) {
+        changeMenuDate(moment(e.date));
+    });
+
+    // 当日を起点としてメニューを表示する
+    changeMenuDate(moment());
 
     //---- ヘルパ
     // 日付を選択しているか?
