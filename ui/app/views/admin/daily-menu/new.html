@@ -3,8 +3,14 @@
 
     <div>
         <div class="day-tab" style="border-bottom: 1px solid #DDDDDD; padding-bottom:5px;">
+            <div class="day-tab" style="border-bottom: 1px solid #DDDDDD; padding-bottom:5px; padding-left: 10px;">
             <ul class="nav nav-pills day-tabs">
-                <li id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-class="{'active': is_day_selected(daily_menu.menu_date)}" ng-repeat="daily_menu in daily_menus">
+                <li><button type="button" class="btn btn-default" ng-click="show_calendar();">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    <div id='datetimepicker' style="display:inline;"><input type='text' class="form-control" style="visibility:hidden;width:1px;height:1px;padding:0;"/></div>
+                    </button>
+                </li>
+                <li class="divider"></li>                <li id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-class="{'active': is_day_selected(daily_menu.menu_date)}" ng-repeat="daily_menu in daily_menus">
                     <a href="" ng-click="choose_day(daily_menu)">{{daily_menu.menu_date.format("YYYY/MM/DD (ddd)")}}</a>
                 </li>
             </ul>

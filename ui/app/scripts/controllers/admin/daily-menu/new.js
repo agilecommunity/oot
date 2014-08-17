@@ -80,6 +80,9 @@ angular.module('MyControllers')
             $location.path("/");
         });
 
+    // カレンダーの初期化
+    $("#datetimepicker").datetimepicker({pickTime: false, daysOfWeekDisabled: [0,6]});
+
     //---- ヘルパ
     // 日付を選択しているか?
     $scope.is_day_selected = function(day) {
@@ -144,4 +147,8 @@ angular.module('MyControllers')
         lazyApplyChanges($scope.current_daily_menu);
     };
 
+    // カレンダーを表示する
+    $scope.show_calendar = function() {
+        $("#datetimepicker").data("DateTimePicker").show();
+    };
 }]);
