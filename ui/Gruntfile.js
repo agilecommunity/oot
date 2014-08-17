@@ -89,7 +89,8 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
                     '<%= conf.components %>/holderjs/holder.js',
                     '<%= conf.components %>/html5shiv/dist/html5shiv.js',
-                    '<%= conf.components %>/respond/dest/respond.min.js'
+                    '<%= conf.components %>/respond/dest/respond.min.js',
+                    '<%= conf.components %>/underscore/underscore.js'
                 ],
                 expand: true
             },

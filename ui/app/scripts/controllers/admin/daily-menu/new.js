@@ -1,56 +1,113 @@
 
 angular.module('MyControllers')
 .controller('DailyMenuNewController',
-    ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyMenu', 'DailyOrder',
-    function ($scope, $location, $routeParams, $filter, User, DailyMenu, DailyOrder) {
-
-    $scope.menu_items = [];
-    for ( var i=0 ; i < 200; i++ ) {
-        var item = { shop_name: "会社" + i, name: "会社" + i + "-弁当" + i + "とてもながいお弁当の名前", price_on_order: 510 + i };
-        $scope.menu_items.push(item);
-    }
+    ['$scope', '$location', '$routeParams', '$filter', 'User', 'MenuItem', 'DailyMenu',
+    function ($scope, $location, $routeParams, $filter, User, MenuItem, DailyMenu) {
 
     // 5個ずつに分ける
-    var count_per_row = 5;
-    $scope.group_menu_items = [];
-    var group = [];
-    for ( i=0 ; i < $scope.menu_items.length ; i++ ) {
-        group.push($scope.menu_items[i]);
+    var groupingItems  = function() {
+        var count_per_row = 5;
+        $scope.group_menu_items = [];
+        var group = [];
+        for ( var i=0 ; i < $scope.menu_items.length ; i++ ) {
+            group.push($scope.menu_items[i]);
 
-        if ((i+1) % count_per_row === 0 || (i+1) === $scope.menu_items.length) {
-            $scope.group_menu_items.push(group);
-            group = [];
+            if ((i+1) % count_per_row === 0 || (i+1) === $scope.menu_items.length) {
+                $scope.group_menu_items.push(group);
+                group = [];
+            }
         }
-    }
+    };
 
-    $scope.daily_menus = [
-        { menu_date: moment("2014/05/26"), detail_items: [] },
-        { menu_date: moment("2014/05/27"), detail_items: [] },
-        { menu_date: moment("2014/05/28"), detail_items: [] },
-        { menu_date: moment("2014/05/29"), detail_items: [] },
-        { menu_date: moment("2014/05/30"), detail_items: [] }
-    ];
+    // 変更を反映する
+    var applyChanges = function(current_menu) {
+        // 選択されていない場合はメニューを削除する
+        if (current_menu.detail_items.length === 0) {
+            if (current_menu.id !== undefined) {
+                DailyMenu.delete({id: current_menu.id});
+                current_menu.id = undefined;
+            }
+            return;
+        }
 
-    $scope.current_daily_menu = $scope.daily_menus[0];
+        var menu = {id: current_menu.id, menu_date: current_menu.menu_date.unix() * 1000, status: "open", detail_items:[]};
+        angular.forEach(current_menu.detail_items, function(item) {
+            menu.detail_items.push(item);
+        });
+
+        if (menu.id === undefined) {
+            DailyMenu.create({}, menu, function (saved) { current_menu.id = saved.id; });
+        } else {
+            DailyMenu.update({}, menu, function (saved) { current_menu.id = saved.id; });
+        }
+    };
+    var lazyApplyChanges = _.debounce(applyChanges, 500);
+
+    // メニューのItemを取得する
+    $scope.menu_items = MenuItem.query({},
+        function (response) { // 成功時
+            // 表示のために5個ずつグルーピングする
+            groupingItems();
+        },
+        function (response) {   // 失敗時
+            alert("データが取得できませんでした。サインイン画面に戻ります。");
+            $location.path("/");
+        }
+    );
+
+    // メニューを取得する
+    var param_menu_date = "2014/05/26-2014/05/30";
+    DailyMenu.query({"menu_date": param_menu_date},
+        function (response) {  // 成功した時
+            $scope.daily_menus = [];
+            for(var i=0; i<5; i++) {
+                var currentDate = moment("2014/05/26").add("days", i);
+                var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
+
+                var menu = null;
+                if (menuIndex === -1) {
+                    menu = new DailyMenu({ menu_date: currentDate, detail_items: [] });
+                } else {
+                    menu = response[menuIndex];
+                }
+
+                $scope.daily_menus.push(menu);
+            }
+            $scope.current_daily_menu = $scope.daily_menus[0];
+        },
+        function (response) { // 失敗した時
+            alert("データが取得できませんでした。サインイン画面に戻ります。");
+            $location.path("/");
+        });
 
     //---- ヘルパ
     // 日付を選択しているか?
     $scope.is_day_selected = function(day) {
+        if ($scope.current_daily_menu === undefined) {
+            return false;
+        }
         return ($scope.current_daily_menu.menu_date === day);
     };
 
     // 項目を選択しているか?
     $scope.is_item_selected = function(menu_item) {
-        return (jQuery.inArray(menu_item, $scope.current_daily_menu.detail_items) >= 0);
+        if ($scope.current_daily_menu === undefined) {
+            return false;
+        }
+        return ($scope.current_daily_menu.findMenuItem(menu_item) >= 0);
     };
 
     // 項目の1週間の選択状態をHTMLにして出力
     $scope.render_item_select_status = function(menu_item) {
 
+        if ($scope.daily_menus === undefined || $scope.current_daily_menu === undefined) {
+            return "";
+        }
+
         var status = "";
 
         angular.forEach($scope.daily_menus, function(daily_menu){
-            var index = jQuery.inArray(menu_item, daily_menu.detail_items);
+            var index = daily_menu.findMenuItem(menu_item);
             if ( index >= 0 ) {
                 var class_name = "text-muted";
                 if ( daily_menu === $scope.current_daily_menu ) {
@@ -68,17 +125,23 @@ angular.module('MyControllers')
     //---- イベントハンドラ
     // 日付を選択する
     $scope.choose_day = function(daily_menu) {
+        // 必ず保存する
+        applyChanges($scope.current_daily_menu);
+
         $scope.current_daily_menu = daily_menu;
     };
 
     // 項目を選択する
     $scope.choose_item = function(menu_item) {
-        var index = jQuery.inArray(menu_item, $scope.current_daily_menu.detail_items);
+        var index = $scope.current_daily_menu.findMenuItem(menu_item);
         if ( index >= 0 ) {
             $scope.current_daily_menu.detail_items.splice(index, 1);
         } else {
-            $scope.current_daily_menu.detail_items.push(menu_item);
+            $scope.current_daily_menu.detail_items.push({menu_item: menu_item});
         }
+
+        // 選択のたびに保存を行う
+        lazyApplyChanges($scope.current_daily_menu);
     };
 
 }]);

@@ -36,9 +36,50 @@ angular.module('MyServices')
                 params: {menu_date: "@menu_date"},
                 isArray: false,
                 cache: false
+            },
+            create: {
+                method: "POST"
+            },
+            update: {
+                method: "PUT",
+               isArray: false
             }
         }
     );
+
+    // メニューから該当するItemを探し、そのindexを返す
+    DailyMenu.prototype.findMenuItem = function(menu_item) {
+        // jQuery in Arrayよりコピペ
+        var len;
+        var arr = this.detail_items;
+
+        if (arr === undefined || arr === null) {
+            return -1;
+        }
+
+        len = arr.length;
+        var i = i ? i < 0 ? Math.max( 0, len + i ) : i : 0;
+
+        for ( ; i < len; i++ ) {
+            // Skip accessing in sparse arrays
+            if ( i in arr && arr[ i ].menu_item.id === menu_item.id ) {
+                return i;
+            }
+        }
+
+        return -1;
+    };
+
+    // メニューのリストから該当の日付のメニューを探し、そのindexを返す
+    DailyMenu.findByMenuDate = function(list, menu_date) {
+        for (var i=0; i<list.length; i++) {
+            if (list[i].menu_date.unix() === menu_date.unix()) {
+                return i;
+            }
+        }
+        return -1;
+    };
+
 
     return DailyMenu;
 }]);

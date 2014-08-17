@@ -8,7 +8,8 @@ require.config({
         "angular.sanitize": "components/angular-sanitize.min",
         bootstrap : 'components/bootstrap.min',
         'moment' : 'components/moment-with-langs.min',
-        'datetimepicker' : 'components/bootstrap-datetimepicker.min'
+        'datetimepicker' : 'components/bootstrap-datetimepicker.min',
+        underscore : 'components/underscore'
     },
 
     shim: {
@@ -40,6 +41,10 @@ require.config({
         "datetimepicker" : {
             deps: ["jquery", "moment", "bootstrap"],
             exports: "$.fn.datetimepicker"
+        },
+        underscore : {
+            deps: ["jquery"],
+            exports: "_"
         }
     },
     enforceDefine : true // IE8対策
