@@ -1,11 +1,8 @@
-define(['app',
-        'constants/user-roles',
-        'constants/access-levels',
-        'controllers/controllers'],
-function (app,
-          UserRoles,
-          AccessLevels) {
+(function (app) {
     "use strict";
+
+    var UserRoles = app.UserRoles;
+    var AccessLevels = app.AccessLevels;
 
     return app.config(
         ['$routeProvider', '$httpProvider',     // ルーティングの定義
@@ -42,4 +39,4 @@ function (app,
             redirectTo: '/'                    // "/"に飛ぶ
         });
     }]);
-});
+})(window.app);

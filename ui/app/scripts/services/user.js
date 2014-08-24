@@ -1,4 +1,5 @@
-
+(function(angular, app){
+    var AccessLevels = app.AccessLevels;
 angular.module('MyServices')
 .factory('User',
     ['$http', '$rootScope',
@@ -71,3 +72,4 @@ angular.module('MyServices')
 
       return User;
 }]);
+})(angular, window.app);

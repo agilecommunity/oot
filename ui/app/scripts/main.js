@@ -1,8 +1,4 @@
-define(['jquery',
-        'angular',
-        'app',
-        'routers/routers'],
-function ($,
+(function ($,
           angular,
           app) {
     "use strict";
@@ -46,4 +42,4 @@ function ($,
 
         angular.bootstrap(document, ['oot']);
     });
-});
+})(jQuery, angular, window.app);

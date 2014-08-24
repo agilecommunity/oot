@@ -1,8 +1,9 @@
-define(['constants/user-roles'],
-function (UserRoles) {
+(function (app) {
     "use strict";
 
-    var AccessLevels = {  // ページのアクセスレベル
+    var UserRoles = app.UserRoles;
+
+    app.AccessLevels = {  // ページのアクセスレベル
         public: UserRoles.public | // 111
             UserRoles.user |
             UserRoles.admin,
@@ -12,5 +13,4 @@ function (UserRoles) {
         admin: UserRoles.admin    // 100
     };
 
-    return AccessLevels;
-});
+})(window.app);

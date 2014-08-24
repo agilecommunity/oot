@@ -1,12 +1,9 @@
-define([],
-function () {
+(function (app) {
     "use strict";
 
-    var UserRoles = {  // ロール
+    app.UserRoles = {  // ロール
             public: 1, // 001
             user: 2, // 010
             admin: 4  // 100
     };
-
-    return UserRoles;
-});
+})(window.app);
