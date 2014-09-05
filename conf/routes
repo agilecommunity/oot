@@ -26,8 +26,14 @@ GET           /api/daily-orders/order_date/:order_date        controllers.DailyO
 GET           /                                               controllers.Application.index(path = "")
 
 # SecureSocial
+POST          /api/startSignup                                controllers.Registration.startSignUp()
+POST          /api/signup/:token                              controllers.Registration.signUp(token)
 POST          /authenticate/:provider                         securesocial.controllers.ProviderController.authenticateByPost(provider)
 
 # Misc
+GET           /signup                                         securesocial.controllers.Registration.startSignUp
+GET           /login                                          securesocial.controllers.LoginPage.login
+GET           /reset                                          securesocial.controllers.Registration.startResetPassword
 GET           /*path                                          controllers.Application.index(path)
+
 
