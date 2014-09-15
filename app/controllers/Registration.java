@@ -104,7 +104,7 @@ public class Registration extends Controller {
 
         if (UserService$.MODULE$.findToken(token).isEmpty()) {
             logger.debug("#signUp token not found token:" + token);
-            return badRequest(Messages.get("securesocial.signup.invalidLink"));
+            return forbidden(Messages.get("securesocial.signup.invalidLink"));
         }
 
         JsonNode json = request().body().asJson();

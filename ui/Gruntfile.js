@@ -91,7 +91,8 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/holderjs/holder.js',
                     '<%= conf.components %>/html5shiv/dist/html5shiv.js',
                     '<%= conf.components %>/respond/dest/respond.min.js',
-                    '<%= conf.components %>/underscore/underscore.js'
+                    '<%= conf.components %>/underscore/underscore.js',
+                    '<%= conf.components %>/bootbox/bootbox.js'
                 ],
                 expand: true
             },
