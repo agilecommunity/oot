@@ -28,6 +28,15 @@ playAssetsDirectories <+= baseDirectory / "ui"
 // cucumberの使うフィーチャファイルを対象から除外
 unmanagedResourceDirectories in Test <+= baseDirectory( _ / "test" / "features" / "scenarios" )
 
+// testからcucumberのテストを除外
+testOptions in Test := Seq(Tests.Filter(s => !(s startsWith "feature")))
+
+javaOptions in Test += "-XX:-UseSplitVerifier"
+
+javaOptions in Test += "-Dconfig.file=conf/application.conf"
+
+
+// cucumberタスクの定義
 lazy val cucumberTask = InputKey[Unit]("cucumber", "Run Cucumber tests.")
 
 cucumberTask := {
