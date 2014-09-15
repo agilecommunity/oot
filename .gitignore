@@ -19,3 +19,4 @@ README.html
 public/javascripts/*
 public/stylesheets/*
 public/fonts/*
+conf/application.smtp.conf
