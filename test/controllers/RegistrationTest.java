@@ -184,7 +184,7 @@ public class RegistrationTest {
 
     }
 
-    public static class signupに登録されていないtokenを渡した場合_badRequestが返ること {
+    public static class signupに登録されていないtokenを渡した場合_forbiddenが返ること {
 
         @Before
         public void setUp() {
@@ -211,7 +211,7 @@ public class RegistrationTest {
             JsonNode json = Json.toJson(params);
             Result result = callAPI(fakeRequest(POST, "/api/signup/fufu").withJsonBody(json));
 
-            assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(BAD_REQUEST);
+            assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(FORBIDDEN);
         }
 
 
