@@ -8,8 +8,8 @@ create table local_user (
   provider               varchar(255) not null, -- --- プロバイダ
   email                  varchar(255) not null, -- --- メールアドレス
   password               varchar(255) not null, -- --- ハッシュ化されたパスワード
-  first_name             varchar(255) not null, -- --- 姓
-  last_name              varchar(255) not null, -- --- 名
+  first_name             varchar(255) not null, -- --- 名
+  last_name              varchar(255) not null, -- --- 姓
   is_admin               boolean default false, -- --- 管理者かどうか
 
   created_at             timestamp,        -- --- 作成日
