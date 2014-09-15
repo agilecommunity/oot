@@ -14,6 +14,16 @@
             controller: 'SigninController',  // 利用するコントローラー
             access: AccessLevels.anon        // アクセス権
         })
+        .when('/signup', {
+            templateUrl: '/views/start-signup',
+            controller: 'StartSignupController',
+            access: AccessLevels.anon
+        })
+        .when('/signup/:token', {
+            templateUrl: '/views/signup',
+            controller: 'SignupController',
+            access: AccessLevels.anon
+        })
         .when('/order', {
             templateUrl: '/views/order',
             controller: 'OrderController',

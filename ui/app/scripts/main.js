@@ -3,6 +3,9 @@
           app) {
     "use strict";
 
+    var UserRoles = app.UserRoles;
+    var AccessLevels = app.AccessLevels;
+
     $(function () {
 
         app.run(["$rootScope", "$location", "User", "RouteFinder",
@@ -13,6 +16,10 @@
 
                 // ルートの情報を取得
                 var route = RouteFinder.parseRoute().$$route;
+
+                if (route.access === AccessLevels.anon) {
+                    return;
+                }
 
                 // すでに認証済みの場合
                 if (User.is_signed_in()) {
