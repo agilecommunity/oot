@@ -27,3 +27,20 @@ playAssetsDirectories <+= baseDirectory / "ui"
 // テストの設定
 // cucumberの使うフィーチャファイルを対象から除外
 unmanagedResourceDirectories in Test <+= baseDirectory( _ / "test" / "features" / "scenarios" )
+
+lazy val cucumberTask = InputKey[Unit]("cucumber", "Run Cucumber tests.")
+
+cucumberTask := {
+  val logger = streams.value.log
+  logger.info("Running Cucumber tests.")
+  val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
+  val cucumberOpts = args.isEmpty match {
+    case false => "-Dcucumber.options=" + args.map("--tags " + _).mkString(" ")
+    case true => ""
+  }
+  logger.info("Cucumber.Options: "  + cucumberOpts)
+  val cucumberRunner = "features.RunCucumber"
+  val classPassArgs = (fullClasspath in Test).value.map(_.data).mkString(";")
+  Fork.java(ForkOptions(runJVMOptions=Seq(cucumberOpts)), Seq("-cp", classPassArgs, "org.junit.runner.JUnitCore", cucumberRunner))
+}
+

@@ -11,7 +11,7 @@ public class HeaderStepDefs {
 
     @ならば("^タイトルに \"(.*?)\" と表示されていること$")
     public void タイトルに_と表示されていること(String titleName) throws Throwable {
-        webStepDefs.要素_に_が表示されていること(By.xpath("//div[@class='page-header']/h1"), titleName);
+        webStepDefs.要素_に_が表示されていること(By.xpath("//div[contains(@class,'page-header')]/h1"), titleName);
     }
 
     @ならば("^ユーザ情報に \"(.*?)\" と表示されていること$")
