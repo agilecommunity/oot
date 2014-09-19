@@ -1,9 +1,0 @@
-# for SecureSocial
-smtp {
-  host=smtp.gmail.com
-  port=465
-  ssl=true
-  user="@@@@"
-  password="@@@@"
-  from="@@@@"
-}
