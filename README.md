@@ -1,5 +1,7 @@
 # 美味しいお弁当を食べたい
 
+[![Build Status](https://travis-ci.org/nobiinu-and/oot.svg?branch=develop)](https://travis-ci.org/nobiinu-and/oot)
+
 ## 想定している環境
 
  * Play Framework 2.2.x
