@@ -1,8 +1,12 @@
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.typesafe.config.*;
 import models.MenuItem;
@@ -12,6 +16,7 @@ import play.GlobalSettings;
 import play.Play;
 import play.api.PlayException;
 import play.api.libs.Codecs;
+import play.data.format.Formatters;
 import play.libs.Yaml;
 
 import com.avaje.ebean.Ebean;
@@ -45,6 +50,7 @@ public class Global extends GlobalSettings  {
             }
         }
 
+        registerFormatters();
     }
 
     private Configuration modifySmtpConfiguration(Configuration configuration) {
@@ -68,6 +74,35 @@ public class Global extends GlobalSettings  {
         config = config.withValue("smtp.password", smtpPassword);
 
         return new Configuration(config);
+    }
+
+    private void registerFormatters() {
+        Formatters.register(Date.class, new Formatters.SimpleFormatter<Date>() {
+            @Override
+            public Date parse(String input, Locale l) throws ParseException {
+
+                return new Date(Long.parseLong(input));
+            }
+
+            @Override
+            public String print(Date input, Locale l) {
+                return String.valueOf(input.getTime());
+            }
+        });
+
+        Formatters.register(BigDecimal.class, new Formatters.SimpleFormatter<BigDecimal>(){
+
+            @Override
+            public BigDecimal parse(String text, Locale locale) throws ParseException {
+                return new BigDecimal(text);
+            }
+
+            @Override
+            public String print(BigDecimal bigDecimal, Locale locale) {
+                return String.valueOf(bigDecimal);
+            }
+        });
+
     }
 
     private String decryptAES(String target, String key) {

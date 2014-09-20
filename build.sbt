@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   , "com.google.code.gson" % "gson" % "2.2.4"
   , "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
   , "joda-time" % "joda-time" % "2.3"
+  , "com.fasterxml.jackson.dataformat" % "jackson-dataformat-csv" % "2.4.0"
   , "info.cukes" % "cucumber-java" % "1.1.6"
   , "info.cukes" % "cucumber-junit" % "1.1.6"
   , "org.seleniumhq.selenium" % "selenium-java" % "2.41.0"

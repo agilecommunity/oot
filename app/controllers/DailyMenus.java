@@ -167,19 +167,6 @@ public class DailyMenus extends Controller {
 
         logger.debug(String.format("create request-body:%s", request().body().toString()));
 
-        Formatters.register(Date.class, new Formatters.SimpleFormatter<Date>() {
-            @Override
-            public Date parse(String input, Locale l) throws ParseException {
-
-                return new Date(Long.parseLong(input));
-            }
-
-            @Override
-            public String print(Date input, Locale l) {
-                return String.valueOf(input.getTime());
-            }
-        });
-
         Form<DailyMenu> filledForm = Form.form(DailyMenu.class).bind(json);
 
         if (filledForm.hasErrors()) {
