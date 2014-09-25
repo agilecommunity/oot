@@ -24,7 +24,7 @@ angular.module('MyControllers')
         // 選択されていない場合はメニューを削除する
         if (current_menu.detail_items.length === 0) {
             if (current_menu.id !== undefined) {
-                DailyMenu.delete({id: current_menu.id});
+                DailyMenu.remove({id: current_menu.id});
                 current_menu.id = undefined;
             }
             return;

@@ -92,7 +92,11 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/html5shiv/dist/html5shiv.js',
                     '<%= conf.components %>/respond/dest/respond.min.js',
                     '<%= conf.components %>/underscore/underscore.js',
-                    '<%= conf.components %>/bootbox/bootbox.js'
+                    '<%= conf.components %>/bootbox/bootbox.js',
+                    '<%= conf.components %>/jquery-file-upload/js/vendor/jquery.ui.widget.js',
+                    '<%= conf.components %>/jquery-file-upload/js/jquery.iframe-transport.js',
+                    '<%= conf.components %>/jquery-file-upload/js/jquery.fileupload.js',
+                    '<%= conf.components %>/jquery-file-upload/js/jquery.fileupload-angular.js'
                 ],
                 expand: true
             },
@@ -119,6 +123,8 @@ module.exports = function (grunt) {
                 src: [
                     '<%= conf.components %>/bootstrap/dist/css/bootstrap.min.css',
                     '<%= conf.components %>/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+                    '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload.css',
+                    '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload-ui.css',
                     '<%= conf.stylesheets %>/common.css'
                 ],
                 expand: true

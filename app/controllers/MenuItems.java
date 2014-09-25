@@ -4,15 +4,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import filters.RequireCSRFCheck4Ng;
 import models.DailyMenu;
+import models.LocalUser;
 import models.MenuItem;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
+import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +36,7 @@ public class MenuItems extends Controller {
         return ok(Json.toJson(menus));
     }
 
-    @RequireCSRFCheck4Ng
+    //@RequireCSRFCheck4Ng  /* IE8でjquery file uploadを使うとヘッダにX-Requested-Withが使えないため、byPassも無理らしい */
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result create() {
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -42,10 +45,25 @@ public class MenuItems extends Controller {
 
         logger.debug(String.format("#create Content-Type: %s", contentType));
 
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser localUser = LocalUser.find.byId(user.email().get());
+
+        if (!localUser.is_admin) {
+            logger.warn(String.format("#create only admin can create menu. local_user.id:%s", localUser.email));
+            return unauthorized();
+        }
+
         if (contentType != null && contentType.contains("text/plain")) {
             logger.debug("#create build from csv");
             try {
                 createFromCsv(request().body().asText());
+            } catch (IOException e) {
+                return internalServerError(String.format("{error: \"%s\"", e.getLocalizedMessage()));
+            }
+        } else if (contentType != null && contentType.contains("multipart/form-data;")) {
+            logger.debug("#create build form multipart form-data");
+            try {
+                createFromFile(request().body().asMultipartFormData());
             } catch (IOException e) {
                 return internalServerError(String.format("{error: \"%s\"", e.getLocalizedMessage()));
             }
@@ -67,7 +85,7 @@ public class MenuItems extends Controller {
             Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json.get(index));
 
             if (filledForm.hasErrors()) {
-                logger.debug(String.format("#create item(%d) has error. errors: %s", filledForm.errorsAsJson()));
+                logger.debug(String.format("#create item(%d) has error. errors: %s", index + 1, filledForm.errorsAsJson()));
                 continue;
             }
 
@@ -80,6 +98,11 @@ public class MenuItems extends Controller {
 
         logger.debug(String.format("#createFromCsv text:%s", text));
 
+        if (text == null || text.isEmpty()) {
+            logger.debug("#createFromCsv text is emtpy or null.");
+            return;
+        }
+
         CsvSchema bootstrap = CsvSchema.emptySchema().withHeader().withQuoteChar('"');
         CsvMapper csvMapper = new CsvMapper();
 
@@ -90,5 +113,41 @@ public class MenuItems extends Controller {
         System.out.println(items);
 
         createFromJson(Json.toJson(items));
+    }
+
+    private static void createFromFile(Http.MultipartFormData formData) throws IOException {
+
+        if (formData.getFiles().size() == 0) {
+            return;
+        }
+
+        File csvFile = formData.getFile("menuItems").getFile();
+
+        logger.debug(String.format("#createFromFile fileName:%s", csvFile.getName()));
+
+        BufferedReader bCsvFile;
+        try {
+            FileInputStream fsCsvFile = new FileInputStream(csvFile);
+            InputStreamReader isCsvFile = new InputStreamReader(fsCsvFile, "UTF-8");
+            bCsvFile = new BufferedReader(isCsvFile);
+        } catch (FileNotFoundException e) {
+            throw e;
+        } catch (UnsupportedEncodingException e) {
+            throw e;
+        }
+
+        StringBuffer csvText = new StringBuffer();
+
+        try {
+            String str = bCsvFile.readLine();
+            while (str != null) {
+                csvText.append(str + "\r\n");
+                str = bCsvFile.readLine();
+            }
+        } catch (IOException e) {
+            throw e;
+        }
+
+        createFromCsv(csvText.toString());
     }
 }

@@ -45,6 +45,11 @@
             access: AccessLevels.admin,
             reloadOnSearch: false
         })
+        .when('/admin/menu-items/new', {
+            templateUrl: '/views/admin/menu-item/new',
+            controller: 'MenuItemNewController',
+            access: AccessLevels.admin
+        })
         .otherwise({                           // その他のパスが指定された場合
             redirectTo: '/'                    // "/"に飛ぶ
         });

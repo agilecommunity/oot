@@ -6,6 +6,8 @@
         <title>美味しいお弁当が食べたい！</title>
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap-datetimepicker.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload-ui.css")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/common.css")">
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/ie-shim.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/html5shiv.js")"></script>
@@ -25,6 +27,9 @@
         {{$root.current_user.last_name}} {{$root.current_user.first_name}}
         </div>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.ui.widget.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.iframe-transport.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.fileupload.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular-resource.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular-route.min.js")"></script>
@@ -38,12 +43,13 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/underscore.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/bootbox.js")"></script>
 
+
         <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/constants/constants.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/routers/routers.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/services/services.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/controllers.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/filters/filters.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/controllers.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
     </body>
 </html>
