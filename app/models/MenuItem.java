@@ -23,16 +23,22 @@ public class MenuItem extends Model {
     public Long id;
 
     @Constraints.Required
+    @Constraints.MaxLength(10)
     public String category;
 
     @Constraints.Required
+    @Constraints.MaxLength(255)
     public String shop_name;
 
     @Constraints.Required
+    @Constraints.MaxLength(255)
     public String name;
 
     @Constraints.Required
     public BigDecimal price_on_order;
+
+    @Constraints.MaxLength(255)
+    public String code;
 
     public String item_image_path;
 

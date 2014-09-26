@@ -90,6 +90,11 @@ public class MenuItems extends Controller {
             }
 
             MenuItem item = filledForm.get();
+
+            if (item.code == null) {
+                item.code = "";
+            }
+
             item.save();
         }
     }

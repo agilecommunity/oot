@@ -77,6 +77,7 @@ public class MenuItemsTest {
             builder.append(", \"shop_name\": \"MOTTOMOTTO\"");
             builder.append(", \"name\": \"からあげ弁当\"");
             builder.append(", \"price_on_order\":105");
+            builder.append(", \"code\": \"MOTTOMOTTO-B01\"");
             builder.append("}");
         }
         {
@@ -85,6 +86,7 @@ public class MenuItemsTest {
             builder.append(", \"shop_name\": \"ポカポカ弁当\"");
             builder.append(", \"name\": \"108種類のサラダ\"");
             builder.append(", \"price_on_order\":106");
+            builder.append(", \"code\": null");
             builder.append("}");
         }
         builder.append("]");
@@ -111,6 +113,7 @@ public class MenuItemsTest {
         Assertions.assertThat(item.shop_name).isEqualTo("MOTTOMOTTO");
         Assertions.assertThat(item.name).isEqualTo("からあげ弁当");
         Assertions.assertThat(item.price_on_order).isEqualTo(BigDecimal.valueOf(105L));
+        Assertions.assertThat(item.code).isEqualTo("MOTTOMOTTO-B01");
 
         item = items.get(1);
         Assertions.assertThat(item.id).isNotNull();
@@ -118,6 +121,7 @@ public class MenuItemsTest {
         Assertions.assertThat(item.shop_name).isEqualTo("ポカポカ弁当");
         Assertions.assertThat(item.name).isEqualTo("108種類のサラダ");
         Assertions.assertThat(item.price_on_order).isEqualTo(BigDecimal.valueOf(106L));
+        Assertions.assertThat(item.code).isEmpty();
 
     }
 
@@ -130,6 +134,7 @@ public class MenuItemsTest {
             builder.append(",shop_name");
             builder.append(",name");
             builder.append(",price_on_order");
+            builder.append(",code");
             builder.append("\r\n");
         }
         {
@@ -137,6 +142,7 @@ public class MenuItemsTest {
             builder.append(",\"MOTTOMOTTO\"");
             builder.append(",\"からあげ弁当\"");
             builder.append(",105");
+            builder.append(",\"MOTTOMOTTO-B01\"");
             builder.append("\r\n");
         }
         {
@@ -144,6 +150,7 @@ public class MenuItemsTest {
             builder.append(",\"ポカポカ弁当\"");
             builder.append(",\"108種類のサラダ\"");
             builder.append(",106");
+            builder.append(",");
         }
 
         Result result = callAPI(fakeRequest(POST, "/api/menu-items")
@@ -167,6 +174,7 @@ public class MenuItemsTest {
         Assertions.assertThat(item.shop_name).isEqualTo("MOTTOMOTTO");
         Assertions.assertThat(item.name).isEqualTo("からあげ弁当");
         Assertions.assertThat(item.price_on_order).isEqualTo(BigDecimal.valueOf(105L));
+        Assertions.assertThat(item.code).isEqualTo("MOTTOMOTTO-B01");
 
         item = items.get(1);
         Assertions.assertThat(item.id).isNotNull();
@@ -174,6 +182,7 @@ public class MenuItemsTest {
         Assertions.assertThat(item.shop_name).isEqualTo("ポカポカ弁当");
         Assertions.assertThat(item.name).isEqualTo("108種類のサラダ");
         Assertions.assertThat(item.price_on_order).isEqualTo(BigDecimal.valueOf(106L));
+        Assertions.assertThat(item.code).isEmpty();
 
     }
 
