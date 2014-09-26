@@ -107,6 +107,10 @@ public class Global extends GlobalSettings  {
 
     private String decryptAES(String target, String key) {
 
+        if (target == null || target.isEmpty()) {
+            return "";
+        }
+
         String decryptedPassword = "";
 
         try {
