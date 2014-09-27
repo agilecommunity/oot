@@ -1,10 +1,10 @@
 
 angular.module('MyControllers')
-    .controller('MenuItemNewController',
+    .controller('MenuItemImageImportController',
     ['$scope', '$location', '$routeParams', '$filter', 'User', 'MenuItem', 'DailyMenu',
         function ($scope, $location, $routeParams, $filter, User, MenuItem, DailyMenu) {
 
-    $('#menu-items').fileupload({
+    $('#menu-item-images').fileupload({
         add: function (ev, data) {
             if (data.files === null || data.files.length !== 1) {
                 return;
@@ -38,7 +38,7 @@ angular.module('MyControllers')
         return description;
     };
 
-    $scope.bulkInsert = function() {
+    $scope.bulkImport = function() {
         if ($scope.upload_data === null) {
             return;
         }

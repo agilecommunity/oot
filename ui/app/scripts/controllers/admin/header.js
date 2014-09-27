@@ -18,8 +18,12 @@ angular.module('MyControllers')
         $location.path("/admin/daily-menus/new");
     };
 
-    $scope.showCreateMenuItems = function () {
-        $location.path("/admin/menu-items/new");
+    $scope.showImportMenuItems = function () {
+        $location.path("/admin/menu-items/import");
+    };
+
+    $scope.showImportMenuItemImages = function () {
+        $location.path("/admin/menu-item-images/import");
     };
 
 }]);

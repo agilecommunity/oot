@@ -45,9 +45,14 @@
             access: AccessLevels.admin,
             reloadOnSearch: false
         })
-        .when('/admin/menu-items/new', {
-            templateUrl: '/views/admin/menu-item/new',
-            controller: 'MenuItemNewController',
+        .when('/admin/menu-items/import', {
+            templateUrl: '/views/admin/menu-item/import',
+            controller: 'MenuItemImportController',
+            access: AccessLevels.admin
+        })
+        .when('/admin/menu-item-images/import', {
+            templateUrl: '/views/admin/menu-item-image/import',
+            controller: 'MenuItemImageImportController',
             access: AccessLevels.admin
         })
         .otherwise({                           // その他のパスが指定された場合

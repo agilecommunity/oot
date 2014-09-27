@@ -127,6 +127,10 @@ public class MenuItems extends Controller {
             return;
         }
 
+        for (Http.MultipartFormData.FilePart filePart : formData.getFiles()) {
+            logger.debug(String.format("#createFromFile files key:%s fileName:%s contentType:%s", filePart.getKey(), filePart.getFilename(), filePart.getContentType()));
+        }
+
         File csvFile = formData.getFile("menuItems").getFile();
 
         logger.debug(String.format("#createFromFile fileName:%s", csvFile.getName()));
