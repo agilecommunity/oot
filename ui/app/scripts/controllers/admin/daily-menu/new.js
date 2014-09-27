@@ -112,6 +112,15 @@ angular.module('MyControllers')
         return ($scope.current_daily_menu.findMenuItem(menu_item) >= 0);
     };
 
+    // 画像を表示するHTMLを出力
+    $scope.render_image = function(menu_item) {
+        var imgFile = "no-image.png";
+        if (menu_item.code !== undefined && menu_item.code !== "") {
+            imgFile = menu_item.code + ".png";
+        }
+        return "<img src=\"/assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
+    };
+
     // 項目の1週間の選択状態をHTMLにして出力
     $scope.render_item_select_status = function(menu_item) {
 
