@@ -27,12 +27,11 @@ public class DailyMenu extends Model {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    @NotNull
     @Constraints.Required
     public Date menu_date;
 
-    @NotNull
     @Constraints.Required
+    @Constraints.MaxLength(10)
     public String status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_menu")
