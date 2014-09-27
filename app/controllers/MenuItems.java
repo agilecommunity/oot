@@ -123,6 +123,7 @@ public class MenuItems extends Controller {
     private static void createFromFile(Http.MultipartFormData formData) throws IOException {
 
         if (formData.getFiles().size() == 0) {
+            logger.debug("#createFromFile no files");
             return;
         }
 

@@ -9,18 +9,25 @@ angular.module('MyControllers')
             if (data.files === null || data.files.length !== 1) {
                 return;
             }
-            var file = data.files[0];
-            $scope.upload_file = file; // 複数選択は想定していない
+            $scope.upload_data = data;
             $scope.$apply();
         }
     });
 
     var empty_file = {name: 'ファイルを選択してください', size: null};
+    var getUploadFile = function() {
+        if ($scope.upload_data === null) {
+            return empty_file;
+        }
 
+        return $scope.upload_data.files[0]; // 複数選択は想定していない
+    };
+
+    $scope.upload_data = null;
     $scope.upload_file = empty_file;
 
     $scope.uploadFileDescription = function() {
-        var file = $scope.upload_file;
+        var file = getUploadFile();
         if (file === empty_file) {
             return file.name;
         }
@@ -32,10 +39,11 @@ angular.module('MyControllers')
     };
 
     $scope.bulkInsert = function() {
-        if ($scope.upload_file === empty_file) {
+        if ($scope.upload_data === null) {
             return;
         }
-        $('#menu-items').fileupload('send', {files: [$scope.upload_file]})
+
+        $scope.upload_data.submit()
             .done(function( data, textStatus, jqXHR ) {
                 bootbox.alert("登録が完了しました", function () {
                     $scope.clearForm();
@@ -49,7 +57,7 @@ angular.module('MyControllers')
     };
 
     $scope.clearForm = function() {
-        $scope.upload_file = empty_file;
+        $scope.upload_data = null;
         $scope.menuItemsForm.$setPristine();
         $scope.$apply();
     };
