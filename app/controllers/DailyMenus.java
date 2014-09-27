@@ -160,7 +160,7 @@ public class DailyMenus extends Controller {
 
         if (!localUser.is_admin) {
             logger.warn(String.format("create only admin can create menu. local_user.id:%s", localUser.email));
-            return badRequest();
+            return unauthorized();
         }
 
         JsonNode json = request().body().asJson();
@@ -201,7 +201,7 @@ public class DailyMenus extends Controller {
 
         if (!localUser.is_admin) {
             logger.warn(String.format("update only admin can update menu. local_user.id:%s", localUser.email));
-            return badRequest();
+            return unauthorized();
         }
 
         if (DailyMenu.find.byId(id) == null) {
@@ -249,19 +249,19 @@ public class DailyMenus extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        DailyMenu menu = DailyMenu.find.byId(id);
-
-        if (menu == null) {
-            logger.debug("delete object not found");
-            return ok();
-        }
-
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
         if (!localUser.is_admin) {
             logger.warn(String.format("delete only admin can update menu. local_user.id:%s", localUser.email));
-            return badRequest();
+            return unauthorized();
+        }
+
+        DailyMenu menu = DailyMenu.find.byId(id);
+
+        if (menu == null) {
+            logger.debug("delete object not found");
+            return ok();
         }
 
         menu.delete();
