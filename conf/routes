@@ -7,6 +7,8 @@ GET           /views/*file                                    controllers.UIView
 GET           /api/menu-items                                 controllers.MenuItems.index()
 POST          /api/menu-items                                 controllers.MenuItems.create()
 
+POST          /api/menu-item-images                           controllers.MenuItemImages.create()
+
 GET           /api/daily-menus                                controllers.DailyMenus.index()
 GET           /api/daily-menus/status/:status                 controllers.DailyMenus.indexByStatus(status)
 GET           /api/daily-menus/menu_date/:menu_date           controllers.DailyMenus.showByMenuDate(menu_date)
