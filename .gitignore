@@ -19,4 +19,5 @@ README.html
 public/javascripts/*
 public/stylesheets/*
 public/fonts/*
+public/images/menu-items/*
 conf/application.smtp.conf

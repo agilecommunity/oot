@@ -45,9 +45,21 @@ angular.module('MyControllers')
 
         $scope.upload_data.submit()
         .done(function( data, textStatus, jqXHR ) {
-            bootbox.alert("登録が完了しました", function () {
-                $scope.clearForm();
-            });
+            var result = {statusCode: 200};
+
+            if (data !== "" || data[0] !== undefined) {
+                result = $.parseJSON(data[0].body.innerText);
+            }
+
+            if (result.statusCode === 200) {
+                bootbox.alert("登録が完了しました", function () {
+                    $scope.clearForm();
+                });
+            } else {
+                bootbox.alert("登録できませんでした status:" + result.statusCode, function () {
+                    $scope.clearForm();
+                });
+            }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             bootbox.alert("登録できませんでした status:" + errorThrown, function () {

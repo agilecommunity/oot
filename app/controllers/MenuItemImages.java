@@ -9,9 +9,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import play.Logger;
 import play.Play;
+import play.api.mvc.Codec;
+import play.api.mvc.SimpleResult;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.Results;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
 
@@ -31,8 +34,11 @@ public class MenuItemImages extends Controller {
         logger.debug("#create");
 
         response().setHeader(CACHE_CONTROL, "no-cache");
+        response().setHeader(CONTENT_TYPE, "text/plain");
 
         String contentType = request().getHeader("Content-Type");
+
+        boolean canDetectRequestHeader = clientCanDetectResponseHeader(request().getHeader("User-Agent"));
 
         logger.debug(String.format("#create Content-Type: %s", contentType));
 
@@ -41,14 +47,14 @@ public class MenuItemImages extends Controller {
 
         if (!localUser.is_admin) {
             logger.warn(String.format("#create only admin can create. local_user.id:%s", localUser.email));
-            return unauthorized();
+            return createResult(UNAUTHORIZED, "", canDetectRequestHeader);
         }
 
         Http.MultipartFormData formData = request().body().asMultipartFormData();
 
         if (formData.getFiles().size() == 0) {
             logger.debug("#create no files");
-            return badRequest("");
+            return createResult(BAD_REQUEST, "no file to import", canDetectRequestHeader);
         }
 
         File mayBeZipFile = formData.getFile("menuItemImages").getFile();
@@ -56,18 +62,51 @@ public class MenuItemImages extends Controller {
 
         if (!isZipFile(mayBeZipFile)) {
             logger.debug("#create file isn't zip");
-            return badRequest();
+            return createResult(BAD_REQUEST, "file is not zip", canDetectRequestHeader);
         }
 
         try {
             extractImages(mayBeZipFile);
         } catch (IOException e) {
-            return internalServerError();
+            return createResult(INTERNAL_SERVER_ERROR, "", canDetectRequestHeader);
         } catch (ZipException e) {
-            return internalServerError();
+            return createResult(INTERNAL_SERVER_ERROR, "faild to zip operation", canDetectRequestHeader);
         }
 
-        return ok("");
+        return createResult(OK, "", canDetectRequestHeader);
+    }
+
+    private static boolean clientCanDetectResponseHeader(String userAgent) {
+        if (userAgent == null) {
+            return true;
+        }
+
+        if (userAgent.contains("Trident/4.0")) { // IE8
+            return false;
+        }
+
+        if (userAgent.contains("Trident/5.0")) { // IE9
+            return false;
+        }
+
+        return true;
+    }
+
+    private static Status createResult(int statusCode, String message, boolean canDetectRequestHeader) {
+
+        logger.debug(String.format("#createResult statusCode:%d message:%s canDetectRequestHeader:%b", statusCode, message, canDetectRequestHeader));
+
+        if (canDetectRequestHeader) {
+            logger.debug("#createResult create result by statusCode");
+            return Results.status(statusCode, message);
+        }
+
+        String jsonMessages = String.format("{\"statusCode\":%d, \"message\":\"%s\"}", statusCode, message);
+
+        logger.debug("#createResult create result(ok)");
+
+        return Results.status(OK, jsonMessages);
+
     }
 
     private static boolean isZipFile(File mayBeZipFile) {
