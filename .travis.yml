@@ -10,4 +10,5 @@ before_script:
 - npm install
 - bower install
 - grunt dev
+- cd ../
 script: play-${PLAY_VERSION}/play dist
