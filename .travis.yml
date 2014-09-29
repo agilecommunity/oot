@@ -4,19 +4,17 @@ env:
     - PLAY_VERSION=2.2.2
     - APP_VERSION=1.0-SNAPSHOT
 before_script:
+- cd ..
 - wget http://downloads.typesafe.com/play/${PLAY_VERSION}/play-${PLAY_VERSION}.zip
 - unzip -q play-${PLAY_VERSION}.zip
 - npm install -g grunt-cli
 - npm install -g bower
-- cd ui
+- cd oot/ui
 - npm install
 - bower install
 - grunt dev
 - cd ../
-script: play-${PLAY_VERSION}/play dist
-after_script:
-- rm -rf play-${PLAY_VERSION}
-- rm -f play-${PLAY_VERSION}.zip
+script: ../play-${PLAY_VERSION}/play dist
 deploy:
   provider: releases
   api_key:
