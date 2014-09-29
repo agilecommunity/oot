@@ -12,7 +12,7 @@
     "angular-sanitize": "1.2.14",
     "moment": "2.5.1",
     "bootstrap": "3.1.1",
-    "eonasdan-bootstrap-datetimepicker": "~3.0.0",
+    "eonasdan-bootstrap-datetimepicker": "3.0.0",
     "es5-shim": "~2.3.0",
     "json2": "*",
     "html5shiv": "~3.7.0",
