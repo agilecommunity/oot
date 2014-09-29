@@ -7,6 +7,7 @@ before_script:
 - npm install -g grunt-cli
 - npm install -g bower
 - cd ui
+- npm install
 - bower install
 - grunt dev
 script: play-${PLAY_VERSION}/play dist
