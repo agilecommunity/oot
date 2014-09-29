@@ -12,3 +12,11 @@ before_script:
 - grunt dev
 - cd ../
 script: play-${PLAY_VERSION}/play dist
+deploy:
+  provider: releases
+  api_key:
+    secure: JJ+mwgkitgDNmVJDz5wl6/hRNXODjhVf6hvDFQWj43/66Jya+6ayPO7ElkeF86lnhVPzpBRK1vrdb2gvWyAqvQgVI1H6EjYvBFsw7YmcgHnehLQFutJBVpCqZqtY+vkbQHPV9Jk9AxTUZ7ZusSrVFW1KvyFc6q3yG1tC6/H5pCI=
+  file: /home/travis/build/nobiinu-and/oot/target/universal/oot-webapp-1.0-SNAPSHOT.zip
+  on:
+    repo: nobiinu-and/oot
+    branch: develop
