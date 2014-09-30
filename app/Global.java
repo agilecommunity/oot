@@ -55,6 +55,10 @@ public class Global extends GlobalSettings  {
 
     private Configuration modifySmtpConfiguration(Configuration configuration) {
 
+        if (!configuration.keys().contains("smtp.encryptPassword")) {
+            return configuration;
+        }
+
         if (configuration.getBoolean("smtp.encryptPassword") != true) {
             return configuration;
         }
