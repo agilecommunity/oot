@@ -21,6 +21,15 @@ angular.module('MyControllers')
         }
     );
 
+    // 画像を表示するHTMLを出力
+    $scope.render_image = function(menu_item) {
+        var imgFile = "no-image.png";
+        if (menu_item.code !== undefined && menu_item.code !== "") {
+            imgFile = menu_item.code + ".png";
+        }
+        return "<img src=\"/assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
+    };
+
     $scope.order = function (daily_menu, daily_menu_item) { // イベントハンドラ
 
         // メニューの注文状況を切り替える
