@@ -26,7 +26,7 @@ angular.module('MyControllers')
             return;
         }
 
-        var menu = {id: current_menu.id, menu_date: current_menu.menu_date.unix() * 1000, status: "open", detail_items:[]};
+        var menu = {id: current_menu.id, menu_date: current_menu.menu_date.unix() * 1000, status: current_menu.status, detail_items:[]};
         angular.forEach(current_menu.detail_items, function(item) {
             menu.detail_items.push(item);
         });
@@ -65,7 +65,7 @@ angular.module('MyControllers')
 
                     var menu = null;
                     if (menuIndex === -1) {
-                        menu = new DailyMenu({ menu_date: currentDate, detail_items: [] });
+                        menu = new DailyMenu({ menu_date: currentDate, status: "prepared", detail_items: [] });
                     } else {
                         menu = response[menuIndex];
                     }
@@ -81,7 +81,7 @@ angular.module('MyControllers')
     };
 
     var empty_item = {id: undefined, name: "商品が選択されていません"};
-    var item_max_num = 15;
+    var item_max_num = 12;
     var reset_selected_items = function() {
         $scope.selected_items = [];
         for(var i=0; i<item_max_num; i++) {
@@ -144,6 +144,11 @@ angular.module('MyControllers')
         set_current(daily_menu);
     };
 
+    $scope.change_menu_status = function(status) {
+        $scope.current_daily_menu.status = status;
+        lazy_apply_changes($scope.current_daily_menu);
+    };
+
     $scope.select_item = function(itemIndex) {
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/daily-menu/select-item",
@@ -168,6 +173,10 @@ angular.module('MyControllers')
     //---- ヘルパ
     var item_is_selected = function(index) {
         return ($scope.selected_items[index] !== empty_item);
+    };
+
+    $scope.get_current_menu_status = function() {
+        return $scope.current_daily_menu.status;
     };
 
     $scope.item_is_selected = function(index) {
