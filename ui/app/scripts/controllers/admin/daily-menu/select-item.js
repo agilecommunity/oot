@@ -1,7 +1,17 @@
 angular.module('MyControllers')
     .controller('DailyMenuSelectItemController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem',
-        function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem',
+        function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem) {
+
+    var start_block = function() {
+        $.blockUI({baseZ: 2000, message: null});
+        usSpinnerService.spin("spinner");
+    };
+
+    var stop_block = function() {
+        usSpinnerService.stop("spinner");
+        $.unblockUI();
+    };
 
     var grouping_items  = function() {
         var count_per_row = 4;
@@ -19,13 +29,17 @@ angular.module('MyControllers')
 
     var show_items = function() {
         var filter_shop = $scope.filters.shop;
+        start_block();
         $scope.menu_items = MenuItem.queryByShopName({shop_name: filter_shop.name},
             function (response) { // 成功時
                 // 表示のために5個ずつグルーピングする
                 grouping_items();
+                stop_block();
             },
             function (response) {   // 失敗時
                 alert("データが取得できませんでした。サインイン画面に戻ります。");
+                stop_block();
+                $scope.$dismiss();
                 $location.path("/");
             });
     };

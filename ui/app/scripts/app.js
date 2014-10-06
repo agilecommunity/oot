@@ -13,6 +13,7 @@
             'ngResource',
             'ngSanitize',
             'ui.bootstrap',
+            'angularSpinner',
             'MyServices',
             'MyControllers',
             'MyFilters'
