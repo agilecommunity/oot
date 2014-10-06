@@ -1,28 +1,24 @@
 
 angular.module('MyControllers')
 .controller('DailyMenuNewController',
-    ['$scope', '$location', '$routeParams', '$filter', 'User', 'MenuItem', 'DailyMenu',
-    function ($scope, $location, $routeParams, $filter, User, MenuItem, DailyMenu) {
-
-    // 5個ずつに分ける
-    var groupingItems  = function() {
-        var count_per_row = 5;
-        $scope.group_menu_items = [];
-        var group = [];
-        for ( var i=0 ; i < $scope.menu_items.length ; i++ ) {
-            group.push($scope.menu_items[i]);
-
-            if ((i+1) % count_per_row === 0 || (i+1) === $scope.menu_items.length) {
-                $scope.group_menu_items.push(group);
-                group = [];
-            }
-        }
-    };
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu',
+    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu) {
 
     // 変更を反映する
-    var applyChanges = function(current_menu) {
+    var apply_changes = function(current_menu) {
+
+        var selected_items = compact_selected_items();
+
+        current_menu.detail_items = [];
+        angular.forEach(selected_items, function(item) {
+            current_menu.detail_items.push({menu_item: item});
+        });
+
         // 選択されていない場合はメニューを削除する
-        if (current_menu.detail_items.length === 0) {
+        if (selected_items.length === 0) {
+            console.log("#applyChanges selected items are empty.");
+            console.log("#applyChanges menu.id:" + current_menu.id);
+
             if (current_menu.id !== undefined) {
                 DailyMenu.remove({id: current_menu.id});
                 current_menu.id = undefined;
@@ -35,38 +31,36 @@ angular.module('MyControllers')
             menu.detail_items.push(item);
         });
 
+        console.log("#applyChanges size:" + menu.detail_items.length);
+
         if (menu.id === undefined) {
             DailyMenu.create({}, menu, function (saved) { current_menu.id = saved.id; });
         } else {
             DailyMenu.update({}, menu, function (saved) { current_menu.id = saved.id; });
         }
     };
-    var lazyApplyChanges = _.debounce(applyChanges, 500);
-
-    // メニューのItemを取得する
-    $scope.menu_items = MenuItem.query({},
-        function (response) { // 成功時
-            // 表示のために5個ずつグルーピングする
-            groupingItems();
-        },
-        function (response) {   // 失敗時
-            alert("データが取得できませんでした。サインイン画面に戻ります。");
-            $location.path("/");
-        }
-    );
+    var lazy_apply_changes = _.debounce(apply_changes, 500);
 
     // 日付を変更する
-    var changeMenuDate = function(target) {
-        $scope.menu_date_begin = moment(target).startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
+    var chage_menu_date = function(target) {
+        $scope.menu_date_begin = target.startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
         $scope.menu_date_end = moment($scope.menu_date_begin).add("days", 5);
         $scope.current_daily_menu = new DailyMenu();
 
         var param_menu_date = $scope.menu_date_begin.format("YYYY/MM/DD") + "-" + $scope.menu_date_end.format("YYYY/MM/DD");
         DailyMenu.query({"menu_date": param_menu_date},
             function (response) {
+                console.log("#changeMenuDate DailyMenu size:" + response.length);
+
+                console.log("#changeMenuDate responses");
+                angular.forEach(response, function(item){
+                    console.log(item.menu_date.format("YYYY/MM/DD HH:mm:ss"));
+                });
+
                 $scope.daily_menus = [];
                 for(var i=0; i<5; i++) {
                     var currentDate = moment($scope.menu_date_begin).add("days", i);
+                    console.log(currentDate.format("YYYY/MM/DD HH:mm:ss"));
                     var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
 
                     var menu = null;
@@ -78,7 +72,7 @@ angular.module('MyControllers')
 
                     $scope.daily_menus.push(menu);
                 }
-                $scope.current_daily_menu = $scope.daily_menus[0];
+                set_current($scope.daily_menus[0]);
             },
             function (response) {
                 alert("データが取得できませんでした。サインイン画面に戻ります。");
@@ -86,16 +80,99 @@ angular.module('MyControllers')
             });
     };
 
+    var empty_item = {id: undefined, name: "商品が選択されていません"};
+    var item_max_num = 15;
+    var reset_selected_items = function() {
+        $scope.selected_items = [];
+        for(var i=0; i<item_max_num; i++) {
+            $scope.selected_items[i] = empty_item;
+        }
+    };
+
+    var compact_selected_items = function() {
+        var compacted = [];
+        angular.forEach($scope.selected_items, function(item){
+            if (item !== empty_item) {
+                compacted.push(item);
+            }
+        });
+        return compacted;
+    };
+
+    var deploy_to_selected_items = function(daily_menu) {
+        reset_selected_items();
+
+        console.log("#deploy_to_selected_items detail_items:" + daily_menu.detail_items.length);
+
+        var count = 0;
+        angular.forEach(daily_menu.detail_items, function(item){
+            $scope.selected_items[count] = item.menu_item;
+            count++;
+        });
+    };
+
+    var set_current = function(daily_menu) {
+        console.log("#set_current");
+        console.log(daily_menu);
+        $scope.current_daily_menu = daily_menu;
+        deploy_to_selected_items(daily_menu);
+    };
+
     // カレンダーの初期化
     $("#datetimepicker").datetimepicker({pickTime: false, daysOfWeekDisabled: [0,6]});
-    $("#datetimepicker").on("dp.change",function (e) {
-        changeMenuDate(moment(e.date));
+    $("#datetimepicker").on("dp.change",function (e) { // カレンダーで日付を変更した場合
+        chage_menu_date(moment(e.date));
     });
 
+    // 選択されている商品の初期化
+    reset_selected_items();
+
     // 当日を起点としてメニューを表示する
-    changeMenuDate(moment());
+    chage_menu_date(moment());
+
+    //---- イベントハンドラ
+    // カレンダーを表示する
+    $scope.show_calendar = function() {
+        $("#datetimepicker").data("DateTimePicker").show();
+    };
+
+    // 日付を選択する
+    $scope.choose_day = function(daily_menu) {
+        // 必ず保存する
+        apply_changes($scope.current_daily_menu);
+
+        set_current(daily_menu);
+    };
+
+    $scope.select_item = function(itemIndex) {
+        var modalInstance = $modal.open({
+            templateUrl: "/views/admin/daily-menu/select-item",
+            controller: "DailyMenuSelectItemController",
+            scope: $scope,
+            size: 'lg'
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected_items[itemIndex] = selectedItem;
+            apply_changes($scope.current_daily_menu);
+        }, function () {
+            console.log('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.reset_item = function(index) {
+        $scope.selected_items[index] = empty_item;
+    };
 
     //---- ヘルパ
+    var item_is_selected = function(index) {
+        return ($scope.selected_items[index] !== empty_item);
+    };
+
+    $scope.item_is_selected = function(index) {
+        return item_is_selected(index);
+    };
+
     // 日付を選択しているか?
     $scope.is_day_selected = function(day) {
         if ($scope.current_daily_menu === undefined) {
@@ -104,12 +181,11 @@ angular.module('MyControllers')
         return ($scope.current_daily_menu.menu_date === day);
     };
 
-    // 項目を選択しているか?
-    $scope.is_item_selected = function(menu_item) {
-        if ($scope.current_daily_menu === undefined) {
-            return false;
-        }
-        return ($scope.current_daily_menu.findMenuItem(menu_item) >= 0);
+    $scope.class_for_tile = function(index) {
+        return {
+            'empty': !item_is_selected(index),
+            'selected': item_is_selected(index)
+        };
     };
 
     // 画像を表示するHTMLを出力
@@ -121,55 +197,4 @@ angular.module('MyControllers')
         return "<img src=\"/assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
     };
 
-    // 項目の1週間の選択状態をHTMLにして出力
-    $scope.render_item_select_status = function(menu_item) {
-
-        if ($scope.daily_menus === undefined || $scope.current_daily_menu === undefined) {
-            return "";
-        }
-
-        var status = "";
-
-        angular.forEach($scope.daily_menus, function(daily_menu){
-            var index = daily_menu.findMenuItem(menu_item);
-            if ( index >= 0 ) {
-                var class_name = "text-muted";
-                if ( daily_menu === $scope.current_daily_menu ) {
-                    class_name = "text-primary";
-                }
-                status += "<span class=\"" + class_name + "\">●</span>";
-            } else {
-                status += "<span class=\"text-muted\">○</span>";
-            }
-        });
-
-        return status;
-    };
-
-    //---- イベントハンドラ
-    // 日付を選択する
-    $scope.choose_day = function(daily_menu) {
-        // 必ず保存する
-        applyChanges($scope.current_daily_menu);
-
-        $scope.current_daily_menu = daily_menu;
-    };
-
-    // 項目を選択する
-    $scope.choose_item = function(menu_item) {
-        var index = $scope.current_daily_menu.findMenuItem(menu_item);
-        if ( index >= 0 ) {
-            $scope.current_daily_menu.detail_items.splice(index, 1);
-        } else {
-            $scope.current_daily_menu.detail_items.push({menu_item: menu_item});
-        }
-
-        // 選択のたびに保存を行う
-        lazyApplyChanges($scope.current_daily_menu);
-    };
-
-    // カレンダーを表示する
-    $scope.show_calendar = function() {
-        $("#datetimepicker").data("DateTimePicker").show();
-    };
 }]);

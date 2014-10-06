@@ -4,6 +4,9 @@ GET           /assets/*file                                   controllers.Assets
 GET           /views/*file                                    controllers.UIViews.at(path = "/ui/app/views", file)
 
 # Api
+GET           /api/shops                                      controllers.Shops.index()
+GET           /api/shops/:shop_name/menu-items                controllers.MenuItems.indexByShopName(shop_name)
+
 GET           /api/menu-items                                 controllers.MenuItems.index()
 POST          /api/menu-items                                 controllers.MenuItems.create()
 

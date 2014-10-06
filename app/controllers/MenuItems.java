@@ -26,12 +26,24 @@ public class MenuItems extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.MenuItems");
 
-    @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         List<MenuItem> menus = MenuItem.find.orderBy("id").findList();
+
+        return ok(Json.toJson(menus));
+    }
+
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result indexByShopName(String shopName) {
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
+        logger.debug(String.format("#indexByShopName shopName: %s", shopName));
+
+        List<MenuItem> menus = MenuItem.find.where().eq("shop_name", shopName).orderBy("id").findList();
+
+        logger.debug(String.format("#indexByShopName count: %d", menus.size()));
 
         return ok(Json.toJson(menus));
     }

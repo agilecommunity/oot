@@ -1,3 +1,33 @@
+<style type="text/css">
+.tile {
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    background: #fff;
+    margin-bottom: 10px;
+}
+.empty {
+    background: #d3d3d3;
+    padding: 30px;
+}
+
+.selected {
+    border: 1px solid #d3d3d3;
+    padding: 10px;
+}
+
+.reset-item {
+    position:absolute;
+    top:-0.3em;
+    right:0px;
+    font-size:200%;
+}
+
+div.menu-item .thumbnail {
+    margin-bottom: 0px;
+}
+
+</style>
 <div class="content">
     <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
 
@@ -10,24 +40,75 @@
                 </button>
             </li>
             <li class="divider"></li>
-            <li id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-class="{'active': is_day_selected(daily_menu.menu_date)}" ng-repeat="daily_menu in daily_menus">
-                <a href="" ng-click="choose_day(daily_menu)">{{daily_menu.menu_date.format("YYYY/MM/DD (ddd)")}}</a>
+            <li id="day-{{daily_menu.menu_date|localdate:YYYYMMDD}}" ng-class="{'active': is_day_selected(daily_menu.menu_date)}" ng-repeat="daily_menu in daily_menus">
+                <a href="" ng-click="choose_day(daily_menu)">{{daily_menu.menu_date|localdate:"YYYY/MM/DD (ddd)"}}</a>
             </li>
         </ul>
         </div>
-        <div class="menu-list" class="clearfix col-md-11" style="padding-top: 5px;">
-            <div class="row col-md-offset-1" ng-repeat="group in group_menu_items">
-              <div class="col-md-2 menu" ng-repeat="menu_item in group" ng-class="{'selected': is_item_selected(menu_item)}" ng-click="choose_item(menu_item)">
-                <div class="caption">
-                    <div>【{{menu_item.shop_name}}】</div>
-                    <div> {{menu_item.name}}</div>
-                    <div class="text-right">{{menu_item.price_on_order}}円</div>
+        <div class="container-fluid selected-bento" style="margin-top:10px;">
+            <div class="row">
+                <div class="col-md-11 col-md-offset-1">
+                    <div class="row">
+                        <div class="col-md-10"><span class="label label-default" style="font-size:18px;">お弁当</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2" ng-repeat="n in [] | range:5">
+                            <div class="tile" ng-class="class_for_tile(n)" ng-click="select_item(n)">
+                                <div class="menu-item" ng-show="item_is_selected(n)">
+                                    <div class="caption">
+                                        <div>【{{selected_items[n].shop_name}}】</div>
+                                        <div> {{selected_items[n].name}}</div>
+                                        <div class="text-right">{{selected_items[n].price_on_order}}円</div>
+                                    </div>
+                                    <a href="" class="thumbnail" ng-bind-html="render_image(selected_items[n])"></a>
+                                </div>
+                                <div class="menu-item" ng-hide="item_is_selected(n)">{{selected_items[n].name}}</div>
+                            </div>
+                            <span class="glyphicon glyphicon-remove-sign reset-item" ng-click="reset_item(n)" ng-show="item_is_selected(n)"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2" ng-repeat="n in [] | range:5">
+                            <div class="tile" ng-class="class_for_tile(n+5)" ng-click="select_item(n+5)">
+                                <div ng-show="item_is_selected(n+5)">
+                                    <div class="caption">
+                                        <div>【{{selected_items[n+5].shop_name}}】</div>
+                                        <div> {{selected_items[n+5].name}}</div>
+                                        <div class="text-right">{{selected_items[n+5].price_on_order}}円</div>
+                                    </div>
+                                    <a href="" class="thumbnail" ng-bind-html="render_image(selected_items[n+5])"></a>
+                                </div>
+                                <div ng-hide="item_is_selected(n+5)">{{selected_items[n+5].name}}</div>
+                            </div>
+                            <span class="glyphicon glyphicon-remove-sign reset-item" ng-click="reset_item(n+5)" ng-show="item_is_selected(n+5)"></span>
+                        </div>
+                    </div>
                 </div>
-                <a href="" class="thumbnail" ng-bind-html="render_image(menu_item)">
-                </a>
-                <div class="caption text-center menu-select-status" ng-bind-html="render_item_select_status(menu_item)"></div>
-              </div>
-              <div class="clearfix visible-md" ng-show="$last"></div>
+            </div>
+        </div>
+        <div class="container-fluid selected-side" style="margin-top:10px;">
+            <div class="row">
+                <div class="col-md-11 col-md-offset-1">
+                    <div class="row">
+                        <div class="col-md-10"><span class="label label-default" style="font-size:18px;">サイドメニュー</span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2" ng-repeat="n in [] | range:5">
+                            <div class="tile" ng-class="class_for_tile(n+10)" ng-click="select_item(n+10)">
+                                <div ng-show="item_is_selected(n+10)">
+                                    <div class="caption">
+                                        <div>【{{selected_items[n+10].shop_name}}】</div>
+                                        <div> {{selected_items[n+10].name}}</div>
+                                        <div class="text-right">{{selected_items[n+10].price_on_order}}円</div>
+                                    </div>
+                                    <a href="" class="thumbnail" ng-bind-html="render_image(selected_items[n+10])"></a>
+                                </div>
+                                <div ng-hide="item_is_selected(n+10)">{{selected_items[n+10].name}}</div>
+                            </div>
+                            <span class="glyphicon glyphicon-remove-sign reset-item" ng-click="reset_item(n+10)" ng-show="item_is_selected(n+10)"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

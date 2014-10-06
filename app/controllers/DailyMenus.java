@@ -85,7 +85,6 @@ public class DailyMenus extends Controller {
         }
     }
 
-    @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -112,7 +111,6 @@ public class DailyMenus extends Controller {
         return ok(Json.toJson(menus.orderBy("menu_date").findList()));
     }
 
-    @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result indexByStatus(String status) {
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -122,7 +120,6 @@ public class DailyMenus extends Controller {
         return ok(Json.toJson(menus));
     }
 
-    @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByMenuDate(String menu_date_str) {
 

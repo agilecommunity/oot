@@ -1,0 +1,32 @@
+<div style="margin:10px;">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <p class="navbar-text">お弁当</p>
+            </div>
+            <div class="navbar-collapse">
+                <button type="button" class="btn btn-default navbar-btn" disabled="disabled">肉</button>
+                <button type="button" class="btn btn-default navbar-btn" disabled="disabled">魚</button>
+                <button type="button" class="btn btn-default navbar-btn" disabled="disabled">人気</button>
+                <button type="button" class="btn btn-default navbar-btn" disabled="disabled">新入荷</button>
+                <button type="button" class="btn btn-info navbar-btn" ng-click="select_shops()">店 : {{render_filter_shop()}}</button>
+            </div>
+        </div>
+    </nav>
+    <div class="container menu-items">
+        <div class="row">
+            <div class="col-md-10">対象の商品がありません</div>
+        </div>
+        <div class="row" ng-repeat="group in group_menu_items">
+            <div class="col-md-2 menu-item well" ng-click="select_this(menu_item)" ng-repeat="menu_item in group">
+                <div class="caption">
+                    <div>【{{menu_item.shop_name}}】</div>
+                    <div> {{menu_item.name}}</div>
+                    <div class="text-right">{{menu_item.price_on_order}}円</div>
+                </div>
+                <a href="" class="thumbnail" ng-bind-html="render_image(menu_item)"></a>
+            </div>
+            <div class="clearfix visible-md" ng-show="$last"></div>
+        </div>
+    </div>
+</div>

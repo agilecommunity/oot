@@ -20,6 +20,7 @@
     "holderjs": "~2.3.2",
     "underscore": "~1.6.0",
     "bootbox": "~4.3.0",
-    "jquery-file-upload": "~9.8.0"
+    "jquery-file-upload": "~9.8.0",
+    "angular-bootstrap": "~0.11.2"
   }
 }

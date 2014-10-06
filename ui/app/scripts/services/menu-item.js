@@ -24,6 +24,13 @@ angular.module('MyServices')
             isArray: true,
             transformResponse: transformResponse,
             cache: false
+        },
+        queryByShopName: {
+            url: "/api/shops/:shop_name/menu-items",
+            method: "GET",
+            isArray: true,
+            transformResponse: transformResponse,
+            cache: false
         }
     });
 

@@ -1,0 +1,61 @@
+angular.module('MyControllers')
+    .controller('DailyMenuSelectItemController',
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem',
+        function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem) {
+
+    var grouping_items  = function() {
+        var count_per_row = 4;
+        $scope.group_menu_items = [];
+        var group = [];
+        for ( var i=0 ; i < $scope.menu_items.length ; i++ ) {
+            group.push($scope.menu_items[i]);
+
+            if ((i+1) % count_per_row === 0 || (i+1) === $scope.menu_items.length) {
+                $scope.group_menu_items.push(group);
+                group = [];
+            }
+        }
+    };
+
+    var show_items = function() {
+        var filter_shop = $scope.filters.shop;
+        $scope.menu_items = MenuItem.queryByShopName({shop_name: filter_shop.name},
+            function (response) { // 成功時
+                // 表示のために5個ずつグルーピングする
+                grouping_items();
+            },
+            function (response) {   // 失敗時
+                alert("データが取得できませんでした。サインイン画面に戻ります。");
+                $location.path("/");
+            });
+    };
+
+    $scope.menu_items = [];
+
+    $scope.filters = {};
+    $scope.filters.shop = {id: '@none', name: '選択してください'};
+
+    $scope.select_shops = function() {
+        var modalInstance = $modal.open({
+            templateUrl: "/views/admin/daily-menu/select-shop",
+            scope: $scope,
+            controller: "DailyMenuSelectShopController"
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.filters.shop = selectedItem;
+            show_items();
+        }, function () {
+            console.log('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.select_this = function(item) {
+        $scope.$close(item);
+    };
+
+    $scope.render_filter_shop = function() {
+        return $scope.filters.shop.name;
+    };
+
+}]);

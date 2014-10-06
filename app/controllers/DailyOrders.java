@@ -24,7 +24,6 @@ public class DailyOrders extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyOrders");
 
-    @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showMine() {
 
@@ -44,7 +43,6 @@ public class DailyOrders extends Controller {
         return ok(Json.toJson(orders));
     }
 
-    @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByOrderDate(String order_date_str) {
 
