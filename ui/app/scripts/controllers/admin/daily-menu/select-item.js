@@ -31,6 +31,7 @@ angular.module('MyControllers')
     };
 
     $scope.menu_items = [];
+    $scope.group_menu_items = [];
 
     $scope.filters = {};
     $scope.filters.shop = {id: '@none', name: '選択してください'};
@@ -48,6 +49,10 @@ angular.module('MyControllers')
         }, function () {
             console.log('Modal dismissed at: ' + new Date());
         });
+    };
+
+    $scope.is_empty = function() {
+        return $scope.group_menu_items.length === 0;
     };
 
     $scope.select_this = function(item) {

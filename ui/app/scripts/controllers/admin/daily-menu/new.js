@@ -162,6 +162,7 @@ angular.module('MyControllers')
 
     $scope.reset_item = function(index) {
         $scope.selected_items[index] = empty_item;
+        apply_changes($scope.current_daily_menu);
     };
 
     //---- ヘルパ

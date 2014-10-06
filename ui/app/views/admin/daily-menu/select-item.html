@@ -1,4 +1,8 @@
-<div style="margin:10px;">
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+    <h4>商品選択</h4>
+</div>
+<div class="modal-body">
     <nav class="navbar navbar-default" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -14,10 +18,10 @@
         </div>
     </nav>
     <div class="container menu-items">
-        <div class="row">
-            <div class="col-md-10">対象の商品がありません</div>
+        <div class="row" ng-show="is_empty()">
+            <div class="col-md-8 no-data">対象の商品がありません</div>
         </div>
-        <div class="row" ng-repeat="group in group_menu_items">
+        <div class="row" ng-hide="is_empty()" ng-repeat="group in group_menu_items">
             <div class="col-md-2 menu-item well" ng-click="select_this(menu_item)" ng-repeat="menu_item in group">
                 <div class="caption">
                     <div>【{{menu_item.shop_name}}】</div>
