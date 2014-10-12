@@ -21,7 +21,7 @@ public class DailyOrderItemTest extends WithApplication {
 
      @Before
      public void setUp() {
-         start(fakeApplication(inMemoryDatabase()));
+         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
      }
 
      @After

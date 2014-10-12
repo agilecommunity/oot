@@ -12,6 +12,11 @@ import securesocial.core.IdentityId;
 import securesocial.core.PasswordInfo;
 import securesocial.core.SocialUser;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static play.test.Helpers.inMemoryDatabase;
+
 /*
  * java - Unit-testing methods secured with Securesocial annotation - Stack Overflow
  * http://stackoverflow.com/questions/19226110/unit-testing-methods-secured-with-securesocial-annotation
@@ -46,5 +51,13 @@ public class Utils {
         // secureSocial doesnt seem to set a maxAge or Domain so i set them myself.
         Cookie fake_cookie = new Cookie(auth.cookieName(), scala_cookie.value(), 120, scala_cookie.path(), "None", auth.cookieSecure(), auth.cookieHttpOnly());
         return fake_cookie;
+    }
+
+    public static Map<String, String> getAdditionalApplicationSettings() {
+        Map<String, String> settings = new HashMap<String, String>();
+        settings.put("smtp.mock", "true");
+        settings.putAll(inMemoryDatabase());
+
+        return settings;
     }
 }

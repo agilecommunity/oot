@@ -25,9 +25,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class RegistrationTest {
 
     public static void setUp() {
-        start(fakeApplication(inMemoryDatabase()));
+        start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
     }
-
 
     public static class startSignupとsignupの利用方法 {
 
