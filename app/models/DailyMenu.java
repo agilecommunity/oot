@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.avaje.ebean.validation.NotNull;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -28,7 +24,7 @@ public class DailyMenu extends Model {
     public Long id;
 
     @Constraints.Required
-    public Date menu_date;
+    public java.sql.Date menu_date;
 
     @Constraints.Required
     @Constraints.MaxLength(10)
@@ -42,7 +38,7 @@ public class DailyMenu extends Model {
      */
     public static Finder<Long,DailyMenu> find = new Finder<Long,DailyMenu>(Long.class, DailyMenu.class);
 
-    public static DailyMenu find_by(Date menu_date) {
+    public static DailyMenu find_by(java.sql.Date menu_date) {
         List<DailyMenu> candidate = DailyMenu.find.where().eq("menu_date", menu_date).findList();
 
         if (candidate.size() != 1) {
@@ -52,7 +48,7 @@ public class DailyMenu extends Model {
         return candidate.get(0);
     }
 
-    public static List<DailyMenu> find_between(Date menu_date_from, Date menu_date_to) {
+    public static List<DailyMenu> find_between(java.sql.Date menu_date_from, java.sql.Date menu_date_to) {
         List<DailyMenu> items = DailyMenu.find.where().ge("menu_date", menu_date_from).le("menu_date", menu_date_to).findList();
 
         return items;

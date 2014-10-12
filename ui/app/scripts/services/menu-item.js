@@ -8,12 +8,7 @@ angular.module('MyServices')
         if (data === "") {
             return [];
         }
-
-        // 日付が数字でくるとDateに変換されないので、こちらで変換する
         var list = angular.fromJson(data);
-        angular.forEach(list, function (item) {
-            item.order_date = moment(item.order_date);
-        });
         return list;
     };
 

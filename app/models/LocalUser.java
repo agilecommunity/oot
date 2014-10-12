@@ -1,5 +1,6 @@
 package models;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -31,10 +32,10 @@ public class LocalUser extends Model {
     public String password;
 
     @JsonIgnore
-    public Date created_at;
+    public Timestamp created_at;
 
     @JsonIgnore
-    public Date updated_at;
+    public Timestamp updated_at;
 
     /**
      * Generic query helper for entity with id Long

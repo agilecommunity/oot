@@ -7,24 +7,27 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.typesafe.config.*;
 import models.MenuItem;
-import play.Application;
-import play.Configuration;
-import play.GlobalSettings;
-import play.Play;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import play.*;
 import play.api.PlayException;
 import play.api.libs.Codecs;
 import play.data.format.Formatters;
 import play.libs.Yaml;
 
 import com.avaje.ebean.Ebean;
+import utils.controller.ParameterConverter;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Global extends GlobalSettings  {
+
+    private static Logger.ALogger logger = Logger.of("application.Global");
 
     @Override
     public Configuration onLoadConfig(Configuration configuration, File file, ClassLoader classLoader) {
@@ -36,6 +39,12 @@ public class Global extends GlobalSettings  {
 
     @Override
     public void onStart(Application app) {
+
+        logger.debug("onStart");
+
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
+        registerFormatters();
 
         if(Play.isTest()) { // テストモードの場合はfixtureを読むようにしているので何もしない
             return;
@@ -49,8 +58,6 @@ public class Global extends GlobalSettings  {
                 Ebean.save((List) Yaml.load("fixtures/dev/local_user.yml"));
             }
         }
-
-        registerFormatters();
     }
 
     private Configuration modifySmtpConfiguration(Configuration configuration) {
@@ -81,15 +88,15 @@ public class Global extends GlobalSettings  {
     }
 
     private void registerFormatters() {
-        Formatters.register(Date.class, new Formatters.SimpleFormatter<Date>() {
+        Formatters.register(java.sql.Date.class, new Formatters.SimpleFormatter<java.sql.Date>() {
             @Override
-            public Date parse(String input, Locale l) throws ParseException {
-
-                return new Date(Long.parseLong(input));
+            public java.sql.Date parse(String input, Locale l) throws ParseException {
+                logger.debug(String.format("#parse Date input:%s", input));
+                return ParameterConverter.convertDateFrom(input);
             }
 
             @Override
-            public String print(Date input, Locale l) {
+            public String print(java.sql.Date input, Locale l) {
                 return String.valueOf(input.getTime());
             }
         });

@@ -1,5 +1,9 @@
 package utils.controller;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
+import java.sql.DatabaseMetaData;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,10 +13,10 @@ public class ParameterConverter {
 
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
-    public static Date convertDateFrom(String value) throws ParseException {
+    public static java.sql.Date convertDateFrom(String value) throws ParseException {
 
-        DateFormat format = new SimpleDateFormat(ParameterConverter.DEFAULT_DATE_FORMAT);
-        return format.parse(value);
+        DateTime dateValue = DateTimeFormat.forPattern(DEFAULT_DATE_FORMAT).withZoneUTC().parseDateTime(value);
+        return new java.sql.Date(dateValue.getMillis());
 
     }
 }

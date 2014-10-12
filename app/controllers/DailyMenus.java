@@ -12,6 +12,7 @@ import models.DailyMenu;
 import models.DailyOrder;
 import models.LocalUser;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import play.Logger;
 import play.data.Form;
@@ -32,34 +33,31 @@ public class DailyMenus extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyMenus");
 
     private static class DateRange {
-        public DateTime fromDate;
-        public DateTime toDate;
+        public java.sql.Date fromDate;
+        public java.sql.Date toDate;
 
-        public DateRange(String fromStr, String toStr) {
-            this.fromDate = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(fromStr);
-            this.toDate = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(toStr);
+        public DateRange(String fromStr, String toStr) throws ParseException {
+            this.fromDate = ParameterConverter.convertDateFrom(fromStr);
+            this.toDate = ParameterConverter.convertDateFrom(toStr);
         }
     }
 
     private static class DateParameter {
-        private String bareValue = "";
-
-        private DateTime value = null;
+        private java.sql.Date value = null;
         private DateRange rangeValue = null;
 
-        public DateParameter(String value) {
+        public DateParameter(String value) throws ParseException {
             if (value == null) {
                 return;
             }
-            this.bareValue = value;
+            this.value = ParameterConverter.convertDateFrom(value);
+        }
 
-            String[] values = this.bareValue.split("-");
-
-            if (values.length == 1) {
-                this.value = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(values[0]);
-            } else if (values.length == 2) {
-                this.rangeValue = new DateRange(values[0], values[1]);
+        public DateParameter(String from, String to) throws ParseException {
+            if (from == null && to == null) {
+                return;
             }
+            this.rangeValue = new DateRange(from, to);
         }
 
         public boolean isRange() {
@@ -70,7 +68,7 @@ public class DailyMenus extends Controller {
             return this.rangeValue;
         }
 
-        public DateTime getValue() {
+        public java.sql.Date getValue() {
             return this.value;
         }
     }
@@ -78,9 +76,14 @@ public class DailyMenus extends Controller {
     private static class Parameters {
         public DateParameter menu_date = null;
 
-        public Parameters(Http.Request request) {
+        public Parameters(Http.Request request) throws ParseException {
             if (request.getQueryString("menu_date") != null) {
                 this.menu_date = new DateParameter(request.getQueryString("menu_date"));
+                return;
+            }
+            if (request.getQueryString("from") != null || request.getQueryString("to") != null) {
+                this.menu_date = new DateParameter(request.getQueryString("from"), request.getQueryString("to"));
+                return;
             }
         }
     }
@@ -89,7 +92,13 @@ public class DailyMenus extends Controller {
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Parameters parameters = new Parameters(request());
+        Parameters parameters = null;
+        try {
+            parameters = new Parameters(request());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return internalServerError();
+        }
 
         ExpressionList<DailyMenu> menus = DailyMenu.find.where();
 
@@ -98,13 +107,13 @@ public class DailyMenus extends Controller {
                 DateRange dateRange = parameters.menu_date.getRangeValue();
                 menus.between("menu_date", dateRange.fromDate, dateRange.toDate);
 
-                logger.debug("menu_date(range) from : " + dateRange.fromDate.toString("yyyy/MM/dd"));
-                logger.debug("menu_date(range) to   : " + dateRange.toDate.toString("yyyy/MM/dd"));
+                logger.debug("menu_date(range) from : " + dateRange.fromDate.toString());
+                logger.debug("menu_date(range) to   : " + dateRange.toDate.toString());
 
             } else {
                 menus.eq("menu_date", parameters.menu_date.getValue());
 
-                logger.debug("menu_date(value) : " + parameters.menu_date.getValue().toString("yyyy/MM/dd"));
+                logger.debug("menu_date(value) : " + parameters.menu_date.getValue().toString());
             }
         }
 
@@ -125,7 +134,7 @@ public class DailyMenus extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Date menu_date;
+        java.sql.Date menu_date;
         try {
             menu_date = ParameterConverter.convertDateFrom(menu_date_str);
         } catch (ParseException e) {
@@ -210,20 +219,6 @@ public class DailyMenus extends Controller {
 
         logger.debug(String.format("update request-body:%s", request().body().toString()));
 
-        Formatters.register(Date.class, new Formatters.SimpleFormatter<Date>() {
-
-            @Override
-            public Date parse(String input, Locale l) throws ParseException {
-
-                return new Date(Long.parseLong(input));
-            }
-
-            @Override
-            public String print(Date input, Locale l) {
-                return String.valueOf(input.getTime());
-            }
-        });
-
         Form<DailyMenu> filledForm = Form.form(DailyMenu.class).bind(json);
 
         if (filledForm.hasErrors()) {
@@ -232,6 +227,8 @@ public class DailyMenus extends Controller {
         }
 
         DailyMenu object = filledForm.get();
+
+        logger.debug(String.format("update target_date:%s", object.menu_date.toString()));
 
         object.update();
 
@@ -260,6 +257,8 @@ public class DailyMenus extends Controller {
             logger.debug("delete object not found");
             return ok();
         }
+
+        logger.debug(String.format("delete id:%d date:%s status:%s", menu.id, menu.menu_date.toString(), menu.status ));
 
         menu.delete();
 

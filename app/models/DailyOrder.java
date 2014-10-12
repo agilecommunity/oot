@@ -16,10 +16,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import play.Logger;
+import play.data.validation.Constraints;
 import play.data.validation.Validation;
+import play.data.validation.ValidationError;
 import play.db.ebean.Model;
 
 import com.avaje.ebean.validation.NotNull;
+
+import static play.data.validation.Constraints.*;
 
 @Entity
 public class DailyOrder extends Model {
@@ -32,8 +36,8 @@ public class DailyOrder extends Model {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    @NotNull
-    public Date order_date;
+    @Constraints.Required
+    public java.sql.Date order_date;
 
     @OneToOne(cascade=CascadeType.REFRESH, optional = false) // 参照のみだからREFRESHでいいはず
     @JoinColumn(name="user_id", nullable = false)
@@ -42,31 +46,25 @@ public class DailyOrder extends Model {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_order")
     public List<DailyOrderItem> detail_items = new ArrayList<DailyOrderItem>();
 
-    @Transient
-    public Collection errors;
+    public List<ValidationError> validate() {
 
-    public Boolean is_valid() {
+        List<ValidationError> errors = new ArrayList<ValidationError>();
 
         if (local_user == null) { // なぜかValidateでチェックしてくれないので独自にやる
             logger.debug("is_valid local_user is null");
-            return false;
+            errors.add(new ValidationError("local_user", "error.required"));
         }
 
-        if (order_date == null) { // なぜかValidateでチェックしてくれないので独自にやる
-            logger.debug("is_valid order_date is null");
-            return false;
+        if (errors.size() == 0) {
+            return null;
         }
 
-        errors = Validation.getValidator().validate(this);
-
-        logger.debug(String.format("is_valid errors:%s", errors.toString()));
-
-        return errors.size() == 0;
+        return errors;
     }
 
     public static Finder<Long,DailyOrder> find = new Finder<Long,DailyOrder>(Long.class, DailyOrder.class);
 
-    public static DailyOrder find_by(Date order_date, String user_id) {
+    public static DailyOrder find_by(java.sql.Date order_date, String user_id) {
         List<DailyOrder> candidate = DailyOrder.find.where().eq("order_date", order_date).eq("user_id", user_id).findList();
 
         if (candidate.size() != 1) {
@@ -76,7 +74,7 @@ public class DailyOrder extends Model {
         return candidate.get(0);
     }
 
-    public static List<DailyOrder> find_by(Date order_date) {
+    public static List<DailyOrder> find_by(java.sql.Date order_date) {
         return DailyOrder.find.where().eq("order_date", order_date).findList();
     }
 }

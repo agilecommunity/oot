@@ -26,7 +26,7 @@ angular.module('MyControllers')
             return;
         }
 
-        var menu = {id: current_menu.id, menu_date: current_menu.menu_date.unix() * 1000, status: current_menu.status, detail_items:[]};
+        var menu = {id: current_menu.id, menu_date: current_menu.menu_date.format("YYYY-MM-DD"), status: current_menu.status, detail_items:[]};
         angular.forEach(current_menu.detail_items, function(item) {
             menu.detail_items.push(item);
         });
@@ -44,11 +44,15 @@ angular.module('MyControllers')
     // 日付を変更する
     var chage_menu_date = function(target) {
         $scope.menu_date_begin = target.startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
-        $scope.menu_date_end = moment($scope.menu_date_begin).add("days", 5);
+        $scope.menu_date_end = moment.utc($scope.menu_date_begin).add("days", 4);
         $scope.current_daily_menu = new DailyMenu();
 
-        var param_menu_date = $scope.menu_date_begin.format("YYYY/MM/DD") + "-" + $scope.menu_date_end.format("YYYY/MM/DD");
-        DailyMenu.query({"menu_date": param_menu_date},
+        var params = {
+            "from": $scope.menu_date_begin.format("YYYY-MM-DD"),
+            "to": $scope.menu_date_end.format("YYYY-MM-DD")
+        };
+
+        DailyMenu.query(params,
             function (response) {
                 console.log("#changeMenuDate DailyMenu size:" + response.length);
 
@@ -59,7 +63,7 @@ angular.module('MyControllers')
 
                 $scope.daily_menus = [];
                 for(var i=0; i<5; i++) {
-                    var currentDate = moment($scope.menu_date_begin).add("days", i);
+                    var currentDate = moment.utc($scope.menu_date_begin).add("days", i);
                     console.log(currentDate.format("YYYY/MM/DD HH:mm:ss"));
                     var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
 
@@ -121,14 +125,14 @@ angular.module('MyControllers')
     // カレンダーの初期化
     $("#datetimepicker").datetimepicker({pickTime: false, daysOfWeekDisabled: [0,6]});
     $("#datetimepicker").on("dp.change",function (e) { // カレンダーで日付を変更した場合
-        chage_menu_date(moment(e.date));
+        chage_menu_date(moment.utc(e.date));
     });
 
     // 選択されている商品の初期化
     reset_selected_items();
 
     // 当日を起点としてメニューを表示する
-    chage_menu_date(moment());
+    chage_menu_date(moment.utc());
 
     //---- イベントハンドラ
     // カレンダーを表示する
@@ -201,7 +205,7 @@ angular.module('MyControllers')
     // 画像を表示するHTMLを出力
     $scope.render_image = function(menu_item) {
         var imgFile = "no-image.png";
-        if (menu_item.code !== undefined && menu_item.code !== "") {
+        if (menu_item.code !== undefined && menu_item.code !== "" && menu_item.code !== null) {
             imgFile = menu_item.code + ".png";
         }
         return "<img src=\"/assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";

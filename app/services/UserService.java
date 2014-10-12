@@ -1,5 +1,6 @@
 package services;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import models.LocalToken;
@@ -56,8 +57,8 @@ public class UserService extends BaseUserService {
 
         local_token.uuid = token.uuid;
         local_token.email = token.email;
-        local_token.created_at = token.creationTime.toDate();
-        local_token.expire_at = token.expirationTime.toDate();
+        local_token.created_at = new java.sql.Date(token.creationTime.getMillis());
+        local_token.expire_at = new java.sql.Date(token.expirationTime.getMillis());
         local_token.is_sign_up = token.isSignUp;
 
         local_token.save();

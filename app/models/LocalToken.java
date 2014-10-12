@@ -1,9 +1,11 @@
 package models;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 import play.db.ebean.Model;
 
@@ -17,9 +19,9 @@ public class LocalToken extends Model {
 
     public String email;
 
-    public Date created_at;
+    public java.sql.Date created_at;
 
-    public Date expire_at;
+    public java.sql.Date expire_at;
 
     public boolean is_sign_up;
 

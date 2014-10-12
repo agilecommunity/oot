@@ -20,6 +20,7 @@ import play.libs.Yaml;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.test.FakeRequest;
+import utils.controller.ParameterConverter;
 
 import java.io.IOException;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class DailyMenusTest {
     @Test
     public void createは受け取ったJsonの内容からDailyMenuオブジェクトを作成すること() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menu_date\":1391871600000");
+        builder.append("{ \"menu_date\":\"2014-02-12\"");
         builder.append(", \"status\":\"open\"");
         builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
         builder.append("}");
@@ -59,7 +60,8 @@ public class DailyMenusTest {
 
         assertThat(status(result)).isEqualTo(OK);
 
-        DailyMenu object = DailyMenu.find_by(new Date(1391871600000L));
+        DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-12");
+        DailyMenu object = DailyMenu.find_by(new java.sql.Date(dateValue.getMillis()));
 
         assertThat(object.detail_items.size()).isEqualTo(1);
         DailyMenuItem item = object.detail_items.get(0);
@@ -69,7 +71,7 @@ public class DailyMenusTest {
     @Test
     public void deleteは受け取ったIdに対応するDailyMenuオブジェクトを削除すること() {
 
-        DailyMenu target = DailyMenu.find_by(new Date(1391958000000L)); // 2014-02-10
+        DailyMenu target = DailyMenu.find_by(new java.sql.Date(1391958000000L)); // 2014-02-10
 
         Result result = callAPI(fakeRequest(DELETE, "/api/daily-menus/" + target.id));
 
@@ -82,9 +84,11 @@ public class DailyMenusTest {
     @Test
     public void updateは受け取ったJsonの内容からDailyMenuオブジェクトを更新すること() throws IOException {
 
-        DateTime targetDate = DateTime.parse("2014-02-10");
+        DateTime targetDate = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-10");
 
         Result findResult = callAPI(fakeRequest(GET, "/api/daily-menus/menu_date/" + targetDate.toString("yyyy-MM-dd")));
+
+        logger.debug(String.format("result: %s", contentAsString(findResult)));
 
         String jsonString = contentAsString(findResult);
         ObjectMapper mapper = new ObjectMapper();
@@ -101,7 +105,9 @@ public class DailyMenusTest {
 
         assertThat(status(result)).isEqualTo(OK);
 
-        DailyMenu updated = DailyMenu.find_by(targetDate.toDate());
+        logger.debug(String.format("targetDate(Date): %s", targetDate.toDate().toString()));
+
+        DailyMenu updated = DailyMenu.find_by(new java.sql.Date(targetDate.getMillis()));
         assertThat(updated.id).isEqualTo(1);
         assertThat(updated.menu_date).isEqualTo(targetDate.toDate());
         assertThat(updated.detail_items.size()).isEqualTo(1);

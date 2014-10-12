@@ -29,11 +29,11 @@ angular.module('MyControllers')
         return checklist;
     };
 
-    $scope.menu_date = moment($routeParams.menu_date);
+    $scope.menu_date = moment.utc($routeParams.menu_date);
 
-    var param_date = $scope.menu_date.format('YYYY-MM-DD');
+    var params = {menu_date: $scope.menu_date.format('YYYY-MM-DD')};
 
-    $scope.daily_menu = DailyMenu.getByMenuDate({menu_date: param_date},
+    $scope.daily_menu = DailyMenu.getByMenuDate(params,
         function (response) {
             $scope.daily_orders = DailyOrder.getByOrderDate({order_date: param_date},
                 function (response) {

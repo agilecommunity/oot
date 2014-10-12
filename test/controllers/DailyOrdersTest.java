@@ -12,6 +12,8 @@ import junitparams.Parameters;
 import models.DailyOrder;
 import models.DailyOrderItem;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,12 +51,10 @@ public class DailyOrdersTest extends WithApplication {
      @Test
      public void createMineは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          StringBuilder builder = new StringBuilder();
-         builder.append("[");
          builder.append("{ \"local_user\":{\"id\": \"steve@foo.baa\"}");
-         builder.append(", \"order_date\":1391871600000");
+         builder.append(", \"order_date\":\"2014-02-11\"");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
-         builder.append("]");
 
          JsValue json = Json.parse(builder.toString());
 
@@ -62,7 +62,8 @@ public class DailyOrdersTest extends WithApplication {
 
          assertThat(status(result)).isEqualTo(OK);
 
-         DailyOrder order = DailyOrder.find_by(new Date(1391871600000L), "steve@foo.baa");
+         DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-11");
+         DailyOrder order = DailyOrder.find_by(new java.sql.Date(dateValue.getMillis()), "steve@foo.baa");
          assertThat(order.local_user.first_name).isEqualTo("スティーブ");
 
          assertThat(order.detail_items.size()).isEqualTo(1);
@@ -97,7 +98,7 @@ public class DailyOrdersTest extends WithApplication {
      public void updateMineは指定したIDのDailyOrderオブジェクトを更新すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"id\":1");
-         builder.append(", \"order_date\":1391958000000");
+         builder.append(", \"order_date\":\"2014-02-10\"");
          builder.append(", \"local_user\":{\"id\": \"steve@foo.baa\"}");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
@@ -161,14 +162,13 @@ public class DailyOrdersTest extends WithApplication {
 
      private Object[] illegal_json_data() {
          return JUnitParamsRunner.$(
-                   JUnitParamsRunner.$("[{ }]") // 空のリクエスト
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"steve@foo.baa\"} }]") // 必須項目(order_date)なし
-                 , JUnitParamsRunner.$("[{ \"order_date\":1391871600000 }]")             // 必須項目(local_user)なし
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":1391871600000 }]") // 存在しないユーザ
-                 , JUnitParamsRunner.$("[{ \"order_date\":\"aaa\" }]") // 存在しない日付
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"steve@foo.baa\"}, \"order_date\":1391958000000 }]") // 登録済みの注文
-                 , JUnitParamsRunner.$("[{ \"local_user\": {\"id\":\"bob@foo.baa\"}, \"order_date\":1391871600000 }]") // ユーザが異なる
-                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"steve@foo.baa\"}, \"order_date\":1391871600000 }") // 配列でない
+                   JUnitParamsRunner.$("{ }") // 空のリクエスト
+                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"steve@foo.baa\"} }") // 必須項目(order_date)なし
+                 , JUnitParamsRunner.$("{ \"order_date\":\"2014-02-11\" }")             // 必須項目(local_user)なし
+                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"hoge\"}, \"order_date\":\"2014-02-11\" }") // 存在しないユーザ
+                 , JUnitParamsRunner.$("{ \"order_date\":\"aaa\" }") // 存在しない日付
+                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"steve@foo.baa\"}, \"order_date\":\"2014-02-10\" }") // 登録済みの注文
+                 , JUnitParamsRunner.$("{ \"local_user\": {\"id\":\"bob@foo.baa\"}, \"order_date\":\"2014-02-10\" }") // ユーザが異なる
                  );
 
      }

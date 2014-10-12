@@ -38,6 +38,7 @@ javaOptions in Test += "-XX:-UseSplitVerifier"
 
 javaOptions in Test += "-Dconfig.file=conf/application.conf"
 
+Keys.fork in Test := true
 
 // cucumberタスクの定義
 lazy val cucumberTask = InputKey[Unit]("cucumber", "Run Cucumber tests.")

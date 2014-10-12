@@ -37,38 +37,39 @@ angular.module('MyControllers')
         daily_menu_item.ordered = new_state;
 
         // 注文オブジェクトがあるかどうかを調べる
-        var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
+        var target = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
 
-        var reload_orders = function (request) {
-            // 念のためサーバから最新の注文を取得する
-            $scope.daily_orders = DailyOrder.query();
-        };
-
-        if (order !== null) {
+        if (target !== null) {
             if (new_state === true) {
-                order.detail_items.push({menu_item: daily_menu_item.menu_item});
+                target.detail_items.push({menu_item: daily_menu_item.menu_item});
             } else {
-                order.detail_items = order.detail_items.filter(function (item, index) {
+                target.detail_items = target.detail_items.filter(function (item, index) {
                     return (item.menu_item.id !== daily_menu_item.menu_item.id);
                 });
             }
 
             // あった場合は更新する
-            if (order.detail_items.length > 0) {
-                order.$update({}, reload_orders);
+            if (target.detail_items.length > 0) {
+                target.$update({});
             } else {
-                order.$delete({}, reload_orders);
+                target.$delete({}, function(){
+                    $scope.daily_orders = $scope.daily_orders.filter(function(order, index){
+                        return (order.id !== target.id);
+                    });
+                });
             }
         } else {
             // ない場合は新しく作る
             var new_order = new DailyOrder();
-            new_order.order_date = daily_menu.menu_date.unix() * 1000;
+            new_order.order_date = daily_menu.menu_date;
             new_order.local_user = User.current_user();
             new_order.detail_items = [
                 {menu_item: daily_menu_item.menu_item}
             ];
 
-            DailyOrder.create({}, [new_order], reload_orders);
+            new_order.$create(function(){
+                $scope.daily_orders.push(new_order);
+            });
         }
     };
 
@@ -82,15 +83,23 @@ angular.module('MyControllers')
 
     // メニューに注文状況を反映する
     var applyOrdered = function () {
+        if ($scope.daily_menus === undefined || $scope.daily_orders === undefined) {
+            return;
+        }
+        console.log("#applyOrdered daily_menus:" + $scope.daily_menus.length);
+        console.log("#applyOrdered daily_orders:" + $scope.daily_orders.length);
+
         // メニューの注文状況をリセットする
         angular.forEach($scope.daily_menus, function (menu) {
             angular.forEach(menu.detail_items, function (item) {
                 item.ordered = false;
             });
         });
+
         // 注文を見ながらメニューの注文状況を変更する
         angular.forEach($scope.daily_orders, function (order) {
             var menu = $filter('getByMenuDate')($scope.daily_menus, order.order_date);
+            console.log("#applyOrdered date:" + order.order_date.format("YYYY-MM-DD") + " menu:" + menu);
             if (menu !== null) {
                 angular.forEach(order.detail_items, function (o_d_item) {
                     angular.forEach(menu.detail_items, function (m_d_item) {

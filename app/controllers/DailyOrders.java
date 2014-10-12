@@ -4,8 +4,10 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import models.DailyMenu;
 import models.DailyOrder;
 import play.Logger;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -48,7 +50,7 @@ public class DailyOrders extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Date order_date;
+        java.sql.Date order_date;
         try {
             order_date = ParameterConverter.convertDateFrom(order_date_str);
         } catch (ParseException e) {
@@ -71,46 +73,41 @@ public class DailyOrders extends Controller {
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result createMine() {
 
-        logger.debug("create");
+        logger.debug("createMine");
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("create request-body:%s", request().body().toString()));
+        logger.debug(String.format("createMine request-body:%s", request().body().toString()));
 
-        Gson gson = utils.gson.OotGsonGenerator.create();
+        Form<DailyOrder> filledForm = Form.form(DailyOrder.class).bind(json);
 
-        if (!json.has(0)) {
-            logger.debug("create invalid json format");
-            return badRequest();
+        if (filledForm.hasErrors()) {
+            logger.warn(String.format("update object has some errors. %s", filledForm.errorsAsJson().toString()));
+            return badRequest(filledForm.errorsAsJson().toString());
         }
 
-        DailyOrder order = gson.fromJson(json.get(0).toString(), DailyOrder.class);
-
-        if (!order.is_valid()) {
-            logger.debug("create object has some errors.");
-            return badRequest();
-        }
+        DailyOrder object = filledForm.get();
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
-        if (!order.local_user.id.equals(user.identityId().userId())) {
-            logger.warn(String.format("create cant create others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
+        if (!object.local_user.id.equals(user.identityId().userId())) {
+            logger.warn(String.format("create cant create others order local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
             return badRequest();
         }
 
-        if (DailyOrder.find_by(order.order_date, order.local_user.id) != null) {
+        if (DailyOrder.find_by(object.order_date, object.local_user.id) != null) {
             logger.debug("create object already exists");
             return badRequest();
         }
 
-        logger.debug(String.format("create order.local_user.id:%s", order.local_user.id));
-        logger.debug(String.format("create order.order_date:%s", order.order_date));
+        logger.debug(String.format("create order.local_user.id:%s", object.local_user.id));
+        logger.debug(String.format("create order.order_date:%s", object.order_date));
 
-        order.save();
+        object.save();
 
-        return ok(Json.toJson(order));
+        return ok(Json.toJson(object));
     }
 
     @RequireCSRFCheck4Ng()
@@ -158,28 +155,28 @@ public class DailyOrders extends Controller {
 
         logger.debug(String.format("update request-body:%s", request().body().toString()));
 
-        Gson gson = utils.gson.OotGsonGenerator.create();
+        Form<DailyOrder> filledForm = Form.form(DailyOrder.class).bind(json);
 
-        DailyOrder order = gson.fromJson(json.toString(), DailyOrder.class);
-
-        if (!order.is_valid()) {
-            logger.debug("update object has some errors.");
-            return badRequest();
+        if (filledForm.hasErrors()) {
+            logger.warn(String.format("update object has some errors. %s", filledForm.errorsAsJson().toString()));
+            return badRequest(filledForm.errorsAsJson().toString());
         }
+
+        DailyOrder object = filledForm.get();
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
-        if (!order.local_user.id.equals(user.identityId().userId())) {
-            logger.warn(String.format("update cant update others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
+        if (!object.local_user.id.equals(user.identityId().userId())) {
+            logger.warn(String.format("update cant update others order local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
             return badRequest();
         }
 
-        logger.debug(String.format("update order.local_user.id:%s", order.local_user.id));
-        logger.debug(String.format("update order.order_date:%s", order.order_date));
+        logger.debug(String.format("update order.local_user.id:%s", object.local_user.id));
+        logger.debug(String.format("update order.order_date:%s", object.order_date));
 
-        order.update();
+        object.update();
 
-        return ok(Json.toJson(order));
+        return ok(Json.toJson(object));
     }
 
 }
