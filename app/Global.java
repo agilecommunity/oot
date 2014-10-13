@@ -11,6 +11,7 @@ import java.util.TimeZone;
 
 import com.typesafe.config.*;
 import models.MenuItem;
+import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import play.*;
@@ -125,11 +126,14 @@ public class Global extends GlobalSettings  {
         String decryptedPassword = "";
 
         try {
+            logger.debug("hoge1");
+
             byte[] raw = key.substring(0, 16).getBytes("utf-8");
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-            decryptedPassword = new String(cipher.doFinal(Codecs.hexStringToByte(target)));
+            decryptedPassword = new String(cipher.doFinal(Base64.decodeBase64(target)));
+
         } catch (UnsupportedEncodingException e) {
             throw new PlayException("Configuration error", "can't support uft-8");
         } catch (NoSuchAlgorithmException e) {
