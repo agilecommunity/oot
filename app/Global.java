@@ -126,8 +126,6 @@ public class Global extends GlobalSettings  {
         String decryptedPassword = "";
 
         try {
-            logger.debug("hoge1");
-
             byte[] raw = key.substring(0, 16).getBytes("utf-8");
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance("AES");
