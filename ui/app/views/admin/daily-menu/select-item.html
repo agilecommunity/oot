@@ -28,6 +28,7 @@
                     <div> {{menu_item.name}}</div>
                     <div class="text-right">{{menu_item.price_on_order}}円</div>
                 </div>
+                <div class="comment label label-success">{{menu_item.comment}}</div>
                 <a href="" class="thumbnail" ng-bind-html="render_image(menu_item)"></a>
             </div>
             <div class="clearfix visible-md" ng-show="$last"></div>

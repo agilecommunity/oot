@@ -320,6 +320,23 @@ td.price {
     background-color: #dddddd;
 }
 
+
+
+/* メニュー表示 */
+div.menu-item {
+    position: relative;
+}
+div.menu-item div.comment {
+    position: absolute;
+    left: 0px;
+    bottom: 5px;
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
 /* Bootstrap補助 */
 ul.nav-pills li.divider {
     margin: 2px 9px;

@@ -38,6 +38,9 @@ public class MenuItem extends Model {
     public BigDecimal price_on_order;
 
     @Constraints.MaxLength(255)
+    public String comment;
+
+    @Constraints.MaxLength(255)
     public String code;
 
     public String item_image_path;
