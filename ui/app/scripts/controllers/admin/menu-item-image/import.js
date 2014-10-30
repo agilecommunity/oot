@@ -1,8 +1,18 @@
 
 angular.module('MyControllers')
     .controller('MenuItemImageImportController',
-    ['$scope', '$location', '$routeParams', '$filter', 'User', 'MenuItem', 'DailyMenu',
-        function ($scope, $location, $routeParams, $filter, User, MenuItem, DailyMenu) {
+    ['$scope', '$location', '$routeParams', '$filter', 'usSpinnerService', 'User', 'MenuItem', 'DailyMenu',
+        function ($scope, $location, $routeParams, $filter, usSpinnerService, User, MenuItem, DailyMenu) {
+
+    var start_block = function() {
+        $.blockUI({baseZ: 2000, message: null});
+        usSpinnerService.spin("spinner");
+    };
+
+    var stop_block = function() {
+        usSpinnerService.stop("spinner");
+        $.unblockUI();
+    };
 
     $('#menu-item-images').fileupload({
         add: function (ev, data) {
@@ -43,6 +53,8 @@ angular.module('MyControllers')
             return;
         }
 
+        start_block();
+
         $scope.upload_data.submit()
         .done(function( data, textStatus, jqXHR ) {
             var result = {statusCode: 200};
@@ -50,6 +62,8 @@ angular.module('MyControllers')
             if (data !== "" || data[0] !== undefined) {
                 result = $.parseJSON(data[0].body.innerText);
             }
+
+            stop_block();
 
             if (result.statusCode === 200) {
                 bootbox.alert("登録が完了しました", function () {
@@ -62,6 +76,8 @@ angular.module('MyControllers')
             }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
+            stop_block();
+
             bootbox.alert("登録できませんでした status:" + errorThrown, function () {
                 $scope.clearForm();
             });
