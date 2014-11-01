@@ -186,12 +186,6 @@ public class MenuItemsTest {
 
     }
 
-    @Test
-    public void createは受け取ったファイルの内容からMenuItemオブジェクトを作成すること() throws Throwable {
-
-
-    }
-
     private Result callAPI(FakeRequest baseRequest) {
         Http.Cookie fake_cookie = utils.Utils.fakeCookie("melissa@foo.baa");
         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();

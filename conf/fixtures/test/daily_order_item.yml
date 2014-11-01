@@ -3,3 +3,21 @@
                   id: 1
     menu_item:   !!models.MenuItem
                   id: 1
+
+- !!models.DailyOrderItem
+    daily_order: !!models.DailyOrder
+                  id: 2
+    menu_item:   !!models.MenuItem
+                  id: 2
+
+- !!models.DailyOrderItem
+    daily_order: !!models.DailyOrder
+                  id: 2
+    menu_item:   !!models.MenuItem
+                  id: 3
+
+- !!models.DailyOrderItem
+    daily_order: !!models.DailyOrder
+                  id: 3
+    menu_item:   !!models.MenuItem
+                  id: 2

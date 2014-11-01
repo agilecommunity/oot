@@ -28,6 +28,8 @@ PUT           /api/daily-orders/mine/:id                      controllers.DailyO
 
 GET           /api/daily-orders/order_date/:order_date        controllers.DailyOrders.showByOrderDate(order_date)
 
+GET           /api/order-aggregates/order_date/:order_date    controllers.DailyOrderAggregates.showByOrderDate(order_date)
+
 # Root
 GET           /                                               controllers.Application.index(path = "")
 

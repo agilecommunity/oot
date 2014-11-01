@@ -52,7 +52,7 @@ public class DailyOrdersTest extends WithApplication {
      public void createMineは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"local_user\":{\"id\": \"steve@foo.baa\"}");
-         builder.append(", \"order_date\":\"2014-02-11\"");
+         builder.append(", \"order_date\":\"2014-03-11\"");
          builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
          builder.append("}");
 
@@ -62,7 +62,7 @@ public class DailyOrdersTest extends WithApplication {
 
          assertThat(status(result)).isEqualTo(OK);
 
-         DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-11");
+         DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-03-11");
          DailyOrder order = DailyOrder.find_by(new java.sql.Date(dateValue.getMillis()), "steve@foo.baa");
          assertThat(order.local_user.first_name).isEqualTo("スティーブ");
 
@@ -82,7 +82,7 @@ public class DailyOrdersTest extends WithApplication {
 
      @Test
      public void deleteMineは指定したIDのDailyOrderオブジェクトを削除すること() {
-         assertThat(DailyOrder.find.findRowCount()).isEqualTo(1);
+         assertThat(DailyOrder.find.byId(1L)).isNotNull();
 
          Result result = callDeleteMine(1L);
 
