@@ -5,6 +5,9 @@ angular.module('MyServices')
     function ($resource) {  // 日々の注文を扱うサービス
 
     var transformList = function (data, headersGetter) {
+        if (data === "") {
+            return [];
+        }
         // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
