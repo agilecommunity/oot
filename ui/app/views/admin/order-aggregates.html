@@ -1,0 +1,26 @@
+<div class="content">
+    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+
+    <div class="content-header">注文表 {{order_date.format('YYYY/MM/DD (ddd)')}}</div>
+
+    <div ng-show="order_aggregates == null || order_aggregates.length === 0">
+        <p class="no-data">注文がありません。</p>
+    </div>
+
+    <div ng-show="order_aggregates != null && order_aggregates.length > 0">
+        <table class="table table-bordered table-condensed checklist" id="checklist">
+            <thead>
+            <tr>
+                <th class="check-status">コード</th>
+                <th class="user-name">注文数</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="order-aggregate-{{order_aggregate.menu_item_id}}" ng-repeat="order_aggregate in order_aggregates">
+                <td>{{order_aggregate.code}}</td>
+                <td>{{order_aggregate.num_orders}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

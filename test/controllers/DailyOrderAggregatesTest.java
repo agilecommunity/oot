@@ -32,7 +32,7 @@ public class DailyOrderAggregatesTest {
     @Test
     public void showByOrderDateは指定した日付の注文状況を返すこと_1件() {
 
-        Result result = callAPI(fakeRequest(GET, "/api/order-aggregates/order_date/2014-02-10"));
+        Result result = callAPI(fakeRequest(GET, "/api/daily-order-aggregates/order_date/2014-02-10"));
 
         assertThat(status(result)).isEqualTo(OK);
 
@@ -49,7 +49,7 @@ public class DailyOrderAggregatesTest {
     @Test
     public void showByOrderDateは指定した日付の注文状況を返すこと_2件() {
 
-        Result result = callAPI(fakeRequest(GET, "/api/order-aggregates/order_date/2014-02-11"));
+        Result result = callAPI(fakeRequest(GET, "/api/daily-order-aggregates/order_date/2014-02-11"));
 
         assertThat(status(result)).isEqualTo(OK);
 

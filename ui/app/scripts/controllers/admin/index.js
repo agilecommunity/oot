@@ -14,6 +14,10 @@ angular.module('MyControllers')
         }
     );
 
+    $scope.showOrderAggregates = function (daily_menu) {
+        $location.path("/admin/order-aggregates/order_date/" + daily_menu.menu_date.format('YYYY-MM-DD'));
+    };
+
     $scope.showChecklist = function (daily_menu) {
         $location.path("/admin/checklist/menu_date/" + daily_menu.menu_date.format('YYYY-MM-DD'));
     };

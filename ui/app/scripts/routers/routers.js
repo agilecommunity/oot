@@ -39,6 +39,12 @@
             controller: 'DailyMenuNewController',
             access: AccessLevels.admin
         })
+        .when('/admin/order-aggregates/order_date/:order_date', {
+            templateUrl: '/views/admin/order-aggregates',
+            controller: 'AdminOrderAggregatesController',
+            access: AccessLevels.admin,
+            reloadOnSearch: false
+        })
         .when('/admin/checklist/menu_date/:menu_date', {
             templateUrl: '/views/admin/checklist',
             controller: 'AdminChecklistController',
