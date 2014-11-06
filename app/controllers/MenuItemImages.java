@@ -2,6 +2,7 @@ package controllers;
 
 import eu.medsea.mimeutil.MimeUtil;
 import models.LocalUser;
+import models.MenuItem;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -153,19 +154,40 @@ public class MenuItemImages extends Controller {
             return;
         }
 
+        String menuItemCode = FilenameUtils.getBaseName(fileName);
+        MenuItem item = MenuItem.find.where().eq("code", menuItemCode).findUnique();
+
+        if (item == null) {
+            logger.warn(String.format("#extractImage code not found in menu_items:%s", menuItemCode));
+            return;
+        }
+
         zipFile.extractFile(fileName, pathToWork);
+
         try {
             BufferedImage currentImage = ImageIO.read(new File(pathToWork + "/" + fileName));
+
+            if (currentImage == null) {
+                logger.warn(String.format("#extractImage invalid file type fileName:%s", fileName));
+                return;
+            }
+
             BufferedImage newImage = new BufferedImage(currentImage.getWidth(), currentImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
             newImage.getGraphics().drawImage(currentImage, 0, 0, null);
 
-            String newFileName = FilenameUtils.getBaseName(fileName);
-            File converted = new File(pathToExtract + "/" + newFileName + ".png");
+            String newFileName = String.format("%010d.png", item.id);
+
+            logger.debug(String.format("#extractImage originalFileName:%s FileName:%s", fileName, newFileName));
+
+            File converted = new File(pathToExtract + "/" + newFileName);
             ImageIO.write(newImage, "png", converted);
+
+            item.item_image_path = newFileName;
+            item.update();
+
         } catch (IOException e) {
             logger.error(String.format("#extractImage image conversion error:%s", e.getLocalizedMessage()));
             throw e;
         }
     }
-
 }

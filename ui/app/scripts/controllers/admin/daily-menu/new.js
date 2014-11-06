@@ -205,8 +205,8 @@ angular.module('MyControllers')
     // 画像を表示するHTMLを出力
     $scope.render_image = function(menu_item) {
         var imgFile = "no-image.png";
-        if (menu_item.code !== undefined && menu_item.code !== "" && menu_item.code !== null) {
-            imgFile = menu_item.code + ".png";
+        if (menu_item.item_image_path !== undefined && menu_item.item_image_path !== null) {
+            imgFile = menu_item.item_image_path;
         }
         return "<img src=\"/assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
     };
