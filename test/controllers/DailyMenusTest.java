@@ -4,7 +4,6 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.DailyMenu;
 import models.DailyMenuItem;
 import org.joda.time.DateTime;
@@ -13,7 +12,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import play.Logger;
-import play.api.libs.json.JsValue;
 import play.api.libs.json.Json;
 import play.filters.csrf.CSRF;
 import play.libs.Yaml;
@@ -23,7 +21,7 @@ import play.test.FakeRequest;
 import utils.controller.ParameterConverter;
 
 import java.io.IOException;
-import java.util.Date;
+import java.text.ParseException;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -69,9 +67,9 @@ public class DailyMenusTest {
     }
 
     @Test
-    public void deleteは受け取ったIdに対応するDailyMenuオブジェクトを削除すること() {
+    public void deleteは受け取ったIdに対応するDailyMenuオブジェクトを削除すること() throws ParseException {
 
-        DailyMenu target = DailyMenu.find_by(new java.sql.Date(1391958000000L)); // 2014-02-10
+        DailyMenu target = DailyMenu.find_by(ParameterConverter.convertDateFrom("2014-02-10"));
 
         Result result = callAPI(fakeRequest(DELETE, "/api/daily-menus/" + target.id));
 

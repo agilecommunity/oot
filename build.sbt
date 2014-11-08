@@ -8,19 +8,20 @@ libraryDependencies ++= Seq(
   , cache
   , filters
   , "org.avaje.ebeanorm" % "avaje-ebeanorm-api" % "3.1.1"
-  , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
   , "ws.securesocial" %% "securesocial" % "2.1.4"
   , "eu.medsea.mimeutil" % "mime-util" % "2.1.1"
   , "net.lingala.zip4j" % "zip4j" % "1.3.2"
-  , "pl.pragmatists" % "JUnitParams" % "1.0.2"
-  , "com.google.code.gson" % "gson" % "2.2.4"
   , "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
   , "joda-time" % "joda-time" % "2.3"
   , "com.fasterxml.jackson.dataformat" % "jackson-dataformat-csv" % "2.4.0"
-  , "info.cukes" % "cucumber-java" % "1.1.6"
-  , "info.cukes" % "cucumber-junit" % "1.1.6"
-  , "org.seleniumhq.selenium" % "selenium-java" % "2.41.0"
-  , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.41.0"
+  , "commons-io" % "commons-io" % "2.4"
+  , "commons-codec" % "commons-codec" % "1.9"
+  , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
+  , "pl.pragmatists" % "JUnitParams" % "1.0.2" % "test"
+  , "info.cukes" % "cucumber-java" % "1.1.6" % "test"
+  , "info.cukes" % "cucumber-junit" % "1.1.6" % "test"
+  , "org.seleniumhq.selenium" % "selenium-java" % "2.41.0" % "test"
+  , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.41.0" % "test"
 )
 
 play.Project.playJavaSettings

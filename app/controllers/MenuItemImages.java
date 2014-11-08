@@ -6,12 +6,11 @@ import models.MenuItem;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.UnzipParameters;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import play.Logger;
 import play.Play;
-import play.api.mvc.Codec;
-import play.api.mvc.SimpleResult;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -122,7 +121,6 @@ public class MenuItemImages extends Controller {
 
     private static void extractImages(File mayBeZipFile) throws IOException, ZipException {
         String pathToImages = Play.application().path().getAbsolutePath() + "/public/images/menu-items";
-        String pathToWork = Play.application().path().getAbsolutePath() + "/.tmp";
 
         try {
             ZipFile zipFile = new ZipFile(mayBeZipFile);
@@ -132,22 +130,15 @@ public class MenuItemImages extends Controller {
             for (FileHeader header : headerList) {
                 logger.debug(header.getFileName());
 
-                extractImage(zipFile, header.getFileName(), pathToImages, pathToWork);
+                extractImage(zipFile, header.getFileName(), pathToImages);
             }
         } catch (ZipException e) {
             logger.error(String.format("#extractImages zip operation error:%s", e.getLocalizedMessage()));
             throw e;
-        } finally {
-            try {
-                FileUtils.deleteDirectory(new File(pathToWork));
-            } catch (IOException e) {
-                logger.warn(String.format("#extractImages failed to delete work directory. error:%s", e.getLocalizedMessage()));
-                throw e;
-            }
         }
     }
 
-    private static void extractImage(ZipFile zipFile, String fileName, String pathToExtract, String pathToWork) throws ZipException, IOException {
+    private static void extractImage(ZipFile zipFile, String fileName, String pathToExtract) throws ZipException, IOException {
 
         if (fileName.endsWith(".png")) {
             zipFile.extractFile(fileName, pathToExtract);
@@ -162,10 +153,14 @@ public class MenuItemImages extends Controller {
             return;
         }
 
-        zipFile.extractFile(fileName, pathToWork);
+        String newFileNameBase = String.format("%010d", item.id);
+
+        logger.debug(String.format("#extractImage originalFileName:%s FileNameBase:%s", fileName, newFileNameBase));
+
+        zipFile.extractFile(fileName,  pathToExtract, new UnzipParameters(), newFileNameBase);
 
         try {
-            BufferedImage currentImage = ImageIO.read(new File(pathToWork + "/" + fileName));
+            BufferedImage currentImage = ImageIO.read(new File(pathToExtract + "/" + newFileNameBase));
 
             if (currentImage == null) {
                 logger.warn(String.format("#extractImage invalid file type fileName:%s", fileName));
@@ -175,10 +170,7 @@ public class MenuItemImages extends Controller {
             BufferedImage newImage = new BufferedImage(currentImage.getWidth(), currentImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
             newImage.getGraphics().drawImage(currentImage, 0, 0, null);
 
-            String newFileName = String.format("%010d.png", item.id);
-
-            logger.debug(String.format("#extractImage originalFileName:%s FileName:%s", fileName, newFileName));
-
+            String newFileName = newFileNameBase + ".png";
             File converted = new File(pathToExtract + "/" + newFileName);
             ImageIO.write(newImage, "png", converted);
 
@@ -188,6 +180,12 @@ public class MenuItemImages extends Controller {
         } catch (IOException e) {
             logger.error(String.format("#extractImage image conversion error:%s", e.getLocalizedMessage()));
             throw e;
+        } finally {
+            try {
+                FileUtils.forceDelete(new File(pathToExtract + "/" + newFileNameBase));
+            } catch (IOException e) {
+                logger.warn(String.format("#extractImage failed to delete temp file [%s]", newFileNameBase), e);
+            }
         }
     }
 }

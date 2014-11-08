@@ -1,8 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,17 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 import play.Logger;
 import play.data.validation.Constraints;
-import play.data.validation.Validation;
 import play.data.validation.ValidationError;
 import play.db.ebean.Model;
-
-import com.avaje.ebean.validation.NotNull;
-
-import static play.data.validation.Constraints.*;
 
 @Entity
 public class DailyOrder extends Model {

@@ -4,7 +4,6 @@ import static org.fest.assertions.api.Assertions.*;
 import static play.mvc.Http.Status.*;
 import static play.test.Helpers.*;
 
-import java.util.Date;
 import java.util.List;
 
 import junitparams.JUnitParamsRunner;

@@ -1,11 +1,7 @@
 package models;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Version;
 
 import play.db.ebean.Model;
 

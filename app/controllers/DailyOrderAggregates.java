@@ -1,7 +1,6 @@
 package controllers;
 
 import com.avaje.ebean.*;
-import com.fasterxml.jackson.databind.ser.std.RawSerializer;
 import models.DailyOrderAggregate;
 import play.Logger;
 import play.libs.Json;
@@ -11,7 +10,6 @@ import securesocial.core.java.SecureSocial;
 import utils.controller.ParameterConverter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class DailyOrderAggregates extends Controller {
 

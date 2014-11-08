@@ -10,9 +10,6 @@ import javax.persistence.Id;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-/**
- * Lunch entity managed by Ebean
- */
 @Entity
 public class MenuItem extends Model {
 

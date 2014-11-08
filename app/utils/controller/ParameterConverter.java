@@ -3,11 +3,7 @@ package utils.controller;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import java.sql.DatabaseMetaData;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class ParameterConverter {
 

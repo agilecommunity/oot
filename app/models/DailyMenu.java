@@ -1,19 +1,13 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
 
-import com.avaje.ebean.validation.NotNull;
-import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-/**
- * DailyLunchMenu entity managed by Ebean
- */
 @Entity
 public class DailyMenu extends Model {
 

@@ -8,26 +8,16 @@ import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import play.Logger;
-import play.api.libs.Files;
 import play.api.libs.json.JsValue;
 import play.api.libs.json.Json;
-import play.api.mvc.AnyContentAsMultipartFormData;
-import play.api.mvc.AnyContentAsMultipartFormData$;
-import play.api.mvc.MultipartFormData;
 import play.filters.csrf.CSRF;
 import play.libs.Yaml;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.test.FakeRequest;
-import scala.collection.mutable.Map$;
-import scala.collection.mutable.Seq;
 
-import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static play.test.Helpers.*;
