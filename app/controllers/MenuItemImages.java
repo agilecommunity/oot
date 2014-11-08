@@ -120,7 +120,7 @@ public class MenuItemImages extends Controller {
     }
 
     private static void extractImages(File mayBeZipFile) throws IOException, ZipException {
-        String pathToImages = Play.application().path().getAbsolutePath() + "/public/images/menu-items";
+        String pathToImages = "public/images/menu-items";
 
         try {
             ZipFile zipFile = new ZipFile(mayBeZipFile);
