@@ -26,6 +26,21 @@ angular.module('MyControllers')
             checklist.push(checklist_item);
         });
 
+        // 同じ商品を買った人は続けて表示されるよう、全商品の注文状況を文字列にまとめソートキーとする
+        angular.forEach(checklist, function(check_item){
+            var order_statuses_bits = "";
+            angular.forEach($scope.daily_menu.detail_items, function(menu_item){
+                if (check_item.order_statuses[menu_item.menu_item.id] !== undefined) {
+                    order_statuses_bits += "0";
+                } else {
+                    order_statuses_bits += "1";
+                }
+            });
+            check_item.order_statuses_bits = order_statuses_bits;
+        });
+        // 全商品の注文状況と、ユーザ名でソートする
+        checklist = $filter('orderBy')(checklist, ["order_statuses_bits", "user_name"]);
+
         return checklist;
     };
 
@@ -33,8 +48,12 @@ angular.module('MyControllers')
 
     var params = {menu_date: $scope.menu_date.format('YYYY-MM-DD')};
 
-    $scope.daily_menu = DailyMenu.getByMenuDate(params,
+    DailyMenu.getByMenuDate(params,
         function (response) {
+            // 店名、品名の順に並び替え
+            response.detail_items = $filter('orderBy')(response.detail_items, ['menu_item.shop_name', 'menu_item.name']);
+            $scope.daily_menu = response;
+
             $scope.daily_orders = DailyOrder.getByOrderDate({order_date: $scope.menu_date.format('YYYY-MM-DD')},
                 function (response) {
                     $scope.checklist = create_checklist();
