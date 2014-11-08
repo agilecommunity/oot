@@ -13,5 +13,7 @@ before_script:
 - npm install
 - bower install
 - grunt dev
+- rm -rf node_modules
+- rm -rf app/bower_components
 - cd ../
 script: ../play-${PLAY_VERSION}/play test
