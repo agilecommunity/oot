@@ -8,6 +8,9 @@ angular.module('MyServices')
         // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
+            if (item.code === undefined || item.code === null || item.code === ""){
+                item.code = "(空)";
+            }
             item.order_date = moment.utc(item.order_date);
         });
         return list;

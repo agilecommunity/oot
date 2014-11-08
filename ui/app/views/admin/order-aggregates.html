@@ -11,12 +11,12 @@
         <table class="table table-bordered table-condensed checklist" id="checklist">
             <thead>
             <tr>
-                <th class="check-status">コード</th>
-                <th class="user-name">注文数</th>
+                <th class="code">コード</th>
+                <th class="num-orders">注文数</th>
             </tr>
             </thead>
             <tbody>
-            <tr id="order-aggregate-{{order_aggregate.menu_item_id}}" ng-repeat="order_aggregate in order_aggregates">
+            <tr id="order-aggregate-{{order_aggregate.menu_item_id}}" ng-repeat="order_aggregate in order_aggregates | orderBy:code">
                 <td>{{order_aggregate.code}}</td>
                 <td>{{order_aggregate.num_orders}}</td>
             </tr>
