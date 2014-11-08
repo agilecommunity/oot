@@ -155,7 +155,7 @@ public class MenuItemImages extends Controller {
 
         String newFileNameBase = String.format("%010d", item.id);
 
-        logger.debug(String.format("#extractImage originalFileName:%s FileNameBase:%s", fileName, newFileNameBase));
+        logger.debug(String.format("#extractImage pathToExtract:%s originalFileName:%s newFileNameBase:%s", pathToExtract, fileName, newFileNameBase));
 
         zipFile.extractFile(fileName,  pathToExtract, new UnzipParameters(), newFileNameBase);
 
