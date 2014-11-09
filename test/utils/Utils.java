@@ -55,7 +55,6 @@ public class Utils {
 
     public static Map<String, String> getAdditionalApplicationSettings() {
         Map<String, String> settings = new HashMap<String, String>();
-        settings.put("smtp.mock", "true");
         settings.putAll(inMemoryDatabase());
 
         return settings;
