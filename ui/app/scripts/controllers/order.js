@@ -27,7 +27,7 @@ angular.module('MyControllers')
         if (daily_menu_item.menu_item.item_image_path !== undefined && daily_menu_item.menu_item.item_image_path !== null) {
             imgFile = daily_menu_item.menu_item.item_image_path;
         }
-        return "<img src=\"/assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
+        return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
     };
 
     $scope.order = function (daily_menu, daily_menu_item) { // イベントハンドラ

@@ -120,7 +120,8 @@ public class MenuItemImages extends Controller {
     }
 
     private static void extractImages(File mayBeZipFile) throws IOException, ZipException {
-        String pathToImages = "public/images/menu-items";
+        String pathToImages = FilenameUtils.concat(UCAssets.rootAbsolutePath(), "images");
+        pathToImages = FilenameUtils.concat(pathToImages, "menu-items");
 
         try {
             ZipFile zipFile = new ZipFile(mayBeZipFile);

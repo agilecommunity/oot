@@ -161,6 +161,7 @@ td.price {
     text-align: center;
     margin: 0.5em 0em;
     position: relative;
+    border: none;
 }
 .food-image .pop-rt{
     position: absolute;
