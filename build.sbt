@@ -37,7 +37,7 @@ testOptions in Test := Seq(Tests.Filter(s => !(s startsWith "feature")))
 
 javaOptions in Test += "-XX:-UseSplitVerifier"
 
-javaOptions in Test += "-Dconfig.file=conf/application.conf"
+javaOptions in Test += "-Dconfig.file=conf/unit-test.conf"
 
 Keys.fork in Test := true
 
