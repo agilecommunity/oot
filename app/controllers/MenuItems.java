@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import filters.RequireCSRFCheck4Ng;
@@ -25,13 +26,43 @@ public class MenuItems extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.MenuItems");
 
+    private static class StatusParameter {
+        public String value = "";
+
+        public StatusParameter(String value) {
+            if (value == null) {
+                return;
+            }
+            this.value = value;
+        }
+    }
+
+    private static class Parameters {
+        public StatusParameter status = null;
+
+        public Parameters(Http.Request request) {
+            String value = request.getQueryString("status");
+            if (value != null && !value.isEmpty()) {
+                this.status = new StatusParameter(value);
+                return;
+            }
+        }
+    }
+
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        List<MenuItem> menus = MenuItem.find.orderBy("id").findList();
+        Parameters parameters = null;
+        parameters = new Parameters(request());
 
-        return ok(Json.toJson(menus));
+        ExpressionList<MenuItem> menus = MenuItem.find.where();
+
+        if (parameters.status != null) {
+            menus.eq("status", parameters.status.value);
+        }
+
+        return ok(Json.toJson(menus.orderBy("id").findList()));
     }
 
     @SecureSocial.SecuredAction(ajaxCall = true)
@@ -40,11 +71,17 @@ public class MenuItems extends Controller {
 
         logger.debug(String.format("#indexByShopName shopName: %s", shopName));
 
-        List<MenuItem> menus = MenuItem.find.where().eq("shop_name", shopName).orderBy("id").findList();
+        Parameters parameters = null;
+        parameters = new Parameters(request());
 
-        logger.debug(String.format("#indexByShopName count: %d", menus.size()));
+        ExpressionList<MenuItem> menus = MenuItem.find.where();
 
-        return ok(Json.toJson(menus));
+        if (parameters.status != null) {
+            logger.debug(String.format("#indexByShopName filter enabled status:%s", parameters.status.value));
+            menus.eq("status", parameters.status.value);
+        }
+
+        return ok(Json.toJson(menus.eq("shop_name", shopName).orderBy("id").findList()));
     }
 
     //@RequireCSRFCheck4Ng  /* IE8でjquery file uploadを使うとヘッダにX-Requested-Withが使えないため、byPassも無理らしい */

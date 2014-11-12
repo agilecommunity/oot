@@ -30,7 +30,7 @@ angular.module('MyControllers')
     var show_items = function() {
         var filter_shop = $scope.filters.shop;
         start_block();
-        $scope.menu_items = MenuItem.queryByShopName({shop_name: filter_shop.name},
+        $scope.menu_items = MenuItem.queryByShopName({shop_name: filter_shop.name, status: 'valid'},
             function (response) { // 成功時
                 // 表示のために5個ずつグルーピングする
                 grouping_items();

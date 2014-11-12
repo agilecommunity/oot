@@ -27,7 +27,7 @@
             <table class="table table-bordered table-striped menu-items" ng-show="menu_items.length > 0">
                 <thead>
                     <tr>
-                        <th class="id col-md-1">ID</th>
+                        <th class="id col-md-1">ステータス</th>
                         <th class="shop_name col-md-3">店名</th>
                         <th class="name col-md-1">カテゴリ</th>
                         <th class="name col-md-4">品名</th>
@@ -37,8 +37,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="menu_item in menu_items | orderBy:['shop_name', 'name']">
-                        <td class="id">{{menu_item.id}}</td>
+                    <tr id="menu-item-{{menu_item.id}}" ng-repeat="menu_item in menu_items | orderBy:['shop_name', 'name']">
+                        <td class="id">{{menu_item.status}}</td>
                         <td class="shop_name">{{menu_item.shop_name}}</td>
                         <td class="id">{{menu_item.category}}</td>
                         <td class="name">{{menu_item.name}}</td>

@@ -34,6 +34,11 @@ public class MenuItem extends Model {
     @Constraints.Required
     public BigDecimal price_on_order;
 
+    @Constraints.Required
+    @Constraints.MaxLength(20)
+    public String status;
+
+
     @Constraints.MaxLength(255)
     public String comment;
 

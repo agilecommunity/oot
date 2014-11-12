@@ -32,8 +32,12 @@ angular.module('MyControllers')
         $scope.$dismiss();
     };
 
-    $scope.set_category = function(category) {
-        $scope.menu_item.category = category;
+    $scope.set_category = function(value) {
+        $scope.menu_item.category = value;
+    };
+
+    $scope.set_status = function(value) {
+        $scope.menu_item.status = value;
     };
 
     $scope.has_error = function(name) {
