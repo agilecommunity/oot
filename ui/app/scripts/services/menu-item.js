@@ -26,8 +26,25 @@ angular.module('MyServices')
             isArray: true,
             transformResponse: transformResponse,
             cache: false
+        },
+        create: {                // 新規作成
+            method: "POST",
+            isArray: false
+        },
+        update: {                // 更新
+            method: "PUT",
+            isArray: false
         }
     });
+
+    MenuItem.prototype.$save = function(params, success, error) {
+        if ( !this.id ) {
+            return this.$create(params, success, error);
+        }
+        else {
+            return this.$update(params, success, error);
+        }
+    };
 
     return MenuItem;
 }]);

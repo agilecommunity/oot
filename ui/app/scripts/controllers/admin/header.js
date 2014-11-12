@@ -14,15 +14,19 @@ angular.module('MyControllers')
         $location.path("/admin/index");
     };
 
-    $scope.showCreateOrderMenu = function () {
+    $scope.showOrderMenuCreate = function () {
         $location.path("/admin/daily-menus/new");
     };
 
-    $scope.showImportMenuItems = function () {
+    $scope.showMenuItemsIndex = function () {
+        $location.path("/admin/menu-items/index");
+    };
+
+    $scope.showMenuItemsImport = function () {
         $location.path("/admin/menu-items/import");
     };
 
-    $scope.showImportMenuItemImages = function () {
+    $scope.showMenuItemImagesImport = function () {
         $location.path("/admin/menu-item-images/import");
     };
 

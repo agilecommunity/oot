@@ -10,6 +10,8 @@ GET           /api/shops/:shop_name/menu-items                          controll
 
 GET           /api/menu-items                                           controllers.MenuItems.index()
 POST          /api/menu-items                                           controllers.MenuItems.create()
+PUT           /api/menu-items/:id                                       controllers.MenuItems.update(id: Long)
+DELETE        /api/menu-items/:id                                       controllers.MenuItems.delete(id: Long)
 
 POST          /api/menu-item-images                                     controllers.MenuItemImages.create()
 

@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
+import filters.RequireCSRFCheck4Ng;
 import models.LocalUser;
 import models.MenuItem;
 import play.Logger;
@@ -64,6 +65,7 @@ public class MenuItems extends Controller {
         }
 
         if (contentType != null && contentType.contains("text/plain")) {
+            // text/plainの場合はCSV文字列で指定したとみなす
             logger.debug("#create build from csv");
             try {
                 createFromCsv(request().body().asText());
@@ -71,6 +73,7 @@ public class MenuItems extends Controller {
                 return internalServerError(String.format("{error: \"%s\"", e.getLocalizedMessage()));
             }
         } else if (contentType != null && contentType.contains("multipart/form-data;")) {
+            // multipart/form-dataの場合はCSVファイルで指定したとみなす
             logger.debug("#create build form multipart form-data");
             try {
                 createFromFile(request().body().asMultipartFormData());
@@ -78,35 +81,76 @@ public class MenuItems extends Controller {
                 return internalServerError(String.format("{error: \"%s\"", e.getLocalizedMessage()));
             }
         } else {
+            // どれでもない場合はJsonで指定したとみなす
             logger.debug("#create build from json");
-            createFromJson(request().body().asJson());
+
+            // ここだけ特殊で、結果をそのまま返す
+            return createFromJson(request().body().asJson());
         }
 
         return ok();
     }
 
-    private static void createFromJson(JsonNode json) {
+    @RequireCSRFCheck4Ng
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result update(Long id) {
+        logger.debug(String.format("#update id:%d", id));
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser localUser = LocalUser.find.byId(user.email().get());
+
+        if (!localUser.is_admin) {
+            logger.warn(String.format("#update only admin can create menu. local_user.id:%s", localUser.email));
+            return unauthorized();
+        }
+
+        JsonNode json = request().body().asJson();
+
+        logger.debug(String.format("#update json:%s", json));
+
+        Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json);
+
+        if (filledForm.hasErrors()) {
+            logger.debug(String.format("#update item has error. errors: %s", filledForm.errorsAsJson()));
+            return badRequest(filledForm.errorsAsJson());
+        }
+
+        MenuItem item = filledForm.get();
+
+        item.update();
+
+        return ok(Json.toJson(item));
+    }
+
+    @RequireCSRFCheck4Ng
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result delete(Long id) {
+        logger.debug(String.format("#delete id:%d", id));
+
+        return ok();
+    }
+
+    /**
+     * Json文字列からMenuItemを生成する
+     *   一度に生成できるのは1つのMenuItemのみ
+     * @param json
+     */
+    private static Result createFromJson(JsonNode json) {
 
         logger.debug(String.format("#create json:%s", json));
 
-        for (int index=0; index<json.size(); index++) {
-            logger.debug(String.format("#create item(%d) : %s", index + 1, json.get(index)));
+        Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json);
 
-            Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json.get(index));
-
-            if (filledForm.hasErrors()) {
-                logger.debug(String.format("#create item(%d) has error. errors: %s", index + 1, filledForm.errorsAsJson()));
-                continue;
-            }
-
-            MenuItem item = filledForm.get();
-
-            if (item.code == null) {
-                item.code = "";
-            }
-
-            item.save();
+        if (filledForm.hasErrors()) {
+            logger.debug(String.format("#create item has error. errors: %s", filledForm.errorsAsJson()));
+            return badRequest(filledForm.errorsAsJson());
         }
+
+        MenuItem item = filledForm.get();
+
+        item.save();
+
+        return ok(Json.toJson(item));
     }
 
     private static void createFromCsv(String text) throws IOException {

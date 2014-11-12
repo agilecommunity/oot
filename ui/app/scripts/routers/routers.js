@@ -51,6 +51,11 @@
             access: AccessLevels.admin,
             reloadOnSearch: false
         })
+        .when('/admin/menu-items/index', {
+            templateUrl: '/views/admin/menu-item/index',
+            controller: 'MenuItemIndexController',
+            access: AccessLevels.admin
+        })
         .when('/admin/menu-items/import', {
             templateUrl: '/views/admin/menu-item/import',
             controller: 'MenuItemImportController',

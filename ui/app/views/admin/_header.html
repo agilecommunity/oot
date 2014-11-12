@@ -5,9 +5,10 @@
         </div>
         <ul class="nav navbar-nav">
             <li ng-class="{'active':isActive('/admin/index')}"><a ng-click="showAdminIndex();">メニュー一覧</a></li>
-            <li ng-class="{'active':isActive('/admin/daily-menus/new')}"><a ng-click="showCreateOrderMenu();">メニュー作成</a></li>
-            <li ng-class="{'active':isActive('/admin/menu-items/import')}"><a ng-click="showImportMenuItems();">商品データ一括登録</a></li>
-            <li ng-class="{'active':isActive('/admin/menu-item-images/import')}"><a ng-click="showImportMenuItemImages();">商品画像一括登録</a></li>
+            <li ng-class="{'active':isActive('/admin/daily-menus/new')}"><a ng-click="showOrderMenuCreate();">メニュー作成</a></li>
+            <li ng-class="{'active':isActive('/admin/menu-items/index')}"><a ng-click="showMenuItemsIndex();">商品データ一覧</a></li>
+            <li ng-class="{'active':isActive('/admin/menu-items/import')}"><a ng-click="showMenuItemsImport();">商品データ一括登録</a></li>
+            <li ng-class="{'active':isActive('/admin/menu-item-images/import')}"><a ng-click="showMenuItemImagesImport();">商品画像一括登録</a></li>
         </ul>
     </div>
 </nav>
