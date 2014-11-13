@@ -76,7 +76,7 @@ div.menu-item .thumbnail {
                                                     <div class="text-right">{{selected_items[n].price_on_order}}円</div>
                                                 </div>
                                                 <a href="" class="thumbnail" ng-bind-html="render_image(selected_items[n])"></a>
-                                                <div class="comment label label-success">{{selected_items[n].comment}}</div>
+                                                <div class="comment label label-success" ng-class="{'hidden':(selected_items[n].comment | isEmptyOrUndefined)}">{{selected_items[n].comment}}</div>
                                             </div>
                                             <div class="menu-item" ng-hide="item_is_selected(n)">{{selected_items[n].name}}</div>
                                         </div>
@@ -93,7 +93,7 @@ div.menu-item .thumbnail {
                                                     <div class="text-right">{{selected_items[n+4].price_on_order}}円</div>
                                                 </div>
                                                 <a href="" class="thumbnail" ng-bind-html="render_image(selected_items[n+4])"></a>
-                                                <div class="comment label label-success">{{selected_items[n+4].comment}}</div>
+                                                <div class="comment label label-success" ng-class="{'hidden':(selected_items[n+4].comment | isEmptyOrUndefined)}">{{selected_items[n+4].comment}}</div>
                                             </div>
                                             <div ng-hide="item_is_selected(n+4)">{{selected_items[n+4].name}}</div>
                                         </div>
@@ -119,7 +119,7 @@ div.menu-item .thumbnail {
                                                     <div class="text-right">{{selected_items[n+8].price_on_order}}円</div>
                                                 </div>
                                                 <a href="" class="thumbnail" ng-bind-html="render_image(selected_items[n+8])"></a>
-                                                <div class="comment label label-success">{{selected_items[n+8].comment}}</div>
+                                                <div class="comment label label-success" ng-class="{'hidden':(selected_items[n+8].comment | isEmptyOrUndefined)}">{{selected_items[n+8].comment}}</div>
                                             </div>
                                             <div ng-hide="item_is_selected(n+8)">{{selected_items[n+8].name}}</div>
                                         </div>

@@ -90,6 +90,5 @@ angular.module('MyServices')
         return -1;
     };
 
-
     return DailyMenu;
 }]);

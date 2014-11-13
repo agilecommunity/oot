@@ -20,7 +20,7 @@ public class DailyOrderAggregates extends Controller {
 
         logger.debug("showByOrderDate order_date_str: " + order_date_str);
 
-        String sql = "select do.order_date, doi.menu_item_id, mi.code, count(doi.menu_item_id)"
+        String sql = "select do.order_date, doi.menu_item_id, mi.code, sum(doi.num_orders)"
                 + " from daily_order_item doi"
                 + " join menu_item mi on doi.menu_item_id = mi.id"
                 + " join daily_order do on doi.daily_order_id = do.id"
@@ -30,7 +30,7 @@ public class DailyOrderAggregates extends Controller {
                             .columnMapping("do.order_date", "order_date")
                             .columnMapping("doi.menu_item_id", "menu_item_id")
                             .columnMapping("mi.code", "code")
-                            .columnMapping("count(doi.menu_item_id)", "num_orders")
+                            .columnMapping("sum(doi.num_orders)", "num_orders")
                             .create();
 
         logger.debug("showByOrderDate rawSql: " + rawSql.getSql().toString());

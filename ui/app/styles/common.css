@@ -132,9 +132,6 @@ td.price {
 .choose-list .menu.ordered{
     border-color: #F3BFD6;
 }
-.ordered .food-name{
-    background-color: #F3BFD6;
-}
 
 .page-footer {
     background-color: #454545;
@@ -316,11 +313,23 @@ td.price {
     display: block;
 }
 
+.ordered .food-name {
+    background-color: #F3BFD6;
+}
+
+.ordered .comment {
+    background-color: #F3BFD6;
+    color: firebrick;
+}
+
+.ordered .comment:after {
+    border-bottom-color:#F3BFD6 !important;
+}
+
 /* メニュー作成 */
 .menu.selected {
     background-color: #dddddd;
 }
-
 
 
 /* メニュー表示 */
@@ -328,16 +337,25 @@ div.menu-item {
     position: relative;
 }
 div.menu-item div.comment {
-    position: absolute;
-    left: 0px;
-    bottom: 5px;
-    margin: 5px;
-    padding: 5px;
-    text-align: left;
+    display:inline-block;
+    margin: 0 5px 0 20%;
+    padding-top:5px;
+    padding-bottom:5px;
+    font-size: 1.2em;
+    position:relative;
     white-space: normal;
-    max-width: 65%; /* 価格に重ならない程度の幅 */
-    font-family: sans-serif;
-    font-weight: bold;
+    text-align: left;
+}
+
+div.menu-item div.comment:after    {
+    content: ' ';
+    width:0;
+    height: 0;
+    position:absolute;
+    border:10px solid transparent;
+    border-bottom-color:#5cb85c;
+    bottom:100%;
+    left:35%;
 }
 
 /* Bootstrap補助 */

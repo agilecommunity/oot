@@ -2,7 +2,7 @@
 angular.module('MyControllers')
 .controller('OrderController',
     ['$scope', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder',
-    function ($scope, $location, $filter, User, DailyMenu, DailyOrder) {
+    function ($scope, $location, $filter, User, DailyMenu, DailyOrder, isEmptyOrUndefinedFilter) {
 
     $scope.daily_menus = DailyMenu.queryByStatus({status: "open"},
         function (response) { // 成功時
@@ -27,7 +27,7 @@ angular.module('MyControllers')
         if (daily_menu_item.menu_item.item_image_path !== undefined && daily_menu_item.menu_item.item_image_path !== null) {
             imgFile = daily_menu_item.menu_item.item_image_path;
         }
-        return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\" width=\"100px\" height=\"100px\">";
+        return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
     };
 
     $scope.order = function (daily_menu, daily_menu_item) { // イベントハンドラ
@@ -41,7 +41,7 @@ angular.module('MyControllers')
 
         if (target !== null) {
             if (new_state === true) {
-                target.detail_items.push({menu_item: daily_menu_item.menu_item});
+                target.detail_items.push({menu_item: daily_menu_item.menu_item, num_orders: 1});
             } else {
                 target.detail_items = target.detail_items.filter(function (item, index) {
                     return (item.menu_item.id !== daily_menu_item.menu_item.id);
@@ -64,7 +64,7 @@ angular.module('MyControllers')
             new_order.order_date = daily_menu.menu_date;
             new_order.local_user = User.current_user();
             new_order.detail_items = [
-                {menu_item: daily_menu_item.menu_item}
+                {menu_item: daily_menu_item.menu_item, num_orders: 1}
             ];
 
             new_order.$create(function(){

@@ -22,6 +22,8 @@ public class DailyOrderItem extends Model {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
+    public Short num_orders;
+
     @ManyToOne
     @JoinColumn(name = "daily_order_id")
     @JsonIgnore
