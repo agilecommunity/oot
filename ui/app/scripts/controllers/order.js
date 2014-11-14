@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
 .controller('OrderController',
-    ['$scope', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder',
-    function ($scope, $location, $filter, User, DailyMenu, DailyOrder, isEmptyOrUndefinedFilter) {
+    ['$scope', '$location', '$filter', '$modal', 'User', 'DailyMenu', 'DailyOrder',
+    function ($scope, $location, $filter, $modal, User, DailyMenu, DailyOrder, isEmptyOrUndefinedFilter) {
 
     $scope.daily_menus = DailyMenu.queryByStatus({status: "open"},
         function (response) { // 成功時
@@ -20,15 +20,6 @@ angular.module('MyControllers')
             $location.path("/");
         }
     );
-
-    // 画像を表示するHTMLを出力
-    $scope.render_image = function(daily_menu_item) {
-        var imgFile = "no-image.png";
-        if (daily_menu_item.menu_item.item_image_path !== undefined && daily_menu_item.menu_item.item_image_path !== null) {
-            imgFile = daily_menu_item.menu_item.item_image_path;
-        }
-        return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
-    };
 
     $scope.order = function (daily_menu, daily_menu_item) { // イベントハンドラ
 
@@ -71,6 +62,60 @@ angular.module('MyControllers')
                 $scope.daily_orders.push(new_order);
             });
         }
+    };
+
+    $scope.edit_num_orders = function(daily_menu, daily_menu_item) {
+
+        var modalInstance = $modal.open({
+            templateUrl: "/views/select-num-orders",
+            controller: "SelectNumOrdersController",
+            scope: $scope
+        });
+
+        modalInstance.result.then(function (num_orders) {
+            var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
+
+            if (order === null) {
+                return;
+            }
+
+            var order_item = order.find_item(daily_menu_item.menu_item);
+
+            if (order_item === null) {
+                return;
+            }
+
+            order_item.num_orders = num_orders;
+
+            order.$update({});
+
+        }, function () {
+        });
+    };
+
+    // 画像を表示するHTMLを出力
+    $scope.render_image = function(daily_menu_item) {
+        var imgFile = "no-image.png";
+        if (daily_menu_item.menu_item.item_image_path !== undefined && daily_menu_item.menu_item.item_image_path !== null) {
+            imgFile = daily_menu_item.menu_item.item_image_path;
+        }
+        return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
+    };
+
+    $scope.num_orders = function(daily_menu, daily_menu_item) {
+        var order = $filter('getByOrderDate')($scope.daily_orders, daily_menu.menu_date);
+
+        if (order === null) {
+            return "";
+        }
+
+        var order_item = order.find_item(daily_menu_item.menu_item);
+
+        if (order_item === null) {
+            return "";
+        }
+
+        return order_item.num_orders;
     };
 
     $scope.totalPriceOfTheDay = function (target_date) {

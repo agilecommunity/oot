@@ -300,8 +300,8 @@ td.price {
     height: 155px;
 
     position: absolute;
-    left: 5px;
-    bottom: 30px;
+    left: 0px;
+    top: -5px;
     background-image: url('/assets/images/ordered.png');
     background-repeat: no-repeat;
     background-position: left top;
@@ -336,6 +336,7 @@ td.price {
 div.menu-item {
     position: relative;
 }
+
 div.menu-item div.comment {
     display:inline-block;
     margin: 0 5px 0 20%;
@@ -356,6 +357,14 @@ div.menu-item div.comment:after    {
     border-bottom-color:#5cb85c;
     bottom:100%;
     left:35%;
+}
+
+div.menu-item .num-orders {
+    position: absolute;
+    font-size: 150%;
+    padding: 5px 10px;
+    top: 5px;
+    right: 5px;
 }
 
 /* Bootstrap補助 */

@@ -61,9 +61,20 @@ angular.module('MyServices')
     DailyOrder.prototype.total_price = function () {
         var price = 0;
         angular.forEach(this.detail_items, function (item) {
-            price += item.menu_item.price_on_order;
+            price += item.menu_item.price_on_order * item.num_orders;
         });
         return price;
+    };
+
+    DailyOrder.prototype.find_item = function(menu_item) {
+        var target = null;
+        this.detail_items.some(function (item) {
+            if (item.menu_item.id == menu_item.id) {
+                target = item;
+            }
+            return target !== null;
+        });
+        return target;
     };
 
     return DailyOrder;
