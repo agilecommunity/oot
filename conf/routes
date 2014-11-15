@@ -2,6 +2,7 @@
 
 GET           /assets/*file                                             controllers.Assets.at(path = "/public", file)
 GET           /views/*file                                              controllers.UIViews.at(path = "/ui/app/views", file)
+GET           /uc-assets/images/*file                                   controllers.UCAssets.imagesAt(file)
 GET           /uc-assets/*file                                          controllers.UCAssets.at(file)
 
 # Api

@@ -12,6 +12,23 @@ public class UCAssets extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.UCAssets");
 
     private static String RootPath = "uc-assets";
+    private static String NoImagePath = "public/images/no-image.png";
+
+    public static Result imagesAt(String file) {
+
+        String targetFilePath = UCAssets.pathTo("images/" + file);
+
+        logger.trace(String.format("#imagesAt target file path:%s", targetFilePath));
+
+        File targetFile = new File(targetFilePath);
+
+        if (!targetFile.exists()) {
+            targetFile = new File(UCAssets.NoImagePath);
+        }
+
+        return ok(targetFile);
+
+    }
 
     public static Result at(String file) {
 
