@@ -25,8 +25,8 @@
                 <tbody>
                     <tr ng-repeat="checkitem in checklist">
                         <td></td>
-                        <td>{{checkitem.user_name}}</td>
-                        <td class="order-status" ng-repeat="item in daily_menu.detail_items">{{checkitem.order_statuses[item.menu_item.id].ordered | checkmark}}</td>
+                        <td class="user-name">{{checkitem.user_name}}</td>
+                        <td class="order-status" ng-repeat="item in daily_menu.detail_items">{{render_num_orders(checkitem.order_statuses[item.menu_item.id].num_orders)}}</td>
                     </tr>
                 </tbody>
             </table>

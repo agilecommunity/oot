@@ -19,7 +19,7 @@ angular.module('MyControllers')
             angular.forEach(order.detail_items, function (item) {
                 var order_status = [];
                 order_status.menu_id = item.menu_item.id;
-                order_status.ordered = true;
+                order_status.num_orders = item.num_orders;
                 order_statuses[item.menu_item.id] = order_status;
             });
             checklist_item.order_statuses = order_statuses;
@@ -77,5 +77,17 @@ angular.module('MyControllers')
             }
         }
     );
+
+    $scope.render_num_orders = function(num_orders) {
+        if ($filter('isEmptyOrUndefined')(num_orders) === true) {
+            return "";
+        }
+
+        if (num_orders === 1) {
+            return "○";
+        }
+
+        return num_orders;
+    };
 }]);
 

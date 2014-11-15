@@ -270,6 +270,8 @@ td.price {
 }
 .checklist .order-status {
     text-align: center;
+    vertical-align: middle;
+    font-size: 130%;
 }
 
 /* AngularJS用 */
