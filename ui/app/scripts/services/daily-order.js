@@ -23,12 +23,19 @@ angular.module('MyServices')
         return one;
     };
 
-    var DailyOrder = $resource('/api/daily-orders/mine/:id',
+    var DailyOrder = $resource('/api/daily-orders/:id',
         { id: "@id" }, {
         getByOrderDate: {
             method: "GET",
             url: "/api/daily-orders/order_date/:order_date",
             params: {order_date: "@order_date"},
+            isArray: true,
+            transformResponse: transformList,
+            cache: false
+        },
+        getMine: {
+            method: "GET",
+            url: "/api/daily-orders/mine",
             isArray: true,
             transformResponse: transformList,
             cache: false
@@ -75,6 +82,20 @@ angular.module('MyServices')
             return target !== null;
         });
         return target;
+    };
+
+    DailyOrder.prototype.remove_item = function(menu_item) {
+        this.detail_items = this.detail_items.filter(function (item, index) {
+            return (item.menu_item.id !== menu_item.id);
+        });
+    };
+
+    DailyOrder.prototype.add_item = function(menu_item, num_orders) {
+        if (this.find_item(menu_item) !== null) {
+            return;
+        }
+
+        this.detail_items.push({menu_item: menu_item, num_orders: num_orders});
     };
 
     return DailyOrder;

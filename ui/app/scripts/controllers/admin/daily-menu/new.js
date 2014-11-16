@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
 .controller('DailyMenuNewController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder',
+    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder) {
 
     // 変更を反映する
     var apply_changes = function(current_menu) {
@@ -72,6 +72,7 @@ angular.module('MyControllers')
                         menu = new DailyMenu({ menu_date: currentDate, status: "prepared", detail_items: [] });
                     } else {
                         menu = response[menuIndex];
+                        menu.detail_items = $filter('orderBy')(menu.detail_items, ['menu_item.shop_name', 'menu_item.name']);
                     }
 
                     $scope.daily_menus.push(menu);
@@ -166,6 +167,19 @@ angular.module('MyControllers')
             apply_changes($scope.current_daily_menu);
         }, function () {
             console.log('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    $scope.edit_order = function(daily_menu) {
+        var modalInstance = $modal.open({
+            templateUrl: "/views/admin/daily-order/edit",
+            controller: "DailyOrderEditController",
+            size: 'lg',
+            resolve: {
+                daily_menu: function() {
+                    return $scope.current_daily_menu;
+                }
+            }
         });
     };
 

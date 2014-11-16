@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import models.DailyOrder;
+import models.LocalUser;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -22,25 +23,6 @@ import filters.RequireCSRFCheck4Ng;
 public class DailyOrders extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyOrders");
-
-    @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showMine() {
-
-        response().setHeader(CACHE_CONTROL, "no-cache");
-
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-
-        ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
-
-
-        if (request().queryString().containsKey("order_date")) {
-            query.eq("order_date", request().queryString().get("order_date"));
-        }
-
-        List<DailyOrder> orders = query.findList();
-
-        return ok(Json.toJson(orders));
-    }
 
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByOrderDate(String order_date_str) {
@@ -65,10 +47,29 @@ public class DailyOrders extends Controller {
         return ok(Json.toJson(list));
     }
 
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result showMine() {
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+
+        ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
+
+
+        if (request().queryString().containsKey("order_date")) {
+            query.eq("order_date", request().queryString().get("order_date"));
+        }
+
+        List<DailyOrder> orders = query.findList();
+
+        return ok(Json.toJson(orders));
+    }
+
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result createMine() {
+    public static Result create() {
 
         logger.debug("createMine");
 
@@ -89,8 +90,8 @@ public class DailyOrders extends Controller {
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
-        if (!object.local_user.id.equals(user.identityId().userId())) {
-            logger.warn(String.format("create cant create others order local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
+        if (!DailyOrders.canEdit(object, user)) {
+            logger.warn(String.format("create cant create local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
             return badRequest();
         }
 
@@ -109,39 +110,9 @@ public class DailyOrders extends Controller {
 
     @RequireCSRFCheck4Ng()
     @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result deleteMine(Long id) {
-
-        logger.debug(String.format("deleteMine id: %s", id));
-
-        response().setHeader(CACHE_CONTROL, "no-cache");
-
-        DailyOrder order = DailyOrder.find.byId(id);
-
-        if (order == null) {
-            logger.debug("deleteMine object not found");
-            return ok();
-        }
-
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-
-        if (!order.local_user.id.equals(user.identityId().userId())) {
-            logger.warn(String.format("deleteMine cant delete others order local_user.id:%s identity.user.id:%s", order.local_user.id, user.identityId().userId() ));
-            return badRequest();
-        }
-
-        order.delete();
-
-        return ok();
-    }
-
-    @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result updateMine(Long id) {
-
-        logger.debug(String.format("update id: %s", id));
-
-        response().setHeader(CACHE_CONTROL, "no-cache");
+    public static Result update(Long id) {
+        logger.debug("#update");
 
         if (DailyOrder.find.byId(id) == null) {
             logger.debug("update object doesnt exist");
@@ -163,8 +134,8 @@ public class DailyOrders extends Controller {
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
-        if (!object.local_user.id.equals(user.identityId().userId())) {
-            logger.warn(String.format("update cant update others order local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
+        if (! DailyOrders.canEdit(object, user)) {
+            logger.warn(String.format("update cant update local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
             return badRequest();
         }
 
@@ -174,6 +145,50 @@ public class DailyOrders extends Controller {
         object.update();
 
         return ok(Json.toJson(object));
+    }
+
+    @RequireCSRFCheck4Ng()
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result delete(Long id) {
+
+        logger.debug(String.format("deleteMine id: %s", id));
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
+        DailyOrder object = DailyOrder.find.byId(id);
+
+        if (object == null) {
+            logger.debug("deleteMine object not found");
+            return ok();
+        }
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+
+        if (! DailyOrders.canEdit(object, user)) {
+            logger.warn(String.format("deleteMine cant delete others order local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
+            return badRequest();
+        }
+
+        object.delete();
+
+        return ok();
+    }
+
+    private static boolean canEdit(DailyOrder order, Identity user) {
+
+        LocalUser current_user = LocalUser.find.byId(user.identityId().userId());
+
+        // 管理者である
+        if (current_user.is_admin == true) {
+            return true;
+        }
+
+        // オブジェクトの所有者である
+        if (order.local_user.id.equals(user.identityId().userId())) {
+            return true;
+        }
+
+        return false;
     }
 
 }

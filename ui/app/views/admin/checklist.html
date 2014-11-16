@@ -3,11 +3,11 @@
 
         <div class="content-header">チェック表 {{menu_date.format('YYYY/MM/DD (ddd)')}}</div>
 
-        <div ng-show="daily_menu.detail_items == null || daily_menu.detail_items.length === 0">
-            <p class="no-data">メニューにお弁当がありません。</p>
+        <div ng-show="menu_or_order_is_empty()">
+            <p class="no-data">メニューまたは注文がありません。</p>
         </div>
 
-        <div ng-show="daily_menu.detail_items != null && daily_menu.detail_items.length > 0">
+        <div ng-show="!menu_or_order_is_empty()">
             <table class="table table-bordered table-condensed checklist" id="checklist">
                 <thead>
                     <tr>

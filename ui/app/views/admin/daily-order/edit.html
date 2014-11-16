@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+    <h4>注文修正 {{daily_menu.menu_date.format('YYYY/MM/DD (ddd)')}}</h4>
+</div>
+<div class="modal-body">
+    <div>
+        <table class="table table-bordered table-condensed checklist" id="checklist">
+            <thead>
+            <tr>
+                <th class="user-name" rowspan=3>氏名</th>
+                <th class="shop-name" ng-repeat="item in daily_menu.detail_items">{{item.menu_item.shop_name}}</th>
+            </tr>
+            <tr>
+                <th class="item-name" ng-repeat="item in daily_menu.detail_items">{{item.menu_item.name}}</th>
+            </tr>
+            <tr>
+                <th class="price" ng-repeat="item in daily_menu.detail_items">{{item.menu_item.price_on_order}}円</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="check_item in checklist">
+                <td class="user-name">{{check_item.user_name}}</td>
+                <td class="order-status" ng-click="edit_item(check_item.order, item.menu_item, check_item.order_statuses)" ng-repeat="item in daily_menu.detail_items">
+                    <div class="pull-right">
+                        <span class="glyphicon glyphicon-remove" style="font-size:150%;" ng-click="delete_item(check_item.order, item.menu_item, check_item.order_statuses, $event)" ng-show="check_item.order_statuses[item.menu_item.id].num_orders !== undefined"></span>
+                    </div>
+                    {{check_item.order_statuses[item.menu_item.id].num_orders}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-info" ng-click="add_user()">注文者追加</button>
+    </div>
+
+    <span us-spinner spinner-key="spinner" style="position: absolute;display: block;top: 100px;left: 50%;"></span>
+</div>

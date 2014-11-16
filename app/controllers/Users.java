@@ -17,6 +17,20 @@ public class Users extends Controller {
 
     @RequireCSRFCheck4Ng()
     @SecureSocial.UserAwareAction
+    public static Result index() {
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser local_user = LocalUser.find.byId(user.identityId().userId());
+
+        if (!local_user.is_admin) {
+            return unauthorized();
+        }
+
+        return ok(Json.toJson(LocalUser.find.all()));
+    }
+
+    @RequireCSRFCheck4Ng()
+    @SecureSocial.UserAwareAction
     public static Result showMe() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 

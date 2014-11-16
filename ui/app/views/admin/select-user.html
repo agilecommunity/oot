@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+    <h4>ユーザ選択</h4>
+</div>
+<div class="modal-body">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-info" style="margin:10px 5px;" ng-click="selectThis(user)" ng-repeat="user in users">{{user.last_name + user.first_name}}</button>
+            </div>
+        </div>
+    </div>
+
+</div>

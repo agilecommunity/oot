@@ -6,7 +6,7 @@ angular.module('MyControllers')
 
     $scope.daily_menus = DailyMenu.queryByStatus({status: "open"},
         function (response) { // 成功時
-            $scope.daily_orders = DailyOrder.query({},
+            $scope.daily_orders = DailyOrder.getMine({},
                 function (response) { // 成功時
                 },
                 function (response) {   // 失敗時
@@ -87,7 +87,7 @@ angular.module('MyControllers')
 
             order_item.num_orders = num_orders;
 
-            order.$update({});
+            order.$update({url: '/api/daily-orders/:id'});
 
         }, function () {
         });

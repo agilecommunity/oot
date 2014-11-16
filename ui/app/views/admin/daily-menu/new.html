@@ -47,7 +47,7 @@ div.menu-item .thumbnail {
         </div>
         <div class="container-fluid" style="margin-top:5px;">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style="margin-bottom:10px;">
                     <div class="container-fluid">
                         <div class="pull-right">
                             <label>ステータス:</label>
@@ -56,6 +56,7 @@ div.menu-item .thumbnail {
                                 <button class="btn" ng-click="change_menu_status('open')"     ng-class="{'btn-info': get_current_menu_status() == 'open'}">受付中</button>
                                 <button class="btn" ng-click="change_menu_status('closed')"   ng-class="{'btn-info': get_current_menu_status() == 'closed'}">終了</button>
                             </div>
+                            <button class="btn" ng-click="edit_order(daily_menu)">注文修正</button>
                         </div>
                     </div>
                 </div>

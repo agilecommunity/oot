@@ -78,6 +78,19 @@ angular.module('MyControllers')
         }
     );
 
+    $scope.menu_or_order_is_empty = function() {
+        if ($scope.daily_menu.detail_items === null || $scope.daily_menu.detail_items.length === 0)
+        {
+            return true;
+        }
+
+        if ($scope.daily_orders.length === 0) {
+            return true;
+        }
+
+        return false;
+    };
+
     $scope.render_num_orders = function(num_orders) {
         if ($filter('isEmptyOrUndefined')(num_orders) === true) {
             return "";
