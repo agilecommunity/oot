@@ -36,8 +36,8 @@ public class DailyOrderTest extends WithApplication {
          Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
 
 
-         assertThat(DailyOrder.find.byId(1L).local_user).isNotNull();
-         assertThat(DailyOrder.find.byId(1L).local_user.id).isEqualTo("steve@foo.baa");
-         assertThat(DailyOrder.find.byId(1L).local_user.first_name).isEqualTo("スティーブ");
+         assertThat(DailyOrder.find.byId(1L).localUser).isNotNull();
+         assertThat(DailyOrder.find.byId(1L).localUser.id).isEqualTo("steve@foo.baa");
+         assertThat(DailyOrder.find.byId(1L).localUser.firstName).isEqualTo("スティーブ");
     }
 }

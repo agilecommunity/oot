@@ -1,55 +1,55 @@
 
 angular.module('MyControllers')
     .controller('DailyOrderEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder', 'daily_menu',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder, daily_menu) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder', 'dailyMenu',
+    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder, dailyMenu) {
 
     // チェックリストに使うデータの作成
-    var create_checklist = function () {
+    var createChecklist = function () {
 
         var checklist = [];
 
         // その日注文しているユーザごとに姓名と、注文状況を調査する
-        angular.forEach($scope.daily_orders, function (order) {
+        angular.forEach($scope.dailyOrders, function (order) {
 
-            var checklist_item = [];
-            checklist_item.order = order;
-            checklist_item.user_name = order.local_user.last_name + " " + order.local_user.first_name;
-            var order_statuses = [];
+            var checklistItem = [];
+            checklistItem.order = order;
+            checklistItem.userName = order.localUser.lastName + " " + order.localUser.firstName;
+            var orderStatuses = [];
 
-            angular.forEach(order.detail_items, function (item) {
-                var order_status = {};
-                order_status.menu_id = item.menu_item.id;
-                order_status.num_orders = item.num_orders;
-                order_statuses[item.menu_item.id] = order_status;
+            angular.forEach(order.detailItems, function (item) {
+                var orderStatus = {};
+                orderStatus.menuId = item.menuItem.id;
+                orderStatus.numOrders = item.numOrders;
+                orderStatuses[item.menuItem.id] = orderStatus;
             });
-            checklist_item.order_statuses = order_statuses;
-            checklist.push(checklist_item);
+            checklistItem.orderStatuses = orderStatuses;
+            checklist.push(checklistItem);
         });
 
         // 同じ商品を買った人は続けて表示されるよう、全商品の注文状況を文字列にまとめソートキーとする
-        angular.forEach(checklist, function(check_item){
-            var order_statuses_bits = "";
-            angular.forEach($scope.daily_menu.detail_items, function(menu_item){
-                if (check_item.order_statuses[menu_item.menu_item.id] !== undefined) {
-                    order_statuses_bits += "0";
+        angular.forEach(checklist, function(checkItem){
+            var orderStatusesBits = "";
+            angular.forEach($scope.dailyMenu.detailItems, function(menuItem){
+                if (checkItem.orderStatuses[menuItem.menuItem.id] !== undefined) {
+                    orderStatusesBits += "0";
                 } else {
-                    order_statuses_bits += "1";
+                    orderStatusesBits += "1";
                 }
             });
-            check_item.order_statuses_bits = order_statuses_bits;
+            checkItem.orderStatusesBits = orderStatusesBits;
         });
         // 全商品の注文状況と、ユーザ名でソートする
-        checklist = $filter('orderBy')(checklist, ["order_statuses_bits", "user_name"]);
+        checklist = $filter('orderBy')(checklist, ["orderStatusesBits", "userName"]);
 
         return checklist;
     };
 
     $scope.checklist = [];
-    $scope.daily_menu = daily_menu;
-    $scope.daily_orders = DailyOrder.getByOrderDate({order_date: $scope.daily_menu.menu_date.format('YYYY-MM-DD')},
+    $scope.dailyMenu = dailyMenu;
+    $scope.dailyOrders = DailyOrder.getByOrderDate({orderDate: $scope.dailyMenu.menuDate.format('YYYY-MM-DD')},
         function (response) {
-            $scope.checklist = create_checklist();
+            $scope.checklist = createChecklist();
         },
         function (response) {
             if (response.status === 404) {
@@ -61,50 +61,46 @@ angular.module('MyControllers')
         }
     );
 
-    $scope.edit_item = function(order, menu_item, order_statuses) {
+    $scope.editItem = function(order, menuItem, orderStatuses) {
 
         var modalInstance = $modal.open({
             templateUrl: "/views/select-num-orders",
             controller: "SelectNumOrdersController"
         });
 
-        modalInstance.result.then(function (num_orders) {
-            var order_item = order.find_item(menu_item);
+        modalInstance.result.then(function (numOrders) {
+            var orderItem = order.findItem(menuItem);
 
-            if (order_item === null) {
-                order.add_item(menu_item, num_orders);
-                order_statuses[menu_item.id] = {menu_id: menu_item.id, num_orders: num_orders};
+            if (orderItem === null) {
+                order.addItem(menuItem, numOrders);
+                orderStatuses[menuItem.id] = {menuId: menuItem.id, numOrders: numOrders};
             } else {
-                order_item.num_orders = num_orders;
+                orderItem.numOrders = numOrders;
             }
 
-            order_statuses[menu_item.id].num_orders = num_orders;
+            orderStatuses[menuItem.id].numOrders = numOrders;
 
-            if (order.id === undefined) {
-                order.$create({});
-            } else {
-                order.$update({});
-            }
+            order.$save({});
 
         }, function () {
         });
     };
 
-    $scope.delete_item = function(order, menu_item, order_statuses, event) {
+    $scope.deleteItem = function(order, menuItem, orderStatuses, event) {
         event.stopPropagation();
         event.preventDefault();
 
-        order.remove_item(menu_item);
-        order_statuses[menu_item.id] = undefined;
+        order.removeItem(menuItem);
+        orderStatuses[menuItem.id] = undefined;
 
-        if (order.detail_items.length !== 0) {
+        if (order.detailItems.length !== 0) {
             order.$update({});
         } else {
             order.$delete({});
         }
     };
 
-    $scope.add_user = function() {
+    $scope.addUser = function() {
 
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/select-user",
@@ -112,18 +108,18 @@ angular.module('MyControllers')
         });
 
         modalInstance.result.then(function (user) {
-            var new_order = new DailyOrder();
-            new_order.order_date = $scope.daily_menu.menu_date;
-            new_order.local_user = user;
-            new_order.detail_items = [];
+            var newOrder = new DailyOrder();
+            newOrder.orderDate = $scope.dailyMenu.menuDate;
+            newOrder.localUser = user;
+            newOrder.detailItems = [];
 
-            var checklist_item = [];
-            checklist_item.order = new_order;
-            checklist_item.user_name = new_order.local_user.last_name + " " + new_order.local_user.first_name;
-            checklist_item.order_statuses = [];
+            var checklistItem = [];
+            checklistItem.order = newOrder;
+            checklistItem.userName = newOrder.localUser.lastName + " " + newOrder.localUser.firstName;
+            checklistItem.orderStatuses = [];
 
-            $scope.daily_orders.push(checklist_item.order);
-            $scope.checklist.push(checklist_item);
+            $scope.dailyOrders.push(checklistItem.order);
+            $scope.checklist.push(checklistItem);
         });
     };
 

@@ -120,7 +120,7 @@ public class RegistrationTest {
 
             LocalToken token = new LocalToken();
             token.email = "user1@foo.baa";
-            token.is_sign_up = true;
+            token.isSignUp = true;
             token.uuid = "hoho";
             token.save();
         }
@@ -191,7 +191,7 @@ public class RegistrationTest {
 
             LocalToken token = new LocalToken();
             token.email = "user1@foo.baa";
-            token.is_sign_up = true;
+            token.isSignUp = true;
             token.uuid = "hoho";
             token.save();
         }

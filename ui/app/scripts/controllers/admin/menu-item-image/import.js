@@ -4,12 +4,12 @@ angular.module('MyControllers')
     ['$scope', '$location', '$routeParams', '$filter', 'usSpinnerService', 'User', 'MenuItem', 'DailyMenu',
         function ($scope, $location, $routeParams, $filter, usSpinnerService, User, MenuItem, DailyMenu) {
 
-    var start_block = function() {
+    var startBlock = function() {
         $.blockUI({baseZ: 2000, message: null});
         usSpinnerService.spin("spinner");
     };
 
-    var stop_block = function() {
+    var stopBlock = function() {
         usSpinnerService.stop("spinner");
         $.unblockUI();
     };
@@ -19,26 +19,26 @@ angular.module('MyControllers')
             if (data.files === null || data.files.length !== 1) {
                 return;
             }
-            $scope.upload_data = data;
+            $scope.uploadData = data;
             $scope.$apply();
         }
     });
 
-    var empty_file = {name: 'ファイルを選択してください', size: null};
+    var emptyFile = {name: 'ファイルを選択してください', size: null};
     var getUploadFile = function() {
-        if ($scope.upload_data === null) {
-            return empty_file;
+        if ($scope.uploadData === null) {
+            return emptyFile;
         }
 
-        return $scope.upload_data.files[0]; // 複数選択は想定していない
+        return $scope.uploadData.files[0]; // 複数選択は想定していない
     };
 
-    $scope.upload_data = null;
-    $scope.upload_file = empty_file;
+    $scope.uploadData = null;
+    $scope.uploadFile = emptyFile;
 
     $scope.uploadFileDescription = function() {
         var file = getUploadFile();
-        if (file === empty_file) {
+        if (file === emptyFile) {
             return file.name;
         }
         var description = file.name;
@@ -49,13 +49,13 @@ angular.module('MyControllers')
     };
 
     $scope.bulkImport = function() {
-        if ($scope.upload_data === null) {
+        if ($scope.uploadData === null) {
             return;
         }
 
-        start_block();
+        startBlock();
 
-        $scope.upload_data.submit()
+        $scope.uploadData.submit()
         .done(function( data, textStatus, jqXHR ) {
             var result = {statusCode: 200};
 
@@ -63,7 +63,7 @@ angular.module('MyControllers')
                 result = $.parseJSON(data[0].body.innerText);
             }
 
-            stop_block();
+            stopBlock();
 
             if (result.statusCode === 200) {
                 bootbox.alert("登録が完了しました", function () {
@@ -76,7 +76,7 @@ angular.module('MyControllers')
             }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
-            stop_block();
+            stopBlock();
 
             bootbox.alert("登録できませんでした status:" + errorThrown, function () {
                 $scope.clearForm();
@@ -85,7 +85,7 @@ angular.module('MyControllers')
     };
 
     $scope.clearForm = function() {
-        $scope.upload_data = null;
+        $scope.uploadData = null;
         $scope.menuItemImagesForm.$setPristine();
         $scope.$apply();
     };

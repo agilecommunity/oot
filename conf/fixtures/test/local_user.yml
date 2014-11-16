@@ -3,25 +3,25 @@
     provider:   userpass
     email:      steve@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
-    first_name: スティーブ
-    last_name:  アジャイル
-    is_admin:   false
+    firstName:  スティーブ
+    lastName:   アジャイル
+    isAdmin:    false
 
 - !!models.LocalUser
     id:         bob@foo.baa
     provider:   userpass
     email:      bob@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
-    first_name: ボブ
-    last_name:  アジャイル
-    is_admin:   false
+    firstName:  ボブ
+    lastName:   アジャイル
+    isAdmin:    false
 
 - !!models.LocalUser
     id:         melissa@foo.baa
     provider:   userpass
     email:      melissa@foo.baa
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
-    first_name: メリッサ
-    last_name:  アジャイル
-    is_admin:   true
+    firstName:  メリッサ
+    lastName:   アジャイル
+    isAdmin:    true
 

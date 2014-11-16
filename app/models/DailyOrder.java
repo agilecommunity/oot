@@ -29,22 +29,22 @@ public class DailyOrder extends Model {
     public Long id;
 
     @Constraints.Required
-    public java.sql.Date order_date;
+    public java.sql.Date orderDate;
 
     @OneToOne(cascade=CascadeType.REFRESH, optional = false) // 参照のみだからREFRESHでいいはず
     @JoinColumn(name="user_id", nullable = false)
-    public LocalUser local_user;
+    public LocalUser localUser;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_order")
-    public List<DailyOrderItem> detail_items = new ArrayList<DailyOrderItem>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dailyOrder")
+    public List<DailyOrderItem> detailItems = new ArrayList<DailyOrderItem>();
 
     public List<ValidationError> validate() {
 
         List<ValidationError> errors = new ArrayList<ValidationError>();
 
-        if (local_user == null) { // なぜかValidateでチェックしてくれないので独自にやる
-            logger.debug("is_valid local_user is null");
-            errors.add(new ValidationError("local_user", "error.required"));
+        if (localUser == null) { // なぜかValidateでチェックしてくれないので独自にやる
+            logger.debug("is_valid localUser is null");
+            errors.add(new ValidationError("localUser", "error.required"));
         }
 
         if (errors.size() == 0) {
@@ -56,8 +56,8 @@ public class DailyOrder extends Model {
 
     public static Finder<Long,DailyOrder> find = new Finder<Long,DailyOrder>(Long.class, DailyOrder.class);
 
-    public static DailyOrder find_by(java.sql.Date order_date, String user_id) {
-        List<DailyOrder> candidate = DailyOrder.find.where().eq("order_date", order_date).eq("user_id", user_id).findList();
+    public static DailyOrder findBy(java.sql.Date orderDate, String userId) {
+        List<DailyOrder> candidate = DailyOrder.find.where().eq("order_date", orderDate).eq("user_id", userId).findList();
 
         if (candidate.size() != 1) {
             return null;
@@ -66,7 +66,7 @@ public class DailyOrder extends Model {
         return candidate.get(0);
     }
 
-    public static List<DailyOrder> find_by(java.sql.Date order_date) {
+    public static List<DailyOrder> findBy(java.sql.Date order_date) {
         return DailyOrder.find.where().eq("order_date", order_date).findList();
     }
 }

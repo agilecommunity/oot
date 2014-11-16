@@ -1,11 +1,11 @@
 - !!models.DailyMenu
-    menu_date:  2014-02-09
+    menuDate:   2014-02-09
     status:     open
 
 - !!models.DailyMenu
-    menu_date:  2014-02-10
+    menuDate:   2014-02-10
     status:     open
 
 - !!models.DailyMenu
-    menu_date:  2014-02-11
+    menuDate:   2014-02-11
     status:     prepared

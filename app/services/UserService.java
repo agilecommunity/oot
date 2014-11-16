@@ -56,9 +56,9 @@ public class UserService extends BaseUserService {
 
         local_token.uuid = token.uuid;
         local_token.email = token.email;
-        local_token.created_at = new java.sql.Date(token.creationTime.getMillis());
-        local_token.expire_at = new java.sql.Date(token.expirationTime.getMillis());
-        local_token.is_sign_up = token.isSignUp;
+        local_token.createdAt = new java.sql.Date(token.creationTime.getMillis());
+        local_token.expireAt = new java.sql.Date(token.expirationTime.getMillis());
+        local_token.isSignUp = token.isSignUp;
 
         local_token.save();
 
@@ -95,9 +95,9 @@ public class UserService extends BaseUserService {
         Token result = new Token();
         result.uuid = local_token.uuid;
         result.email = local_token.email;
-        result.isSignUp = local_token.is_sign_up;
-        result.creationTime = new DateTime(local_token.created_at);
-        result.expirationTime = new DateTime(local_token.expire_at);
+        result.isSignUp = local_token.isSignUp;
+        result.creationTime = new DateTime(local_token.createdAt);
+        result.expirationTime = new DateTime(local_token.expireAt);
 
         return result;
     }
@@ -134,7 +134,7 @@ public class UserService extends BaseUserService {
     public void doDeleteExpiredTokens() {
         logger.debug("doDeleteExpiredTokens");
 
-        List<LocalToken> list = LocalToken.find.where().lt("expire_at", new DateTime().toString()).findList();
+        List<LocalToken> list = LocalToken.find.where().lt("expireAt", new DateTime().toString()).findList();
 
         for(LocalToken localToken : list) {
             localToken.delete();
@@ -144,8 +144,8 @@ public class UserService extends BaseUserService {
     private void copyIdentityToLocalUser(Identity source, LocalUser dest) {
         dest.id = source.identityId().userId();
         dest.provider = source.identityId().providerId();
-        dest.first_name = source.firstName();
-        dest.last_name = source.lastName();
+        dest.firstName = source.firstName();
+        dest.lastName = source.lastName();
         dest.email = source.email().get();
         dest.password = source.passwordInfo().get().password();
     }
@@ -153,9 +153,9 @@ public class UserService extends BaseUserService {
     private SocialUser createSocialUserFrom(LocalUser local_user) {
         SocialUser social_user = new SocialUser(
                 new IdentityId(local_user.id, local_user.provider)
-              , local_user.first_name
-              , local_user.last_name
-              , String.format("%s %s", local_user.first_name, local_user.last_name)
+              , local_user.firstName
+              , local_user.lastName
+              , String.format("%s %s", local_user.firstName, local_user.lastName)
               , Option.apply(local_user.email)
               , null
               , new AuthenticationMethod("userPassword")

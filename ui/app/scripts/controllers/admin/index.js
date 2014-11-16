@@ -4,7 +4,7 @@ angular.module('MyControllers')
     ['$scope', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder',
     function ($scope, $location, $filter, User, DailyMenu, DailyOrder) {
 
-    $scope.daily_menus = DailyMenu.query({},
+    $scope.dailyMenus = DailyMenu.query({},
         function (response) { // 成功時
         // 何もしない
         },
@@ -14,12 +14,12 @@ angular.module('MyControllers')
         }
     );
 
-    $scope.showOrderAggregates = function (daily_menu) {
-        $location.path("/admin/order-aggregates/order_date/" + daily_menu.menu_date.format('YYYY-MM-DD'));
+    $scope.showOrderAggregates = function (dailyMenu) {
+        $location.path("/admin/order-aggregates/order-date/" + dailyMenu.menuDate.format('YYYY-MM-DD'));
     };
 
-    $scope.showChecklist = function (daily_menu) {
-        $location.path("/admin/checklist/menu_date/" + daily_menu.menu_date.format('YYYY-MM-DD'));
+    $scope.showChecklist = function (dailyMenu) {
+        $location.path("/admin/checklist/menu-date/" + dailyMenu.menuDate.format('YYYY-MM-DD'));
     };
 
 }]);

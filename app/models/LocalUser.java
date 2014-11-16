@@ -20,22 +20,22 @@ public class LocalUser extends Model {
 
     public String provider;
 
-    public String first_name;
+    public String firstName;
 
-    public String last_name;
+    public String lastName;
 
     public String email;
 
-    public Boolean is_admin;
+    public Boolean isAdmin;
 
     @JsonIgnore
     public String password;
 
     @JsonIgnore
-    public Timestamp created_at;
+    public Timestamp createdAt;
 
     @JsonIgnore
-    public Timestamp updated_at;
+    public Timestamp updatedAt;
 
     /**
      * Generic query helper for entity with id Long

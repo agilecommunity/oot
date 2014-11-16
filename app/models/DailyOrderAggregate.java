@@ -9,12 +9,12 @@ import javax.persistence.*;
 @Sql
 public class DailyOrderAggregate extends Model {
 
-    public java.sql.Date order_date;
+    public java.sql.Date orderDate;
 
-    public Integer menu_item_id;
+    public Integer menuItemId;
 
     public String code;
 
-    public Integer num_orders;
+    public Integer numOrders;
 
 }

@@ -6,28 +6,28 @@
                 <li>キャンセルは、もう１回商品をクリックしてください。</li>
             </ul>
         </div>
-        <div class="day" id="day-{{daily_menu.menu_date.format('YYYYMMDD')}}" ng-repeat="daily_menu in daily_menus | orderBy:menu_date">
+        <div class="day" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:menuDate">
             <div class="day-header">
-                <div class="date">{{daily_menu.menu_date.format('YYYY/MM/DD (ddd)')}}</div>
-                <div class="small-total">当日合計: <span class="price">{{totalPriceOfTheDay(daily_menu.menu_date)}}円</span></div>
+                <div class="date">{{dailyMenu.menuDate.format('YYYY/MM/DD (ddd)')}}</div>
+                <div class="small-total">当日合計: <span class="price">{{totalPriceOfTheDay(dailyMenu.menuDate)}}円</span></div>
                 <div class="clear"></div>
             </div>
             <div class="choose-list page1">
-                <div ng-show="daily_menu.detail_items.length == 0" >
+                <div ng-show="dailyMenu.detailItems.length == 0" >
                     <p class="no-data">選択できるお弁当がありません。</p>
                 </div>
-                <div ng-show="daily_menu.detail_items.length > 0" >
-                    <div ng-repeat="item in daily_menu.detail_items | orderBy:['menu_item.shop_name', 'menu_item.name']" class="menu menu-item" ng-class="{'ordered':item.ordered}">
-                        <div ng-click="order(daily_menu, item);">
-                            <div class="shop-name">{{item.menu_item.shop_name}}</div>
-                            <div class="food-name">{{item.menu_item.name}}</div>
+                <div ng-show="dailyMenu.detailItems.length > 0" >
+                    <div class="menu menu-item" ng-class="{'ordered':dailyMenuItem.ordered}" ng-repeat="dailyMenuItem in dailyMenu.detailItems | orderBy:['menuItem.shopName', 'menuItem.name']">
+                        <div ng-click="order(dailyMenu, dailyMenuItem);">
+                            <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
+                            <div class="food-name">{{dailyMenuItem.menuItem.name}}</div>
                             <div style="position:relative;">
-                                <a href="" class="thumbnail food-image" ng-bind-html="render_image(item)"></a>
+                                <a href="" class="thumbnail food-image" ng-bind-html="renderImage(dailyMenuItem)"></a>
                                 <div class="ordered-mark"></div>
                             </div>
-                            <div class="comment label label-success" ng-class="{'hidden':(item.menu_item.comment | isEmptyOrUndefined)}">{{item.menu_item.comment}}</div>
+                            <div class="comment label label-success" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
                         </div>
-                        <span class="badge alert-danger num-orders" ng-show="item.ordered" ng-click="edit_num_orders(daily_menu, item)">{{num_orders(daily_menu, item)}}</span>
+                        <span class="badge alert-danger num-orders" ng-show="dailyMenuItem.ordered" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">{{numOrders(dailyMenu, dailyMenuItem)}}</span>
                     </div>
 
                     <div class="clear"></div>

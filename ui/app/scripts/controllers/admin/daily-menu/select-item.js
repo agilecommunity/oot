@@ -1,87 +1,86 @@
 angular.module('MyControllers')
     .controller('DailyMenuSelectItemController',
     ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem',
-        function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem) {
+    function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem) {
 
-    var start_block = function() {
+    var startBlock = function() {
         $.blockUI({baseZ: 2000, message: null});
         usSpinnerService.spin("spinner");
     };
 
-    var stop_block = function() {
+    var stopBlock = function() {
         usSpinnerService.stop("spinner");
         $.unblockUI();
     };
 
-    var grouping_items  = function() {
-        var count_per_row = 4;
-        $scope.group_menu_items = [];
+    var groupingItems  = function() {
+        var countPerRow = 4;
+        $scope.groupMenuItems = [];
         var group = [];
-        for ( var i=0 ; i < $scope.menu_items.length ; i++ ) {
-            group.push($scope.menu_items[i]);
+        for ( var i=0 ; i < $scope.menuItems.length ; i++ ) {
+            group.push($scope.menuItems[i]);
 
-            if ((i+1) % count_per_row === 0 || (i+1) === $scope.menu_items.length) {
-                $scope.group_menu_items.push(group);
+            if ((i+1) % countPerRow === 0 || (i+1) === $scope.menuItems.length) {
+                $scope.groupMenuItems.push(group);
                 group = [];
             }
         }
     };
 
-    var show_items = function() {
-        var filter_shop = $scope.filters.shop;
-        start_block();
-        $scope.menu_items = MenuItem.queryByShopName({shop_name: filter_shop.name, status: 'valid'},
+    var showItems = function() {
+        var filterShop = $scope.filters.shop;
+        startBlock();
+        $scope.menuItems = MenuItem.queryByShopName({shopName: filterShop.name, status: 'valid'},
             function (response) { // 成功時
                 // 表示のために5個ずつグルーピングする
-                grouping_items();
-                stop_block();
+                groupingItems();
+                stopBlock();
             },
             function (response) {   // 失敗時
                 alert("データが取得できませんでした。サインイン画面に戻ります。");
-                stop_block();
+                stopBlock();
                 $scope.$dismiss();
                 $location.path("/");
             });
     };
 
-    $scope.menu_items = [];
-    $scope.group_menu_items = [];
+    $scope.menuItems = [];
+    $scope.groupMenuItems = [];
 
     $scope.filters = {};
     $scope.filters.shop = {id: '@none', name: '選択してください'};
 
-    $scope.select_shops = function() {
+    $scope.selectShops = function() {
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/daily-menu/select-shop",
-            scope: $scope,
             controller: "DailyMenuSelectShopController"
         });
 
         modalInstance.result.then(function (selectedItem) {
             $scope.filters.shop = selectedItem;
-            show_items();
+            showItems();
         }, function () {
             console.log('Modal dismissed at: ' + new Date());
         });
     };
 
-    $scope.is_empty = function() {
-        return $scope.group_menu_items.length === 0;
+    $scope.isEmpty = function() {
+        return $scope.groupMenuItems.length === 0;
     };
 
-    $scope.select_this = function(item) {
+    $scope.selectThis = function(item) {
         $scope.$close(item);
     };
 
-    $scope.render_filter_shop = function() {
+    $scope.renderFilterShop = function() {
         return $scope.filters.shop.name;
     };
 
     // 画像を表示するHTMLを出力
-    $scope.render_image = function(menu_item) {
+    $scope.renderImage = function(menuItem) {
         var imgFile = "no-image.png";
-        if (menu_item.item_image_path !== undefined && menu_item.item_image_path !== null) {
-            imgFile = menu_item.item_image_path;
+        if (menuItem.itemImagePath !== undefined && menuItem.itemImagePath !== null) {
+            imgFile = menuItem.itemImagePath;
         }
         return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
     };

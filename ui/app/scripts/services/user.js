@@ -5,15 +5,15 @@ angular.module('MyServices')
     ['$http', '$rootScope', '$resource',
     function ($http, $rootScope, $resource) {  // ユーザ認証を行うサービス
 
-    $rootScope.current_user = null;
+    $rootScope.currentUser = null;
 
-    var User = $resource('/api/users/:id', { id: "@id" });
+    var User = $resource('/api/v1.0/users/:id', { id: "@id" });
 
-    User.current_user = function () {
-        return $rootScope.current_user;
+    User.currentUser = function () {
+        return $rootScope.currentUser;
     };
 
-    User.is_accessible = function (access, user) {
+    User.isAccessible = function (access, user) {
         // 誰でもアクセス可能な場合は、true
         if (access === AccessLevels.anon || access === AccessLevels.public) {
             return true;
@@ -24,15 +24,15 @@ angular.module('MyServices')
             return true;
         }
 
-        if (access === AccessLevels.admin && user !== null && user.is_admin === true) {
+        if (access === AccessLevels.admin && user !== null && user.isAdmin === true) {
             return true;
         }
 
         return false;
     };
 
-    User.is_signed_in = function () {
-        return ($rootScope.current_user !== null);
+    User.isSignedIn = function () {
+        return ($rootScope.currentUser !== null);
     };
 
     // ユーザ名、パスワードで認証を行う
@@ -43,31 +43,31 @@ angular.module('MyServices')
 
         $http({
             method: 'POST',
-            url: '/authenticate/userpass',
+            url: '/api/v1.0/authenticate/userpass',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
             transformRequest: transform,
             data: parameter
         })
         .success(function (data, status, header) {
-            $rootScope.current_user = data;
+            $rootScope.currentUser = data;
             callback.success();
         })
         .error(function (data, status, header) {
-            $rootScope.current_user = null;
+            $rootScope.currentUser = null;
             callback.error(status);
         });
     };
 
     // 取得しているトークンで認証情報を所得してみる
-    User.re_signin = function (callback) {
+    User.reSignin = function (callback) {
 
-        $http.get("/api/users/me")
+        $http.get("/api/v1.0/users/me")
         .success(function (data, status, header) {
-            $rootScope.current_user = data;
+            $rootScope.currentUser = data;
             callback.success();
         })
         .error(function (data, status, header) {
-            $rootScope.current_user = null;
+            $rootScope.currentUser = null;
             callback.error();
         });
     };

@@ -65,15 +65,15 @@ public class DailyMenus extends Controller {
     }
 
     private static class Parameters {
-        public DateParameter menu_date = null;
+        public DateParameter menuDate = null;
 
         public Parameters(Http.Request request) throws ParseException {
-            if (request.getQueryString("menu_date") != null) {
-                this.menu_date = new DateParameter(request.getQueryString("menu_date"));
+            if (request.getQueryString("menuDate") != null) {
+                this.menuDate = new DateParameter(request.getQueryString("menuDate"));
                 return;
             }
             if (request.getQueryString("from") != null || request.getQueryString("to") != null) {
-                this.menu_date = new DateParameter(request.getQueryString("from"), request.getQueryString("to"));
+                this.menuDate = new DateParameter(request.getQueryString("from"), request.getQueryString("to"));
                 return;
             }
         }
@@ -93,22 +93,22 @@ public class DailyMenus extends Controller {
 
         ExpressionList<DailyMenu> menus = DailyMenu.find.where();
 
-        if (parameters.menu_date != null) {
-            if (parameters.menu_date.isRange()) {
-                DateRange dateRange = parameters.menu_date.getRangeValue();
-                menus.between("menu_date", dateRange.fromDate, dateRange.toDate);
+        if (parameters.menuDate != null) {
+            if (parameters.menuDate.isRange()) {
+                DateRange dateRange = parameters.menuDate.getRangeValue();
+                menus.between("menuDate", dateRange.fromDate, dateRange.toDate);
 
-                logger.debug("menu_date(range) from : " + dateRange.fromDate.toString());
-                logger.debug("menu_date(range) to   : " + dateRange.toDate.toString());
+                logger.debug("#index menuDate(range) from : " + dateRange.fromDate.toString());
+                logger.debug("#index menuDate(range) to   : " + dateRange.toDate.toString());
 
             } else {
-                menus.eq("menu_date", parameters.menu_date.getValue());
+                menus.eq("menuDate", parameters.menuDate.getValue());
 
-                logger.debug("menu_date(value) : " + parameters.menu_date.getValue().toString());
+                logger.debug("#index menuDate(value) : " + parameters.menuDate.getValue().toString());
             }
         }
 
-        return ok(Json.toJson(menus.orderBy("menu_date").findList()));
+        return ok(Json.toJson(menus.orderBy("menuDate").findList()));
     }
 
     @SecureSocial.SecuredAction(ajaxCall = true)
@@ -121,22 +121,22 @@ public class DailyMenus extends Controller {
     }
 
     @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showByMenuDate(String menu_date_str) {
+    public static Result showByMenuDate(String menuDateStr) {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        java.sql.Date menu_date;
+        java.sql.Date menuDate;
         try {
-            menu_date = ParameterConverter.convertDateFrom(menu_date_str);
+            menuDate = ParameterConverter.convertDateFrom(menuDateStr);
         } catch (ParseException e) {
-            logger.debug(String.format("showByMenuDate parse error menu_date_str:%s", menu_date_str));
+            logger.debug(String.format("#showByMenuDate parse error menu_date_str:%s", menuDateStr));
             return badRequest();
         }
 
-        DailyMenu menu = DailyMenu.find_by(menu_date);
+        DailyMenu menu = DailyMenu.findBy(menuDate);
 
         if (menu == null) {
-            logger.debug(String.format("showByMenuDate menu not found menu_date_str:%s", menu_date_str));
+            logger.debug(String.format("#showByMenuDate menu not found menu_date_str:%s", menuDateStr));
             return notFound();
         }
 
@@ -148,35 +148,35 @@ public class DailyMenus extends Controller {
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result create() {
 
-        logger.debug("create");
+        logger.debug("#create");
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
-        if (!localUser.is_admin) {
-            logger.warn(String.format("create only admin can create menu. local_user.id:%s", localUser.email));
+        if (!localUser.isAdmin) {
+            logger.warn(String.format("#create only admin can create menu. localUser.id:%s", localUser.email));
             return unauthorized();
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("create request-body:%s", request().body().toString()));
+        logger.debug(String.format("#create request-body:%s", request().body().toString()));
 
         Form<DailyMenu> filledForm = Form.form(DailyMenu.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("create object has some errors. %s", filledForm.errorsAsJson().toString()));
+            logger.warn(String.format("#create object has some errors. %s", filledForm.errorsAsJson().toString()));
             return badRequest(filledForm.errorsAsJson().toString());
         }
 
         DailyMenu object = filledForm.get();
 
-        logger.debug("DailyMenu.menu_date: " + object.menu_date.toString());
+        logger.debug("#create DailyMenu.menuDate: " + object.menuDate.toString());
 
-        if (DailyMenu.find_by(object.menu_date) != null) {
-            logger.warn(String.format("create object is already exists. %s", object.menu_date.toString()));
+        if (DailyMenu.findBy(object.menuDate) != null) {
+            logger.warn(String.format("#create object is already exists. %s", object.menuDate.toString()));
             return badRequest();
         }
 
@@ -189,37 +189,37 @@ public class DailyMenus extends Controller {
     @SecureSocial.SecuredAction(ajaxCall = true)
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result update(Long id) {
-        logger.debug("update");
+        logger.debug("#update");
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
-        if (!localUser.is_admin) {
-            logger.warn(String.format("update only admin can update menu. local_user.id:%s", localUser.email));
+        if (!localUser.isAdmin) {
+            logger.warn(String.format("#update only admin can update menu. localUser.id:%s", localUser.email));
             return unauthorized();
         }
 
         if (DailyMenu.find.byId(id) == null) {
-            logger.debug("update object doesn't exist");
+            logger.debug("#update object doesn't exist");
             return badRequest();
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("update request-body:%s", request().body().toString()));
+        logger.debug(String.format("#update request-body:%s", request().body().toString()));
 
         Form<DailyMenu> filledForm = Form.form(DailyMenu.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("update object has some errors. %s", filledForm.errorsAsJson().toString()));
+            logger.warn(String.format("#update object has some errors. %s", filledForm.errorsAsJson().toString()));
             return badRequest(filledForm.errorsAsJson().toString());
         }
 
         DailyMenu object = filledForm.get();
 
-        logger.debug(String.format("update target_date:%s", object.menu_date.toString()));
+        logger.debug(String.format("#update target_date:%s", object.menuDate.toString()));
 
         object.update();
 
@@ -230,26 +230,26 @@ public class DailyMenus extends Controller {
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result delete(Long id) {
 
-        logger.debug(String.format("delete id: %s", id));
+        logger.debug(String.format("#delete id: %s", id));
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
-        if (!localUser.is_admin) {
-            logger.warn(String.format("delete only admin can update menu. local_user.id:%s", localUser.email));
+        if (!localUser.isAdmin) {
+            logger.warn(String.format("#delete only admin can update menu. localUser.id:%s", localUser.email));
             return unauthorized();
         }
 
         DailyMenu menu = DailyMenu.find.byId(id);
 
         if (menu == null) {
-            logger.debug("delete object not found");
+            logger.debug("#delete object not found");
             return ok();
         }
 
-        logger.debug(String.format("delete id:%d date:%s status:%s", menu.id, menu.menu_date.toString(), menu.status ));
+        logger.debug(String.format("#delete id:%d date:%s status:%s", menu.id, menu.menuDate.toString(), menu.status ));
 
         menu.delete();
 

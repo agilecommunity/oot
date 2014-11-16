@@ -1,31 +1,31 @@
 - !!models.MenuItem
     category:        bento
-    shop_name:       銀座肉屋
+    shopName:        銀座肉屋
     name:            カルビハンバーグ弁当
-    price_on_order:  580
+    priceOnOrder:    580
     code:            銀座肉屋　カルビハンバーグ弁当　580円
-    item_image_path: JA60.jpg
+    itemImagePath:   JA60.jpg
 
 - !!models.MenuItem
     category:        bento
-    shop_name:       銀座魚屋
+    shopName:        銀座魚屋
     name:            たっぷりサーモン丼
-    price_on_order:  530
+    priceOnOrder:    530
     code:            銀座魚屋　たっぷりサーモン丼　550円 - 20円 = 530円
-    item_image_path: JA61.jpg
+    itemImagePath:   JA61.jpg
 
 - !!models.MenuItem
     category:        side
-    shop_name:       有楽町八百屋
+    shopName:        有楽町八百屋
     name:            八品目のサラダ
-    price_on_order:  230
+    priceOnOrder:    230
     code:            有楽町八百屋　八品目のサラダ　230円
-    item_image_path: sarad01.jpg
+    itemImagePath:   sarad01.jpg
 
 - !!models.MenuItem
     category:        side
-    shop_name:       有楽町フルーツ屋
+    shopName:        有楽町フルーツ屋
     name:            カットフルーツ盛り合わせ
-    price_on_order:  280
+    priceOnOrder:    280
     code:            null
-    item_image_path: sarad02.jpg
+    itemImagePath:   sarad02.jpg

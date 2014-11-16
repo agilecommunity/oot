@@ -16,9 +16,9 @@ public class DailyOrderAggregates extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.OrderLists");
 
     @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showByOrderDate(String order_date_str) {
+    public static Result showByOrderDate(String orderDateStr) {
 
-        logger.debug("showByOrderDate order_date_str: " + order_date_str);
+        logger.debug("#showByOrderDate orderDateStr: " + orderDateStr);
 
         String sql = "select do.order_date, doi.menu_item_id, mi.code, sum(doi.num_orders)"
                 + " from daily_order_item doi"
@@ -27,25 +27,25 @@ public class DailyOrderAggregates extends Controller {
                 + " group by do.order_date, doi.menu_item_id";
 
         RawSql rawSql = RawSqlBuilder.parse(sql)
-                            .columnMapping("do.order_date", "order_date")
-                            .columnMapping("doi.menu_item_id", "menu_item_id")
+                            .columnMapping("do.order_date", "orderDate")
+                            .columnMapping("doi.menu_item_id", "menuItemId")
                             .columnMapping("mi.code", "code")
-                            .columnMapping("sum(doi.num_orders)", "num_orders")
+                            .columnMapping("sum(doi.num_orders)", "numOrders")
                             .create();
 
-        logger.debug("showByOrderDate rawSql: " + rawSql.getSql().toString());
+        logger.debug("#showByOrderDate rawSql: " + rawSql.getSql().toString());
 
-        java.sql.Date order_date;
+        java.sql.Date orderDate;
         try {
-            order_date = ParameterConverter.convertDateFrom(order_date_str);
+            orderDate = ParameterConverter.convertDateFrom(orderDateStr);
         } catch (ParseException e) {
-            logger.debug(String.format("showByOrderDate parse error order_date_str: %s", order_date_str));
+            logger.debug(String.format("#showByOrderDate parse error orderDateStr: %s", orderDateStr));
             return badRequest();
         }
 
         Query<DailyOrderAggregate> query = Ebean.find(DailyOrderAggregate.class);
         query.setRawSql(rawSql)
-                .where().eq("order_date", order_date)
+                .where().eq("order_date", orderDate)
                 .orderBy("code");
 
         return ok(Json.toJson(query.findList()));

@@ -12,19 +12,19 @@
                     <button type="button" class="btn btn-default navbar-btn" disabled="disabled">魚</button>
                     <button type="button" class="btn btn-default navbar-btn" disabled="disabled">人気</button>
                     <button type="button" class="btn btn-default navbar-btn" disabled="disabled">新入荷</button>
-                    <button type="button" class="btn btn-info navbar-btn" ng-click="select_shops()">店 : {{render_filter_shop()}}</button>
+                    <button type="button" class="btn btn-info navbar-btn" ng-click="selectShops()">店 : {{renderFilterShop()}}</button>
                 </div>
             </div>
         </nav>
 
         <div>
             <div class="pull-right" style="margin-right:1.5em; margin-bottom:0.5em;">
-                <button class="btn btn-info" ng-click="add_item()">商品を追加する</button>
+                <button class="btn btn-info" ng-click="addItem()">商品を追加する</button>
             </div>
-            <div ng-show="menu_items.length === 0">
+            <div ng-show="menuItems.length === 0">
                 <p class="no-data">商品がありません。</p>
             </div>
-            <table class="table table-bordered table-striped menu-items" ng-show="menu_items.length > 0">
+            <table class="table table-bordered table-striped menu-items" ng-show="menuItems.length > 0">
                 <thead>
                     <tr>
                         <th class="id col-md-1">ステータス</th>
@@ -37,13 +37,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="menu-item-{{menu_item.id}}" ng-repeat="menu_item in menu_items | orderBy:['shop_name', 'name']">
-                        <td class="id">{{menu_item.status}}</td>
-                        <td class="shop_name">{{menu_item.shop_name}}</td>
-                        <td class="id">{{menu_item.category}}</td>
-                        <td class="name">{{menu_item.name}}</td>
-                        <td class="price_on_order">{{menu_item.price_on_order}}</td>
-                        <td class="edit"><button class="btn btn-info" ng-click="edit_item(menu_item)">編集</button></td>
+                    <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'name']">
+                        <td class="id">{{menuItem.status}}</td>
+                        <td class="shop_name">{{menuItem.shopName}}</td>
+                        <td class="id">{{menuItem.category}}</td>
+                        <td class="name">{{menuItem.name}}</td>
+                        <td class="price_on_order">{{menuItem.priceOnOrder}}</td>
+                        <td class="edit"><button class="btn btn-info" ng-click="editItem(menuItem)">編集</button></td>
                         <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
                     </tr>
                 </tbody>

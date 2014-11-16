@@ -11,17 +11,17 @@ angular.module('MyServices')
             if (item.code === undefined || item.code === null || item.code === ""){
                 item.code = "(空)";
             }
-            item.order_date = moment.utc(item.order_date);
+            item.orderDate = moment.utc(item.orderDate);
         });
         return list;
     };
 
-    var DailyOrderAggregate = $resource('/api/daily-order-aggregates/:id',
+    var DailyOrderAggregate = $resource('/api/v1.0/daily-order-aggregates/:id',
         { id: "@id" }, {
             getByOrderDate: {
                 method: "GET",
-                url: "/api/daily-order-aggregates/order_date/:order_date",
-                params: {order_date: "@order_date"},
+                url: "/api/v1.0/daily-order-aggregates/order-date/:orderDate",
+                params: {orderDate: "@orderDate"},
                 isArray: true,
                 transformResponse: transformList,
                 cache: false

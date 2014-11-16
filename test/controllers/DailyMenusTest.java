@@ -49,33 +49,33 @@ public class DailyMenusTest {
     @Test
     public void createは受け取ったJsonの内容からDailyMenuオブジェクトを作成すること() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menu_date\":\"2014-02-12\"");
+        builder.append("{ \"menuDate\":\"2014-02-12\"");
         builder.append(", \"status\":\"open\"");
-        builder.append(", \"detail_items\":[{\"menu_item\":{\"id\":2}}]");
+        builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
         builder.append("}");
 
-        Result result = callAPI(fakeRequest(POST, "/api/daily-menus").withJsonBody(Json.parse(builder.toString())));
+        Result result = callAPI(fakeRequest(POST, "/api/v1.0/daily-menus").withJsonBody(Json.parse(builder.toString())));
 
         assertThat(status(result)).isEqualTo(OK);
 
         DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-12");
-        DailyMenu object = DailyMenu.find_by(new java.sql.Date(dateValue.getMillis()));
+        DailyMenu object = DailyMenu.findBy(new java.sql.Date(dateValue.getMillis()));
 
-        assertThat(object.detail_items.size()).isEqualTo(1);
-        DailyMenuItem item = object.detail_items.get(0);
-        assertThat(item.menu_item.name).isEqualTo("たっぷりサーモン丼");
+        assertThat(object.detailItems.size()).isEqualTo(1);
+        DailyMenuItem item = object.detailItems.get(0);
+        assertThat(item.menuItem.name).isEqualTo("たっぷりサーモン丼");
     }
 
     @Test
     public void deleteは受け取ったIdに対応するDailyMenuオブジェクトを削除すること() throws ParseException {
 
-        DailyMenu target = DailyMenu.find_by(ParameterConverter.convertDateFrom("2014-02-10"));
+        DailyMenu target = DailyMenu.findBy(ParameterConverter.convertDateFrom("2014-02-10"));
 
-        Result result = callAPI(fakeRequest(DELETE, "/api/daily-menus/" + target.id));
+        Result result = callAPI(fakeRequest(DELETE, "/api/v1.0/daily-menus/" + target.id));
 
         assertThat(status(result)).isEqualTo(OK);
 
-        assertThat(DailyMenu.find_by(target.menu_date)).isNull();
+        assertThat(DailyMenu.findBy(target.menuDate)).isNull();
 
     }
 
@@ -84,7 +84,7 @@ public class DailyMenusTest {
 
         DateTime targetDate = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-10");
 
-        Result findResult = callAPI(fakeRequest(GET, "/api/daily-menus/menu_date/" + targetDate.toString("yyyy-MM-dd")));
+        Result findResult = callAPI(fakeRequest(GET, "/api/v1.0/daily-menus/menu-date/" + targetDate.toString("yyyy-MM-dd")));
 
         logger.debug(String.format("result: %s", contentAsString(findResult)));
 
@@ -92,25 +92,25 @@ public class DailyMenusTest {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = mapper.readTree(jsonString);
 
-        String newMenuItem = "{\"menu_item\":{\"id\":3}}";
+        String newMenuItem = "{\"menuItem\":{\"id\":3}}";
         JsonNode newMenuItemObj = mapper.readTree(newMenuItem);
 
-        ((ArrayNode)(actualObj.get("detail_items"))).remove(0);
-        ((ArrayNode)(actualObj.get("detail_items"))).add(newMenuItemObj);
+        ((ArrayNode)(actualObj.get("detailItems"))).remove(0);
+        ((ArrayNode)(actualObj.get("detailItems"))).add(newMenuItemObj);
 
-        Result result = callAPI(fakeRequest(PUT, "/api/daily-menus/" + actualObj.get("id"))
+        Result result = callAPI(fakeRequest(PUT, "/api/v1.0/daily-menus/" + actualObj.get("id"))
                         .withJsonBody(Json.parse(actualObj.toString()), PUT));
 
         assertThat(status(result)).isEqualTo(OK);
 
         logger.debug(String.format("targetDate(Date): %s", targetDate.toDate().toString()));
 
-        DailyMenu updated = DailyMenu.find_by(new java.sql.Date(targetDate.getMillis()));
+        DailyMenu updated = DailyMenu.findBy(new java.sql.Date(targetDate.getMillis()));
         assertThat(updated.id).isEqualTo(1);
-        assertThat(updated.menu_date).isEqualTo(targetDate.toDate());
-        assertThat(updated.detail_items.size()).isEqualTo(1);
-        assertThat(updated.detail_items.get(0).menu_item.id).isEqualTo(3);
-        assertThat(updated.detail_items.get(0).menu_item.name).isEqualTo("八品目のサラダ");
+        assertThat(updated.menuDate).isEqualTo(targetDate.toDate());
+        assertThat(updated.detailItems.size()).isEqualTo(1);
+        assertThat(updated.detailItems.get(0).menuItem.id).isEqualTo(3);
+        assertThat(updated.detailItems.get(0).menuItem.name).isEqualTo("八品目のサラダ");
     }
 
     private Result callAPI(FakeRequest baseRequest) {

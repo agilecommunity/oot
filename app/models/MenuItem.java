@@ -25,14 +25,14 @@ public class MenuItem extends Model {
 
     @Constraints.Required
     @Constraints.MaxLength(255)
-    public String shop_name;
+    public String shopName;
 
     @Constraints.Required
     @Constraints.MaxLength(255)
     public String name;
 
     @Constraints.Required
-    public BigDecimal price_on_order;
+    public BigDecimal priceOnOrder;
 
     @Constraints.Required
     @Constraints.MaxLength(20)
@@ -45,7 +45,7 @@ public class MenuItem extends Model {
     @Constraints.MaxLength(255)
     public String code;
 
-    public String item_image_path;
+    public String itemImagePath;
 
     /**
      * Generic query helper for entity Lunch with id Long

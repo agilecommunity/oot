@@ -34,7 +34,7 @@ public class DailyMenuItemTest extends WithApplication {
          Ebean.save((List) Yaml.load("fixtures/test/daily_menu.yml"));
          Ebean.save((List) Yaml.load("fixtures/test/daily_menu_item.yml"));
 
-         assertThat(DailyMenuItem.find.byId(1L).daily_menu).isNotNull();
-         assertThat(DailyMenuItem.find.byId(1L).daily_menu.menu_date).isEqualTo("2014-02-10");
+         assertThat(DailyMenuItem.find.byId(1L).dailyMenu).isNotNull();
+         assertThat(DailyMenuItem.find.byId(1L).dailyMenu.menuDate).isEqualTo("2014-02-10");
     }
 }

@@ -15,11 +15,11 @@ public class LocalToken extends Model {
 
     public String email;
 
-    public java.sql.Date created_at;
+    public java.sql.Date createdAt;
 
-    public java.sql.Date expire_at;
+    public java.sql.Date expireAt;
 
-    public boolean is_sign_up;
+    public boolean isSignUp;
 
     /**
      * Generic query helper for entity with id Long

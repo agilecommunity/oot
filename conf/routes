@@ -6,47 +6,45 @@ GET           /uc-assets/images/*file                                   controll
 GET           /uc-assets/*file                                          controllers.UCAssets.at(file)
 
 # Api
-GET           /api/shops                                                controllers.Shops.index()
-GET           /api/shops/:shop_name/menu-items                          controllers.MenuItems.indexByShopName(shop_name)
+GET           /api/v1.0/shops                                                controllers.Shops.index()
+GET           /api/v1.0/shops/:shopName/menu-items                           controllers.MenuItems.indexByShopName(shopName)
 
-GET           /api/menu-items                                           controllers.MenuItems.index()
-POST          /api/menu-items                                           controllers.MenuItems.create()
-PUT           /api/menu-items/:id                                       controllers.MenuItems.update(id: Long)
-DELETE        /api/menu-items/:id                                       controllers.MenuItems.delete(id: Long)
+GET           /api/v1.0/menu-items                                           controllers.MenuItems.index()
+POST          /api/v1.0/menu-items                                           controllers.MenuItems.create()
+PUT           /api/v1.0/menu-items/:id                                       controllers.MenuItems.update(id: Long)
+DELETE        /api/v1.0/menu-items/:id                                       controllers.MenuItems.delete(id: Long)
 
-POST          /api/menu-item-images                                     controllers.MenuItemImages.create()
+POST          /api/v1.0/menu-item-images                                     controllers.MenuItemImages.create()
 
-GET           /api/daily-menus                                          controllers.DailyMenus.index()
-GET           /api/daily-menus/status/:status                           controllers.DailyMenus.indexByStatus(status)
-GET           /api/daily-menus/menu_date/:menu_date                     controllers.DailyMenus.showByMenuDate(menu_date)
-POST          /api/daily-menus                                          controllers.DailyMenus.create()
-PUT           /api/daily-menus/:id                                      controllers.DailyMenus.update(id: Long)
-DELETE        /api/daily-menus/:id                                      controllers.DailyMenus.delete(id: Long)
+GET           /api/v1.0/daily-menus                                          controllers.DailyMenus.index()
+GET           /api/v1.0/daily-menus/status/:status                           controllers.DailyMenus.indexByStatus(status)
+GET           /api/v1.0/daily-menus/menu-date/:menuDate                      controllers.DailyMenus.showByMenuDate(menuDate)
+POST          /api/v1.0/daily-menus                                          controllers.DailyMenus.create()
+PUT           /api/v1.0/daily-menus/:id                                      controllers.DailyMenus.update(id: Long)
+DELETE        /api/v1.0/daily-menus/:id                                      controllers.DailyMenus.delete(id: Long)
 
-GET           /api/users                                                controllers.Users.index()
-GET           /api/users/me                                             controllers.Users.showMe()
+GET           /api/v1.0/users                                                controllers.Users.index()
+GET           /api/v1.0/users/me                                             controllers.Users.showMe()
 
-POST          /api/daily-orders                                         controllers.DailyOrders.create()
-DELETE        /api/daily-orders/:id                                     controllers.DailyOrders.delete(id: Long)
-PUT           /api/daily-orders/:id                                     controllers.DailyOrders.update(id: Long)
+POST          /api/v1.0/daily-orders                                         controllers.DailyOrders.create()
+DELETE        /api/v1.0/daily-orders/:id                                     controllers.DailyOrders.delete(id: Long)
+PUT           /api/v1.0/daily-orders/:id                                     controllers.DailyOrders.update(id: Long)
 
-GET           /api/daily-orders/mine                                    controllers.DailyOrders.showMine()
-GET           /api/daily-orders/order_date/:order_date                  controllers.DailyOrders.showByOrderDate(order_date)
+GET           /api/v1.0/daily-orders/mine                                    controllers.DailyOrders.showMine()
+GET           /api/v1.0/daily-orders/order-date/:orderDate                   controllers.DailyOrders.showByOrderDate(orderDate)
 
-GET           /api/daily-order-aggregates/order_date/:order_date        controllers.DailyOrderAggregates.showByOrderDate(order_date)
-
-# Root
-GET           /                                                         controllers.Application.index(path = "")
+GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate         controllers.DailyOrderAggregates.showByOrderDate(orderDate)
 
 # SecureSocial
-POST          /api/startSignup                                          controllers.Registration.startSignUp()
-POST          /api/signup/:token                                        controllers.Registration.signUp(token)
-POST          /authenticate/:provider                                   securesocial.controllers.ProviderController.authenticateByPost(provider)
+POST          /api/v1.0/start-signup                                         controllers.Registration.startSignUp()
+POST          /api/v1.0/signup/:token                                        controllers.Registration.signUp(token)
+POST          /api/v1.0/authenticate/:provider                               securesocial.controllers.ProviderController.authenticateByPost(provider)
+
+# Root
+GET           /                                                              controllers.Application.index(path = "")
 
 # Misc
 GET           /signup                                                   securesocial.controllers.Registration.startSignUp
 GET           /login                                                    securesocial.controllers.LoginPage.login
 GET           /reset                                                    securesocial.controllers.Registration.startResetPassword
 GET           /*path                                                    controllers.Application.index(path)
-
-

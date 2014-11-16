@@ -18,22 +18,22 @@ public class DailyMenu extends Model {
     public Long id;
 
     @Constraints.Required
-    public java.sql.Date menu_date;
+    public java.sql.Date menuDate;
 
     @Constraints.Required
     @Constraints.MaxLength(10)
     public String status;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "daily_menu")
-    public List<DailyMenuItem> detail_items = new ArrayList<DailyMenuItem>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dailyMenu")
+    public List<DailyMenuItem> detailItems = new ArrayList<DailyMenuItem>();
 
     /**
      * Generic query helper for entity Lunch with id Long
      */
     public static Finder<Long,DailyMenu> find = new Finder<Long,DailyMenu>(Long.class, DailyMenu.class);
 
-    public static DailyMenu find_by(java.sql.Date menu_date) {
-        List<DailyMenu> candidate = DailyMenu.find.where().eq("menu_date", menu_date).findList();
+    public static DailyMenu findBy(java.sql.Date menuDate) {
+        List<DailyMenu> candidate = DailyMenu.find.where().eq("menuDate", menuDate).findList();
 
         if (candidate.size() != 1) {
             return null;
@@ -42,8 +42,8 @@ public class DailyMenu extends Model {
         return candidate.get(0);
     }
 
-    public static List<DailyMenu> find_between(java.sql.Date menu_date_from, java.sql.Date menu_date_to) {
-        List<DailyMenu> items = DailyMenu.find.where().ge("menu_date", menu_date_from).le("menu_date", menu_date_to).findList();
+    public static List<DailyMenu> findBetween(java.sql.Date menuDateFrom, java.sql.Date menuDateTo) {
+        List<DailyMenu> items = DailyMenu.find.where().ge("menuDate", menuDateFrom).le("menuDate", menuDateTo).findList();
 
         return items;
     }

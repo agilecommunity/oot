@@ -8,7 +8,7 @@ angular.module('MyServices')
         // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
-            item.menu_date = moment.utc(item.menu_date);
+            item.menuDate = moment.utc(item.menuDate);
         });
         return list;
     };
@@ -16,12 +16,12 @@ angular.module('MyServices')
     var transformOne = function (data, headersGetter) {
         // utcに変換する
         var one = angular.fromJson(data);
-        one.order_date = moment.utc(one.order_date);
+        one.menuDate = moment.utc(one.menuDate);
         return one;
     };
 
     var DailyMenu = $resource(                 // RESTのAPIを簡単に扱える$resourceサービスを利用する
-        '/api/daily-menus/:id',                // APIのURL。:idは変数 query,createなど必要のないときは使われない
+        '/api/v1.0/daily-menus/:id',           // APIのURL。:idは変数 query,createなど必要のないときは使われない
         {id: "@id"},                           // :idを@idにマッピングする。@はオブジェクトのプロパティを意味するので、
         {                                      // DailyMenuオブジェクトのプロパティ"id"の値が使われる
             query: {                           // queryはオブジェクト全件を取り出す
@@ -32,15 +32,15 @@ angular.module('MyServices')
             },
             queryByStatus: {
                 method: "GET",
-                url: "/api/daily-menus/status/:status",
+                url: "/api/v1.0/daily-menus/status/:status",
                 params: {status: "@status"},
                 isArray: true,
                 transformResponse: transformList
             },
             getByMenuDate: {
                 method: "GET",
-                url: "/api/daily-menus/menu_date/:menu_date",
-                params: {menu_date: "@menu_date"},
+                url: "/api/v1.0/daily-menus/menu-date/:menuDate",
+                params: {menuDate: "@menuDate"},
                 isArray: false,
                 cache: false,
                 transformResponse: transformOne
@@ -58,10 +58,10 @@ angular.module('MyServices')
     );
 
     // メニューから該当するItemを探し、そのindexを返す
-    DailyMenu.prototype.findMenuItem = function(menu_item) {
+    DailyMenu.prototype.findMenuItem = function(menuItem) {
         // jQuery in Arrayよりコピペ
         var len;
-        var arr = this.detail_items;
+        var arr = this.detailItems;
 
         if (arr === undefined || arr === null) {
             return -1;
@@ -72,7 +72,7 @@ angular.module('MyServices')
 
         for ( ; i < len; i++ ) {
             // Skip accessing in sparse arrays
-            if ( i in arr && arr[ i ].menu_item.id === menu_item.id ) {
+            if ( i in arr && arr[ i ].menuItem.id === menuItem.id ) {
                 return i;
             }
         }
@@ -81,9 +81,9 @@ angular.module('MyServices')
     };
 
     // メニューのリストから該当の日付のメニューを探し、そのindexを返す
-    DailyMenu.findByMenuDate = function(list, menu_date) {
+    DailyMenu.findByMenuDate = function(list, menuDate) {
         for (var i=0; i<list.length; i++) {
-            if (list[i].menu_date.unix() === menu_date.unix()) {
+            if (list[i].menuDate.unix() === menuDate.unix()) {
                 return i;
             }
         }

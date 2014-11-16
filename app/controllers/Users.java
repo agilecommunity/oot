@@ -20,9 +20,9 @@ public class Users extends Controller {
     public static Result index() {
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser local_user = LocalUser.find.byId(user.identityId().userId());
+        LocalUser localUser = LocalUser.find.byId(user.identityId().userId());
 
-        if (!local_user.is_admin) {
+        if (!localUser.isAdmin) {
             return unauthorized();
         }
 
@@ -46,14 +46,14 @@ public class Users extends Controller {
 
         logger.debug(String.format("showMe user.email:%s", user.email().get()));
 
-        List<LocalUser> local_users = LocalUser.find.where().eq("email", user.email().get()).findList();
+        List<LocalUser> localUsers = LocalUser.find.where().eq("email", user.email().get()).findList();
 
-        if (local_users.size() != 1) {
+        if (localUsers.size() != 1) {
             logger.warn(String.format("showMe LocalUser not found or too many email:%s", user.email()));
             return unauthorized();
         }
 
-        return ok(Json.toJson(local_users.get(0)));
+        return ok(Json.toJson(localUsers.get(0)));
     }
 
 }

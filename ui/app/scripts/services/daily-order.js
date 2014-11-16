@@ -11,7 +11,7 @@ angular.module('MyServices')
         // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
-            item.order_date = moment.utc(item.order_date);
+            item.orderDate = moment.utc(item.orderDate);
         });
         return list;
     };
@@ -19,23 +19,23 @@ angular.module('MyServices')
     var transformOne = function (data, headersGetter) {
         // utcに変換する
         var one = angular.fromJson(data);
-        one.order_date = moment.utc(one.order_date);
+        one.orderDate = moment.utc(one.orderDate);
         return one;
     };
 
-    var DailyOrder = $resource('/api/daily-orders/:id',
+    var DailyOrder = $resource('/api/v1.0/daily-orders/:id',
         { id: "@id" }, {
         getByOrderDate: {
             method: "GET",
-            url: "/api/daily-orders/order_date/:order_date",
-            params: {order_date: "@order_date"},
+            url: "/api/v1.0/daily-orders/order-date/:orderDate",
+            params: {orderDate: "@orderDate"},
             isArray: true,
             transformResponse: transformList,
             cache: false
         },
         getMine: {
             method: "GET",
-            url: "/api/daily-orders/mine",
+            url: "/api/v1.0/daily-orders/mine",
             isArray: true,
             transformResponse: transformList,
             cache: false
@@ -49,7 +49,7 @@ angular.module('MyServices')
         create: {                // 新規作成
             method: "POST",
             transformRequest: function (data, headersGetter) {
-                data.order_date = data.order_date.format("YYYY-MM-DD");
+                data.orderDate = data.orderDate.format("YYYY-MM-DD");
                 return angular.toJson(data);
             },
             transformResponse: transformOne
@@ -58,25 +58,25 @@ angular.module('MyServices')
             method: "PUT",
             isArray: false,
             transformRequest: function (data, headersGetter) {
-                data.order_date = data.order_date.format("YYYY-MM-DD");
+                data.orderDate = data.orderDate.format("YYYY-MM-DD");
                 return angular.toJson(data);
             },
             transformResponse: transformOne
         }
     });
 
-    DailyOrder.prototype.total_price = function () {
+    DailyOrder.prototype.totalPrice = function () {
         var price = 0;
-        angular.forEach(this.detail_items, function (item) {
-            price += item.menu_item.price_on_order * item.num_orders;
+        angular.forEach(this.detailItems, function (item) {
+            price += item.menuItem.priceOnOrder * item.numOrders;
         });
         return price;
     };
 
-    DailyOrder.prototype.find_item = function(menu_item) {
+    DailyOrder.prototype.findItem = function(menuItem) {
         var target = null;
-        this.detail_items.some(function (item) {
-            if (item.menu_item.id == menu_item.id) {
+        this.detailItems.some(function (item) {
+            if (item.menuItem.id == menuItem.id) {
                 target = item;
             }
             return target !== null;
@@ -84,18 +84,27 @@ angular.module('MyServices')
         return target;
     };
 
-    DailyOrder.prototype.remove_item = function(menu_item) {
-        this.detail_items = this.detail_items.filter(function (item, index) {
-            return (item.menu_item.id !== menu_item.id);
+    DailyOrder.prototype.removeItem = function(menuItem) {
+        this.detailItems = this.detailItems.filter(function (item, index) {
+            return (item.menuItem.id !== menuItem.id);
         });
     };
 
-    DailyOrder.prototype.add_item = function(menu_item, num_orders) {
-        if (this.find_item(menu_item) !== null) {
+    DailyOrder.prototype.addItem = function(menuItem, numOrders) {
+        if (this.findItem(menuItem) !== null) {
             return;
         }
 
-        this.detail_items.push({menu_item: menu_item, num_orders: num_orders});
+        this.detailItems.push({menuItem: menuItem, numOrders: numOrders});
+    };
+
+    DailyOrder.prototype.$save = function(params, success, error) {
+        if ( !this.id ) {
+            return this.$create(params, success, error);
+        }
+        else {
+            return this.$update(params, success, error);
+        }
     };
 
     return DailyOrder;

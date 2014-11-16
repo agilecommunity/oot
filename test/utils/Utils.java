@@ -33,9 +33,9 @@ public class Utils {
         Logger.debug(String.format("LocalUser id:%s provider:%s", local_user.id, local_user.provider));
 
         SocialUser social_user = new SocialUser(new IdentityId(local_user.id, local_user.provider),
-            local_user.first_name,
-            local_user.last_name,
-            String.format("%s %s", local_user.first_name, local_user.last_name),
+            local_user.firstName,
+            local_user.lastName,
+            String.format("%s %s", local_user.firstName, local_user.lastName),
             Option.apply(local_user.email),
             null,
             new AuthenticationMethod("userPassword"),

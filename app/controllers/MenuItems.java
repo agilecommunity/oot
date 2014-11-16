@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -96,8 +97,8 @@ public class MenuItems extends Controller {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
-        if (!localUser.is_admin) {
-            logger.warn(String.format("#create only admin can create menu. local_user.id:%s", localUser.email));
+        if (!localUser.isAdmin) {
+            logger.warn(String.format("#create only admin can create menu. localUser.id:%s", localUser.email));
             return unauthorized();
         }
 
@@ -136,8 +137,8 @@ public class MenuItems extends Controller {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
-        if (!localUser.is_admin) {
-            logger.warn(String.format("#update only admin can create menu. local_user.id:%s", localUser.email));
+        if (!localUser.isAdmin) {
+            logger.warn(String.format("#update only admin can create menu. localUser.id:%s", localUser.email));
             return unauthorized();
         }
 
@@ -169,25 +170,59 @@ public class MenuItems extends Controller {
 
     /**
      * Json文字列からMenuItemを生成する
-     *   一度に生成できるのは1つのMenuItemのみ
      * @param json
      */
     private static Result createFromJson(JsonNode json) {
 
-        logger.debug(String.format("#create json:%s", json));
+        logger.debug(String.format("#createFromJson json:%s", json));
 
-        Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json);
+        StringBuilder result = new StringBuilder();
+        result.append("[");
 
-        if (filledForm.hasErrors()) {
-            logger.debug(String.format("#create item has error. errors: %s", filledForm.errorsAsJson()));
-            return badRequest(filledForm.errorsAsJson());
+        Ebean.beginTransaction();
+
+        boolean hasError = false;
+
+        try {
+            for (int index = 0; index < json.size(); index++) {
+                if (index != 0) {
+                    result.append(",");
+                }
+
+                Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json.get(index));
+
+                if (filledForm.hasErrors()) {
+                    logger.debug(String.format("#createFromJson item has error. errors: %s", filledForm.errorsAsJson()));
+                    result.append(filledForm.errorsAsJson().toString());
+                    hasError = true;
+                    continue;
+                }
+
+                MenuItem item = filledForm.get();
+
+                item.save();
+
+                result.append(Json.toJson(item).toString());
+            }
+
+            if (!hasError) {
+                Ebean.commitTransaction();
+            } else {
+                Ebean.rollbackTransaction();
+            }
+        } catch (Exception ex) {
+            Ebean.rollbackTransaction();
         }
 
-        MenuItem item = filledForm.get();
+        result.append("]");
 
-        item.save();
+        logger.debug(String.format("#createFromJson result:%s", result.toString()));
 
-        return ok(Json.toJson(item));
+        if (!hasError) {
+            return ok(result.toString());
+        } else {
+            return badRequest(result.toString());
+        }
     }
 
     private static void createFromCsv(String text) throws IOException {
@@ -205,8 +240,6 @@ public class MenuItems extends Controller {
         MappingIterator<Map<String, Object>> iterator = csvMapper.reader(Map.class).with(bootstrap).readValues(text);
 
         List<Map<String, Object>> items = iterator.readAll();
-
-        System.out.println(items);
 
         createFromJson(Json.toJson(items));
     }

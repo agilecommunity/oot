@@ -10,7 +10,6 @@ import net.lingala.zip4j.model.UnzipParameters;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import play.Logger;
-import play.Play;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -45,8 +44,8 @@ public class MenuItemImages extends Controller {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
         LocalUser localUser = LocalUser.find.byId(user.email().get());
 
-        if (!localUser.is_admin) {
-            logger.warn(String.format("#create only admin can create. local_user.id:%s", localUser.email));
+        if (!localUser.isAdmin) {
+            logger.warn(String.format("#create only admin can create. localUser.id:%s", localUser.email));
             return createResult(UNAUTHORIZED, "", canDetectRequestHeader);
         }
 
@@ -175,7 +174,7 @@ public class MenuItemImages extends Controller {
             File converted = new File(pathToExtract + "/" + newFileName);
             ImageIO.write(newImage, "png", converted);
 
-            item.item_image_path = newFileName;
+            item.itemImagePath = newFileName;
             item.update();
 
         } catch (IOException e) {

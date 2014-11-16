@@ -22,16 +22,16 @@ public class DailyOrderItem extends Model {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    public Short num_orders;
+    public Short numOrders;
 
     @ManyToOne
     @JoinColumn(name = "daily_order_id")
     @JsonIgnore
-    public DailyOrder daily_order;
+    public DailyOrder dailyOrder;
 
     @OneToOne(cascade=CascadeType.REFRESH) // 参照のみだからREFRESHでいいはず
     @JoinColumn(name="menu_item_id")
-    public MenuItem menu_item;
+    public MenuItem menuItem;
 
     public static Finder<Long,DailyOrderItem> find = new Finder<Long,DailyOrderItem>(Long.class, DailyOrderItem.class);
 }

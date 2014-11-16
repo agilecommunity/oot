@@ -22,10 +22,10 @@
                 }
 
                 // すでに認証済みの場合
-                if (User.is_signed_in()) {
+                if (User.isSignedIn()) {
 
                     // アクセスチェック
-                    if (User.is_accessible(route.access, User.current_user()) === true) {
+                    if (User.isAccessible(route.access, User.currentUser()) === true) {
                         return;
                     } else {
                         alert("ページにアクセスできる権限がありません");
@@ -35,7 +35,7 @@
                 }
 
                 // 現在持っているトークンを使って再認証する
-                User.re_signin({
+                User.reSignin({
                     success: function () {
                         // 何もしない
                     },

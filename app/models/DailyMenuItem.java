@@ -19,11 +19,11 @@ public class DailyMenuItem extends Model {
     @ManyToOne
     @JoinColumn(name = "daily_menu_id")
     @JsonIgnore
-    public DailyMenu daily_menu;
+    public DailyMenu dailyMenu;
     
     @OneToOne(cascade=CascadeType.REFRESH) // 参照のみだからREFRESHでいいはず
     @JoinColumn(name="menu_item_id")
-    public MenuItem menu_item;
+    public MenuItem menuItem;
     
     /**
      * Generic query helper for entity Lunch with id Long

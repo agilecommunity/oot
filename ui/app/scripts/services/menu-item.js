@@ -12,7 +12,7 @@ angular.module('MyServices')
         return list;
     };
 
-    var MenuItem = $resource('/api/menu-items/:id',
+    var MenuItem = $resource('/api/v1.0/menu-items/:id',
         { id: "@id" }, {
         query: {
             method: "GET",
@@ -21,7 +21,7 @@ angular.module('MyServices')
             cache: false
         },
         queryByShopName: {
-            url: "/api/shops/:shop_name/menu-items",
+            url: "/api/v1.0/shops/:shopName/menu-items",
             method: "GET",
             isArray: true,
             transformResponse: transformResponse,
@@ -29,7 +29,7 @@ angular.module('MyServices')
         },
         create: {                // 新規作成
             method: "POST",
-            isArray: false
+            isArray: true
         },
         update: {                // 更新
             method: "PUT",

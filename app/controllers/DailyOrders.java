@@ -25,22 +25,22 @@ public class DailyOrders extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyOrders");
 
     @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showByOrderDate(String order_date_str) {
+    public static Result showByOrderDate(String orderDateStr) {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        java.sql.Date order_date;
+        java.sql.Date orderDate;
         try {
-            order_date = ParameterConverter.convertDateFrom(order_date_str);
+            orderDate = ParameterConverter.convertDateFrom(orderDateStr);
         } catch (ParseException e) {
-            logger.debug(String.format("showByOrderDate parse error order_date_str: %s", order_date_str));
+            logger.debug(String.format("#showByOrderDate parse error orderDateStr: %s", orderDateStr));
             return badRequest();
         }
 
-        List<DailyOrder> list = DailyOrder.find_by(order_date);
+        List<DailyOrder> list = DailyOrder.findBy(orderDate);
 
         if (list == null || list.size() == 0) {
-            logger.debug(String.format("showByOrderDate order not found order_date_str:%s", order_date_str));
+            logger.debug(String.format("#showByOrderDate order not found orderDateStr:%s", orderDateStr));
             return notFound();
         }
 
@@ -57,8 +57,8 @@ public class DailyOrders extends Controller {
         ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
 
 
-        if (request().queryString().containsKey("order_date")) {
-            query.eq("order_date", request().queryString().get("order_date"));
+        if (request().queryString().containsKey("orderDate")) {
+            query.eq("orderDate", request().queryString().get("orderDate"));
         }
 
         List<DailyOrder> orders = query.findList();
@@ -71,18 +71,18 @@ public class DailyOrders extends Controller {
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result create() {
 
-        logger.debug("createMine");
+        logger.debug("#create");
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("createMine request-body:%s", request().body().toString()));
+        logger.debug(String.format("#create request-body:%s", request().body().toString()));
 
         Form<DailyOrder> filledForm = Form.form(DailyOrder.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("update object has some errors. %s", filledForm.errorsAsJson().toString()));
+            logger.warn(String.format("#create object has some errors. %s", filledForm.errorsAsJson().toString()));
             return badRequest(filledForm.errorsAsJson().toString());
         }
 
@@ -91,17 +91,17 @@ public class DailyOrders extends Controller {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         if (!DailyOrders.canEdit(object, user)) {
-            logger.warn(String.format("create cant create local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
+            logger.warn(String.format("#create cant create localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
             return badRequest();
         }
 
-        if (DailyOrder.find_by(object.order_date, object.local_user.id) != null) {
-            logger.debug("create object already exists");
+        if (DailyOrder.findBy(object.orderDate, object.localUser.id) != null) {
+            logger.debug("#create object already exists");
             return badRequest();
         }
 
-        logger.debug(String.format("create order.local_user.id:%s", object.local_user.id));
-        logger.debug(String.format("create order.order_date:%s", object.order_date));
+        logger.debug(String.format("#create order.localUser.id:%s", object.localUser.id));
+        logger.debug(String.format("#create order.orderDate:%s", object.orderDate));
 
         object.save();
 
@@ -115,18 +115,18 @@ public class DailyOrders extends Controller {
         logger.debug("#update");
 
         if (DailyOrder.find.byId(id) == null) {
-            logger.debug("update object doesnt exist");
+            logger.debug("#update object doesnt exist");
             return badRequest();
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("update request-body:%s", request().body().toString()));
+        logger.debug(String.format("#update request-body:%s", request().body().toString()));
 
         Form<DailyOrder> filledForm = Form.form(DailyOrder.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("update object has some errors. %s", filledForm.errorsAsJson().toString()));
+            logger.warn(String.format("#update object has some errors. %s", filledForm.errorsAsJson().toString()));
             return badRequest(filledForm.errorsAsJson().toString());
         }
 
@@ -135,12 +135,12 @@ public class DailyOrders extends Controller {
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         if (! DailyOrders.canEdit(object, user)) {
-            logger.warn(String.format("update cant update local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
+            logger.warn(String.format("#update cant update localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
             return badRequest();
         }
 
-        logger.debug(String.format("update order.local_user.id:%s", object.local_user.id));
-        logger.debug(String.format("update order.order_date:%s", object.order_date));
+        logger.debug(String.format("#update order.localUser.id:%s", object.localUser.id));
+        logger.debug(String.format("#update order.orderDate:%s", object.orderDate));
 
         object.update();
 
@@ -151,21 +151,21 @@ public class DailyOrders extends Controller {
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result delete(Long id) {
 
-        logger.debug(String.format("deleteMine id: %s", id));
+        logger.debug(String.format("#delete id: %s", id));
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         DailyOrder object = DailyOrder.find.byId(id);
 
         if (object == null) {
-            logger.debug("deleteMine object not found");
+            logger.debug("#delete object not found");
             return ok();
         }
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         if (! DailyOrders.canEdit(object, user)) {
-            logger.warn(String.format("deleteMine cant delete others order local_user.id:%s identity.user.id:%s", object.local_user.id, user.identityId().userId() ));
+            logger.warn(String.format("#delete cant delete others order localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
             return badRequest();
         }
 
@@ -179,12 +179,12 @@ public class DailyOrders extends Controller {
         LocalUser current_user = LocalUser.find.byId(user.identityId().userId());
 
         // 管理者である
-        if (current_user.is_admin == true) {
+        if (current_user.isAdmin == true) {
             return true;
         }
 
         // オブジェクトの所有者である
-        if (order.local_user.id.equals(user.identityId().userId())) {
+        if (order.localUser.id.equals(user.identityId().userId())) {
             return true;
         }
 
