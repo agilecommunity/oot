@@ -41,7 +41,7 @@ public class RegistrationTest {
             Map<String, String> params = new HashMap<String, String>();
             params.put("email", "user1@foo.baa");
             JsonNode json = Json.toJson(params);
-            Result result = callAPI(fakeRequest(POST, "/api/startSignup").withJsonBody(json));
+            Result result = callAPI(fakeRequest(POST, "/api/v1.0/start-signup").withJsonBody(json));
 
             assertThat(status(result)).isEqualTo(OK);
 
@@ -55,7 +55,7 @@ public class RegistrationTest {
             params.put("passWord1", "hogehoge");
             params.put("passWord2", "hogehoge");
             json = Json.toJson(params);
-            result = callAPI(fakeRequest(POST, "/api/signup/" + token.uuid).withJsonBody(json));
+            result = callAPI(fakeRequest(POST, "/api/v1.0/signup/" + token.uuid).withJsonBody(json));
 
             assertThat(status(result)).isEqualTo(OK);
 
@@ -89,7 +89,7 @@ public class RegistrationTest {
             Map<String, String> params = new HashMap<String, String>();
             params.put("email", this.fixture.name);
             JsonNode json = Json.toJson(params);
-            Result result = callAPI(fakeRequest(POST, "/api/startSignup").withJsonBody(json));
+            Result result = callAPI(fakeRequest(POST, "/api/v1.0/start-signup").withJsonBody(json));
 
             assertThat(status(result)).isEqualTo(BAD_REQUEST);
 
@@ -154,7 +154,7 @@ public class RegistrationTest {
             params.put(fixture.name, fixture.value);
 
             JsonNode json = Json.toJson(params);
-            Result result = callAPI(fakeRequest(POST, "/api/signup/hoho").withJsonBody(json));
+            Result result = callAPI(fakeRequest(POST, "/api/v1.0/signup/hoho").withJsonBody(json));
 
             assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(BAD_REQUEST);
 
@@ -208,7 +208,7 @@ public class RegistrationTest {
             params.put("passWord2", "hogehoge");
 
             JsonNode json = Json.toJson(params);
-            Result result = callAPI(fakeRequest(POST, "/api/signup/fufu").withJsonBody(json));
+            Result result = callAPI(fakeRequest(POST, "/api/v1.0/signup/fufu").withJsonBody(json));
 
             assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(FORBIDDEN);
         }

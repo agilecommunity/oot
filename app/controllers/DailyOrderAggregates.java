@@ -45,7 +45,7 @@ public class DailyOrderAggregates extends Controller {
 
         Query<DailyOrderAggregate> query = Ebean.find(DailyOrderAggregate.class);
         query.setRawSql(rawSql)
-                .where().eq("order_date", orderDate)
+                .where().eq("orderDate", orderDate)
                 .orderBy("code");
 
         return ok(Json.toJson(query.findList()));

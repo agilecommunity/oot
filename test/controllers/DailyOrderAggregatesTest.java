@@ -65,7 +65,7 @@ public class DailyOrderAggregatesTest {
 
         assertThat(node.get(1).get("orderDate").asText()).isEqualTo("2014-02-11");
         assertThat(node.get(1).get("code").asText()).isEqualTo("銀座魚屋　たっぷりサーモン丼　550円 - 20円 = 530円");
-        assertThat(node.get(1).get("numOrders").asInt()).isEqualTo(2);
+        assertThat(node.get(1).get("numOrders").asInt()).isEqualTo(5);
     }
 
     private Result callAPI(FakeRequest baseRequest) {
