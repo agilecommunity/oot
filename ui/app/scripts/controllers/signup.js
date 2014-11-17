@@ -24,7 +24,7 @@ angular.module('MyControllers')
         parameter.passWord1 = $scope.passWord1;
         parameter.passWord2 = $scope.passWord2;
 
-        $http.post('/api/signup/' + $routeParams.token, parameter)
+        $http.post('/api/v1.0/signup/' + $routeParams.token, parameter)
         .success(function (data, status, header) {
             bootbox.dialog({
                 message: "アカウントの登録が完了しました。サインインしてください",

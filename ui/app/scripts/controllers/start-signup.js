@@ -19,7 +19,7 @@ angular.module('MyControllers')
         $scope.formErrors = {};
         var parameter = {email: $scope.email};
 
-        $http.post("/api/startSignup", parameter)
+        $http.post("/api/v1.0/start-signup", parameter)
         .success(function (data, status, header) {
             bootbox.dialog({
                 message: "登録したアドレスに確認メールを送りました",
