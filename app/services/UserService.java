@@ -148,6 +148,7 @@ public class UserService extends BaseUserService {
         dest.lastName = source.lastName();
         dest.email = source.email().get();
         dest.password = source.passwordInfo().get().password();
+        dest.isAdmin = false;
     }
 
     private SocialUser createSocialUserFrom(LocalUser local_user) {

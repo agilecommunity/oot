@@ -176,10 +176,13 @@ public class DailyOrders extends Controller {
 
     private static boolean canEdit(DailyOrder order, Identity user) {
 
-        LocalUser current_user = LocalUser.find.byId(user.identityId().userId());
+        logger.debug(String.format("#canEdit identityId: %s", user.identityId()));
+        logger.debug(String.format("#canEdit identityId.userId: %s", user.identityId().userId()));
+
+        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
 
         // 管理者である
-        if (current_user.isAdmin == true) {
+        if (currentUser.isAdmin == true) {
             return true;
         }
 
