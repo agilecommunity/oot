@@ -29,20 +29,21 @@ public class UserService extends BaseUserService {
 
     @Override
     public Identity doSave(Identity user) {
-        logger.debug(String.format("doSave userId:%s", user.identityId().userId()));
+        logger.debug(String.format("#doSave userId:%s", user.identityId().userId()));
 
-        LocalUser local_user = null;
-        local_user = LocalUser.find.byId(user.identityId().userId());
+        LocalUser localUser = null;
+        localUser = LocalUser.find.byId(user.identityId().userId());
 
-        if (local_user == null) {
-            logger.debug("doSave LocalUser not found create new");
-            local_user = new LocalUser();
-            copyIdentityToLocalUser(user, local_user);
-            local_user.save();
+        if (localUser == null) {
+            logger.debug("#doSave LocalUser not found create new");
+            localUser = new LocalUser();
+            localUser.isAdmin = false;
+            copyIdentityToLocalUser(user, localUser);
+            localUser.save();
         } else {
-            logger.debug("doSave LocalUser found update");
-            copyIdentityToLocalUser(user, local_user);
-            local_user.update();
+            logger.debug("#doSave LocalUser found update localUser:" + localUser.toString());
+            copyIdentityToLocalUser(user, localUser);
+            localUser.update();
         }
 
         return user;
@@ -52,31 +53,31 @@ public class UserService extends BaseUserService {
     public void doSave(Token token) {
         logger.debug(String.format("doSaveToken uuid:%s email:%s", token.uuid, token.email));
 
-        LocalToken local_token = new LocalToken();
+        LocalToken localToken = new LocalToken();
 
-        local_token.uuid = token.uuid;
-        local_token.email = token.email;
-        local_token.createdAt = new java.sql.Date(token.creationTime.getMillis());
-        local_token.expireAt = new java.sql.Date(token.expirationTime.getMillis());
-        local_token.isSignUp = token.isSignUp;
+        localToken.uuid = token.uuid;
+        localToken.email = token.email;
+        localToken.createdAt = new java.sql.Date(token.creationTime.getMillis());
+        localToken.expireAt = new java.sql.Date(token.expirationTime.getMillis());
+        localToken.isSignUp = token.isSignUp;
 
-        local_token.save();
+        localToken.save();
 
-        logger.debug(String.format("doSaveToken uuid:%s", local_token.uuid));
+        logger.debug(String.format("doSaveToken uuid:%s", localToken.uuid));
     }
 
     @Override
     public Identity doFind(IdentityId identityId) {
         logger.debug(String.format("doFind userId:%s", identityId.userId()));
 
-        LocalUser local_user = LocalUser.find.byId(identityId.userId());
+        LocalUser localUser = LocalUser.find.byId(identityId.userId());
 
-        if (local_user == null) {
+        if (localUser == null) {
             logger.debug("doFind LocalUser not found");
             return null;
         }
 
-        SocialUser social_user = createSocialUserFrom(local_user);
+        SocialUser social_user = createSocialUserFrom(localUser);
 
         return social_user;
     }
@@ -85,19 +86,19 @@ public class UserService extends BaseUserService {
     public Token doFindToken(String tokenId) {
         logger.debug(String.format("doFindToken tokenId:%s", tokenId));
 
-        LocalToken local_token = LocalToken.find.byId(tokenId);
+        LocalToken localToken = LocalToken.find.byId(tokenId);
 
-        if (local_token == null) {
+        if (localToken == null) {
             logger.debug("doFindToken LocalToken not found");
             return null;
         }
 
         Token result = new Token();
-        result.uuid = local_token.uuid;
-        result.email = local_token.email;
-        result.isSignUp = local_token.isSignUp;
-        result.creationTime = new DateTime(local_token.createdAt);
-        result.expirationTime = new DateTime(local_token.expireAt);
+        result.uuid = localToken.uuid;
+        result.email = localToken.email;
+        result.isSignUp = localToken.isSignUp;
+        result.creationTime = new DateTime(localToken.createdAt);
+        result.expirationTime = new DateTime(localToken.expireAt);
 
         return result;
     }
@@ -114,9 +115,9 @@ public class UserService extends BaseUserService {
             return null;
         }
 
-        SocialUser social_user = createSocialUserFrom(list.get(0));
+        SocialUser socialUser = createSocialUserFrom(list.get(0));
 
-        return social_user;
+        return socialUser;
     }
 
     @Override
@@ -148,23 +149,22 @@ public class UserService extends BaseUserService {
         dest.lastName = source.lastName();
         dest.email = source.email().get();
         dest.password = source.passwordInfo().get().password();
-        dest.isAdmin = false;
     }
 
-    private SocialUser createSocialUserFrom(LocalUser local_user) {
-        SocialUser social_user = new SocialUser(
-                new IdentityId(local_user.id, local_user.provider)
-              , local_user.firstName
-              , local_user.lastName
-              , String.format("%s %s", local_user.firstName, local_user.lastName)
-              , Option.apply(local_user.email)
+    private SocialUser createSocialUserFrom(LocalUser localUser) {
+        SocialUser socialUser = new SocialUser(
+                new IdentityId(localUser.id, localUser.provider)
+              , localUser.firstName
+              , localUser.lastName
+              , String.format("%s %s", localUser.firstName, localUser.lastName)
+              , Option.apply(localUser.email)
               , null
               , new AuthenticationMethod("userPassword")
               , null
               , null
-              , Some.apply(new PasswordInfo("bcrypt", local_user.password, null))
+              , Some.apply(new PasswordInfo("bcrypt", localUser.password, null))
           );
 
-        return social_user;
+        return socialUser;
     }
 }

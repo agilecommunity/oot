@@ -32,10 +32,10 @@ public class LocalUser extends Model {
     public String password;
 
     @JsonIgnore
-    public Timestamp createdAt;
+    public java.sql.Date createdAt;
 
     @JsonIgnore
-    public Timestamp updatedAt;
+    public java.sql.Date updatedAt;
 
     /**
      * Generic query helper for entity with id Long
