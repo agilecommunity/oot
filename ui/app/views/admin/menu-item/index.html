@@ -17,15 +17,16 @@
             </div>
         </nav>
 
-        <div>
-            <div class="pull-right" style="margin-right:1.5em; margin-bottom:0.5em;">
-                <button class="btn btn-info" ng-click="addItem()">商品を追加する</button>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right" style="margin-right:1.5em; margin-bottom:0.5em;">
+                    <button class="btn btn-info" ng-click="addItem()">商品を追加する</button>
+                </div>
             </div>
-            <div ng-show="menuItems.length === 0">
-                <p class="no-data">商品がありません。</p>
-            </div>
-            <table class="table table-bordered table-striped menu-items" ng-show="menuItems.length > 0">
-                <thead>
+            <div class="col-md-12">
+                <p class="no-data" ng-show="menuItems.length === 0">商品がありません。</p>
+                <table class="table table-bordered table-striped menu-items" ng-show="menuItems.length > 0">
+                    <thead>
                     <tr>
                         <th class="id col-md-1">ステータス</th>
                         <th class="shop_name col-md-3">店名</th>
@@ -35,8 +36,8 @@
                         <th class="edit col-md-1">編集</th>
                         <th class="delete col-md-1">削除</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'name']">
                         <td class="id">{{menuItem.status}}</td>
                         <td class="shop_name">{{menuItem.shopName}}</td>
@@ -46,8 +47,9 @@
                         <td class="edit"><button class="btn btn-info" ng-click="editItem(menuItem)">編集</button></td>
                         <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
