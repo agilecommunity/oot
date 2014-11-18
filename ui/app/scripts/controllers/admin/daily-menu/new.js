@@ -4,6 +4,21 @@ angular.module('MyControllers')
     ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder',
     function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder) {
 
+    var compactSelectedItems = function() {
+        var compacted = [];
+
+        var pushItem = function(item) {
+            if (item !== emptyItem) {
+                compacted.push(item);
+            }
+        };
+
+        angular.forEach($scope.selectedItems.bento, pushItem);
+        angular.forEach($scope.selectedItems.side, pushItem);
+
+        return compacted;
+    };
+
     // 変更を反映する
     var applyChanges = function(currentMenu) {
 
@@ -86,22 +101,20 @@ angular.module('MyControllers')
     };
 
     var emptyItem = {id: undefined, name: "商品が選択されていません"};
-    var itemMaxNum = 12;
-    var resetSelectedItems = function() {
-        $scope.selectedItems = [];
-        for(var i=0; i<itemMaxNum; i++) {
-            $scope.selectedItems[i] = emptyItem;
-        }
-    };
 
-    var compactSelectedItems = function() {
-        var compacted = [];
-        angular.forEach($scope.selectedItems, function(item){
-            if (item !== emptyItem) {
-                compacted.push(item);
-            }
-        });
-        return compacted;
+    $scope.selectedItems = {};
+
+    var resetSelectedItems = function() {
+        $scope.selectedItems.bento = [];
+        $scope.selectedItems.side = [];
+
+        for(i=0; i<12; i++) {
+            $scope.selectedItems.bento.push(emptyItem);
+        }
+
+        for(i=0; i<8; i++) {
+            $scope.selectedItems.side.push(emptyItem);
+        }
     };
 
     var deployToSelectedItems = function(dailyMenu) {
@@ -109,10 +122,9 @@ angular.module('MyControllers')
 
         console.log("#deployToSelectedItems detailItems:" + dailyMenu.detailItems.length);
 
-        var count = 0;
         angular.forEach(dailyMenu.detailItems, function(item){
-            $scope.selectedItems[count] = item.menuItem;
-            count++;
+            $scope.selectedItems[item.menuItem.category].unshift(item.menuItem);
+            $scope.selectedItems[item.menuItem.category].pop();
         });
     };
 
@@ -154,7 +166,7 @@ angular.module('MyControllers')
         lazyApplyChanges($scope.currentDailyMenu);
     };
 
-    $scope.selectItem = function(itemIndex) {
+    $scope.selectItem = function(category, index) {
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/daily-menu/select-item",
             controller: "DailyMenuSelectItemController",
@@ -163,12 +175,18 @@ angular.module('MyControllers')
         });
 
         modalInstance.result.then(function (selectedItem) {
-            $scope.selectedItems[itemIndex] = selectedItem;
+            $scope.selectedItems[category][index] = selectedItem;
             applyChanges($scope.currentDailyMenu);
         }, function () {
             console.log('Modal dismissed at: ' + new Date());
         });
     };
+
+    $scope.resetItem = function(category, index) {
+        $scope.selectedItems[category][index] = emptyItem;
+        applyChanges($scope.currentDailyMenu);
+    };
+
 
     $scope.editOrder = function(dailyMenu) {
         var modalInstance = $modal.open({
@@ -183,21 +201,16 @@ angular.module('MyControllers')
         });
     };
 
-    $scope.resetItem = function(index) {
-        $scope.selectedItems[index] = emptyItem;
-        applyChanges($scope.currentDailyMenu);
-    };
-
-    var itemIsSelected = function(index) {
-        return ($scope.selectedItems[index] !== emptyItem);
-    };
-
     $scope.getCurrentMenuStatus = function() {
         return $scope.currentDailyMenu.status;
     };
 
-    $scope.itemIsSelected = function(index) {
-        return itemIsSelected(index);
+    var itemIsSelected = function(item) {
+        return (item !== emptyItem);
+    };
+
+    $scope.itemIsSelected = function(item) {
+        return itemIsSelected(item);
     };
 
     // 日付を選択しているか?
@@ -208,10 +221,10 @@ angular.module('MyControllers')
         return ($scope.currentDailyMenu.menuDate === day);
     };
 
-    $scope.classForTile = function(index) {
+    $scope.classForTile = function(item) {
         return {
-            'empty': !itemIsSelected(index),
-            'selected': itemIsSelected(index)
+            'empty': !itemIsSelected(item),
+            'selected': itemIsSelected(item)
         };
     };
 
