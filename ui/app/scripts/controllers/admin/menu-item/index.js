@@ -49,26 +49,28 @@ angular.module('MyControllers')
     };
 
     $scope.editItem = function(menuItem) {
-        $scope.menuItem = menuItem;
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/menu-item/edit",
-            scope: $scope,
             controller: "MenuItemEditController",
-            backdrop: "static"
+            backdrop: "static",
+            resolve: {
+                menuItem: menuItem
+            }
         });
     };
 
     $scope.addItem = function() {
-        $scope.menuItem = new MenuItem();
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/menu-item/edit",
-            scope: $scope,
             controller: "MenuItemEditController",
-            backdrop: "static"
+            backdrop: "static",
+            resolve: {
+                menuItem: new MenuItem()
+            }
         });
 
-        modalInstance.result.then(function (){
-            $scope.menuItems.push($scope.menuItem);
+        modalInstance.result.then(function (newItem){
+            $scope.menuItems.push(newItem);
         });
     };
 

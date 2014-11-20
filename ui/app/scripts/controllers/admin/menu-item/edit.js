@@ -1,8 +1,9 @@
 angular.module('MyControllers')
     .controller('MenuItemEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', menuItem,
+    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, menuItem) {
 
+    $scope.menuItem = menuItem;
     var menuItemSaved = angular.copy($scope.menuItem);
 
     $scope.errors = [];
@@ -14,7 +15,7 @@ angular.module('MyControllers')
             handler.success = function(saved) {
                 $scope.errors = [];
                 $scope.menuItem.id = saved[0].id;
-                $scope.$close();
+                $scope.$close(menuItem);
             };
 
             handler.error = function(error) {
@@ -32,7 +33,7 @@ angular.module('MyControllers')
             handler.success = function(saved) {
                 $scope.errors = [];
                 $scope.menuItem.id = saved.id;
-                $scope.$close();
+                $scope.$close(menuItem);
             };
 
             handler.error = function(error) {
