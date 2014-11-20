@@ -1,6 +1,6 @@
 angular.module('MyControllers')
     .controller('MenuItemEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', menuItem,
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'menuItem',
     function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, menuItem) {
 
     $scope.menuItem = menuItem;
@@ -13,9 +13,7 @@ angular.module('MyControllers')
 
         if ($scope.menuItem.id === undefined) {
             handler.success = function(saved) {
-                $scope.errors = [];
-                $scope.menuItem.id = saved[0].id;
-                $scope.$close(menuItem);
+                $scope.$close(saved);
             };
 
             handler.error = function(error) {
@@ -31,9 +29,7 @@ angular.module('MyControllers')
             MenuItem.create([$scope.menuItem], handler.success, handler.error);
         } else {
             handler.success = function(saved) {
-                $scope.errors = [];
-                $scope.menuItem.id = saved.id;
-                $scope.$close(menuItem);
+                $scope.$close(saved);
             };
 
             handler.error = function(error) {

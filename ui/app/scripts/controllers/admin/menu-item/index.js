@@ -54,7 +54,9 @@ angular.module('MyControllers')
             controller: "MenuItemEditController",
             backdrop: "static",
             resolve: {
-                menuItem: menuItem
+                menuItem: function() {
+                    return menuItem;
+                }
             }
         });
     };
@@ -65,11 +67,14 @@ angular.module('MyControllers')
             controller: "MenuItemEditController",
             backdrop: "static",
             resolve: {
-                menuItem: new MenuItem()
+                menuItem: function() {
+                    new MenuItem();
+                }
             }
         });
 
         modalInstance.result.then(function (newItem){
+            console.log(newItem);
             $scope.menuItems.push(newItem);
         });
     };

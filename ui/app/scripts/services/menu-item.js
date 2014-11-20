@@ -37,14 +37,5 @@ angular.module('MyServices')
         }
     });
 
-    MenuItem.prototype.$save = function(params, success, error) {
-        if ( !this.id ) {
-            return this.$create(params, success, error);
-        }
-        else {
-            return this.$update(params, success, error);
-        }
-    };
-
     return MenuItem;
 }]);
