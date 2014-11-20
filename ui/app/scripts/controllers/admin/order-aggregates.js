@@ -1,18 +1,10 @@
 angular.module('MyControllers')
     .controller('AdminOrderAggregatesController',
-    ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyOrderAggregate',
-        function ($scope, $location, $routeParams, $filter, User, DailyOrderAggregate) {
+    ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyOrderAggregate', 'orderDate', 'orderAggregates',
+        function ($scope, $location, $routeParams, $filter, User, DailyOrderAggregate, orderDate, orderAggregates) {
 
-    $scope.orderDate = moment.utc($routeParams.orderDate);
+    $scope.orderDate = orderDate;
+    $scope.orderAggregates = orderAggregates;
 
-    var params = {orderDate: $scope.orderDate.format('YYYY-MM-DD')};
-
-    $scope.orderAggregates = DailyOrderAggregate.getByOrderDate(params,
-        function (response) {
-        },
-        function (response) {
-            alert("データが取得できませんでした。");
-        }
-    );
 }]);
 

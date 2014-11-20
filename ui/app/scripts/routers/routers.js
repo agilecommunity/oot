@@ -43,7 +43,18 @@
             templateUrl: '/views/admin/order-aggregates',
             controller: 'AdminOrderAggregatesController',
             access: AccessLevels.admin,
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: {
+                orderDate: function($route) {
+                    return moment.utc($route.current.params.orderDate);
+                },
+                orderAggregates: function($route, DailyOrderAggregate) {
+                    var orderDate = moment.utc($route.current.params.orderDate);
+                    return DailyOrderAggregate.getByOrderDate({
+                        orderDate: orderDate.format('YYYY-MM-DD')
+                    });
+                }
+            }
         })
         .when('/admin/checklist/menu-date/:menuDate', {
             templateUrl: '/views/admin/checklist',
