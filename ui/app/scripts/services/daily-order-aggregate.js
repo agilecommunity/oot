@@ -1,19 +1,22 @@
 
 angular.module('MyServices')
-    .factory('DailyOrderAggregate',
-    ['$resource',
-    function ($resource) {  // 日々の注文を扱うサービス
+.factory('DailyOrderAggregate',
+    ['$resource', '$http',
+    function ($resource, $http) {  // 日々の注文を扱うサービス
 
     var transformList = function (data, headersGetter) {
+
+        var transformed = app.my.helpers.transformRequestDefault(data);
+
+        if (!angular.isArray(data)) {
+            return transformed;
+        }
+
         // utcに変換する
-        var list = angular.fromJson(data);
-        angular.forEach(list, function (item) {
-            if (item.code === undefined || item.code === null || item.code === ""){
-                item.code = "(空)";
-            }
+        angular.forEach(transformed, function (item) {
             item.orderDate = moment.utc(item.orderDate);
         });
-        return list;
+        return transformed;
     };
 
     var DailyOrderAggregate = $resource('/api/v1.0/daily-order-aggregates/:id',

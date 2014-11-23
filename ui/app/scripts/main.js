@@ -8,8 +8,8 @@
 
     $(function () {
 
-        app.run(["$rootScope", "$location", "User", "RouteFinder",
-                 function ($rootScope, $location, User, RouteFinder) {
+        app.run(["$rootScope", "$location", "$window", "User", "RouteFinder",
+                 function ($rootScope, $location, $window, User, RouteFinder) {
 
             // ブラウザのリロード対策
             $rootScope.$on('$locationChangeStart', function (ev, next, current) {
@@ -28,7 +28,7 @@
                     if (User.isAccessible(route.access, User.currentUser()) === true) {
                         return;
                     } else {
-                        alert("ページにアクセスできる権限がありません");
+                        alert("ページにアクセスできる権限がありません。");
                         ev.preventDefault();
                         return;
                     }
@@ -43,6 +43,21 @@
                         ev.preventDefault();
                         $location.path("/");
                     }
+                });
+            });
+
+            $rootScope.$on('$routeChangeError', function(event, current, previous, rejection){
+                var message = "画面の表示中にエラーが発生しました。元の画面に戻ります。";
+
+                if (rejection) {
+                    message += "<br/>" + "ステータス:" + rejection.status;
+                    message += "&nbsp;";
+                    message += "原因:" + rejection.reason;
+                }
+
+                bootbox.alert(message, function(){
+                    // $location.path だと上手く遷移してくれなかったので…
+                    $window.history.back();
                 });
             });
         }]);

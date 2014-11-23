@@ -5,7 +5,7 @@
     var AccessLevels = app.AccessLevels;
 
     return app.config(
-        ['$routeProvider', '$httpProvider',     // ルーティングの定義
+        ['$routeProvider', '$httpProvider',    // ルーティングの定義
         function ($routeProvider, $httpProvider) {
 
         $routeProvider
@@ -43,18 +43,7 @@
             templateUrl: '/views/admin/order-aggregates',
             controller: 'AdminOrderAggregatesController',
             access: AccessLevels.admin,
-            reloadOnSearch: false,
-            resolve: {
-                orderDate: function($route) {
-                    return moment.utc($route.current.params.orderDate);
-                },
-                orderAggregates: function($route, DailyOrderAggregate) {
-                    var orderDate = moment.utc($route.current.params.orderDate);
-                    return DailyOrderAggregate.getByOrderDate({
-                        orderDate: orderDate.format('YYYY-MM-DD')
-                    });
-                }
-            }
+            resolve: app.my.resolvers.AdminOrderAggregatesController
         })
         .when('/admin/checklist/menu-date/:menuDate', {
             templateUrl: '/views/admin/checklist',

@@ -1,7 +1,7 @@
-(function(angular, app){
-    var AccessLevels = app.AccessLevels;
+var AccessLevels = app.AccessLevels;
+
 angular.module('MyServices')
-    .factory('User',
+.factory('User',
     ['$http', '$rootScope', '$resource',
     function ($http, $rootScope, $resource) {  // ユーザ認証を行うサービス
 
@@ -45,7 +45,9 @@ angular.module('MyServices')
             method: 'POST',
             url: '/api/v1.0/authenticate/userpass',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-            transformRequest: transform,
+            transformRequest: function(data) {
+                return jQuery.param(data);
+            },
             data: parameter
         })
         .success(function (data, status, header) {
@@ -73,5 +75,5 @@ angular.module('MyServices')
     };
 
     return User;
+
 }]);
-})(angular, window.app);

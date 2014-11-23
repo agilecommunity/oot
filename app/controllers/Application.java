@@ -10,5 +10,8 @@ public class Application extends Controller {
     public static Result index(String path) {
         return ok(views.html.main.render());
     }
-  
+
+    public static Result apiNotFound(String path) {
+        return notFound("指定したパスが存在しません");
+    }
 }

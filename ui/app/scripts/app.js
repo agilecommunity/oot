@@ -20,4 +20,8 @@
         ]
     );
 
+    window.app.my = {};
+    window.app.my.resolvers = {};
+    window.app.my.helpers = {};
+
 })(window);

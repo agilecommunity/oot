@@ -40,6 +40,8 @@ POST          /api/v1.0/start-signup                                         con
 POST          /api/v1.0/signup/:token                                        controllers.Registration.signUp(token)
 POST          /api/v1.0/authenticate/:provider                               securesocial.controllers.ProviderController.authenticateByPost(provider)
 
+GET           /api/*path                                                     controllers.Application.apiNotFound(path)
+
 # Root
 GET           /                                                              controllers.Application.index(path = "")
 

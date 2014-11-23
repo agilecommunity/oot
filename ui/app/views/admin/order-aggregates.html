@@ -17,7 +17,7 @@
             </thead>
             <tbody>
             <tr id="order-aggregate-{{orderAggregate.menu_item_id}}" ng-repeat="orderAggregate in orderAggregates | orderBy:code">
-                <td>{{orderAggregate.code}}</td>
+                <td>{{orderAggregate.code | karamoji}}</td>
                 <td>{{orderAggregate.numOrders}}</td>
             </tr>
             </tbody>
