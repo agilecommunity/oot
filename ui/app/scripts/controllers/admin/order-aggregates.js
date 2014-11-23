@@ -1,29 +1,27 @@
 
 angular.module('MyControllers')
     .controller('AdminOrderAggregatesController',
-    ['$scope', 'orderDate', 'orderAggregates',
-    function ($scope, orderDate, orderAggregates) {
+    ['$scope', 'initialData',
+    function ($scope, initialData) {
 
-    $scope.orderDate = orderDate;
-    $scope.orderAggregates = orderAggregates;
+    $scope.orderDate = initialData.orderDate;
+    $scope.orderAggregates = initialData.orderAggregates;
 
 }]);
 
 app.my.resolvers.AdminOrderAggregatesController = {
-    orderDate: function($route) {
-        return moment.utc($route.current.params.orderDate);
-    },
-    orderAggregates: function($route, $q, DailyOrderAggregate) {
+    initialData: function($route, $q, DailyOrderAggregate) {
+        var orderDate = moment.utc($route.current.params.orderDate);
+
         var deferred = $q.defer();
 
         var success = function(value, responseHeaders) {
-            deferred.resolve(value);
+            deferred.resolve({orderDate: orderDate, orderAggregates: value});
         };
         var error = function(responseHeaders) {
             deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
         };
 
-        var orderDate = moment.utc($route.current.params.orderDate);
         DailyOrderAggregate.getByOrderDate({
             orderDate: orderDate.format('YYYY-MM-DD')
         }, success, error);
