@@ -18,13 +18,14 @@ app.my.resolvers.AdminOrderAggregatesController = {
         var success = function(value, responseHeaders) {
             deferred.resolve({orderDate: orderDate, orderAggregates: value});
         };
+
         var error = function(responseHeaders) {
             deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
         };
 
         DailyOrderAggregate.getByOrderDate({
             orderDate: orderDate.format('YYYY-MM-DD')
-        }, success, error);
+        }).$promise.then(success, error);
 
         return deferred.promise;
     }
