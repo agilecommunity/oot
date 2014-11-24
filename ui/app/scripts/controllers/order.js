@@ -6,7 +6,7 @@ angular.module('MyControllers')
 
     $scope.dailyMenus = DailyMenu.queryByStatus({status: "open"},
         function (response) { // 成功時
-            $scope.dailyOrders = DailyOrder.getMine({},
+            $scope.dailyOrders = DailyOrder.queryMine({},
                 function (response) { // 成功時
                 },
                 function (response) {   // 失敗時

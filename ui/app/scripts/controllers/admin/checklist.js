@@ -55,7 +55,7 @@ angular.module('MyControllers')
             response.detailItems = $filter('orderBy')(response.detailItems, ['menuItem.shopName', 'menuItem.name']);
             $scope.dailyMenu = response;
 
-            $scope.dailyOrders = DailyOrder.getByOrderDate({orderDate: $scope.menuDate.format('YYYY-MM-DD')},
+            $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: $scope.menuDate.format('YYYY-MM-DD')},
                 function (response) {
                     $scope.checklist = createChecklist();
                 },

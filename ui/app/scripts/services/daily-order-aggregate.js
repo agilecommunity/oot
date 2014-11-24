@@ -21,7 +21,7 @@ angular.module('MyServices')
 
     var DailyOrderAggregate = $resource('/api/v1.0/daily-order-aggregates/:id',
         { id: "@id" }, {
-            getByOrderDate: {
+            queryByOrderDate: {
                 method: "GET",
                 url: "/api/v1.0/daily-order-aggregates/order-date/:orderDate",
                 params: {orderDate: "@orderDate"},

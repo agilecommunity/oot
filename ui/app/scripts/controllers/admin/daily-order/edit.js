@@ -47,7 +47,7 @@ angular.module('MyControllers')
 
     $scope.checklist = [];
     $scope.dailyMenu = dailyMenu;
-    $scope.dailyOrders = DailyOrder.getByOrderDate({orderDate: $scope.dailyMenu.menuDate.format('YYYY-MM-DD')},
+    $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: $scope.dailyMenu.menuDate.format('YYYY-MM-DD')},
         function (response) {
             $scope.checklist = createChecklist();
         },

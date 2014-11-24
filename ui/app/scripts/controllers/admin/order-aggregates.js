@@ -23,7 +23,7 @@ app.my.resolvers.AdminOrderAggregatesController = {
             deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
         };
 
-        DailyOrderAggregate.getByOrderDate({
+        DailyOrderAggregate.queryByOrderDate({
             orderDate: orderDate.format('YYYY-MM-DD')
         }).$promise.then(success, error);
 

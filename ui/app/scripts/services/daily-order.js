@@ -25,7 +25,13 @@ angular.module('MyServices')
 
     var DailyOrder = $resource('/api/v1.0/daily-orders/:id',
         { id: "@id" }, {
-        getByOrderDate: {
+        query: {
+            method: "GET",
+            isArray: true,
+            transformResponse: transformList,
+            cache: false
+        },
+        queryByOrderDate: {
             method: "GET",
             url: "/api/v1.0/daily-orders/order-date/:orderDate",
             params: {orderDate: "@orderDate"},
@@ -33,15 +39,9 @@ angular.module('MyServices')
             transformResponse: transformList,
             cache: false
         },
-        getMine: {
+        queryMine: {
             method: "GET",
             url: "/api/v1.0/daily-orders/mine",
-            isArray: true,
-            transformResponse: transformList,
-            cache: false
-        },
-        query: {
-            method: "GET",
             isArray: true,
             transformResponse: transformList,
             cache: false
