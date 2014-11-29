@@ -12,12 +12,12 @@ angular.module('MyControllers')
         // その日注文しているユーザごとに姓名と、注文状況を調査する
         angular.forEach($scope.dailyOrders, function (order) {
 
-            var checklistItem = [];
+            var checklistItem = {};
             checklistItem.userName = order.localUser.lastName + " " + order.localUser.firstName;
             var orderStatuses = [];
 
             angular.forEach(order.detailItems, function (item) {
-                var orderStatus = [];
+                var orderStatus = {};
                 orderStatus.menuId = item.menuItem.id;
                 orderStatus.numOrders = item.numOrders;
                 orderStatuses[item.menuItem.id] = orderStatus;
@@ -40,7 +40,7 @@ angular.module('MyControllers')
             checkItem.orderStatusesBits = orderStatusesBits;
         });
         // 全商品の注文状況と、ユーザ名でソートする
-        checklist = $filter('orderBy')(checklist, ["orderStatuses_bits", "userName"]);
+        checklist = $filter('orderBy')(checklist, ["orderStatusesBits", "userName"]);
 
         return checklist;
     };
