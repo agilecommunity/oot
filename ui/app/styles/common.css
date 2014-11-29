@@ -126,8 +126,15 @@ td.price {
     border: solid 4px #DDDDDD;
     border-radius: 10px;
     width: 295px;
-    float: left;
     cursor: pointer;
+
+    /* 以下、高さの異なるdivがあっても上手く廻り込みをさせるためのおまじない */
+    display: -moz-inline-box; /*for Firefox 2*/
+    display: inline-block; /*for modern*/
+    /display: inline; /*for ie5～7*/
+    /zoom: 1; /*for ie5～7*/
+    vertical-align: top;
+
 }
 .choose-list .menu.ordered{
     border-color: #F3BFD6;
