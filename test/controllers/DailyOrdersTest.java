@@ -50,7 +50,7 @@ public class DailyOrdersTest extends WithApplication {
      @Test
      public void createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          StringBuilder builder = new StringBuilder();
-         builder.append("{ \"localUser\":{\"id\": \"steve@foo.baa\"}");
+         builder.append("{ \"localUser\":{\"id\": \"steve@foo.bar\"}");
          builder.append(", \"orderDate\":\"2014-03-11\"");
          builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
          builder.append("}");
@@ -62,7 +62,7 @@ public class DailyOrdersTest extends WithApplication {
          assertThat(status(result)).isEqualTo(OK);
 
          DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-03-11");
-         DailyOrder order = DailyOrder.findBy(new java.sql.Date(dateValue.getMillis()), "steve@foo.baa");
+         DailyOrder order = DailyOrder.findBy(new java.sql.Date(dateValue.getMillis()), "steve@foo.bar");
          assertThat(order.localUser.firstName).isEqualTo("スティーブ");
 
          assertThat(order.detailItems.size()).isEqualTo(1);
@@ -98,7 +98,7 @@ public class DailyOrdersTest extends WithApplication {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"id\":1");
          builder.append(", \"orderDate\":\"2014-02-10\"");
-         builder.append(", \"localUser\":{\"id\": \"steve@foo.baa\"}");
+         builder.append(", \"localUser\":{\"id\": \"steve@foo.bar\"}");
          builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
          builder.append("}");
 
@@ -119,7 +119,7 @@ public class DailyOrdersTest extends WithApplication {
      private Result callCreate(String jsonString) {
 
          JsValue json = Json.parse(jsonString);
-         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.baa");
+         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(POST, "/api/v1.0/daily-orders")
@@ -133,7 +133,7 @@ public class DailyOrdersTest extends WithApplication {
 
      private Result callDelete(Long id) {
 
-         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.baa");
+         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(DELETE, String.format("/api/v1.0/daily-orders/%d", id))
@@ -147,7 +147,7 @@ public class DailyOrdersTest extends WithApplication {
      private Result callUpdate(Long id, String jsonString) {
 
          JsValue json = Json.parse(jsonString);
-         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.baa");
+         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
          String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
          Result result = route(fakeRequest(PUT, String.format("/api/v1.0/daily-orders/%d", id))
@@ -162,12 +162,12 @@ public class DailyOrdersTest extends WithApplication {
      private Object[] illegal_json_data() {
          return JUnitParamsRunner.$(
                    JUnitParamsRunner.$("{ }") // 空のリクエスト
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.baa\"} }") // 必須項目(orderDate)なし
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"} }") // 必須項目(orderDate)なし
                  , JUnitParamsRunner.$("{ \"orderDate\":\"2014-02-11\" }")             // 必須項目(localUser)なし
                  , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11\" }") // 存在しないユーザ
                  , JUnitParamsRunner.$("{ \"orderDate\":\"aaa\" }") // 存在しない日付
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.baa\"}, \"orderDate\":\"2014-02-10\" }") // 登録済みの注文
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.baa\"}, \"orderDate\":\"2014-02-10\" }") // ユーザが異なる
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10\" }") // 登録済みの注文
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10\" }") // ユーザが異なる
                  );
 
      }

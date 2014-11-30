@@ -69,7 +69,7 @@ public class DailyOrderAggregatesTest {
     }
 
     private Result callAPI(FakeRequest baseRequest) {
-        Http.Cookie fake_cookie = utils.Utils.fakeCookie("melissa@foo.baa");
+        Http.Cookie fake_cookie = utils.Utils.fakeCookie("melissa@foo.bar");
         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
         return route(baseRequest

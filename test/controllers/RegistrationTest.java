@@ -39,16 +39,16 @@ public class RegistrationTest {
         public void 確認() {
 
             Map<String, String> params = new HashMap<String, String>();
-            params.put("email", "user1@foo.baa");
+            params.put("email", "user1@foo.bar");
             JsonNode json = Json.toJson(params);
             Result result = callAPI(fakeRequest(POST, "/api/v1.0/start-signup").withJsonBody(json));
 
             assertThat(status(result)).isEqualTo(OK);
 
-            LocalToken token = LocalToken.find.where().eq("email", "user1@foo.baa").findUnique();
+            LocalToken token = LocalToken.find.where().eq("email", "user1@foo.bar").findUnique();
 
             params.clear();
-            params.put("email", "user1@foo.baa");
+            params.put("email", "user1@foo.bar");
             params.put("userName", "username1");
             params.put("firstName", "firstname1");
             params.put("lastName", "lastname1");
@@ -59,8 +59,8 @@ public class RegistrationTest {
 
             assertThat(status(result)).isEqualTo(OK);
 
-            assertThat(LocalToken.find.where().eq("email", "user1@foo.baa").findRowCount()).isEqualTo(0);
-            assertThat(LocalUser.find.where().eq("email", "user1@foo.baa").findRowCount()).isEqualTo(1);
+            assertThat(LocalToken.find.where().eq("email", "user1@foo.bar").findRowCount()).isEqualTo(0);
+            assertThat(LocalUser.find.where().eq("email", "user1@foo.bar").findRowCount()).isEqualTo(1);
         }
     }
 
@@ -119,7 +119,7 @@ public class RegistrationTest {
             RegistrationTest.setUp();
 
             LocalToken token = new LocalToken();
-            token.email = "user1@foo.baa";
+            token.email = "user1@foo.bar";
             token.isSignUp = true;
             token.uuid = "hoho";
             token.save();
@@ -144,7 +144,7 @@ public class RegistrationTest {
         public void テスト() {
 
             Map<String, String> params = new HashMap<String, String>();
-            params.put("email", "user1@foo.baa");
+            params.put("email", "user1@foo.bar");
             params.put("userName", "username1");
             params.put("firstName", "firstname1");
             params.put("lastName", "lastname1");
@@ -190,7 +190,7 @@ public class RegistrationTest {
             RegistrationTest.setUp();
 
             LocalToken token = new LocalToken();
-            token.email = "user1@foo.baa";
+            token.email = "user1@foo.bar";
             token.isSignUp = true;
             token.uuid = "hoho";
             token.save();
@@ -200,7 +200,7 @@ public class RegistrationTest {
         public void テスト() {
 
             Map<String, String> params = new HashMap<String, String>();
-            params.put("email", "user1@foo.baa");
+            params.put("email", "user1@foo.bar");
             params.put("userName", "username1");
             params.put("firstName", "firstname1");
             params.put("lastName", "lastname1");

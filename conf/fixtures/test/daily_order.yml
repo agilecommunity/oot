@@ -1,15 +1,15 @@
 - !!models.DailyOrder
     orderDate:  2014-02-10
     localUser:  !!models.LocalUser
-                  id: steve@foo.baa
+                  id: steve@foo.bar
 
 - !!models.DailyOrder
     orderDate:  2014-02-11
     localUser:  !!models.LocalUser
-                  id: steve@foo.baa
+                  id: steve@foo.bar
 
 - !!models.DailyOrder
     orderDate:  2014-02-11
     localUser:  !!models.LocalUser
-                  id: bob@foo.baa
+                  id: bob@foo.bar
 
