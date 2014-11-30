@@ -15,3 +15,5 @@ before_script:
 - grunt dev
 - cd ../
 script: ../play-${PLAY_VERSION}/play test
+notifications:
+  slack: agilecom:dyFpi9UUyhS10BazKyNsSf13
