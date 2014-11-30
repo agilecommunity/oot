@@ -370,10 +370,19 @@ div.menu-item div.comment:after    {
 
 div.menu-item .num-orders {
     position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
+div.menu-item .num-orders .btn {
+    font-size: 80%;
+    padding: 3px 7px;
+    vertical-align: top;
+}
+
+div.menu-item .num-orders .badge {
     font-size: 150%;
-    padding: 5px 10px;
-    top: 5px;
-    right: 5px;
+    vertical-align: top;
 }
 
 /* Bootstrap補助 */
@@ -382,4 +391,10 @@ ul.nav-pills li.divider {
     height: 1.5em;
     padding: 1.5px;
     background-color: #e5e5e5;
+}
+
+.badge-primary {
+    background-color: #428bca;
+    border-color: #357ebd;
+    color: #fff;
 }

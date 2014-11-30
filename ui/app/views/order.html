@@ -20,7 +20,6 @@
                     <div class="menu menu-item" ng-class="{'ordered':dailyMenuItem.ordered}" ng-repeat="dailyMenuItem in dailyMenu.detailItems | orderBy:['menuItem.shopName', 'menuItem.name']">
                         <div ng-click="order(dailyMenu, dailyMenuItem);">
                             <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                            <span type="button" class="btn btn-primary" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">数変更</span>
                             <div class="food-name">{{dailyMenuItem.menuItem.name}}</div>
                             <div style="position:relative;">
                                 <a href="" class="thumbnail food-image" ng-bind-html="renderImage(dailyMenuItem)"></a>
@@ -28,7 +27,10 @@
                             </div>
                             <div class="comment label label-success" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
                         </div>
-                        <span class="badge alert-danger num-orders" ng-show="dailyMenuItem.ordered" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">{{numOrders(dailyMenu, dailyMenuItem)}}</span>
+                        <div class="num-orders" ng-show="dailyMenuItem.ordered">
+                            <span type="button" class="btn btn-primary" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">数変更</span>
+                            <span class="badge badge-primary" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">{{numOrders(dailyMenu, dailyMenuItem)}}</span>
+                        </div>
                     </div>
 
                     <div class="clear"></div>
