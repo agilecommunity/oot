@@ -1,25 +1,25 @@
 - !!models.LocalUser
-    id:         steve@foo.baa
+    id:         steve@foo.bar
     provider:   userpass
-    email:      steve@foo.baa
+    email:      steve@foo.bar
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     firstName:  スティーブ
     lastName:   アジャイル
     isAdmin:    false
 
 - !!models.LocalUser
-    id:         bob@foo.baa
+    id:         bob@foo.bar
     provider:   userpass
-    email:      bob@foo.baa
+    email:      bob@foo.bar
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     firstName:  ボブ
     lastName:   アジャイル
     isAdmin:    false
 
 - !!models.LocalUser
-    id:         melissa@foo.baa
+    id:         melissa@foo.bar
     provider:   userpass
-    email:      melissa@foo.baa
+    email:      melissa@foo.bar
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     firstName:  メリッサ
     lastName:   アジャイル
