@@ -13,7 +13,7 @@ angular.module('MyControllers')
 
         if ($scope.menuItem.id === undefined) {
             handler.success = function(saved) {
-                $scope.$close(saved);
+                $scope.$close(saved[0]);
             };
 
             handler.error = function(error) {
@@ -26,7 +26,7 @@ angular.module('MyControllers')
                 }
             };
 
-            MenuItem.create([$scope.menuItem], handler.success, handler.error);
+            MenuItem.create({}, [$scope.menuItem], handler.success, handler.error);
         } else {
             handler.success = function(saved) {
                 $scope.$close(saved);

@@ -68,7 +68,7 @@ angular.module('MyControllers')
             backdrop: "static",
             resolve: {
                 menuItem: function() {
-                    new MenuItem();
+                    return new MenuItem();
                 }
             }
         });
