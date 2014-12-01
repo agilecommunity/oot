@@ -53,10 +53,11 @@
                 <span class="help-block" id="error.menuItem.status">{{errors.status}}</span>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-default" ng-click="save()">OK</button>
-            </div>
-        </div>
     </form>
+</div>
+<div class="modal-footer">
+    <div class="pull-right">
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" ng-click="save()">OK</button>
+    </div>
 </div>
