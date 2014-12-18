@@ -17,3 +17,4 @@ before_script:
 script: ../play-${PLAY_VERSION}/play test
 notifications:
   slack: agilecom:dyFpi9UUyhS10BazKyNsSf13
+sudo: false
