@@ -27,11 +27,6 @@ public class GlobalHooks {
 
         TEST_SERVER = testServer(PORT, fakeApplication(inMemoryDatabase()));
         start(TEST_SERVER);
-
-        Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/daily_menu.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/daily_menu_item.yml"));
     }
 
     @After

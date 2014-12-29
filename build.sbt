@@ -20,8 +20,8 @@ libraryDependencies ++= Seq(
   , "pl.pragmatists" % "JUnitParams" % "1.0.2" % "test"
   , "info.cukes" % "cucumber-java" % "1.1.6" % "test"
   , "info.cukes" % "cucumber-junit" % "1.1.6" % "test"
-  , "org.seleniumhq.selenium" % "selenium-java" % "2.41.0" % "test"
-  , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.41.0" % "test"
+  , "org.seleniumhq.selenium" % "selenium-java" % "2.44.0" % "test"
+  , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0" % "test"
 )
 
 play.Project.playJavaSettings

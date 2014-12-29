@@ -1,6 +1,7 @@
 package features.support;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public class WebBrowser {
@@ -12,7 +13,8 @@ public class WebBrowser {
             // なぜかIE11だと上手く動作するので、こちらを利用
             // FirefoxDriverだとログインに失敗してしまう (セッションIDがCookieに保存されないようだ)
             System.setProperty("webdriver.ie.driver", "test\\features\\drivers\\IEDriverServer.exe");
-            INSTANCE = new InternetExplorerDriver();
+            //INSTANCE = new InternetExplorerDriver();
+            INSTANCE = new FirefoxDriver();
         }
     }
 
