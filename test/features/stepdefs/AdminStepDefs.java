@@ -16,9 +16,7 @@ public class AdminStepDefs {
     public void 以下の商品を登録する(DataTable productParams) throws Throwable {
 
         features.pages.admin.HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
-        headerModule.商品一覧画面表示();
-
-        features.pages.admin.menuItem.IndexPage indexPage = new IndexPage(WebBrowser.INSTANCE);
+        features.pages.admin.menuItem.IndexPage indexPage = headerModule.商品一覧画面表示();
 
         List<Map<String, String>> products = productParams.asMaps(String.class, String.class);
 

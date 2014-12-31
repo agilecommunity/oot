@@ -28,8 +28,9 @@ public class HeaderModule {
     @FindBy(how=How.LINK_TEXT, using="商品データ一覧")
     private WebElement showMenuItemsIndex;
 
-    public void 商品一覧画面表示() {
+    public features.pages.admin.menuItem.IndexPage 商品一覧画面表示() throws Throwable {
         this.showMenuItemsIndex.click();
+        return new features.pages.admin.menuItem.IndexPage(this.driver);
     }
 
 }
