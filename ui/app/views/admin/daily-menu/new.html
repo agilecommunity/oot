@@ -68,7 +68,7 @@ div.menu-item .thumbnail {
                                     <div class="col-md-11"><span class="label label-default" style="font-size:18px;">お弁当</span></div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3" ng-repeat-start="selectedItem in selectedItems.bento | orderBy:['shopName', 'name'] track by $index">
+                                    <div class="col-xs-12 col-sm-6 col-md-3" ng-repeat-start="selectedItem in selectedItems.bento | orderBy:['shopName', 'name'] track by $index">
                                         <div class="tile" ng-class="classForTile(selectedItem)" ng-click="selectItem('bento', $index)">
                                             <div class="menu-item" ng-show="itemIsSelected(selectedItem)">
                                                 <div class="caption">
@@ -83,8 +83,7 @@ div.menu-item .thumbnail {
                                         </div>
                                         <span class="glyphicon glyphicon-remove-circle reset-item" ng-click="resetItem('bento', $index)" ng-show="itemIsSelected(selectedItem)"></span>
                                     </div>
-                                    <div class="clearfix" ng-show="($index + 1) % 4 === 0"></div>
-                                    <div ng-repeat-end=""></div>
+                                    <div class="clearfix" ng-show="($index + 1) % 4 === 0" ng-repeat-end></div>
                                 </div>
                             </div>
                         </div>

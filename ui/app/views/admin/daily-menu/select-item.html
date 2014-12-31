@@ -22,7 +22,7 @@
             <div class="col-md-8 no-data">対象の商品がありません</div>
         </div>
         <div class="row" ng-hide="isEmpty()" ng-repeat="group in groupMenuItems">
-            <div class="col-md-2 menu-item well" ng-click="selectThis(menuItem)" ng-repeat="menuItem in group">
+            <div class="col-xs-12 col-sm-6 col-md-3 menu-item well" ng-click="selectThis(menuItem)" ng-repeat="menuItem in group">
                 <div class="caption">
                     <div>【{{menuItem.shopName}}】</div>
                     <div> {{menuItem.name}}</div>

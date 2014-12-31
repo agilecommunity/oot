@@ -15,8 +15,8 @@
             <label class="col-sm-2 control-label">カテゴリ</label>
             <div class="col-sm-10">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default" ng-class="{active: menuItem.category == 'bento'}" ng-click="setCategory('bento')">弁当</button>
-                    <button type="button" class="btn btn-default" ng-class="{active: menuItem.category == 'side'}"  ng-click="setCategory('side')">サイドメニュー</button>
+                    <button type="button" class="btn btn-default category" ng-class="{active: menuItem.category == 'bento'}" ng-click="setCategory('bento')">弁当</button>
+                    <button type="button" class="btn btn-default category" ng-class="{active: menuItem.category == 'side'}"  ng-click="setCategory('side')">サイドメニュー</button>
                 </div>
                 <span class="help-block" id="error.menuItem.category">{{errors.category}}</span>
             </div>
@@ -46,9 +46,9 @@
             <label class="col-sm-2 control-label">ステータス</label>
             <div class="col-sm-10">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default" ng-class="{active: menuItem.status == 'valid'}"     ng-click="setStatus('valid')">有効</button>
-                    <button type="button" class="btn btn-default" ng-class="{active: menuItem.status == 'stopped'}"   ng-click="setStatus('stopped')">停止</button>
-                    <button type="button" class="btn btn-default" ng-class="{active: menuItem.status == 'suspended'}" ng-click="setStatus('suspended')">休眠</button>
+                    <button type="button" class="btn btn-default status" ng-class="{active: menuItem.status == 'valid'}"     ng-click="setStatus('valid')">有効</button>
+                    <button type="button" class="btn btn-default status" ng-class="{active: menuItem.status == 'stopped'}"   ng-click="setStatus('stopped')">停止</button>
+                    <button type="button" class="btn btn-default status" ng-class="{active: menuItem.status == 'suspended'}" ng-click="setStatus('suspended')">休眠</button>
                 </div>
                 <span class="help-block" id="error.menuItem.status">{{errors.status}}</span>
             </div>
@@ -57,7 +57,7 @@
 </div>
 <div class="modal-footer">
     <div class="pull-right">
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
-        <button class="btn btn-primary" ng-click="save()">OK</button>
+        <button class="btn btn-default" id="menuItem.cancel" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" id="menuItem.ok" ng-click="save()">OK</button>
     </div>
 </div>

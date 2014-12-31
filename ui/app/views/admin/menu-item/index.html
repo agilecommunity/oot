@@ -1,7 +1,7 @@
 
 <div class="content">
     <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
-    <div>
+    <div class="content-body">
         <nav class="navbar navbar-default" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-right" style="margin-right:1.5em; margin-bottom:0.5em;">
-                    <button class="btn btn-info" ng-click="addItem()">商品を追加する</button>
+                    <button class="btn btn-info" id="addItem" ng-click="addItem()">商品を追加する</button>
                 </div>
             </div>
             <div class="col-md-12">
