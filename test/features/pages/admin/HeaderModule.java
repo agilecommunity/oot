@@ -19,7 +19,7 @@ public class HeaderModule {
 
     public HeaderModule(WebDriver driver) throws Throwable {
 
-        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.order-management"));
+        SeleniumUtils.waitForVisible(driver, By.cssSelector("nav.admin-header"));
 
         PageFactory.initElements(new DefaultElementLocatorFactory(driver.findElement(By.cssSelector("nav.admin-header"))), this);
         this.driver = driver;
@@ -28,9 +28,17 @@ public class HeaderModule {
     @FindBy(how=How.LINK_TEXT, using="商品データ一覧")
     private WebElement showMenuItemsIndex;
 
-    public features.pages.admin.menuItem.IndexPage 商品一覧画面表示() throws Throwable {
+    @FindBy(how=How.LINK_TEXT, using="メニュー作成")
+    private WebElement showOrderMenuNew;
+
+    public features.pages.admin.menuItem.IndexPage showMenuItemsIndex() throws Throwable {
         this.showMenuItemsIndex.click();
         return new features.pages.admin.menuItem.IndexPage(this.driver);
+    }
+
+    public features.pages.admin.dailyMenu.NewPage showOrderMenuNew() throws Throwable {
+        this.showOrderMenuNew.click();
+        return new features.pages.admin.dailyMenu.NewPage(this.driver);
     }
 
 }

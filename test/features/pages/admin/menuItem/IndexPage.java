@@ -28,7 +28,7 @@ public class IndexPage {
     @FindBy(id="addItem")
     private WebElement addItem;
 
-    public EditPage 商品追加(Map<String, String> params) throws Throwable {
+    public EditPage addProduct(Map<String, String> params) throws Throwable {
         this.addItem.click();
         EditPage editPage = new EditPage(this.driver);
 

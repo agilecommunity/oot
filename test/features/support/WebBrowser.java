@@ -4,7 +4,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverEngine;
+import org.openqa.selenium.ie.InternetExplorerDriverLogLevel;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
+
+import java.io.File;
 
 public class WebBrowser {
 
@@ -18,9 +21,12 @@ public class WebBrowser {
             InternetExplorerDriverService service =
                     new InternetExplorerDriverService.Builder()
                             .withEngineImplementation(InternetExplorerDriverEngine.LEGACY)
-                            .usingAnyFreePort().build();
-            //INSTANCE = new InternetExplorerDriver(service);
-            INSTANCE = new FirefoxDriver();
+                            .usingAnyFreePort()
+                            .withLogLevel(InternetExplorerDriverLogLevel.TRACE)
+                            .withLogFile(new File("logs/iedriver.log"))
+                            .build();
+            INSTANCE = new InternetExplorerDriver(service);
+            //INSTANCE = new FirefoxDriver();
         }
     }
 
