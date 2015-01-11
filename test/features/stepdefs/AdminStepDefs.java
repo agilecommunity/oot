@@ -2,6 +2,7 @@ package features.stepdefs;
 
 import cucumber.api.DataTable;
 import cucumber.api.java.ja.もし;
+import cucumber.api.java.ja.前提;
 import features.pages.admin.HeaderModule;
 import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.dailyMenu.SelectItemPage;
@@ -9,14 +10,40 @@ import features.pages.admin.dailyMenu.SelectShopPage;
 import features.pages.admin.menuItem.EditPage;
 import features.support.SeleniumUtils;
 import features.support.WebBrowser;
+import models.LocalUser;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.openqa.selenium.By;
+import play.libs.Scala;
+import securesocial.core.Registry;
 
 import java.util.List;
 import java.util.Map;
 
 public class AdminStepDefs {
+
+    @前提("^以下のユーザを登録する:$")
+    public void 以下のユーザを登録する(DataTable productParams) throws Throwable {
+        List<Map<String, String>> users = productParams.asMaps(String.class, String.class);
+
+        for (Map<String, String>user : users) {
+            LocalUser newUser = new LocalUser();
+            newUser.email = user.get("メールアドレス");
+            newUser.id = newUser.email;
+            newUser.firstName = user.get("名");
+            newUser.lastName = user.get("姓");
+            newUser.password = Registry.hashers().get("bcrypt").get().hash(user.get("パスワード")).password();
+            newUser.provider = "userpass";
+            newUser.save();
+        }
+
+        for (Map<String, String>user : users) {
+            LocalUser registeredUser = LocalUser.find.byId(user.get("メールアドレス"));
+            if (registeredUser == null) {
+                throw new Exception("ユーザの作成に失敗しました");
+            }
+        }
+    }
 
     @もし("^以下の商品を登録する:$")
     public void 以下の商品を登録する(DataTable productParams) throws Throwable {
