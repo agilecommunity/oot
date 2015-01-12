@@ -2,12 +2,14 @@ package features.support;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerDriverEngine;
 import org.openqa.selenium.ie.InternetExplorerDriverLogLevel;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 
 import java.io.File;
+import java.util.logging.Level;
 
 public class WebBrowser {
 
@@ -15,18 +17,25 @@ public class WebBrowser {
 
     public static void setUp() {
         if (INSTANCE == null) {
-            // なぜかIE11だと上手く動作するので、こちらを利用
-            // FirefoxDriverだとログインに失敗してしまう (セッションIDがCookieに保存されないようだ)
-            System.setProperty("webdriver.ie.driver", "test\\features\\drivers\\IEDriverServer.exe");
-            InternetExplorerDriverService service =
-                    new InternetExplorerDriverService.Builder()
-                            .withEngineImplementation(InternetExplorerDriverEngine.LEGACY)
-                            .usingAnyFreePort()
-                            .withLogLevel(InternetExplorerDriverLogLevel.TRACE)
-                            .withLogFile(new File("logs/iedriver.log"))
-                            .build();
-            INSTANCE = new InternetExplorerDriver(service);
-            //INSTANCE = new FirefoxDriver();
+
+            String driverType = System.getProperty("selenium.driver", "ie");
+
+            if ("firefox".equals(driverType)) {
+                FirefoxProfile profile = new FirefoxProfile();
+                profile.setPreference("webdriver.log.driver", "ALL");
+                profile.setPreference("webdriver.log.file", new File("logs/webdriver-firefox.log").getAbsolutePath());
+                INSTANCE = new FirefoxDriver(profile);
+            } else {
+                System.setProperty("webdriver.ie.driver", "test\\features\\drivers\\IEDriverServer.exe");
+                InternetExplorerDriverService service =
+                        new InternetExplorerDriverService.Builder()
+                                .withEngineImplementation(InternetExplorerDriverEngine.LEGACY)
+                                .usingAnyFreePort()
+                                .withLogLevel(InternetExplorerDriverLogLevel.TRACE)
+                                .withLogFile(new File("logs/webdriver-ie.log"))
+                                .build();
+                INSTANCE = new InternetExplorerDriver(service);
+            }
         }
     }
 

@@ -24,9 +24,14 @@ public class SeleniumUtils {
         wait.until(invisibilityOfElementLocated(locator));
     }
 
+    // findElement().clickでClickができないときの回避策
     public static void click(WebDriver driver, By locator) throws Throwable {
-        // findElement().clickでClickができないときの回避策
         WebElement target = driver.findElement(locator);
+        SeleniumUtils.click(driver, target);
+    }
+
+    // findElement().clickでClickができないときの回避策
+    public static void click(WebDriver driver, WebElement target) throws Throwable {
         JavascriptExecutor js = (JavascriptExecutor)driver;
         js.executeScript("arguments[0].click();", target);
     }
