@@ -6,6 +6,7 @@ import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
 import cucumber.api.java.ja.前提;
 import features.pages.admin.HeaderModule;
+import features.pages.admin.OrderAggregatesPage;
 import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.dailyMenu.SelectItemPage;
 import features.pages.admin.dailyMenu.SelectShopPage;
@@ -108,7 +109,21 @@ public class AdminStepDefs {
         features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
         features.pages.admin.ChecklistPage checklistPage = indexPage.showCheckList(menuDate);
 
-        List<Map<String, String>> checkListActual = checklistPage.getList();
-        checkListExpected.diff(checkListActual);
+        List<Map<String, String>> actual = checklistPage.getList();
+        checkListExpected.diff(actual);
     }
+
+    @ならば("^日付 \"(.*)\" の注文表が以下の内容であること:$")
+    public void 日付_の注文表が以下の内容であること(
+            @Transform(JodaTimeConverter.class)DateTime menuDate,
+            DataTable orderAggregatesExpected
+    ) throws Throwable {
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        OrderAggregatesPage orderAggregatesPage = indexPage.showOrderAggregates(menuDate);
+
+        List<Map<String, String>> actual = orderAggregatesPage.getList();
+        orderAggregatesExpected.diff(actual);
+    }
+
 }

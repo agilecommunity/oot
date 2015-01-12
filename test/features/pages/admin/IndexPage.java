@@ -33,4 +33,13 @@ public class IndexPage {
 
         return new features.pages.admin.ChecklistPage(this.driver);
     }
+
+    public features.pages.admin.OrderAggregatesPage showOrderAggregates(DateTime menuDate) throws Throwable {
+        By buttonLocator = By.id(String.format("show-order-aggreagates-%s", menuDate.toString("yyyyMMdd")));
+        WebElement button = base.findElement(buttonLocator);
+        button.click();
+
+        return new features.pages.admin.OrderAggregatesPage(this.driver);
+    }
+
 }

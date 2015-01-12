@@ -35,23 +35,23 @@ public class ChecklistPage {
 
         By shopNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'shop-name')]");
         By itemNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'item-name')]");
-        By orderStatusRowsLocator = By.xpath("//table[@id='checklist']/tbody/tr");
+        By statusRowsLocator = By.xpath("//table[@id='checklist']/tbody/tr");
 
         List<WebElement> shopNameCells = this.base.findElements(shopNameCellsLocator);
         List<WebElement> itemNameCells = this.base.findElements(itemNameCellsLocator);
-        List<WebElement> orderStatusRows = this.base.findElements(orderStatusRowsLocator);
+        List<WebElement> statusRows = this.base.findElements(statusRowsLocator);
 
-        for (WebElement orderStatusRow : orderStatusRows) {
+        for (WebElement statusRow : statusRows) {
             Map<String, String> checkRow = new HashMap<String, String>();
 
-            checkRow.put("チェック", orderStatusRow.findElement(By.xpath("td[1]")).getText());
-            checkRow.put("氏名", orderStatusRow.findElement(By.xpath("td[2]")).getText());
+            checkRow.put("チェック", statusRow.findElement(By.xpath("td[1]")).getText());
+            checkRow.put("氏名", statusRow.findElement(By.xpath("td[2]")).getText());
 
             for (int index=0; index<shopNameCells.size(); index++) {
                 String shopName = shopNameCells.get(index).getText();
                 String itemName = itemNameCells.get(index).getText();
 
-                checkRow.put(String.format("%s　%s", shopName, itemName), orderStatusRow.findElement(By.xpath(String.format("td[%d]", index + 3))).getText());
+                checkRow.put(String.format("%s　%s", shopName, itemName), statusRow.findElement(By.xpath(String.format("td[%d]", index + 3))).getText());
             }
 
             list.add(checkRow);

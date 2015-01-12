@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content admin-order-aggregates">
     <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
 
     <div class="content-header">注文表 {{orderDate.format('YYYY/MM/DD (ddd)')}}</div>
@@ -8,7 +8,7 @@
     </div>
 
     <div ng-show="orderAggregates != null && orderAggregates.length > 0">
-        <table class="table table-bordered table-condensed checklist" id="checklist">
+        <table class="table table-bordered table-condensed order-aggregates" id="order-aggregates">
             <thead>
             <tr>
                 <th class="code">コード</th>
