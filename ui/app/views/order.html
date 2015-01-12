@@ -1,4 +1,4 @@
-    <div class="content">
+    <div class="content order">
         <div class="message">
             <ul>
                 <li><span style="color:red;font-size:1.5em;">商品をクリックするだけで、すぐに注文登録</span>します。「確定」ボタンは必要ありません。</li>
@@ -12,7 +12,7 @@
                 <div class="small-total">当日合計: <span class="price">{{totalPriceOfTheDay(dailyMenu.menuDate)}}円</span></div>
                 <div class="clear"></div>
             </div>
-            <div class="choose-list page1">
+            <div class="choose-list">
                 <div ng-show="dailyMenu.detailItems.length == 0" >
                     <p class="no-data">選択できるお弁当がありません。</p>
                 </div>

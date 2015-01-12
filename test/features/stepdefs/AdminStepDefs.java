@@ -34,6 +34,7 @@ public class AdminStepDefs {
             newUser.lastName = user.get("姓");
             newUser.password = Registry.hashers().get("bcrypt").get().hash(user.get("パスワード")).password();
             newUser.provider = "userpass";
+            newUser.isAdmin = "管理者".equals(user.get("ロール"));
             newUser.save();
         }
 
@@ -74,7 +75,7 @@ public class AdminStepDefs {
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         NewPage newPage = headerModule.showOrderMenuNew();
 
-        DateTime menuDate = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(menuParams.get("日時"));
+        DateTime menuDate = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(menuParams.get("日付"));
         newPage.setWeek(menuDate);
         newPage.setDate(menuDate);
         newPage.setStatus(menuParams.get("ステータス"));
