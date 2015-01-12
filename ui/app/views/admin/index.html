@@ -1,8 +1,8 @@
-    <div class="content">
+    <div class="content admin-index">
         <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
 
         <div class="order-management">
-            <div class="day" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:menuDate">
+            <div class="day" id="day-{{dailyMenu.menuDate|localdate:'YYYYMMDD'}}" ng-repeat="dailyMenu in dailyMenus | orderBy:menuDate">
                 <h3>{{dailyMenu.menuDate.format('YYYY/MM/DD (ddd)')}}</h3>
                  <table class="table table-bordered order-summary">
                      <thead>
@@ -37,8 +37,8 @@
                     <li><button class="btn btn-success button" disabled>表示編集</button></li>
                     <li><button class="btn btn-success button" disabled>注文締切</button></li>
                     <li><button class="btn btn-success button" disabled>確認表</button></li>
-                    <li><button class="btn btn-success button" ng-click="showOrderAggregates(dailyMenu);">注文表</button></li>
-                    <li><button class="btn btn-success button" ng-click="showChecklist(dailyMenu);">チェック表</button></li>
+                    <li><button class="btn btn-success button" id="show-order-aggreagate-{{dailyMenu.menuDate|localdate:'YYYYMMDD'}}" ng-click="showOrderAggregates(dailyMenu);">注文表</button></li>
+                    <li><button class="btn btn-success button" id="show-checklist-{{dailyMenu.menuDate|localdate:'YYYYMMDD'}}" ng-click="showChecklist(dailyMenu);">チェック表</button></li>
                     <li><button class="btn btn-success button" disabled>削除</button></li>
                 </ul>
             <div class="clear"></div>

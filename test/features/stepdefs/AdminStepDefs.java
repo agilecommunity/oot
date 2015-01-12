@@ -1,6 +1,8 @@
 package features.stepdefs;
 
 import cucumber.api.DataTable;
+import cucumber.api.Transform;
+import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
 import cucumber.api.java.ja.前提;
 import features.pages.admin.HeaderModule;
@@ -8,6 +10,7 @@ import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.dailyMenu.SelectItemPage;
 import features.pages.admin.dailyMenu.SelectShopPage;
 import features.pages.admin.menuItem.EditPage;
+import features.support.JodaTimeConverter;
 import features.support.SeleniumUtils;
 import features.support.WebBrowser;
 import models.LocalUser;
@@ -17,6 +20,7 @@ import org.openqa.selenium.By;
 import play.libs.Scala;
 import securesocial.core.Registry;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Map;
 
@@ -93,5 +97,18 @@ public class AdminStepDefs {
 
             itemIndex += 1;
         } while (true);
+    }
+
+    @ならば("^日付 \"(.*)\" のチェック表が以下の内容であること:$")
+    public void 日付_のチェック表が以下の内容であること(
+            @Transform(JodaTimeConverter.class)DateTime menuDate,
+            DataTable checkListExpected
+    ) throws Throwable {
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        features.pages.admin.ChecklistPage checklistPage = indexPage.showCheckList(menuDate);
+
+        List<Map<String, String>> checkListActual = checklistPage.getList();
+        checkListExpected.diff(checkListActual);
     }
 }

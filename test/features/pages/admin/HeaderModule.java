@@ -25,11 +25,19 @@ public class HeaderModule {
         this.driver = driver;
     }
 
+    @FindBy(how=How.LINK_TEXT, using="メニュー一覧")
+    private WebElement showAdminIndex;
+
     @FindBy(how=How.LINK_TEXT, using="商品データ一覧")
     private WebElement showMenuItemsIndex;
 
     @FindBy(how=How.LINK_TEXT, using="メニュー作成")
     private WebElement showOrderMenuNew;
+
+    public features.pages.admin.IndexPage showAdminIndex() throws Throwable {
+        this.showAdminIndex.click();
+        return new features.pages.admin.IndexPage(this.driver);
+    }
 
     public features.pages.admin.menuItem.IndexPage showMenuItemsIndex() throws Throwable {
         this.showMenuItemsIndex.click();
