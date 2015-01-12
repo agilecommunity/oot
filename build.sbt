@@ -64,8 +64,9 @@ cucumberTask := {
   val jvmOptions = Seq(cucumberOpts, "-Dlogger.resource=logger-test-features.xml") :+ driverOptions :+ baseUrlOptions
   logger.info("jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
-  val classPassArgs = (fullClasspath in Test).value.map(_.data).mkString(";")
-  val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPassArgs, "org.junit.runner.JUnitCore", cucumberRunner))
+  val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(";")
+  logger.info("classPath: " + classPathArgs)
+  val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner))
   forkResult match {
     case 0 => 0
     case _ => sys.error("run cucumber failed") // cucumberが失敗したらタスクも失敗するように(結構強引)
