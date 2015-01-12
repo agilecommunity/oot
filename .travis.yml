@@ -3,9 +3,6 @@ env:
   global:
     - PLAY_VERSION=2.2.2
     - APP_VERSION=1.0-SNAPSHOT
-before_install:
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
 before_script:
 - cd ..
 - wget http://downloads.typesafe.com/play/${PLAY_VERSION}/play-${PLAY_VERSION}.zip
@@ -19,7 +16,6 @@ before_script:
 - cd ../
 script:
 - ../play-${PLAY_VERSION}/play test
-- ../play-${PLAY_VERSION}/play -Dselenium.driver=firefox cucumber
 notifications:
   slack: agilecom:dyFpi9UUyhS10BazKyNsSf13
 sudo: false

@@ -65,7 +65,6 @@ cucumberTask := {
   logger.info("jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
   val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(";")
-  logger.info("classPath: " + classPathArgs)
   val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner))
   forkResult match {
     case 0 => 0
