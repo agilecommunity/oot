@@ -50,12 +50,12 @@ cucumberTask := {
   logger.info("Running Cucumber tests.")
   logger.info("- os.name: " + System.getProperty("os.name").toLowerCase())
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
-  val cucumberTagsOpt = args.isEmpty match {
-    case false => args.map("--tags " + _).mkString(" ")
-    case true => ""
+  val cucumberDefaultOpts = "--format pretty"
+  val cucumberOpts = args.isEmpty match {
+    case false => "-Dcucumber.options=\"" + cucumberDefaultOpts + " " + args.map("--tags " + _).mkString(" ") + "\""
+    case true => "-Dcucumber.options=\"" + cucumberDefaultOpts + "\""
   }
-  val cucumberOpts = "-Dcucumber.options=\"" + Seq("--format pretty", cucumberTagsOpt).mkString(" ") + "\""
-  logger.info("Cucumber.Options: "  + cucumberOpts)
+  logger.info("- cucumber.options: "  + cucumberOpts)
   val seleniumDriverOptions = System.getProperty("selenium.driver") match {
     case s:String => "-Dselenium.driver=" + s
     case _ => ""
@@ -66,11 +66,12 @@ cucumberTask := {
   }
   val appOptions = Seq("-Dlogger.resource=logger-test-features.xml", "-Dconfig.file=conf/unit-test.conf")
   val jvmOptions = appOptions :+ cucumberOpts :+ seleniumDriverOptions :+ seleniumBaseUrlOptions
-  logger.info("jvmOptions: "  + jvmOptions)
+  logger.info("- jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
   val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(File.pathSeparator)
   //val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner))
-  val forkResult = Process("java " + jvmOptions.mkString(" ") + Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner).mkString(" ")) ! logger
+  val commandStr = "java " + jvmOptions.mkString(" ") + Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner).mkString(" ")
+  val forkResult = Process(commandStr) ! logger
   forkResult match {
     case 0 => 0
     case _ => sys.error("run cucumber failed") // cucumberが失敗したらタスクも失敗するように(結構強引)
