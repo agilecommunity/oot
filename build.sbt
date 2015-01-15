@@ -45,14 +45,10 @@ Keys.fork in Test := true
 lazy val cucumberTask = InputKey[Int]("cucumber", "Run Cucumber tests.")
 
 cucumberTask := {
+  import java.io.File
   val logger = streams.value.log
   logger.info("Running Cucumber tests.")
-  val osName = System.getProperty("os.name").toLowerCase()
-  logger.info("os.name: " + osName)
-  val classPathSeparator = osName match {
-    case u if u.startsWith("windows") => ";"
-    case _ => ":"
-  }
+  logger.info("- os.name: " + System.getProperty("os.name").toLowerCase())
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
   val cucumberOpts = args.isEmpty match {
     case false => "-Dcucumber.options=" + args.map("--tags " + _).mkString(" ")
@@ -70,9 +66,9 @@ cucumberTask := {
   val jvmOptions = Seq(cucumberOpts, "-Dlogger.resource=logger-test-features.xml") :+ driverOptions :+ baseUrlOptions
   logger.info("jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
-  val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(classPathSeparator)
-  logger.info("classPath: " + classPathArgs)
-  val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner))
+  val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(File.pathSeparator)
+  //val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner))
+  val forkResult = Process("java " + jvmOptions.mkString(" ") + Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner).mkString(" ")) ! logger
   forkResult match {
     case 0 => 0
     case _ => sys.error("run cucumber failed") // cucumberが失敗したらタスクも失敗するように(結構強引)
