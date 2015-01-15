@@ -11,6 +11,7 @@ import features.support.WebBrowser;
 @CucumberOptions(
       glue = {"features.stepdefs", "features.support"}
     , features = {"test/features/scenarios"}
+    , format = {"pretty"}
 )
 public class RunCucumber {
 
