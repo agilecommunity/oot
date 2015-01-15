@@ -42,11 +42,17 @@ javaOptions in Test += "-Dconfig.file=conf/unit-test.conf"
 Keys.fork in Test := true
 
 // cucumberタスクの定義
-lazy val cucumberTask = InputKey[Unit]("cucumber", "Run Cucumber tests.")
+lazy val cucumberTask = InputKey[Int]("cucumber", "Run Cucumber tests.")
 
 cucumberTask := {
   val logger = streams.value.log
   logger.info("Running Cucumber tests.")
+  val osName = System.getProperty("os.name").toLowerCase()
+  logger.info("os.name: " + osName)
+  val classPathSeparator = osName match {
+    case u if u.startsWith("windows") => ";"
+    case _ => ":"
+  }
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
   val cucumberOpts = args.isEmpty match {
     case false => "-Dcucumber.options=" + args.map("--tags " + _).mkString(" ")
@@ -64,7 +70,7 @@ cucumberTask := {
   val jvmOptions = Seq(cucumberOpts, "-Dlogger.resource=logger-test-features.xml") :+ driverOptions :+ baseUrlOptions
   logger.info("jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
-  val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(";")
+  val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(classPathSeparator)
   val forkResult: Int = Fork.java(ForkOptions(runJVMOptions=jvmOptions), Seq("-cp", classPathArgs, "org.junit.runner.JUnitCore", cucumberRunner))
   forkResult match {
     case 0 => 0
