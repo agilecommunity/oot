@@ -50,20 +50,22 @@ cucumberTask := {
   logger.info("Running Cucumber tests.")
   logger.info("- os.name: " + System.getProperty("os.name").toLowerCase())
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
-  val cucumberOpts = args.isEmpty match {
-    case false => "-Dcucumber.options=" + args.map("--tags " + _).mkString(" ")
+  val cucumberTagsOpt = args.isEmpty match {
+    case false => args.map("--tags " + _).mkString(" ")
     case true => ""
   }
+  val cucumberOpts = "-Dcucumber.options=\"" + Seq("--format pretty", cucumberTagsOpt).mkString(" ") + "\""
   logger.info("Cucumber.Options: "  + cucumberOpts)
-  val driverOptions = System.getProperty("selenium.driver") match {
+  val seleniumDriverOptions = System.getProperty("selenium.driver") match {
     case s:String => "-Dselenium.driver=" + s
     case _ => ""
   }
-  val baseUrlOptions = System.getProperty("selenium.baseUrl") match {
+  val seleniumBaseUrlOptions = System.getProperty("selenium.baseUrl") match {
     case s:String => "-Dselenium.baseUrl=" + s
     case _ => ""
   }
-  val jvmOptions = Seq(cucumberOpts, "-Dlogger.resource=logger-test-features.xml", "-Dconfig.file=conf/unit-test.conf") :+ driverOptions :+ baseUrlOptions
+  val appOptions = Seq("-Dlogger.resource=logger-test-features.xml", "-Dconfig.file=conf/unit-test.conf")
+  val jvmOptions = appOptions :+ cucumberOpts :+ seleniumDriverOptions :+ seleniumBaseUrlOptions
   logger.info("jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
   val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(File.pathSeparator)
