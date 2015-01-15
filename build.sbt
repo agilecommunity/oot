@@ -63,7 +63,7 @@ cucumberTask := {
     case s:String => "-Dselenium.baseUrl=" + s
     case _ => ""
   }
-  val jvmOptions = Seq(cucumberOpts, "-Dlogger.resource=logger-test-features.xml") :+ driverOptions :+ baseUrlOptions
+  val jvmOptions = Seq(cucumberOpts, "-Dlogger.resource=logger-test-features.xml", "-Dconfig.file=conf/unit-test.conf") :+ driverOptions :+ baseUrlOptions
   logger.info("jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"
   val classPathArgs = (fullClasspath in Test).value.map(_.data).mkString(File.pathSeparator)
