@@ -52,8 +52,8 @@ cucumberTask := {
   val args: Seq[String] = Def.spaceDelimited("<arg>").parsed
   val cucumberDefaultOpts = "--format pretty"
   val cucumberOpts = args.isEmpty match {
-    case false => "-Dcucumber.options=\"" + cucumberDefaultOpts + " " + args.map("--tags " + _).mkString(" ") + "\""
-    case true => "-Dcucumber.options=\"" + cucumberDefaultOpts + "\""
+    case false => "\"-Dcucumber.options=" + cucumberDefaultOpts + " " + args.map("--tags " + _).mkString(" ") + "\""
+    case true => "\"-Dcucumber.options=" + cucumberDefaultOpts + "\""
   }
   logger.info("- cucumber.options: "  + cucumberOpts)
   val seleniumDriverOptions = System.getProperty("selenium.driver") match {
