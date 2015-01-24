@@ -1,0 +1,41 @@
+    <div class="content order">
+        <div class="message">
+            <ul>
+                <li><span style="color:red;font-size:1.5em;">商品をクリックするだけで、すぐに注文登録</span>します。「確定」ボタンは必要ありません。</li>
+                <li>終了は、そのままウインドウを閉じるだけです。</li>
+                <li>キャンセルは、もう１回商品をクリックしてください。</li>
+            </ul>
+        </div>
+        <div class="day" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:menuDate">
+            <div class="day-header">
+                <div class="date">{{dailyMenu.menuDate.format('YYYY/MM/DD (ddd)')}}</div>
+                <div class="small-total">当日合計: <span class="price">{{totalPriceOfTheDay(dailyMenu.menuDate)}}円</span></div>
+                <div class="clear"></div>
+            </div>
+            <div class="choose-list">
+                <div ng-show="dailyMenu.detailItems.length == 0" >
+                    <p class="no-data">選択できるお弁当がありません。</p>
+                </div>
+                <div ng-show="dailyMenu.detailItems.length > 0" >
+                    <div class="menu menu-item" ng-class="{'ordered':dailyMenuItem.ordered}" ng-repeat="dailyMenuItem in dailyMenu.detailItems | orderBy:['menuItem.shopName', 'menuItem.name']">
+                        <div ng-click="order(dailyMenu, dailyMenuItem);">
+                            <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
+                            <div class="food-name">{{dailyMenuItem.menuItem.name}}</div>
+                            <div style="position:relative;">
+                                <a href="" class="thumbnail food-image" ng-bind-html="renderImage(dailyMenuItem)"></a>
+                                <div class="ordered-mark"></div>
+                            </div>
+                            <div class="comment label label-success" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
+                        </div>
+                        <div class="num-orders" ng-show="dailyMenuItem.ordered">
+                            <span type="button" class="btn btn-primary" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">数変更</span>
+                            <span class="badge badge-primary" ng-click="editNumOrders(dailyMenu, dailyMenuItem)">{{numOrders(dailyMenu, dailyMenuItem)}}</span>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>

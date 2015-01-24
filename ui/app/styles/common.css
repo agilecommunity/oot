@@ -1,0 +1,400 @@
+
+/*
+    http://www.irasutoya.com/
+ */
+
+*{
+    font-family: Meiryo;
+}
+body{
+    margin: 0px;
+    border: none;
+}
+
+th.count,
+th.price,
+td.count,
+td.price {
+    text-align: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.message {
+    margin: 1em;
+}
+
+.divider {
+    padding: 0.2em 1em;
+    margin: 0.5em -0.5em;
+    font-size: 1.5em;
+    background-color: #dcf0c1;
+}
+
+.no-data {
+    margin: 1.5em;
+    padding: 1.0em;
+    font-size: larger;
+    color:#b94a48;
+    background-color:#f2dede;
+    border-color:#eed3d7;
+
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+}
+
+.page-header{
+    border-top: solid 5px #92D13D;
+    background-image: url('/assets/images/common/syoukadou_obentou.png');
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: contain;
+}
+
+.page-header h1{
+    margin-left: 90px;
+    vertical-align: middle;
+    float: left;
+}
+
+.page-header .right-ctrl {
+    margin: 0.5em;
+    float: right;
+}
+.page-header .right-ctrl > div{
+    float: left;
+}
+.page-header .right-ctrl .user-name{
+    margin-right: 1.5em;
+    line-height: 33px;
+}
+.page-header .right-ctrl .logout{
+    background-color: #92D13D;
+
+    background: -moz-linear-gradient(top, #92D13D, #70af1b);
+    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+    font-size: 0.8em;
+    color: white;
+    padding: 0.5em 1em;
+    width: 80px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.content-header {
+    background-color: #92D13D;
+
+    background: -moz-linear-gradient(top, #92D13D, #70af1b);
+    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+    color: white;
+    padding: 0.5em 1em;
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+
+.content .day .day-header {
+    background-color: #92D13D;
+
+    background: -moz-linear-gradient(top, #92D13D, #70af1b);
+    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+    color: white;
+    padding: 0.5em 1em;
+    font-size: 2em;
+}
+
+.content .day .day-header .date{
+    float: left;
+}
+.content .day .day-header .small-total{
+    float: right;
+}
+
+.choose-list{
+    margin-bottom: 4em;
+}
+.choose-list .menu{
+    margin: 0.5em;
+    padding: 0.5em;
+    border: solid 4px #DDDDDD;
+    border-radius: 10px;
+    width: 295px;
+    cursor: pointer;
+
+    /* 以下、高さの異なるdivがあっても上手く廻り込みをさせるためのおまじない */
+    display: -moz-inline-box; /*for Firefox 2*/
+    display: inline-block; /*for modern*/
+    /display: inline; /*for ie5～7*/
+    /zoom: 1; /*for ie5～7*/
+    vertical-align: top;
+
+}
+.choose-list .menu.ordered{
+    border-color: #F3BFD6;
+}
+
+.page-footer {
+    background-color: #454545;
+}
+.page-footer {
+    background-color: #343434;
+    color: white;
+    margin-top: 2em;
+    padding: 1em;
+    text-align: center;
+}
+.page-footer > div{
+    margin: 0.5em;
+}
+
+.food-name {
+    background-color: #dcf0c1;
+    margin: auto -0.6em;
+    font-size: 1.3em;
+    padding: 0.4em;
+}
+
+.food-image {
+    text-align: center;
+    margin: 0.5em 0em;
+    position: relative;
+    border: none;
+}
+.food-image .pop-rt{
+    position: absolute;
+    right: -30px;
+    top: -30px;
+}
+.food-image .pop-lt{
+    position: absolute;
+    left: -30px;
+    top: -30px;
+}
+
+
+
+.food-price{
+    font-size: 1.5em;
+    text-align: right;
+}
+
+.button {
+    background-color: #92D13D;
+
+    background: -moz-linear-gradient(top, #92D13D, #70af1b);
+    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
+
+
+    color: white;
+    padding: 0.5em 1em;
+    width: 160px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.other-page {
+    margin: 1em;
+}
+.other-page .button{
+    float: left;
+
+}
+.other-page .other-info {
+    padding: 0.5em 1em;
+    float: left;
+}
+
+.user-info {
+    position: absolute;
+    top: 50px;
+    right: 1em;
+}
+
+.login-form {
+    margin: 1em;
+    text-align: center;
+}
+
+/*
+   172   bde38a
+   204   dcf0c1
+*/
+
+
+
+.order-management .title {
+    margin: 0.5em;
+    font-size: 1.5em;
+}
+.order-management .day {
+    margin: 0.5em;
+}
+
+.order-management .order-summary {
+    width: 350px;
+    margin-left:10px;
+    float: left;
+}
+.order-management .order-summary th,
+.order-management .order-summary td {
+    padding: 0.5em;
+}
+
+.order-management .commands {
+    float: left;
+    margin-left:10px;
+    padding-left:0px;
+    width: 570px;
+}
+.order-management .commands li {
+    float: left;
+    margin: 0.5em;
+    width: 160px;
+    list-style-type: none;
+}
+
+.checklist {
+    border-collapse: collapse;
+    width: 90%;
+}
+.checklist .shop-name {
+    border-bottom: none;
+}
+.checklist .item-name {
+    border-top: none;
+    border-bottom: none;
+}
+.checklist .price {
+    border-top: none;
+}
+.checklist .order-status {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 130%;
+}
+
+/* AngularJS用 */
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+
+/*
+ * Bootstrap打消し用
+ */
+.page-header{
+    margin-top: 0px;
+}
+
+
+/*
+ * 暫定「注文中」アイコン
+ */
+.ordered{
+    position: relative;
+}
+
+.ordered-mark{
+    display: none;
+
+    width: 276px;
+    height: 155px;
+
+    position: absolute;
+    left: 0px;
+    top: -5px;
+    background-image: url('/assets/images/ordered.png');
+    background-repeat: no-repeat;
+    background-position: left top;
+
+    z-index: 10;
+}
+
+.ordered .ordered-mark{
+    display: block;
+}
+
+.ordered .food-name {
+    background-color: #F3BFD6;
+}
+
+.ordered .comment {
+    background-color: #F3BFD6;
+    color: firebrick;
+}
+
+.ordered .comment:after {
+    border-bottom-color:#F3BFD6 !important;
+}
+
+/* メニュー作成 */
+.menu.selected {
+    background-color: #dddddd;
+}
+
+
+/* メニュー表示 */
+div.menu-item {
+    position: relative;
+}
+
+div.menu-item div.comment {
+    display:inline-block;
+    margin: 0 5px 0 20%;
+    padding-top:5px;
+    padding-bottom:5px;
+    font-size: 1.2em;
+    position:relative;
+    white-space: normal;
+    text-align: left;
+}
+
+div.menu-item div.comment:after    {
+    content: ' ';
+    width:0;
+    height: 0;
+    position:absolute;
+    border:10px solid transparent;
+    border-bottom-color:#5cb85c;
+    bottom:100%;
+    left:35%;
+}
+
+div.menu-item .num-orders {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
+div.menu-item .num-orders .btn {
+    font-size: 80%;
+    padding: 3px 7px;
+    vertical-align: top;
+}
+
+div.menu-item .num-orders .badge {
+    font-size: 150%;
+    vertical-align: top;
+}
+
+/* Bootstrap補助 */
+ul.nav-pills li.divider {
+    margin: 2px 9px;
+    height: 1.5em;
+    padding: 1.5px;
+    background-color: #e5e5e5;
+}
+
+.badge-primary {
+    background-color: #428bca;
+    border-color: #357ebd;
+    color: #fff;
+}

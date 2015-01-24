@@ -1,0 +1,24 @@
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 1
+    menuItem:  !!models.MenuItem
+                  id: 1
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 1
+    menuItem:  !!models.MenuItem
+                  id: 2
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 1
+    menuItem:  !!models.MenuItem
+                  id: 3
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 2
+    menuItem:  !!models.MenuItem
+                  id: 1
+

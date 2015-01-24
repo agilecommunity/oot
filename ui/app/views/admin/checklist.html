@@ -1,0 +1,34 @@
+    <div class="content admin-checklist">
+        <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+
+        <div class="content-header">チェック表 {{menuDate.format('YYYY/MM/DD (ddd)')}}</div>
+
+        <div ng-show="menuOrOrderIsEmpty()">
+            <p class="no-data">メニューまたは注文がありません。</p>
+        </div>
+
+        <div ng-show="!menuOrOrderIsEmpty()">
+            <table class="table table-bordered table-condensed checklist" id="checklist">
+                <thead>
+                    <tr>
+                        <th class="check-status" rowspan=3>チェック</th>
+                        <th class="user-name" rowspan=3>氏名</th>
+                        <th class="shop-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.shopName}}</th>
+                    </tr>
+                    <tr>
+                        <th class="item-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.name}}</th>
+                    </tr>
+                    <tr>
+                        <th class="price" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.priceOnOrder}}円</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="checkitem in checklist">
+                        <td></td>
+                        <td class="user-name">{{checkitem.userName}}</td>
+                        <td class="order-status" ng-repeat="item in dailyMenu.detailItems">{{renderNumOrders(checkitem.orderStatuses[item.menuItem.id].numOrders)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+         </div>
+    </div>

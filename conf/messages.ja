@@ -1,0 +1,30 @@
+# デフォルトメッセージ
+# Play framework | イトウ アスカ Blog http://osd.jp/itoasuka/category/play-framework より
+
+# --- Constraints
+constraint.required=必須
+constraint.min=最小値: {0}
+constraint.max=最大値: {0}
+constraint.minLength=最小長さ: {0}
+constraint.maxLength=最大長さ: {0}
+constraint.email=Email
+
+# --- Formats
+format.date=日付 (''{0}'')
+format.numeric=数値
+
+# --- Errors
+error.invalid=不正な値
+error.required=この欄は必須です
+error.number=数値でなければなりません
+error.min={0} 以上でなければなりません
+error.max={0} 以下でなければなりません
+error.minLength=最小長さは {0} です
+error.maxLength=最大長さは {0} です
+error.email=正しいEmailアドレスでなければなりません
+error.pattern={0} の形式でなければなりません
+
+# SecureSocial
+
+securesocial.signup.invalidLink=無効なリンクです。メールの内容をもう一度確認してください
+securesocial.signup.passwordsDoNotMatch=パスワードが一致しません

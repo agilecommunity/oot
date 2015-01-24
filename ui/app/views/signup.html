@@ -1,0 +1,45 @@
+<div class="content">
+    <div class="content-header">サインアップ</div>
+    <div class="login-form">
+        <form class="form-horizontal">
+            <div class="form-group" ng-class="getErrorClass('email')">
+                <label for="email" class="col-sm-2 control-label">メールアドレス</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="email" id="email">
+                    <span class="help-block bg-danger" id="error-email" ng-show="hasFormError('email')">{{formErrors.email}}</span>
+                </div>
+            </div>
+            <div class="form-group" ng-class="getErrorClass('lastName')">
+                <label for="lastName" class="col-sm-2 control-label">姓</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="lastName" id="lastName">
+                    <span class="help-block bg-danger" id="error-lastName" ng-show="hasFormError('lastName')">{{formErrors.lastName}}</span>
+                </div>
+            </div>
+            <div class="form-group" ng-class="getErrorClass('firstName')">
+                <label for="firstName" class="col-sm-2 control-label">名</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="firstName" id="firstName">
+                    <span class="help-block bg-danger" id="error-firstName" ng-show="hasFormError('firstName')">{{formErrors.firstName}}</span>
+                </div>
+            </div>
+            <div class="form-group" ng-class="getErrorClass('passWord1')">
+                <label for="passWord1" class="col-sm-2 control-label">パスワード</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" ng-model="passWord1" id="passWord1">
+                    <span class="help-block bg-danger" id="error-passWord1" ng-show="hasFormError('passWord1')">{{formErrors.passWord1}}</span>
+                </div>
+            </div>
+            <div class="form-group" ng-class="getErrorClass('passWord2')">
+                <label for="passWord2" class="col-sm-2 control-label">パスワード(確認)</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" ng-model="passWord2" id="passWord2">
+                    <span class="help-block bg-danger" id="error-passWord2" ng-show="hasFormError('passWord2')">{{formErrors.passWord2}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success button" id="signup" ng-click="signup();">サインアップ</button>
+            </div>
+        </form>
+    </div>
+</div>

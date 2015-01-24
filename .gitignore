@@ -12,3 +12,13 @@ tmp
 .project
 RUNNING_PID
 .settings
+*.db
+README.html
+*/**/bower_components
+*/**/node_modules
+public/javascripts/*
+public/stylesheets/*
+public/fonts/*
+public/images/menu-items/*
+conf/application.smtp.conf
+uc-assets

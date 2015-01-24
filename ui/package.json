@@ -1,0 +1,21 @@
+{
+  "name": "oot-webapp-ui",
+  "version": "0.0.1",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-watch": "^0.5.0",
+    "less": "^1.7.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-jsdoc": "^0.5.4",
+    "grunt-notify": "^0.3.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  }
+}

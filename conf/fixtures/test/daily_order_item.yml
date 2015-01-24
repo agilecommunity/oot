@@ -1,0 +1,27 @@
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 1
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 2
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  2
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 2
+    menuItem:   !!models.MenuItem
+                  id: 3
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 3
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  3

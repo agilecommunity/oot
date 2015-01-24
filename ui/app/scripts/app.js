@@ -1,0 +1,27 @@
+(function(window) {
+    "use strict";
+
+    moment.lang('ja');
+
+    angular.module('MyServices', ['ngResource', 'ngRoute']);
+    angular.module('MyControllers', []);
+    angular.module('MyFilters', []);
+
+    window.app = angular.module('oot',
+        [  // アプリケーションの定義
+            'ngRoute',            // 依存するサービスを指定する
+            'ngResource',
+            'ngSanitize',
+            'ui.bootstrap',
+            'angularSpinner',
+            'MyServices',
+            'MyControllers',
+            'MyFilters'
+        ]
+    );
+
+    window.app.my = {};
+    window.app.my.resolvers = {};
+    window.app.my.helpers = {};
+
+})(window);

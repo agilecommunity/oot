@@ -1,0 +1,56 @@
+package models;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import play.data.validation.Constraints;
+import play.db.ebean.Model;
+
+@Entity
+public class MenuItem extends Model {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long id;
+
+    @Constraints.Required
+    @Constraints.MaxLength(10)
+    public String category;
+
+    @Constraints.Required
+    @Constraints.MaxLength(255)
+    public String shopName;
+
+    @Constraints.Required
+    @Constraints.MaxLength(255)
+    public String name;
+
+    @Constraints.Required
+    public BigDecimal priceOnOrder;
+
+    @Constraints.Required
+    @Constraints.MaxLength(20)
+    public String status;
+
+
+    @Constraints.MaxLength(255)
+    public String comment;
+
+    @Constraints.MaxLength(255)
+    public String code;
+
+    public String itemImagePath;
+
+    /**
+     * Generic query helper for entity Lunch with id Long
+     */
+    public static Finder<Long,MenuItem> find = new Finder<Long,MenuItem>(Long.class, MenuItem.class);
+
+}
+

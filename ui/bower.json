@@ -1,0 +1,28 @@
+{
+  "name": "oot-webapp-ui",
+  "version": "0.0.1",
+  "homepage": "https://github.com/nobiinu-and/oot",
+  "private": true,
+  "dependencies": {
+    "requirejs": "~2.1.11",
+    "jquery": "1.9.0",
+    "angular": "1.2.14",
+    "angular-route": "1.2.14",
+    "angular-resource": "1.2.14",
+    "angular-sanitize": "1.2.14",
+    "moment": "2.5.1",
+    "bootstrap": "3.1.1",
+    "eonasdan-bootstrap-datetimepicker": "3.0.0",
+    "es5-shim": "~2.3.0",
+    "json2": "*",
+    "html5shiv": "~3.7.0",
+    "respond": "~1.4.2",
+    "holderjs": "~2.3.2",
+    "underscore": "~1.6.0",
+    "bootbox": "~4.3.0",
+    "jquery-file-upload": "~9.8.0",
+    "angular-bootstrap": "~0.11.2",
+    "angular-spinner": "~0.5.1",
+    "blockui": "*"
+  }
+}

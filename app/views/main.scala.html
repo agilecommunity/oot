@@ -1,0 +1,59 @@
+@()
+<!DOCTYPE html>
+<html  xmlns:ng="http://angularjs.org" id="ng-app">
+    <head>
+        <meta charset="utf-8">
+        <title>美味しいお弁当が食べたい！</title>
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap-datetimepicker.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload-ui.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/common.css")">
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/ie-shim.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/html5shiv.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/respond.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/helpers/console.js")"></script>
+    </head>
+    <body>
+        <div class="page-header clearfix">
+            <h1>美味しいお弁当を食べたい！</h1>
+        </div>
+        <div ng-view ng-cloak></div>
+        <div class="page-footer">
+            <div class="copyright">サイト開発者 : NES アジャイルコミュニティ</div>
+            <div class="powered-by">使用 F/W :  Play Framework 2.0</div>
+        </div>
+        <div class="user-info" ng-cloak>
+        {{$root.currentUser.lastName}} {{$root.currentUser.firstName}}
+        </div>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.ui.widget.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.iframe-transport.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.fileupload.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular-resource.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular-route.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular-sanitize.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/ui-bootstrap.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/ui-bootstrap-tpls.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/spin.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/angular-spinner.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/moment-with-langs.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/bootstrap-datetimepicker.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/holder.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/html5shiv.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/respond.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/underscore.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/bootbox.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.blockUI.js")"></script>
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/app.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/constants/constants.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/routers/routers.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/services/services.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/filters/filters.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/controllers/controllers.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/main.js")"></script>
+    </body>
+</html>
