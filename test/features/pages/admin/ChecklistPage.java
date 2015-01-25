@@ -34,7 +34,7 @@ public class ChecklistPage {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
         By shopNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'shop-name')]");
-        By itemNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'item-name')]");
+        By itemNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'food-name')]");
         By statusRowsLocator = By.xpath("//table[@id='checklist']/tbody/tr");
 
         List<WebElement> shopNameCells = this.base.findElements(shopNameCellsLocator);

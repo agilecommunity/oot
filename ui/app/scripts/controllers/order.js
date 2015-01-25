@@ -125,6 +125,15 @@ angular.module('MyControllers')
         return 0;
     };
 
+    $scope.getDetailItems = function(dailyMenu, category) {
+        var items = $filter('filter')(dailyMenu.detailItems, {menuItem: {category: category}});
+        return items;
+    };
+
+    $scope.hasDetailItems = function(dailyMenu, category) {
+        return $scope.getDetailItems(dailyMenu, category).length > 0;
+    };
+
     // メニューに注文状況を反映する
     var applyOrdered = function () {
         if ($scope.dailyMenus === undefined || $scope.dailyOrders === undefined) {

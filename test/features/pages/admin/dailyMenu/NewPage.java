@@ -97,7 +97,7 @@ public class NewPage {
 
     public NewPage(WebDriver driver) throws Throwable {
 
-        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.selected-bento"));
+        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.category-row"));
         PageFactory.initElements(driver, this);
         this.driver = driver;
     }
@@ -140,9 +140,16 @@ public class NewPage {
         logger.warn("#setStatus can't find status: {}", value);
     }
 
-    public void addItem(String shopName, String itemName) throws Throwable {
+    /**
+     * 商品を追加する
+     * @param shopName
+     * @param itemName
+     * @param priceOnOrder  価格 単位を含めること (ex. "100円")
+     * @throws Throwable
+     */
+    public void addItem(String shopName, String itemName, String priceOnOrder) throws Throwable {
 
-        By emptyTileLocator = By.cssSelector("div.tile.empty");
+        By emptyTileLocator = By.cssSelector("div.menu-item.empty");
 
         WebElement emptyTile = this.driver.findElement(emptyTileLocator);
         emptyTile.click();
@@ -152,7 +159,7 @@ public class NewPage {
         selectShopPage.select(shopName);
         selectItemPage.select(itemName);
 
-        By itemTileLocator = By.xpath(String.format("//div[@class='tile selected']/div[@class='menu-item']/div[@class='caption' and div[contains(@class, 'shop-name') and text()='【%s】'] and div[contains(@class, 'name')  and text()='%s']]", shopName, itemName));
+        By itemTileLocator = By.xpath(String.format("//div[@class='menu-item selected']/div[@class='tile']/div[@class='caption' and div[contains(@class, 'shop-name') and text()='%s'] and div[contains(@class, 'food-name')  and text()='%s %s']]", shopName, itemName, priceOnOrder));
         SeleniumUtils.waitForVisible(this.driver, itemTileLocator);
 
         return;

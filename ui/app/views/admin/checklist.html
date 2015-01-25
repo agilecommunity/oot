@@ -16,10 +16,7 @@
                         <th class="shop-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.shopName}}</th>
                     </tr>
                     <tr>
-                        <th class="item-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.name}}</th>
-                    </tr>
-                    <tr>
-                        <th class="price" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.priceOnOrder}}円</th>
+                        <th class="food-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.name}}　{{item.menuItem.priceOnOrder}}円</th>
                     </tr>
                 </thead>
                 <tbody>
