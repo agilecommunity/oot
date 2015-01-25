@@ -74,9 +74,6 @@ td.price {
 .page-header .right-ctrl .logout{
     background-color: #92D13D;
 
-    background: -moz-linear-gradient(top, #92D13D, #70af1b);
-    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
-
     font-size: 0.8em;
     color: white;
     padding: 0.5em 1em;
@@ -89,21 +86,14 @@ td.price {
 .content-header {
     background-color: #92D13D;
 
-    background: -moz-linear-gradient(top, #92D13D, #70af1b);
-    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
-
     color: white;
     padding: 0.5em 1em;
     font-size: 2em;
     margin-bottom: 10px;
 }
 
-
 .content .day .day-header {
     background-color: #92D13D;
-
-    background: -moz-linear-gradient(top, #92D13D, #70af1b);
-    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
 
     color: white;
     padding: 0.5em 1em;
@@ -117,27 +107,111 @@ td.price {
     float: right;
 }
 
-.choose-list{
-    margin-bottom: 4em;
+.food-price{
+    text-align: right;
 }
-.choose-list .menu{
-    margin: 0.5em;
-    padding: 0.5em;
+
+.food-image {
+    text-align: center;
+    position: relative;
+    border: none;
+}
+.food-image .pop-rt{
+    position: absolute;
+    right: -30px;
+    top: -30px;
+}
+.food-image .pop-lt{
+    position: absolute;
+    left: -30px;
+    top: -30px;
+}
+
+.caption .shop-name, .caption .food-name {
+    font-size: 1.3em;
+    padding: 0.4em;
+}
+.caption .food-name {
+    background-color: #dcf0c1;
+}
+
+.menu-item {
+    position: relative;
+}
+.menu-item .food-image .thumbnail {
+    margin-bottom: 0px;
+}
+.menu-item .comment {
+    background-color: #76B91B;
+    display:inline-block;
+    margin: 0 5px 0 20%;
+    padding-top:5px;
+    padding-bottom:5px;
+    font-size: 1.2em;
+    position:relative;
+    white-space: normal;
+    text-align: left;
+}
+
+.menu-item .comment:after    {
+    content: ' ';
+    width:0;
+    height: 0;
+    position:absolute;
+    border:10px solid transparent;
+    border-bottom-color:#76B91B;
+    bottom:100%;
+    left:35%;
+}
+
+.choose-list{
+    margin-bottom: 2em;
+    width: 98%;
+}
+.category-row{
+    margin-top: 0.5em;
+}
+.category-row .category{
+    background-color: #C9F18E;
+    color: #59920A;
+
+    display: inline-block;
+    font-size: 1.5em;
+    border-radius: 0;
+    margin-bottom: 0.2em;
+}
+.category-row .menu-item-list{
+    line-height: normal;
+    padding: 0px;
+}
+.category-row .menu-item-list .menu-item-container{
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+    /* 高さの異なるliがあった場合でも、上手く回り込むようにするおまじない(のはずが、上手く回り込まない) */
+    display: inline-block;
+    /display:inline;
+    /zoom:1;
+}
+.category-row .menu-item{
     border: solid 4px #DDDDDD;
     border-radius: 10px;
-    width: 295px;
     cursor: pointer;
-
-    /* 以下、高さの異なるdivがあっても上手く廻り込みをさせるためのおまじない */
-    display: -moz-inline-box; /*for Firefox 2*/
-    display: inline-block; /*for modern*/
-    /display: inline; /*for ie5～7*/
-    /zoom: 1; /*for ie5～7*/
-    vertical-align: top;
-
 }
-.choose-list .menu.ordered{
-    border-color: #F3BFD6;
+.choose-list .menu-item .num-orders {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+.choose-list .menu-item .num-orders .btn {
+    font-size: 80%;
+    padding: 3px 7px;
+    vertical-align: top;
+}
+.choose-list .menu-item .num-orders .badge {
+    font-size: 150%;
+    vertical-align: top;
 }
 
 .page-footer {
@@ -154,43 +228,8 @@ td.price {
     margin: 0.5em;
 }
 
-.food-name {
-    background-color: #dcf0c1;
-    margin: auto -0.6em;
-    font-size: 1.3em;
-    padding: 0.4em;
-}
-
-.food-image {
-    text-align: center;
-    margin: 0.5em 0em;
-    position: relative;
-    border: none;
-}
-.food-image .pop-rt{
-    position: absolute;
-    right: -30px;
-    top: -30px;
-}
-.food-image .pop-lt{
-    position: absolute;
-    left: -30px;
-    top: -30px;
-}
-
-
-
-.food-price{
-    font-size: 1.5em;
-    text-align: right;
-}
-
 .button {
     background-color: #92D13D;
-
-    background: -moz-linear-gradient(top, #92D13D, #70af1b);
-    background: -webkit-gradient(linear, left top, left bottom, from(#92D13D), to(#70af1b));
-
 
     color: white;
     padding: 0.5em 1em;
@@ -198,18 +237,6 @@ td.price {
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.other-page {
-    margin: 1em;
-}
-.other-page .button{
-    float: left;
-
-}
-.other-page .other-info {
-    padding: 0.5em 1em;
-    float: left;
 }
 
 .user-info {
@@ -300,6 +327,7 @@ td.price {
  */
 .ordered{
     position: relative;
+    border-color: #F3BFD6;
 }
 
 .ordered-mark{
@@ -309,8 +337,8 @@ td.price {
     height: 155px;
 
     position: absolute;
-    left: 0px;
-    top: -5px;
+    left: 50px;
+    top: 5px;
     background-image: url('/assets/images/ordered.png');
     background-repeat: no-repeat;
     background-position: left top;
@@ -330,7 +358,6 @@ td.price {
     background-color: #F3BFD6;
     color: firebrick;
 }
-
 .ordered .comment:after {
     border-bottom-color:#F3BFD6 !important;
 }
@@ -340,50 +367,7 @@ td.price {
     background-color: #dddddd;
 }
 
-
 /* メニュー表示 */
-div.menu-item {
-    position: relative;
-}
-
-div.menu-item div.comment {
-    display:inline-block;
-    margin: 0 5px 0 20%;
-    padding-top:5px;
-    padding-bottom:5px;
-    font-size: 1.2em;
-    position:relative;
-    white-space: normal;
-    text-align: left;
-}
-
-div.menu-item div.comment:after    {
-    content: ' ';
-    width:0;
-    height: 0;
-    position:absolute;
-    border:10px solid transparent;
-    border-bottom-color:#5cb85c;
-    bottom:100%;
-    left:35%;
-}
-
-div.menu-item .num-orders {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-}
-
-div.menu-item .num-orders .btn {
-    font-size: 80%;
-    padding: 3px 7px;
-    vertical-align: top;
-}
-
-div.menu-item .num-orders .badge {
-    font-size: 150%;
-    vertical-align: top;
-}
 
 /* Bootstrap補助 */
 ul.nav-pills li.divider {

@@ -93,8 +93,8 @@ public class AdminStepDefs {
                 break;
             }
 
-            String[] itemNameParams = menuParams.get(keyName).split("　", 2);
-            newPage.addItem(itemNameParams[0], itemNameParams[1]);
+            String[] itemNameParams = menuParams.get(keyName).split("　", 3);
+            newPage.addItem(itemNameParams[0], itemNameParams[1], itemNameParams[2]);
 
             itemIndex += 1;
         } while (true);

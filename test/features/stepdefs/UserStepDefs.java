@@ -25,8 +25,8 @@ public class UserStepDefs {
                 break;
             }
 
-            String[] itemNameParams = orderParams.get(keyName).split("　", 2);
-            orderPage.order(orderDate, itemNameParams[0], itemNameParams[1]);
+            String[] itemNameParams = orderParams.get(keyName).split("　", 3);
+            orderPage.order(orderDate, itemNameParams[0], itemNameParams[1], itemNameParams[2]);
 
             itemIndex += 1;
         } while (true);

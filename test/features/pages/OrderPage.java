@@ -28,16 +28,24 @@ public class OrderPage {
     @FindBy(how=How.CSS, using="div.content.order")
     private WebElement base;
 
-    public void order(DateTime orderDate, String shopName, String itemName) throws Throwable {
+    /**
+     * 注文をする
+     * @param orderDate
+     * @param shopName
+     * @param itemName
+     * @param priceOnOrder  価格 単位を含めること (ex. "100円")
+     * @throws Throwable
+     */
+    public void order(DateTime orderDate, String shopName, String itemName, String priceOnOrder) throws Throwable {
 
         By dayBaseLocator = By.id(String.format("day-%s", orderDate.toString("yyyyMMdd")));
         WebElement dayBase = base.findElement(dayBaseLocator);
 
-        By itemLocator = By.xpath(String.format("div[@class='choose-list']//div[contains(@class,'menu menu-item')]/div[div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s']]", shopName, itemName));
+        By itemLocator = By.xpath(String.format("div[contains(@class, 'choose-list')]//div[contains(@class,'menu-item')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s %s']]", shopName, itemName, priceOnOrder));
         WebElement item = dayBase.findElement(itemLocator);
         item.click();
 
-        By orderdItemLocator = By.xpath(String.format("//div[@id='day-%s']/div[@class='choose-list']//div[contains(@class,'menu menu-item') and contains(@class, 'ordered') and div[div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s']]]", orderDate.toString("yyyyMMdd"), shopName, itemName));
+        By orderdItemLocator = By.xpath(String.format("//div[@id='day-%s']/div[contains(@class, 'choose-list')]//div[contains(@class,'menu-item') and contains(@class, 'ordered')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s %s']]", orderDate.toString("yyyyMMdd"), shopName, itemName, priceOnOrder));
         SeleniumUtils.waitForVisible(this.driver, orderdItemLocator);
 
     }

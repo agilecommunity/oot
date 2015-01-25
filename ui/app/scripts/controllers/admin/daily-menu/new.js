@@ -221,7 +221,7 @@ angular.module('MyControllers')
         return ($scope.currentDailyMenu.menuDate === day);
     };
 
-    $scope.classForTile = function(item) {
+    $scope.classForMenuItem = function(item) {
         return {
             'empty': !itemIsSelected(item),
             'selected': itemIsSelected(item)
