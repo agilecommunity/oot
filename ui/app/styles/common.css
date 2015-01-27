@@ -116,11 +116,13 @@ td.price {
     position: relative;
     border: none;
 }
+
 .food-image .pop-rt{
     position: absolute;
     right: -30px;
     top: -30px;
 }
+
 .food-image .pop-lt{
     position: absolute;
     left: -30px;
@@ -135,13 +137,32 @@ td.price {
     background-color: #dcf0c1;
 }
 
-.menu-item {
+.label-category {
+    background-color: #C9F18E;
+    color: #59920A;
+
+    display: inline-block;
+    font-size: 1.5em;
+    border-radius: 0;
+    margin-bottom: 0.2em;
+}
+
+.menu-item,
+.menu-item-sm {
     position: relative;
 }
-.menu-item .food-image .thumbnail {
+
+.menu-item-sm {
+    font-size: 80%;
+}
+
+.menu-item .food-image .thumbnail,
+.menu-item-sm .food-image .thumbnail {
     margin-bottom: 0px;
 }
-.menu-item .comment {
+
+.menu-item .comment,
+.menu-item-sm .comment {
     background-color: #76B91B;
     display:inline-block;
     margin: 0 5px 0 20%;
@@ -153,7 +174,8 @@ td.price {
     text-align: left;
 }
 
-.menu-item .comment:after    {
+.menu-item .comment:after,
+.menu-item-sm .comment:after {
     content: ' ';
     width:0;
     height: 0;
@@ -164,6 +186,11 @@ td.price {
     left:35%;
 }
 
+.menu-item-sm .food-image img {
+    max-width: 150px;
+    height: auto;
+}
+
 .choose-list{
     margin-bottom: 2em;
     width: 98%;
@@ -171,20 +198,13 @@ td.price {
 .category-row{
     margin-top: 0.5em;
 }
-.category-row .category{
-    background-color: #C9F18E;
-    color: #59920A;
 
-    display: inline-block;
-    font-size: 1.5em;
-    border-radius: 0;
-    margin-bottom: 0.2em;
-}
-.category-row .menu-item-list{
+.menu-item-list {
     line-height: normal;
     padding: 0px;
 }
-.category-row .menu-item-list .menu-item-container{
+
+.menu-item-list .menu-item-container{
     margin: 0px;
     padding-left: 5px;
     padding-right: 5px;
@@ -194,22 +214,27 @@ td.price {
     /display:inline;
     /zoom:1;
 }
-.category-row .menu-item{
+
+.menu-item-list .menu-item,
+.menu-item-list .menu-item-sm {
     border: solid 4px #DDDDDD;
     border-radius: 10px;
     cursor: pointer;
 }
-.choose-list .menu-item .num-orders {
+
+.menu-item-list .menu-item .num-orders {
     position: absolute;
     top: 3px;
     right: 3px;
 }
-.choose-list .menu-item .num-orders .btn {
+
+.menu-item-list .menu-item .num-orders .btn {
     font-size: 80%;
     padding: 3px 7px;
     vertical-align: top;
 }
-.choose-list .menu-item .num-orders .badge {
+
+.menu-item-list .menu-item .num-orders .badge {
     font-size: 150%;
     vertical-align: top;
 }
@@ -217,6 +242,7 @@ td.price {
 .page-footer {
     background-color: #454545;
 }
+
 .page-footer {
     background-color: #343434;
     color: white;
@@ -325,12 +351,12 @@ td.price {
 /*
  * 暫定「注文中」アイコン
  */
-.ordered{
+.ordered {
     position: relative;
     border-color: #F3BFD6;
 }
 
-.ordered-mark{
+.ordered-mark {
     display: none;
 
     width: 276px;
@@ -339,14 +365,50 @@ td.price {
     position: absolute;
     left: 50px;
     top: 5px;
-    background-image: url('/assets/images/ordered.png');
     background-repeat: no-repeat;
+    background-image: url('/assets/images/ordered.png');
     background-position: left top;
 
     z-index: 10;
 }
 
-.ordered .ordered-mark{
+.selected-mark {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+
+    background-color: #d3d3d3;
+
+    text-align: center;
+
+    opacity: 0.5;
+    -ms-filter: "alpha(opacity=0.5)";  /* ie 8 */
+}
+
+.selected-mark:before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.selected-mark p {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.ordered .ordered-mark,
+.selected .selected-mark {
     display: block;
 }
 
@@ -360,11 +422,6 @@ td.price {
 }
 .ordered .comment:after {
     border-bottom-color:#F3BFD6 !important;
-}
-
-/* メニュー作成 */
-.menu.selected {
-    background-color: #dddddd;
 }
 
 /* メニュー表示 */

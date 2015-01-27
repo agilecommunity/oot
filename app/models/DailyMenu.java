@@ -1,11 +1,13 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.*;
 
 import play.data.validation.Constraints;
+import play.data.validation.ValidationError;
 import play.db.ebean.Model;
 
 @Entity
@@ -25,7 +27,28 @@ public class DailyMenu extends Model {
     public String status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dailyMenu")
+    @OrderBy("id")
     public List<DailyMenuItem> detailItems = new ArrayList<DailyMenuItem>();
+
+    public List<ValidationError> validate() {
+        ArrayList<ValidationError> errors = new ArrayList<ValidationError>();
+
+        this.validateOverlappedItem(errors);
+
+        return errors.isEmpty() ? null : errors;
+    }
+
+    private void validateOverlappedItem(ArrayList<ValidationError> errors) {
+        HashMap<Long, Boolean> itemIds = new HashMap<Long, Boolean>();
+
+        for (DailyMenuItem item : this.detailItems) {
+            if (itemIds.containsKey(item.menuItem.id)) {
+                errors.add(new ValidationError("detailItems", "error.oot.dailyMenu.overlappedItem"));
+                return;
+            }
+            itemIds.put(item.menuItem.id, true);
+        }
+    }
 
     /**
      * Generic query helper for entity Lunch with id Long

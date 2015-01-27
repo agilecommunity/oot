@@ -1,7 +1,13 @@
 angular.module('MyControllers')
     .controller('DailyMenuSelectItemController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem',
-    function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem', 'category', 'selectedItems', 'currentItem',
+    function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem, category, selectedItems, currentItem) {
+
+    console.log("DailyMenuSelectItemController category: " + category);
+    console.log("DailyMenuSelectItemController selectedItems: ");
+    console.log(selectedItems);
+    console.log("DailyMenuSelectItemController currentItem: ");
+    console.log(currentItem);
 
     var startBlock = function() {
         $.blockUI({baseZ: 2000, message: null});
@@ -18,9 +24,13 @@ angular.module('MyControllers')
         $scope.groupMenuItems = [];
         var group = [];
         for ( var i=0 ; i < $scope.menuItems.length ; i++ ) {
+            if ($scope.menuItems[i].category !== category) {
+                continue;
+            }
+
             group.push($scope.menuItems[i]);
 
-            if ((i+1) % countPerRow === 0 || (i+1) === $scope.menuItems.length) {
+            if ((group.length) % countPerRow === 0 || (i+1) === $scope.menuItems.length) {
                 $scope.groupMenuItems.push(group);
                 group = [];
             }
@@ -68,7 +78,15 @@ angular.module('MyControllers')
         return $scope.groupMenuItems.length === 0;
     };
 
+    $scope.isSelected = function(item) {
+        var selected = ($filter('getById')(selectedItems, item.id) !== null);
+        return (selected && item.id !== currentItem.id);
+    };
+
     $scope.selectThis = function(item) {
+        if ($scope.isSelected(item)) {
+            return;
+        }
         $scope.$close(item);
     };
 
