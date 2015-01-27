@@ -39,8 +39,8 @@ public class SelectItemPage {
         return new SelectShopPage(this.driver);
     }
 
-    public void select(String value) {
-        By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item') and div[@class='caption']/div[contains(@class, 'name') and text()='%s']]", value));
+    public void select(String itemName, String priceOnOrder) {
+        By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item-sm') and div[@class='caption']/div[contains(@class, 'food-name') and text()='%s %s']]", itemName, priceOnOrder));
         WebElement button = this.base.findElement(itemLocator);
         button.click();
 

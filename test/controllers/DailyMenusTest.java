@@ -27,6 +27,7 @@ import java.util.List;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static play.mvc.Http.Status.*;
 import static play.test.Helpers.*;
+import static play.test.Helpers.contentAsString;
 
 public class DailyMenusTest {
     Logger.ALogger logger = Logger.of("application.controllers.DailyMenusTest");
@@ -64,6 +65,25 @@ public class DailyMenusTest {
         assertThat(object.detailItems.size()).isEqualTo(1);
         DailyMenuItem item = object.detailItems.get(0);
         assertThat(item.menuItem.name).isEqualTo("たっぷりサーモン丼");
+    }
+
+    @Test
+    public void createは同じ商品が登録された場合BadRequestを返すこと() throws Throwable {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{ \"menuDate\":\"2014-02-12\"");
+        builder.append(", \"status\":\"open\"");
+        builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}, {\"menuItem\":{\"id\":2}}]");
+        builder.append("}");
+
+        Result result = callAPI(fakeRequest(POST, "/api/v1.0/daily-menus").withJsonBody(Json.parse(builder.toString())));
+
+        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+
+        String jsonString = contentAsString(result);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode errorMessages = mapper.readTree(jsonString);
+
+        assertThat(errorMessages.get("detailItems").get(0).asText()).describedAs("エラーメッセージ").isEqualTo("同じ商品は登録できません");
     }
 
     @Test

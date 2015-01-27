@@ -24,6 +24,8 @@ error.maxLength=最大長さは {0} です
 error.email=正しいEmailアドレスでなければなりません
 error.pattern={0} の形式でなければなりません
 
+error.oot.dailyMenu.overlappedItem=同じ商品は登録できません
+
 # SecureSocial
 
 securesocial.signup.invalidLink=無効なリンクです。メールの内容をもう一度確認してください

@@ -50,12 +50,12 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="row">
                             <div class="col-xs12 col-sm-12 col-md-12">
-                                <div class="category label">お弁当</div>
+                                <div class="label-category label">弁当</div>
                             </div>
                         </div>
                         <div class="menu-item-list row">
-                            <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-repeat-start="selectedItem in selectedItems.bento | orderBy:['shopName', 'name'] track by $index">
-                                <div class="menu-item" ng-class="classForMenuItem(selectedItem)" ng-click="selectItem('bento', $index)">
+                            <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-repeat-start="selectedItem in selectedItems.bento track by $index">
+                                <div class="menu-item-sm" ng-class="classForMenuItem(selectedItem)" ng-click="selectItem('bento', $index)">
                                     <div class="tile" ng-show="itemIsSelected(selectedItem)">
                                         <div class="caption">
                                             <div class="shop-name">{{selectedItem.shopName}}</div>
@@ -80,12 +80,12 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="row">
                             <div class="col-xs12 col-sm-12 col-md-12">
-                                <div class="category label">サイドメニュー</div>
+                                <div class="label-category label">サイドメニュー</div>
                             </div>
                         </div>
                         <div class="menu-item-list row">
-                            <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-repeat-start="selectedItem in selectedItems.side | orderBy:['shopName', 'name'] track by $index">
-                                <div class="menu-item" ng-class="classForMenuItem(selectedItem)" ng-click="selectItem('side', $index)">
+                            <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-repeat-start="selectedItem in selectedItems.side track by $index">
+                                <div class="menu-item-sm" ng-class="classForMenuItem(selectedItem)" ng-click="selectItem('side', $index)">
                                     <div class="tile" ng-show="itemIsSelected(selectedItem)">
                                         <div class="caption">
                                             <div class="shop-name">{{selectedItem.shopName}}</div>

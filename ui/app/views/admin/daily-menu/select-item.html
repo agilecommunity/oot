@@ -17,19 +17,23 @@
             </div>
         </div>
     </nav>
-    <div class="container-fluid menu-items">
+    <div class="menu-items container-fluid">
         <div class="row" ng-show="isEmpty()">
             <div class="col-md-8 no-data">対象の商品がありません</div>
         </div>
-        <div class="row" ng-hide="isEmpty()" ng-repeat="group in groupMenuItems">
-            <div class="col-xs-12 col-sm-6 col-md-3 menu-item well" ng-click="selectThis(menuItem)" ng-repeat="menuItem in group">
-                <div class="caption">
-                    <div class="shop-name">【{{menuItem.shopName}}】</div>
-                    <div class="name">{{menuItem.name}}</div>
-                    <div class="price-on-order text-right">{{menuItem.priceOnOrder}}円</div>
+        <div class="menu-item-list row" ng-hide="isEmpty()" ng-repeat="group in groupMenuItems">
+            <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-click="selectThis(menuItem)" ng-repeat="menuItem in group">
+                <div class="menu-item-sm">
+                    <div class="caption">
+                        <div class="shop-name">【{{menuItem.shopName}}】</div>
+                        <div class="food-name">{{menuItem.name}} {{menuItem.priceOnOrder}}円</div>
+                    </div>
+                    <div class="food-image">
+                        <a href="" class="thumbnail" ng-bind-html="renderImage(menuItem)"></a>
+                    </div>
+                    <div class="comment label label-success" ng-class="{'hidden':(menuItem.comment | isEmptyOrUndefined)}">{{menuItem.comment}}</div>
+                    <div class="selected-mark" ng-show="isSelected(menuItem)"><p>選択中</p></div>
                 </div>
-                <a href="" class="thumbnail" ng-bind-html="renderImage(menuItem)"></a>
-                <div class="comment label label-success" ng-class="{'hidden':(menuItem.comment | isEmptyOrUndefined)}">{{menuItem.comment}}</div>
             </div>
             <div class="clearfix visible-md" ng-show="$last"></div>
         </div>

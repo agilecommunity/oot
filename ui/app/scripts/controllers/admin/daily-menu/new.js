@@ -170,8 +170,18 @@ angular.module('MyControllers')
         var modalInstance = $modal.open({
             templateUrl: "/views/admin/daily-menu/select-item",
             controller: "DailyMenuSelectItemController",
-            scope: $scope,
-            size: 'lg'
+            size: 'lg',
+            resolve: {
+                category: function() {
+                    return category;
+                },
+                selectedItems: function() {
+                    return $scope.selectedItems[category];
+                },
+                currentItem: function() {
+                    return $scope.selectedItems[category][index];
+                }
+            }
         });
 
         modalInstance.result.then(function (selectedItem) {
