@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="menu-item-list row">
-                                <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-repeat="dailyMenuItem in getDetailItems(dailyMenu, 'bento') | orderBy:['menuItem.shopName', 'menuItem.name']">
+                                <div class="menu-item-container col-xs-12 col-sm-6 col-md-3 col-lg-3" ng-repeat-start="dailyMenuItem in getDetailItems(dailyMenu, 'bento') track by $index">
                                     <div class="menu-item" ng-class="{'ordered':dailyMenuItem.ordered}">
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
                                             <div class="caption">
@@ -46,6 +46,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="clearfix visible-lg" ng-if="($index + 1) % 4 === 0"></div>
+                                <div class="clearfix visible-md" ng-if="($index + 1) % 4 === 0"></div>
+                                <div class="clearfix visible-sm" ng-if="($index + 1) % 2 === 0"></div>
+                                <div ng-repeat-end=""></div>
                             </div>
                         </div>
                     </div>
@@ -58,7 +62,7 @@
                                 </div>
                             </div>
                             <div class="menu-item-list row">
-                                <div class="menu-item-container col-xs-12 col-sm-6 col-md-3" ng-repeat="dailyMenuItem in getDetailItems(dailyMenu, 'side') | orderBy:['menuItem.shopName', 'menuItem.name']">
+                                <div class="menu-item-container col-xs-12 col-sm-6 col-md-3 col-lg-3" ng-repeat-start="dailyMenuItem in getDetailItems(dailyMenu, 'side') track by $index">
                                     <div class="menu-item" ng-class="{'ordered':dailyMenuItem.ordered}">
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
                                             <div class="caption">
@@ -77,6 +81,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="clearfix visible-lg" ng-if="($index + 1) % 4 === 0"></div>
+                                <div class="clearfix visible-md" ng-if="($index + 1) % 4 === 0"></div>
+                                <div class="clearfix visible-sm" ng-if="($index + 1) % 2 === 0"></div>
+                                <div ng-repeat-end=""></div>
                             </div>
                         </div>
                     </div>
