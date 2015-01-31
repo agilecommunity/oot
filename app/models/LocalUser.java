@@ -8,6 +8,8 @@ import javax.persistence.Id;
 
 import play.db.ebean.Model;
 
+import com.avaje.ebean.annotation.CreatedTimestamp;
+import com.avaje.ebean.annotation.UpdatedTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -32,10 +34,12 @@ public class LocalUser extends Model {
     public String password;
 
     @JsonIgnore
-    public java.sql.Date createdAt;
+    @CreatedTimestamp
+    public Date createdAt;
 
     @JsonIgnore
-    public java.sql.Date updatedAt;
+    @UpdatedTimestamp
+    public Date updatedAt;
 
     /**
      * Generic query helper for entity with id Long
