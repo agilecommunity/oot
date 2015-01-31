@@ -39,8 +39,6 @@ public class Global extends GlobalSettings  {
 
         logger.debug("onStart");
 
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-
         registerFormatters();
 
         if(Play.isTest()) { // テストモードの場合はfixtureを読むようにしているので何もしない
