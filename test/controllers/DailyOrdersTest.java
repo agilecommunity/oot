@@ -28,6 +28,8 @@ import play.mvc.Result;
 import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
+import utils.Utils;
+import utils.controller.ParameterConverter;
 
 @RunWith(JUnitParamsRunner.class)
 public class DailyOrdersTest extends WithApplication {
@@ -37,10 +39,10 @@ public class DailyOrdersTest extends WithApplication {
      @Before
      public void setUp() {
          start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-         Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/menu_item.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/local_user.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order_item.yml"));
      }
 
      @After
@@ -51,7 +53,7 @@ public class DailyOrdersTest extends WithApplication {
      public void createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"localUser\":{\"id\": \"steve@foo.bar\"}");
-         builder.append(", \"orderDate\":\"2014-03-11\"");
+         builder.append(", \"orderDate\":\"2014-03-11+09:00\"");
          builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
          builder.append("}");
 
@@ -61,8 +63,8 @@ public class DailyOrdersTest extends WithApplication {
 
          assertThat(status(result)).isEqualTo(OK);
 
-         DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-03-11");
-         DailyOrder order = DailyOrder.findBy(new java.sql.Date(dateValue.getMillis()), "steve@foo.bar");
+         DateTime dateValue = ParameterConverter.convertDateFrom("2014-03-11+09:00");
+         DailyOrder order = DailyOrder.findBy(new DateTime(dateValue.getMillis()), "steve@foo.bar");
          assertThat(order.localUser.firstName).isEqualTo("スティーブ");
 
          assertThat(order.detailItems.size()).isEqualTo(1);
@@ -97,7 +99,7 @@ public class DailyOrdersTest extends WithApplication {
      public void updateは指定したIDのDailyOrderオブジェクトを更新すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"id\":1");
-         builder.append(", \"orderDate\":\"2014-02-10\"");
+         builder.append(", \"orderDate\":\"2014-02-10+09:00\"");
          builder.append(", \"localUser\":{\"id\": \"steve@foo.bar\"}");
          builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
          builder.append("}");
@@ -163,11 +165,11 @@ public class DailyOrdersTest extends WithApplication {
          return JUnitParamsRunner.$(
                    JUnitParamsRunner.$("{ }") // 空のリクエスト
                  , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"} }") // 必須項目(orderDate)なし
-                 , JUnitParamsRunner.$("{ \"orderDate\":\"2014-02-11\" }")             // 必須項目(localUser)なし
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11\" }") // 存在しないユーザ
+                 , JUnitParamsRunner.$("{ \"orderDate\":\"2014-02-11+09:00\" }")             // 必須項目(localUser)なし
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11+09:00\" }") // 存在しないユーザ
                  , JUnitParamsRunner.$("{ \"orderDate\":\"aaa\" }") // 存在しない日付
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10\" }") // 登録済みの注文
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10\" }") // ユーザが異なる
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10+09:00\" }") // 登録済みの注文
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10+09:00\" }") // ユーザが異なる
                  );
 
      }

@@ -15,6 +15,7 @@ import play.libs.Yaml;
 import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
+import utils.Utils;
 
 @RunWith(JUnit4.class)
 public class DailyOrderTest extends WithApplication {
@@ -30,10 +31,10 @@ public class DailyOrderTest extends WithApplication {
 
      @Test
      public void local_userはLocalUserオブジェクトを返すこと() {
-         Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/menu_item.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/local_user.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order.yml"));
+         Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order_item.yml"));
 
 
          assertThat(DailyOrder.find.byId(1L).localUser).isNotNull();

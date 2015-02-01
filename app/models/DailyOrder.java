@@ -12,10 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import models.annotations.JodaDate;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import play.db.ebean.Model;
+import utils.json.JodaDateOperator;
 
 @Entity
 public class DailyOrder extends Model {
@@ -29,7 +34,10 @@ public class DailyOrder extends Model {
     public Long id;
 
     @Constraints.Required
-    public java.sql.Date orderDate;
+    @JodaDate
+    @JsonSerialize(using=JodaDateOperator.JodaDateSerializer.class)
+    @JsonDeserialize(using=JodaDateOperator.JodaDateDeserializer.class)
+    public DateTime orderDate;
 
     @OneToOne(cascade=CascadeType.REFRESH, optional = false) // 参照のみだからREFRESHでいいはず
     @JoinColumn(name="user_id", nullable = false)
@@ -56,7 +64,7 @@ public class DailyOrder extends Model {
 
     public static Finder<Long,DailyOrder> find = new Finder<Long,DailyOrder>(Long.class, DailyOrder.class);
 
-    public static DailyOrder findBy(java.sql.Date orderDate, String userId) {
+    public static DailyOrder findBy(DateTime orderDate, String userId) {
         List<DailyOrder> candidate = DailyOrder.find.where().eq("order_date", orderDate).eq("user_id", userId).findList();
 
         if (candidate.size() != 1) {
@@ -66,7 +74,7 @@ public class DailyOrder extends Model {
         return candidate.get(0);
     }
 
-    public static List<DailyOrder> findBy(java.sql.Date order_date) {
+    public static List<DailyOrder> findBy(DateTime order_date) {
         return DailyOrder.find.where().eq("order_date", order_date).findList();
     }
 }

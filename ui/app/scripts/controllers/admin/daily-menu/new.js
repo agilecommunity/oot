@@ -41,7 +41,7 @@ angular.module('MyControllers')
             return;
         }
 
-        var menu = {id: currentMenu.id, menuDate: currentMenu.menuDate.format("YYYY-MM-DD"), status: currentMenu.status, detailItems:[]};
+        var menu = {id: currentMenu.id, menuDate: currentMenu.menuDate.format("YYYY-MM-DDZ"), status: currentMenu.status, detailItems:[]};
         angular.forEach(currentMenu.detailItems, function(item) {
             menu.detailItems.push(item);
         });
@@ -58,13 +58,14 @@ angular.module('MyControllers')
 
     // 日付を変更する
     var changeMenuDate = function(target) {
-        $scope.menuDateBegin = target.startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
-        $scope.menuDateEnd = moment.utc($scope.menuDateBegin).add("days", 4);
+        target = moment(target.format("YYYY-MM-DDT00:00:00.000Z"));
+        $scope.menuDateBegin = moment(target).startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
+        $scope.menuDateEnd = moment($scope.menuDateBegin).add("days", 4);
         $scope.currentDailyMenu = new DailyMenu();
 
         var params = {
-            "from": $scope.menuDateBegin.format("YYYY-MM-DD"),
-            "to": $scope.menuDateEnd.format("YYYY-MM-DD")
+            "from": $scope.menuDateBegin.format("YYYY-MM-DDZ"),
+            "to": $scope.menuDateEnd.format("YYYY-MM-DDZ")
         };
 
         DailyMenu.query(params,
@@ -73,13 +74,13 @@ angular.module('MyControllers')
 
                 console.log("#changeMenuDate responses");
                 angular.forEach(response, function(item){
-                    console.log(item.menuDate.format("YYYY/MM/DD HH:mm:ss"));
+                    console.log(item.menuDate.format("YYYY-MM-DDZ"));
                 });
 
                 $scope.dailyMenus = [];
                 for(var i=0; i<5; i++) {
-                    var currentDate = moment.utc($scope.menuDateBegin).add("days", i);
-                    console.log(currentDate.format("YYYY/MM/DD HH:mm:ss"));
+                    var currentDate = moment($scope.menuDateBegin).add("days", i);
+                    console.log(currentDate.format("YYYY-MM-DDZ"));
                     var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
 
                     var menu = null;
@@ -92,7 +93,10 @@ angular.module('MyControllers')
 
                     $scope.dailyMenus.push(menu);
                 }
-                setCurrent($scope.dailyMenus[0]);
+
+                console.log("#changeMenuDate target: ");
+                console.log(target);
+                setCurrent($filter('getByMenuDate')($scope.dailyMenus, target));
             },
             function (response) {
                 alert("データが取得できませんでした。サインイン画面に戻ります。");
@@ -135,17 +139,17 @@ angular.module('MyControllers')
         deployToSelectedItems(dailyMenu);
     };
 
-    // カレンダーの初期化
-    $("#datetimepicker").datetimepicker({pickTime: false, daysOfWeekDisabled: [0,6]});
+    // カレンダーの初期化0
+    $("#datetimepicker").datetimepicker({language: 'ja', pickTime: false, daysOfWeekDisabled: [0,6], useCurrent: false});
     $("#datetimepicker").on("dp.change",function (e) { // カレンダーで日付を変更した場合
-        changeMenuDate(moment.utc(e.date));
+        changeMenuDate(moment(e.date));
     });
 
     // 選択されている商品の初期化
     resetSelectedItems();
 
     // 当日を起点としてメニューを表示する
-    changeMenuDate(moment.utc());
+    changeMenuDate(moment().startOf('week').add("days", 1)); // startOfは日曜が取れるので月曜にシフト
 
     //---- イベントハンドラ
     // カレンダーを表示する

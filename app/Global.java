@@ -6,18 +6,19 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import com.typesafe.config.*;
 import models.MenuItem;
+import models.annotations.JodaDate;
 import org.apache.commons.codec.binary.Base64;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import play.*;
 import play.api.PlayException;
 import play.data.format.Formatters;
 import play.libs.Yaml;
 
 import com.avaje.ebean.Ebean;
-import utils.controller.ParameterConverter;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -83,17 +84,29 @@ public class Global extends GlobalSettings  {
     }
 
     private void registerFormatters() {
-        Formatters.register(java.sql.Date.class, new Formatters.SimpleFormatter<java.sql.Date>() {
+        Formatters.register(DateTime.class, new Formatters.AnnotationFormatter<JodaDate,DateTime>() {
             @Override
-            public java.sql.Date parse(String input, Locale l) throws ParseException {
-                logger.debug(String.format("#parse Date input:%s", input));
-                return ParameterConverter.convertDateFrom(input);
+            public DateTime parse(JodaDate annotation, String input, Locale locale) throws ParseException {
+                if (input == null || input.trim().isEmpty())
+                    return null;
+
+                if (annotation.format().isEmpty())
+                    return new DateTime(Long.parseLong(input));
+                else
+                    return DateTimeFormat.forPattern(annotation.format()).withLocale(locale).parseDateTime(input);
             }
 
             @Override
-            public String print(java.sql.Date input, Locale l) {
-                return String.valueOf(input.getTime());
+            public String print(JodaDate annotation, DateTime time, Locale locale) {
+                if (time == null)
+                    return null;
+
+                if (annotation.format().isEmpty())
+                    return time.getMillis() + "";
+                else
+                    return time.toString(annotation.format(), locale);
             }
+
         });
 
         Formatters.register(BigDecimal.class, new Formatters.SimpleFormatter<BigDecimal>(){

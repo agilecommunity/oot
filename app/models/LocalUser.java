@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.joda.time.DateTime;
 import play.db.ebean.Model;
 
 import com.avaje.ebean.annotation.CreatedTimestamp;

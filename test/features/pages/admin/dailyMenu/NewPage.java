@@ -41,17 +41,17 @@ public class NewPage {
         @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.next")
         private WebElement nextMonth;
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.switch")
+        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.picker-switch")
         private WebElement currentMonth;
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.switch")
+        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.picker-switch")
         private WebElement switchScale;
 
         public void pickDate(DateTime value) throws Throwable {
 
             logger.debug("#pickDate currentMonth:" +  currentMonth.getText());
 
-            DateTime currentMonthDt = DateTimeFormat.forPattern("MMMM yyyy").withLocale(Locale.US).parseDateTime(currentMonth.getText());
+            DateTime currentMonthDt = DateTimeFormat.forPattern("MMMM yyyy").withLocale(Locale.JAPAN).parseDateTime(currentMonth.getText());
 
             logger.debug("#pickDate currentMonth Year:{} Month:{}", currentMonthDt.getYear(), currentMonthDt.getMonthOfYear());
 
@@ -80,7 +80,7 @@ public class NewPage {
                 }
             }
 
-            if (!currentMonth.getText().equals(value.toString("MMMM yyyy", Locale.US))) {
+            if (!currentMonth.getText().equals(value.toString("MMMM yyyy", Locale.JAPAN))) {
                 throw new Exception(String.format("目的の月に変更できませんでした current:[%s]", currentMonth.getText()));
             }
 

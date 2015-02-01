@@ -8,18 +8,16 @@ angular.module('MyServices')
         if (data === "") {
             return [];
         }
-        // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
-            item.orderDate = moment.utc(item.orderDate);
+            item.orderDate = app.my.helpers.parseDate(item.orderDate);
         });
         return list;
     };
 
     var transformOne = function (data, headersGetter) {
-        // utcに変換する
         var one = angular.fromJson(data);
-        one.orderDate = moment.utc(one.orderDate);
+        one.orderDate = app.my.helpers.parseDate(one.orderDate);
         return one;
     };
 
@@ -49,7 +47,7 @@ angular.module('MyServices')
         create: {                // 新規作成
             method: "POST",
             transformRequest: function (data, headersGetter) {
-                data.orderDate = data.orderDate.format("YYYY-MM-DD");
+                data.orderDate = data.orderDate.format("YYYY-MM-DDZ");
                 return angular.toJson(data);
             },
             transformResponse: transformOne
@@ -58,7 +56,7 @@ angular.module('MyServices')
             method: "PUT",
             isArray: false,
             transformRequest: function (data, headersGetter) {
-                data.orderDate = data.orderDate.format("YYYY-MM-DD");
+                data.orderDate = data.orderDate.format("YYYY-MM-DDZ");
                 return angular.toJson(data);
             },
             transformResponse: transformOne

@@ -27,16 +27,16 @@ public class UserServiceTest {
         LocalToken expiredToken = new LocalToken();
         expiredToken.uuid = UUID.randomUUID().toString();
         expiredToken.email = "expired@local";
-        expiredToken.createdAt = new java.util.Date(DateTime.now().getMillis());
-        expiredToken.expireAt = new java.util.Date(DateTime.now().minusMinutes(2).getMillis());
+        expiredToken.createdAt = DateTime.now().toDate();
+        expiredToken.expireAt = DateTime.now().minusMinutes(2).toDate();
         expiredToken.isSignUp = true;
         expiredToken.save();
 
         LocalToken livingToken = new LocalToken();
         livingToken.uuid = UUID.randomUUID().toString();
         livingToken.email = "living@local";
-        livingToken.createdAt = new java.util.Date(DateTime.now().getMillis());
-        livingToken.expireAt = new java.util.Date(DateTime.now().plusMinutes(2).getMillis());
+        livingToken.createdAt = DateTime.now().toDate();
+        livingToken.expireAt = DateTime.now().plusMinutes(2).toDate();
         livingToken.isSignUp = true;
         livingToken.save();
 

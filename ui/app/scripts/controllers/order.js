@@ -30,6 +30,11 @@ angular.module('MyControllers')
         // 注文オブジェクトがあるかどうかを調べる
         var target = $filter('getByOrderDate')($scope.dailyOrders, dailyMenu.menuDate);
 
+        var orderErrorHandler = function(response){
+            console.log(response);
+            bootbox.alert("注文に失敗しました。status:" + response.status, function () {});
+        };
+
         if (target !== null) {
             if (new_state === true) {
                 target.detailItems.push({menuItem: dailyMenuItem.menuItem, numOrders: 1});
@@ -41,12 +46,12 @@ angular.module('MyControllers')
 
             // あった場合は更新する
             if (target.detailItems.length > 0) {
-                target.$update({});
+                target.$update({}, function(){}, orderErrorHandler);
             } else {
                 target.$delete({}, function(){
                     $scope.dailyOrders = $scope.dailyOrders.filter(function(order, index){
                         return (order.id !== target.id);
-                    });
+                    }, orderErrorHandler);
                 });
             }
         } else {
@@ -60,7 +65,7 @@ angular.module('MyControllers')
 
             new_order.$create(function(){
                 $scope.dailyOrders.push(new_order);
-            });
+            }, orderErrorHandler);
         }
     };
 
@@ -152,7 +157,7 @@ angular.module('MyControllers')
         // 注文を見ながらメニューの注文状況を変更する
         angular.forEach($scope.dailyOrders, function (order) {
             var menu = $filter('getByMenuDate')($scope.dailyMenus, order.orderDate);
-            console.log("#applyOrdered date:" + order.orderDate.format("YYYY-MM-DD") + " menu:" + menu);
+            console.log("#applyOrdered date:" + order.orderDate.format("YYYY-MM-DDZ") + " menu:" + menu);
             if (menu !== null) {
                 angular.forEach(order.detailItems, function (orderDetailItem) {
                     angular.forEach(menu.detailItems, function (menuDetailItem) {

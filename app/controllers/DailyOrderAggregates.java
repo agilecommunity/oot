@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.*;
 import models.DailyOrderAggregate;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -35,13 +36,7 @@ public class DailyOrderAggregates extends Controller {
 
         logger.debug("#showByOrderDate rawSql: " + rawSql.getSql().toString());
 
-        java.sql.Date orderDate;
-        try {
-            orderDate = ParameterConverter.convertDateFrom(orderDateStr);
-        } catch (ParseException e) {
-            logger.debug(String.format("#showByOrderDate parse error orderDateStr: %s", orderDateStr));
-            return badRequest();
-        }
+        DateTime orderDate = ParameterConverter.convertDateFrom(orderDateStr);
 
         Query<DailyOrderAggregate> query = Ebean.find(DailyOrderAggregate.class);
         query.setRawSql(rawSql)

@@ -45,9 +45,9 @@ angular.module('MyControllers')
         return checklist;
     };
 
-    $scope.menuDate = moment.utc($routeParams.menuDate);
+    $scope.menuDate = moment($routeParams.menuDate);
 
-    var params = {menuDate: $scope.menuDate.format('YYYY-MM-DD')};
+    var params = {menuDate: $scope.menuDate.format('YYYY-MM-DDZ')};
 
     DailyMenu.getByMenuDate(params,
         function (response) {
@@ -55,7 +55,7 @@ angular.module('MyControllers')
             response.detailItems = $filter('orderBy')(response.detailItems, ['menuItem.shopName', 'menuItem.name']);
             $scope.dailyMenu = response;
 
-            $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: $scope.menuDate.format('YYYY-MM-DD')},
+            $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: $scope.menuDate.format('YYYY-MM-DDZ')},
                 function (response) {
                     $scope.checklist = createChecklist();
                 },

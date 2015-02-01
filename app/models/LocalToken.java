@@ -3,6 +3,7 @@ package models;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.joda.time.DateTime;
 import play.db.ebean.Model;
 import java.util.Date;
 

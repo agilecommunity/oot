@@ -6,9 +6,14 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import models.annotations.JodaDate;
+import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import play.db.ebean.Model;
+import utils.json.JodaDateOperator;
 
 @Entity
 public class DailyMenu extends Model {
@@ -20,7 +25,10 @@ public class DailyMenu extends Model {
     public Long id;
 
     @Constraints.Required
-    public java.sql.Date menuDate;
+    @JodaDate
+    @JsonSerialize(using=JodaDateOperator.JodaDateSerializer.class)
+    @JsonDeserialize(using=JodaDateOperator.JodaDateDeserializer.class)
+    public DateTime menuDate;
 
     @Constraints.Required
     @Constraints.MaxLength(10)
@@ -55,7 +63,7 @@ public class DailyMenu extends Model {
      */
     public static Finder<Long,DailyMenu> find = new Finder<Long,DailyMenu>(Long.class, DailyMenu.class);
 
-    public static DailyMenu findBy(java.sql.Date menuDate) {
+    public static DailyMenu findBy(DateTime menuDate) {
         List<DailyMenu> candidate = DailyMenu.find.where().eq("menuDate", menuDate).findList();
 
         if (candidate.size() != 1) {

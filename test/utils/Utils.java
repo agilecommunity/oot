@@ -1,5 +1,6 @@
 package utils;
 
+import com.avaje.ebean.Ebean;
 import models.LocalUser;
 import play.Logger;
 import play.mvc.Http.Cookie;
@@ -11,8 +12,10 @@ import securesocial.core.Authenticator;
 import securesocial.core.IdentityId;
 import securesocial.core.PasswordInfo;
 import securesocial.core.SocialUser;
+import utils.snakeyaml.JodaPropertyConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static play.test.Helpers.inMemoryDatabase;
@@ -58,5 +61,10 @@ public class Utils {
         settings.putAll(inMemoryDatabase());
 
         return settings;
+    }
+
+    public static Object loadYaml(String pathToFile) {
+        org.yaml.snakeyaml.Yaml yaml = new org.yaml.snakeyaml.Yaml(new JodaPropertyConstructor());
+        return yaml.load(play.Play.application().resourceAsStream(pathToFile));
     }
 }

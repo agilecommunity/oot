@@ -5,18 +5,16 @@ angular.module('MyServices')
     function ($resource) {  // 日々のメニューを扱うサービス
 
     var transformList = function (data, headersGetter) {  // 結果を変換したい場合はtransformResponseを使う
-        // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
-            item.menuDate = moment.utc(item.menuDate);
+            item.menuDate = app.my.helpers.parseDate(item.menuDate);
         });
         return list;
     };
 
     var transformOne = function (data, headersGetter) {
-        // utcに変換する
         var one = angular.fromJson(data);
-        one.menuDate = moment.utc(one.menuDate);
+        one.menuDate = app.my.helpers.parseDate(one.menuDate);
         return one;
     };
 

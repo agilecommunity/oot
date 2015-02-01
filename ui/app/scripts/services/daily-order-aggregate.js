@@ -12,9 +12,8 @@ angular.module('MyServices')
             return transformed;
         }
 
-        // utcに変換する
         angular.forEach(transformed, function (item) {
-            item.orderDate = moment.utc(item.orderDate);
+            item.orderDate = app.my.helpers.parseDate(item.orderDate);
         });
         return transformed;
     };

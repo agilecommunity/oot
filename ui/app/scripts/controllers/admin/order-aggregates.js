@@ -11,7 +11,7 @@ angular.module('MyControllers')
 
 app.my.resolvers.AdminOrderAggregatesController = {
     initialData: function($route, $q, DailyOrderAggregate) {
-        var orderDate = moment.utc($route.current.params.orderDate);
+        var orderDate = moment($route.current.params.orderDate);
 
         var deferred = $q.defer();
 
@@ -24,7 +24,7 @@ app.my.resolvers.AdminOrderAggregatesController = {
         };
 
         DailyOrderAggregate.queryByOrderDate({
-            orderDate: orderDate.format('YYYY-MM-DD')
+            orderDate: orderDate.format('YYYY-MM-DDZ')
         }).$promise.then(success, error);
 
         return deferred.promise;
