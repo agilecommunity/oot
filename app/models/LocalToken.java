@@ -3,7 +3,9 @@ package models;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.joda.time.DateTime;
 import play.db.ebean.Model;
+import java.util.Date;
 
 @Entity
 public class LocalToken extends Model {
@@ -15,9 +17,9 @@ public class LocalToken extends Model {
 
     public String email;
 
-    public java.sql.Date createdAt;
+    public Date createdAt;
 
-    public java.sql.Date expireAt;
+    public Date expireAt;
 
     public boolean isSignUp;
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import models.DailyOrder;
 import models.LocalUser;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -29,13 +30,7 @@ public class DailyOrders extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        java.sql.Date orderDate;
-        try {
-            orderDate = ParameterConverter.convertDateFrom(orderDateStr);
-        } catch (ParseException e) {
-            logger.debug(String.format("#showByOrderDate parse error orderDateStr: %s", orderDateStr));
-            return badRequest();
-        }
+        DateTime orderDate = ParameterConverter.convertTimestampFrom(orderDateStr);
 
         List<DailyOrder> list = DailyOrder.findBy(orderDate);
 

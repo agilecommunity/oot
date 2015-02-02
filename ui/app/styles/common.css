@@ -208,11 +208,6 @@ td.price {
     margin: 0px;
     padding-left: 5px;
     padding-right: 5px;
-
-    /* 高さの異なるliがあった場合でも、上手く回り込むようにするおまじない(のはずが、上手く回り込まない) */
-    display: inline-block;
-    /display:inline;
-    /zoom:1;
 }
 
 .menu-item-list .menu-item,
@@ -405,6 +400,25 @@ td.price {
 
     font-size: 3em;
     font-weight: bold;
+}
+
+.reset-item {
+    position:absolute;
+    top:-0.3em;
+    right:0px;
+    font-size:200%;
+}
+
+.menu-item-sm.empty {
+    background: #d3d3d3;
+    padding: 50px 30px;
+    font-size: 1.2em;
+    min-height: 250px;
+}
+
+.tile.empty {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .ordered .ordered-mark,

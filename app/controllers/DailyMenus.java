@@ -7,6 +7,7 @@ import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.DailyMenu;
 import models.LocalUser;
+import org.joda.time.DateTime;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -24,24 +25,24 @@ public class DailyMenus extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyMenus");
 
     private static class DateRange {
-        public java.sql.Date fromDate;
-        public java.sql.Date toDate;
+        public DateTime fromDate;
+        public DateTime toDate;
 
         public DateRange(String fromStr, String toStr) throws ParseException {
-            this.fromDate = ParameterConverter.convertDateFrom(fromStr);
-            this.toDate = ParameterConverter.convertDateFrom(toStr);
+            this.fromDate = ParameterConverter.convertTimestampFrom(fromStr);
+            this.toDate = ParameterConverter.convertTimestampFrom(toStr);
         }
     }
 
     private static class DateParameter {
-        private java.sql.Date value = null;
+        private DateTime value = null;
         private DateRange rangeValue = null;
 
         public DateParameter(String value) throws ParseException {
             if (value == null) {
                 return;
             }
-            this.value = ParameterConverter.convertDateFrom(value);
+            this.value = ParameterConverter.convertTimestampFrom(value);
         }
 
         public DateParameter(String from, String to) throws ParseException {
@@ -59,7 +60,7 @@ public class DailyMenus extends Controller {
             return this.rangeValue;
         }
 
-        public java.sql.Date getValue() {
+        public DateTime getValue() {
             return this.value;
         }
     }
@@ -125,13 +126,7 @@ public class DailyMenus extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        java.sql.Date menuDate;
-        try {
-            menuDate = ParameterConverter.convertDateFrom(menuDateStr);
-        } catch (ParseException e) {
-            logger.debug(String.format("#showByMenuDate parse error menu_date_str:%s", menuDateStr));
-            return badRequest();
-        }
+        DateTime menuDate = ParameterConverter.convertTimestampFrom(menuDateStr);
 
         DailyMenu menu = DailyMenu.findBy(menuDate);
 
@@ -189,7 +184,7 @@ public class DailyMenus extends Controller {
     @SecureSocial.SecuredAction(ajaxCall = true)
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result update(Long id) {
-        logger.debug("#update");
+        logger.debug("#update id: {}", id);
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 

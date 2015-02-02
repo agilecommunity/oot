@@ -45,9 +45,9 @@ angular.module('MyControllers')
         return checklist;
     };
 
-    $scope.menuDate = moment.utc($routeParams.menuDate);
+    $scope.menuDate = moment.tz($routeParams.menuDate, moment.defaultZone.name); // 日付のみの文字をパースする場合、TimeZoneを指定しないとOSのタイムゾーンが影響するらしい
 
-    var params = {menuDate: $scope.menuDate.format('YYYY-MM-DD')};
+    var params = {menuDate: app.my.helpers.formatTimestamp($scope.menuDate)};
 
     DailyMenu.getByMenuDate(params,
         function (response) {
@@ -55,7 +55,7 @@ angular.module('MyControllers')
             response.detailItems = $filter('orderBy')(response.detailItems, ['menuItem.shopName', 'menuItem.name']);
             $scope.dailyMenu = response;
 
-            $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: $scope.menuDate.format('YYYY-MM-DD')},
+            $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: app.my.helpers.formatTimestamp($scope.menuDate)},
                 function (response) {
                     $scope.checklist = createChecklist();
                 },

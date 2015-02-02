@@ -7,12 +7,9 @@ import java.text.ParseException;
 
 public class ParameterConverter {
 
-    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String FORMAT_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
-    public static java.sql.Date convertDateFrom(String value) throws ParseException {
-
-        DateTime dateValue = DateTimeFormat.forPattern(DEFAULT_DATE_FORMAT).withZoneUTC().parseDateTime(value);
-        return new java.sql.Date(dateValue.getMillis());
-
+    public static DateTime convertTimestampFrom(String value) {
+        return DateTimeFormat.forPattern(FORMAT_TIMESTAMP).parseDateTime(value);
     }
 }

@@ -11,7 +11,7 @@ angular.module('MyControllers')
 
 app.my.resolvers.AdminOrderAggregatesController = {
     initialData: function($route, $q, DailyOrderAggregate) {
-        var orderDate = moment.utc($route.current.params.orderDate);
+        var orderDate = moment.tz($route.current.params.orderDate, moment.defaultZone.name); //日付のみの文字をパースするときはTimezoneを指定しないと、OSのデフォルトに影響される
 
         var deferred = $q.defer();
 
@@ -24,7 +24,7 @@ app.my.resolvers.AdminOrderAggregatesController = {
         };
 
         DailyOrderAggregate.queryByOrderDate({
-            orderDate: orderDate.format('YYYY-MM-DD')
+            orderDate: app.my.helpers.formatTimestamp(orderDate)
         }).$promise.then(success, error);
 
         return deferred.promise;

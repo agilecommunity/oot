@@ -4,12 +4,14 @@ angular.module('MyServices')
     ['$resource',
     function ($resource) {  // メニューにある弁当、サラダ
 
-    var transformResponse = function (data, headersGetter) {
-        if (data === "") {
-            return [];
+    var transformResponse = {
+        one: function (data, headersGetter) {
+            if (data === "") {
+                return [];
+            }
+            var list = angular.fromJson(data);
+            return list;
         }
-        var list = angular.fromJson(data);
-        return list;
     };
 
     var MenuItem = $resource('/api/v1.0/menu-items/:id',
@@ -17,14 +19,14 @@ angular.module('MyServices')
         query: {
             method: "GET",
             isArray: true,
-            transformResponse: transformResponse,
+            transformResponse: transformResponse.one,
             cache: false
         },
         queryByShopName: {
             url: "/api/v1.0/shops/:shopName/menu-items",
             method: "GET",
             isArray: true,
-            transformResponse: transformResponse,
+            transformResponse: transformResponse.one,
             cache: false
         },
         create: {                // 新規作成

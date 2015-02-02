@@ -1,22 +1,23 @@
 
 angular.module('MyServices')
 .factory('DailyMenu',
-    ['$resource',
-    function ($resource) {  // 日々のメニューを扱うサービス
+    ['$resource', '$filter',
+    function ($resource, $filter) {  // 日々のメニューを扱うサービス
 
     var transformList = function (data, headersGetter) {  // 結果を変換したい場合はtransformResponseを使う
-        // utcに変換する
         var list = angular.fromJson(data);
         angular.forEach(list, function (item) {
-            item.menuDate = moment.utc(item.menuDate);
+            item.menuDate = app.my.helpers.parseTimestamp(item.menuDate);
         });
         return list;
     };
 
     var transformOne = function (data, headersGetter) {
-        // utcに変換する
+        if ($filter('isEmptyOrUndefined')(data)) {
+            return null;
+        }
         var one = angular.fromJson(data);
-        one.menuDate = moment.utc(one.menuDate);
+        one.menuDate = app.my.helpers.parseTimestamp(one.menuDate);
         return one;
     };
 
@@ -33,14 +34,12 @@ angular.module('MyServices')
             queryByStatus: {
                 method: "GET",
                 url: "/api/v1.0/daily-menus/status/:status",
-                params: {status: "@status"},
                 isArray: true,
                 transformResponse: transformList
             },
             getByMenuDate: {
                 method: "GET",
                 url: "/api/v1.0/daily-menus/menu-date/:menuDate",
-                params: {menuDate: "@menuDate"},
                 isArray: false,
                 cache: false,
                 transformResponse: transformOne

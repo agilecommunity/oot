@@ -57,8 +57,8 @@ public class UserService extends BaseUserService {
 
         localToken.uuid = token.uuid;
         localToken.email = token.email;
-        localToken.createdAt = new java.sql.Date(token.creationTime.getMillis());
-        localToken.expireAt = new java.sql.Date(token.expirationTime.getMillis());
+        localToken.createdAt = token.creationTime.toDate();
+        localToken.expireAt = token.expirationTime.toDate();
         localToken.isSignUp = token.isSignUp;
 
         localToken.save();
@@ -133,11 +133,14 @@ public class UserService extends BaseUserService {
 
     @Override
     public void doDeleteExpiredTokens() {
-        logger.debug("doDeleteExpiredTokens");
+        logger.debug("#doDeleteExpiredTokens");
 
         List<LocalToken> list = LocalToken.find.where().lt("expireAt", new DateTime().toString()).findList();
 
+        logger.debug("#doDeleteExpiredTokens num of expire: {}", list.size());
+
         for(LocalToken localToken : list) {
+            logger.debug("#doDeleteExpiredTokens expireAt: {}", localToken.expireAt);
             localToken.delete();
         }
     }

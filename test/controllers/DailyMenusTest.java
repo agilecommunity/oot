@@ -7,17 +7,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import models.DailyMenu;
 import models.DailyMenuItem;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import play.Logger;
 import play.api.libs.json.Json;
 import play.filters.csrf.CSRF;
-import play.libs.Yaml;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.test.FakeRequest;
+import utils.Utils;
 import utils.controller.ParameterConverter;
 
 import java.io.IOException;
@@ -35,12 +34,13 @@ public class DailyMenusTest {
     @Before
     public void setUp() {
         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-        Ebean.save((List) Yaml.load("fixtures/test/menu_item.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/local_user.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/daily_order.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/daily_order_item.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/daily_menu.yml"));
-        Ebean.save((List) Yaml.load("fixtures/test/daily_menu_item.yml"));
+
+        Ebean.save((List) Utils.loadYaml("fixtures/test/menu_item.yml"));
+        Ebean.save((List) Utils.loadYaml("fixtures/test/local_user.yml"));
+        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order.yml"));
+        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order_item.yml"));
+        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_menu.yml"));
+        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_menu_item.yml"));
     }
 
     @After
@@ -50,7 +50,7 @@ public class DailyMenusTest {
     @Test
     public void createは受け取ったJsonの内容からDailyMenuオブジェクトを作成すること() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menuDate\":\"2014-02-12\"");
+        builder.append("{ \"menuDate\":\"2014-02-12T00:00:00.000+09:00\"");
         builder.append(", \"status\":\"open\"");
         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
         builder.append("}");
@@ -59,8 +59,8 @@ public class DailyMenusTest {
 
         assertThat(status(result)).isEqualTo(OK);
 
-        DateTime dateValue = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-12");
-        DailyMenu object = DailyMenu.findBy(new java.sql.Date(dateValue.getMillis()));
+        DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-02-12T00:00:00.000+09:00");
+        DailyMenu object = DailyMenu.findBy(new DateTime(dateValue.getMillis()));
 
         assertThat(object.detailItems.size()).isEqualTo(1);
         DailyMenuItem item = object.detailItems.get(0);
@@ -70,7 +70,7 @@ public class DailyMenusTest {
     @Test
     public void createは同じ商品が登録された場合BadRequestを返すこと() throws Throwable {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menuDate\":\"2014-02-12\"");
+        builder.append("{ \"menuDate\":\"2014-02-12T00:00:00.000+09:00\"");
         builder.append(", \"status\":\"open\"");
         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}, {\"menuItem\":{\"id\":2}}]");
         builder.append("}");
@@ -89,7 +89,7 @@ public class DailyMenusTest {
     @Test
     public void deleteは受け取ったIdに対応するDailyMenuオブジェクトを削除すること() throws ParseException {
 
-        DailyMenu target = DailyMenu.findBy(ParameterConverter.convertDateFrom("2014-02-10"));
+        DailyMenu target = DailyMenu.findBy(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+09:00"));
 
         Result result = callAPI(fakeRequest(DELETE, "/api/v1.0/daily-menus/" + target.id));
 
@@ -102,9 +102,11 @@ public class DailyMenusTest {
     @Test
     public void updateは受け取ったJsonの内容からDailyMenuオブジェクトを更新すること() throws IOException {
 
-        DateTime targetDate = DateTimeFormat.forPattern("yyyy-MM-dd").withZoneUTC().parseDateTime("2014-02-10");
+        DateTime targetDate = ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+09:00");
 
-        Result findResult = callAPI(fakeRequest(GET, "/api/v1.0/daily-menus/menu-date/" + targetDate.toString("yyyy-MM-dd")));
+        logger.debug("targetDate: {}", targetDate);
+
+        Result findResult = callAPI(fakeRequest(GET, "/api/v1.0/daily-menus/menu-date/" + targetDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
 
         logger.debug(String.format("result: %s", contentAsString(findResult)));
 
@@ -123,11 +125,11 @@ public class DailyMenusTest {
 
         assertThat(status(result)).isEqualTo(OK);
 
-        logger.debug(String.format("targetDate(Date): %s", targetDate.toDate().toString()));
+        logger.debug(String.format("targetDate(Date): %s", targetDate.toString()));
 
-        DailyMenu updated = DailyMenu.findBy(new java.sql.Date(targetDate.getMillis()));
+        DailyMenu updated = DailyMenu.findBy(targetDate);
         assertThat(updated.id).isEqualTo(1);
-        assertThat(updated.menuDate).isEqualTo(targetDate.toDate());
+        assertThat(updated.menuDate).isEqualTo(targetDate);
         assertThat(updated.detailItems.size()).isEqualTo(1);
         assertThat(updated.detailItems.get(0).menuItem.id).isEqualTo(3);
         assertThat(updated.detailItems.get(0).menuItem.name).isEqualTo("八品目のサラダ");

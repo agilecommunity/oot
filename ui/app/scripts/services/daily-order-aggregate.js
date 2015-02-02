@@ -4,19 +4,17 @@ angular.module('MyServices')
     ['$resource', '$http',
     function ($resource, $http) {  // 日々の注文を扱うサービス
 
-    var transformList = function (data, headersGetter) {
-
-        var transformed = app.my.helpers.transformRequestDefault(data);
-
-        if (!angular.isArray(data)) {
+    var transformResponse = {
+        list: function (data, headersGetter) {
+            var transformed = app.my.helpers.transformRequestDefault(data);
+            if (!angular.isArray(data)) {
+                return transformed;
+            }
+            angular.forEach(transformed, function (item) {
+                item.orderDate = app.my.helpers.parseTimestamp(item.orderDate);
+            });
             return transformed;
         }
-
-        // utcに変換する
-        angular.forEach(transformed, function (item) {
-            item.orderDate = moment.utc(item.orderDate);
-        });
-        return transformed;
     };
 
     var DailyOrderAggregate = $resource('/api/v1.0/daily-order-aggregates/:id',
@@ -24,9 +22,8 @@ angular.module('MyServices')
             queryByOrderDate: {
                 method: "GET",
                 url: "/api/v1.0/daily-order-aggregates/order-date/:orderDate",
-                params: {orderDate: "@orderDate"},
                 isArray: true,
-                transformResponse: transformList,
+                transformResponse: transformResponse.list,
                 cache: false
             }
     });

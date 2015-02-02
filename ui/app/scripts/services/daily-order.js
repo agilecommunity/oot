@@ -4,23 +4,29 @@ angular.module('MyServices')
     ['$resource',
     function ($resource) {  // 日々の注文を扱うサービス
 
-    var transformList = function (data, headersGetter) {
-        if (data === "") {
-            return [];
+    var transformRequest = {
+        one: function (data, headersGetter) {
+            data.orderDate = app.my.helpers.formatTimestamp(data.orderDate);
+            return angular.toJson(data);
         }
-        // utcに変換する
-        var list = angular.fromJson(data);
-        angular.forEach(list, function (item) {
-            item.orderDate = moment.utc(item.orderDate);
-        });
-        return list;
     };
 
-    var transformOne = function (data, headersGetter) {
-        // utcに変換する
-        var one = angular.fromJson(data);
-        one.orderDate = moment.utc(one.orderDate);
-        return one;
+    var transformResponse = {
+        list: function (data, headersGetter) {
+            if (data === "") {
+                return [];
+            }
+            var list = angular.fromJson(data);
+            angular.forEach(list, function (item) {
+                item.orderDate = app.my.helpers.parseTimestamp(item.orderDate);
+            });
+            return list;
+        },
+        one: function (data, headersGetter) {
+            var one = angular.fromJson(data);
+            one.orderDate = app.my.helpers.parseTimestamp(one.orderDate);
+            return one;
+        }
     };
 
     var DailyOrder = $resource('/api/v1.0/daily-orders/:id',
@@ -28,40 +34,33 @@ angular.module('MyServices')
         query: {
             method: "GET",
             isArray: true,
-            transformResponse: transformList,
+            transformResponse: transformResponse.list,
             cache: false
         },
         queryByOrderDate: {
             method: "GET",
             url: "/api/v1.0/daily-orders/order-date/:orderDate",
-            params: {orderDate: "@orderDate"},
             isArray: true,
-            transformResponse: transformList,
+            transformResponse: transformResponse.list,
             cache: false
         },
         queryMine: {
             method: "GET",
             url: "/api/v1.0/daily-orders/mine",
             isArray: true,
-            transformResponse: transformList,
+            transformResponse: transformResponse.list,
             cache: false
         },
         create: {                // 新規作成
             method: "POST",
-            transformRequest: function (data, headersGetter) {
-                data.orderDate = data.orderDate.format("YYYY-MM-DD");
-                return angular.toJson(data);
-            },
-            transformResponse: transformOne
+            transformRequest: transformRequest.one,
+            transformResponse: transformResponse.one
         },
         update: {                // 更新
             method: "PUT",
             isArray: false,
-            transformRequest: function (data, headersGetter) {
-                data.orderDate = data.orderDate.format("YYYY-MM-DD");
-                return angular.toJson(data);
-            },
-            transformResponse: transformOne
+            transformRequest: transformRequest.one,
+            transformResponse: transformResponse.one
         }
     });
 
