@@ -2,7 +2,6 @@ package models.annotations;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import utils.json.JodaDateOperator;
 
 import java.lang.annotation.*;
 
