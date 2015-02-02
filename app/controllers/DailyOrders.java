@@ -30,7 +30,7 @@ public class DailyOrders extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        DateTime orderDate = ParameterConverter.convertDateFrom(orderDateStr);
+        DateTime orderDate = ParameterConverter.convertTimestampFrom(orderDateStr);
 
         List<DailyOrder> list = DailyOrder.findBy(orderDate);
 

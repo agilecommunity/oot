@@ -29,8 +29,8 @@ public class DailyMenus extends Controller {
         public DateTime toDate;
 
         public DateRange(String fromStr, String toStr) throws ParseException {
-            this.fromDate = ParameterConverter.convertDateFrom(fromStr);
-            this.toDate = ParameterConverter.convertDateFrom(toStr);
+            this.fromDate = ParameterConverter.convertTimestampFrom(fromStr);
+            this.toDate = ParameterConverter.convertTimestampFrom(toStr);
         }
     }
 
@@ -42,7 +42,7 @@ public class DailyMenus extends Controller {
             if (value == null) {
                 return;
             }
-            this.value = ParameterConverter.convertDateFrom(value);
+            this.value = ParameterConverter.convertTimestampFrom(value);
         }
 
         public DateParameter(String from, String to) throws ParseException {
@@ -126,7 +126,7 @@ public class DailyMenus extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        DateTime menuDate = ParameterConverter.convertDateFrom(menuDateStr);
+        DateTime menuDate = ParameterConverter.convertTimestampFrom(menuDateStr);
 
         DailyMenu menu = DailyMenu.findBy(menuDate);
 

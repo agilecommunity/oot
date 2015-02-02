@@ -35,7 +35,7 @@ public class DailyOrderAggregatesTest {
     @Test
     public void showByOrderDateは指定した日付の注文状況を返すこと_1件() {
 
-        Result result = callAPI(fakeRequest(GET, "/api/v1.0/daily-order-aggregates/order-date/2014-02-10+09:00"));
+        Result result = callAPI(fakeRequest(GET, "/api/v1.0/daily-order-aggregates/order-date/2014-02-10T00:00:00.000+09:00"));
 
         assertThat(status(result)).isEqualTo(OK);
 
@@ -44,7 +44,7 @@ public class DailyOrderAggregatesTest {
         JsonNode node = Json.parse(jsonString);
 
         assertThat(node.size()).isEqualTo(1);
-        assertThat(node.get(0).get("orderDate").asText()).isEqualTo("2014-02-10+0900");
+        assertThat(ParameterConverter.convertTimestampFrom(node.get(0).get("orderDate").asText())).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+0900"));
         assertThat(node.get(0).get("code").asText()).isEqualTo("銀座肉屋　カルビハンバーグ弁当　580円");
         assertThat(node.get(0).get("numOrders").asInt()).isEqualTo(1);
     }
@@ -52,7 +52,7 @@ public class DailyOrderAggregatesTest {
     @Test
     public void showByOrderDateは指定した日付の注文状況を返すこと_2件() {
 
-        Result result = callAPI(fakeRequest(GET, "/api/v1.0/daily-order-aggregates/order-date/2014-02-11+09:00"));
+        Result result = callAPI(fakeRequest(GET, "/api/v1.0/daily-order-aggregates/order-date/2014-02-11T00:00:00.000+09:00"));
 
         assertThat(status(result)).isEqualTo(OK);
 
@@ -62,11 +62,11 @@ public class DailyOrderAggregatesTest {
 
         assertThat(node.size()).isEqualTo(2);
 
-        assertThat(node.get(0).get("orderDate").asText()).isEqualTo("2014-02-11+0900");
+        assertThat(ParameterConverter.convertTimestampFrom(node.get(0).get("orderDate").asText())).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-11T00:00:00.000+0900"));
         assertThat(node.get(0).get("code").asText()).isEqualTo("有楽町八百屋　八品目のサラダ　230円");
         assertThat(node.get(0).get("numOrders").asInt()).isEqualTo(1);
 
-        assertThat(node.get(1).get("orderDate").asText()).isEqualTo("2014-02-11+0900");
+        assertThat(ParameterConverter.convertTimestampFrom(node.get(1).get("orderDate").asText())).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-11T00:00:00.000+0900"));
         assertThat(node.get(1).get("code").asText()).isEqualTo("銀座魚屋　たっぷりサーモン丼　550円 - 20円 = 530円");
         assertThat(node.get(1).get("numOrders").asInt()).isEqualTo(5);
     }

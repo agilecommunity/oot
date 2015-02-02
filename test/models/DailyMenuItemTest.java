@@ -38,6 +38,6 @@ public class DailyMenuItemTest extends WithApplication {
          Ebean.save((List) Utils.loadYaml("fixtures/test/daily_menu_item.yml"));
 
          assertThat(DailyMenuItem.find.byId(1L).dailyMenu).isNotNull();
-         assertThat(DailyMenuItem.find.byId(1L).dailyMenu.menuDate.toString()).isEqualTo(ParameterConverter.convertDateFrom("2014-02-10+0900").toString());
+         assertThat(DailyMenuItem.find.byId(1L).dailyMenu.menuDate.toString()).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+0900").toString());
     }
 }

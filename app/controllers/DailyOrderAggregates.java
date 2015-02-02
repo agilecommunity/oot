@@ -36,7 +36,7 @@ public class DailyOrderAggregates extends Controller {
 
         logger.debug("#showByOrderDate rawSql: " + rawSql.getSql().toString());
 
-        DateTime orderDate = ParameterConverter.convertDateFrom(orderDateStr);
+        DateTime orderDate = ParameterConverter.convertTimestampFrom(orderDateStr);
 
         Query<DailyOrderAggregate> query = Ebean.find(DailyOrderAggregate.class);
         query.setRawSql(rawSql)

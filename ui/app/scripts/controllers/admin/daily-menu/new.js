@@ -41,7 +41,12 @@ angular.module('MyControllers')
             return;
         }
 
-        var menu = {id: currentMenu.id, menuDate: currentMenu.menuDate.format("YYYY-MM-DDZ"), status: currentMenu.status, detailItems:[]};
+        var menu = {
+            id: currentMenu.id,
+            menuDate: app.my.helpers.formatTimestamp(currentMenu.menuDate),
+            status: currentMenu.status,
+            detailItems:[]
+        };
         angular.forEach(currentMenu.detailItems, function(item) {
             menu.detailItems.push(item);
         });
@@ -58,14 +63,14 @@ angular.module('MyControllers')
 
     // 日付を変更する
     var changeMenuDate = function(target) {
-        target = moment(target.format("YYYY-MM-DDT00:00:00.000Z"));
+        target = moment(target.format('YYYY-MM-DDT00:00:00.000Z'));
         $scope.menuDateBegin = moment(target).startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
         $scope.menuDateEnd = moment($scope.menuDateBegin).add("days", 4);
         $scope.currentDailyMenu = new DailyMenu();
 
         var params = {
-            "from": $scope.menuDateBegin.format("YYYY-MM-DDZ"),
-            "to": $scope.menuDateEnd.format("YYYY-MM-DDZ")
+            "from": app.my.helpers.formatTimestamp($scope.menuDateBegin),
+            "to": app.my.helpers.formatTimestamp($scope.menuDateEnd)
         };
 
         DailyMenu.query(params,
@@ -74,13 +79,13 @@ angular.module('MyControllers')
 
                 console.log("#changeMenuDate responses");
                 angular.forEach(response, function(item){
-                    console.log(item.menuDate.format("YYYY-MM-DDZ"));
+                    console.log(app.my.helpers.formatTimestamp(item.menuDate));
                 });
 
                 $scope.dailyMenus = [];
                 for(var i=0; i<5; i++) {
                     var currentDate = moment($scope.menuDateBegin).add("days", i);
-                    console.log(currentDate.format("YYYY-MM-DDZ"));
+                    console.log(app.my.helpers.formatTimestamp(currentDate));
                     var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
 
                     var menu = null;

@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import com.typesafe.config.*;
 import models.MenuItem;
-import models.annotations.JodaDate;
+import models.annotations.JodaTimestamp;
 import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -84,9 +84,9 @@ public class Global extends GlobalSettings  {
     }
 
     private void registerFormatters() {
-        Formatters.register(DateTime.class, new Formatters.AnnotationFormatter<JodaDate,DateTime>() {
+        Formatters.register(DateTime.class, new Formatters.AnnotationFormatter<JodaTimestamp,DateTime>() {
             @Override
-            public DateTime parse(JodaDate annotation, String input, Locale locale) throws ParseException {
+            public DateTime parse(JodaTimestamp annotation, String input, Locale locale) throws ParseException {
                 if (input == null || input.trim().isEmpty())
                     return null;
 
@@ -97,7 +97,7 @@ public class Global extends GlobalSettings  {
             }
 
             @Override
-            public String print(JodaDate annotation, DateTime time, Locale locale) {
+            public String print(JodaTimestamp annotation, DateTime time, Locale locale) {
                 if (time == null)
                     return null;
 

@@ -157,7 +157,7 @@ angular.module('MyControllers')
         // 注文を見ながらメニューの注文状況を変更する
         angular.forEach($scope.dailyOrders, function (order) {
             var menu = $filter('getByMenuDate')($scope.dailyMenus, order.orderDate);
-            console.log("#applyOrdered date:" + order.orderDate.format("YYYY-MM-DDZ") + " menu:" + menu);
+            console.log("#applyOrdered date:" + app.my.helpers.formatTimestamp(order.orderDate) + " menu:" + menu);
             if (menu !== null) {
                 angular.forEach(order.detailItems, function (orderDetailItem) {
                     angular.forEach(menu.detailItems, function (menuDetailItem) {

@@ -39,6 +39,6 @@ public class DailyOrderItemTest extends WithApplication {
 
 
          assertThat(DailyOrderItem.find.byId(1L).dailyOrder).isNotNull();
-         assertThat(DailyOrderItem.find.byId(1L).dailyOrder.orderDate.toString()).isEqualTo(ParameterConverter.convertDateFrom("2014-02-10+0900").toString());
+         assertThat(DailyOrderItem.find.byId(1L).dailyOrder.orderDate.toString()).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+0900").toString());
     }
 }

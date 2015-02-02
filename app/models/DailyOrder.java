@@ -14,13 +14,13 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import models.annotations.JodaDate;
+import models.annotations.JodaTimestamp;
 import org.joda.time.DateTime;
 import play.Logger;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import play.db.ebean.Model;
-import utils.json.JodaDateOperator;
+import utils.json.JodaTimestampOperator;
 
 @Entity
 public class DailyOrder extends Model {
@@ -34,9 +34,9 @@ public class DailyOrder extends Model {
     public Long id;
 
     @Constraints.Required
-    @JodaDate
-    @JsonSerialize(using=JodaDateOperator.JodaDateSerializer.class)
-    @JsonDeserialize(using=JodaDateOperator.JodaDateDeserializer.class)
+    @JodaTimestamp
+    @JsonSerialize(using=JodaTimestampOperator.JodaTimestampSerializer.class)
+    @JsonDeserialize(using=JodaTimestampOperator.JodaTimestampDeserializer.class)
     public DateTime orderDate;
 
     @OneToOne(cascade=CascadeType.REFRESH, optional = false) // 参照のみだからREFRESHでいいはず

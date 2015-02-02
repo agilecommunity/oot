@@ -13,10 +13,10 @@ app.my.helpers.transformRequestDefault = function(data) {
     return data;
 };
 
-app.my.helpers.parseDate = function(value) {
-    return moment(value, 'YYYY-MM-DDZ');
-};
-
 app.my.helpers.parseTimestamp = function(value) {
     return moment(value, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+};
+
+app.my.helpers.formatTimestamp = function(value) {
+    return value.format('YYYY-MM-DDTHH:mm:ss.SSSZ');
 };

@@ -53,7 +53,7 @@ public class DailyOrdersTest extends WithApplication {
      public void createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"localUser\":{\"id\": \"steve@foo.bar\"}");
-         builder.append(", \"orderDate\":\"2014-03-11+09:00\"");
+         builder.append(", \"orderDate\":\"2014-03-11T00:00:00.000+09:00\"");
          builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
          builder.append("}");
 
@@ -63,7 +63,7 @@ public class DailyOrdersTest extends WithApplication {
 
          assertThat(status(result)).isEqualTo(OK);
 
-         DateTime dateValue = ParameterConverter.convertDateFrom("2014-03-11+09:00");
+         DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-03-11T00:00:00.000+09:00");
          DailyOrder order = DailyOrder.findBy(new DateTime(dateValue.getMillis()), "steve@foo.bar");
          assertThat(order.localUser.firstName).isEqualTo("スティーブ");
 
@@ -99,7 +99,7 @@ public class DailyOrdersTest extends WithApplication {
      public void updateは指定したIDのDailyOrderオブジェクトを更新すること() {
          StringBuilder builder = new StringBuilder();
          builder.append("{ \"id\":1");
-         builder.append(", \"orderDate\":\"2014-02-10+09:00\"");
+         builder.append(", \"orderDate\":\"2014-02-10T00:00:00.000+09:00\"");
          builder.append(", \"localUser\":{\"id\": \"steve@foo.bar\"}");
          builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
          builder.append("}");
@@ -165,11 +165,11 @@ public class DailyOrdersTest extends WithApplication {
          return JUnitParamsRunner.$(
                    JUnitParamsRunner.$("{ }") // 空のリクエスト
                  , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"} }") // 必須項目(orderDate)なし
-                 , JUnitParamsRunner.$("{ \"orderDate\":\"2014-02-11+09:00\" }")             // 必須項目(localUser)なし
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11+09:00\" }") // 存在しないユーザ
+                 , JUnitParamsRunner.$("{ \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }")             // 必須項目(localUser)なし
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }") // 存在しないユーザ
                  , JUnitParamsRunner.$("{ \"orderDate\":\"aaa\" }") // 存在しない日付
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10+09:00\" }") // 登録済みの注文
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10+09:00\" }") // ユーザが異なる
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10T00:00:00.000+09:00\" }") // 登録済みの注文
+                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10T00:00:00.000+09:00\" }") // ユーザが異なる
                  );
 
      }

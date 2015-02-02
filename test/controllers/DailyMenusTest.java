@@ -50,7 +50,7 @@ public class DailyMenusTest {
     @Test
     public void createは受け取ったJsonの内容からDailyMenuオブジェクトを作成すること() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menuDate\":\"2014-02-12+09:00\"");
+        builder.append("{ \"menuDate\":\"2014-02-12T00:00:00.000+09:00\"");
         builder.append(", \"status\":\"open\"");
         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
         builder.append("}");
@@ -59,7 +59,7 @@ public class DailyMenusTest {
 
         assertThat(status(result)).isEqualTo(OK);
 
-        DateTime dateValue = ParameterConverter.convertDateFrom("2014-02-12+09:00");
+        DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-02-12T00:00:00.000+09:00");
         DailyMenu object = DailyMenu.findBy(new DateTime(dateValue.getMillis()));
 
         assertThat(object.detailItems.size()).isEqualTo(1);
@@ -70,7 +70,7 @@ public class DailyMenusTest {
     @Test
     public void createは同じ商品が登録された場合BadRequestを返すこと() throws Throwable {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menuDate\":\"2014-02-12+09:00\"");
+        builder.append("{ \"menuDate\":\"2014-02-12T00:00:00.000+09:00\"");
         builder.append(", \"status\":\"open\"");
         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}, {\"menuItem\":{\"id\":2}}]");
         builder.append("}");
@@ -89,7 +89,7 @@ public class DailyMenusTest {
     @Test
     public void deleteは受け取ったIdに対応するDailyMenuオブジェクトを削除すること() throws ParseException {
 
-        DailyMenu target = DailyMenu.findBy(ParameterConverter.convertDateFrom("2014-02-10+09:00"));
+        DailyMenu target = DailyMenu.findBy(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+09:00"));
 
         Result result = callAPI(fakeRequest(DELETE, "/api/v1.0/daily-menus/" + target.id));
 
@@ -102,11 +102,11 @@ public class DailyMenusTest {
     @Test
     public void updateは受け取ったJsonの内容からDailyMenuオブジェクトを更新すること() throws IOException {
 
-        DateTime targetDate = ParameterConverter.convertDateFrom("2014-02-10+09:00");
+        DateTime targetDate = ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+09:00");
 
         logger.debug("targetDate: {}", targetDate);
 
-        Result findResult = callAPI(fakeRequest(GET, "/api/v1.0/daily-menus/menu-date/" + targetDate.toString("yyyy-MM-ddZ")));
+        Result findResult = callAPI(fakeRequest(GET, "/api/v1.0/daily-menus/menu-date/" + targetDate.toString("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
 
         logger.debug(String.format("result: %s", contentAsString(findResult)));
 

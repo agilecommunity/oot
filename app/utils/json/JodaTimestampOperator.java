@@ -15,16 +15,16 @@ import java.io.IOException;
 /* http://tiku.io/questions/592492/custom-jodatime-serializer-using-play-frameworks-json-library より*/
 public class JodaTimestampOperator {
 
-    private final String PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    private static final String PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
-    public class JodaTimeStampDeserializer extends JsonDeserializer<DateTime> {
+    public static class JodaTimestampDeserializer extends JsonDeserializer<DateTime> {
         @Override
         public DateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
             return DateTimeFormat.forPattern(PATTERN).parseDateTime(jp.getText());
         }
     }
 
-    public class JodaTimeStampSerializer extends JsonSerializer<DateTime> {
+    public static class JodaTimestampSerializer extends JsonSerializer<DateTime> {
         @Override
         public void serialize(DateTime value, JsonGenerator gen, SerializerProvider arg2) throws IOException, JsonProcessingException {
             gen.writeString(value.toString(PATTERN));
