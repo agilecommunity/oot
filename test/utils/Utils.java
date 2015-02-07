@@ -3,7 +3,9 @@ package utils;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Transaction;
+import models.AppMetadata;
 import models.LocalUser;
+import org.yaml.snakeyaml.Yaml;
 import play.Configuration;
 import play.Logger;
 import play.Play;
@@ -18,6 +20,10 @@ import securesocial.core.PasswordInfo;
 import securesocial.core.SocialUser;
 import utils.snakeyaml.JodaPropertyConstructor;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -83,6 +89,14 @@ public class Utils {
         }
     }
 
+    public static void createAppMetadata(Map<String, Object> data) throws Throwable {
+        Yaml yaml = new Yaml();
+        File metaFile = new File("target/scala-2.10/classes/" + AppMetadata.pathToMetadata);
+        Writer writer = new OutputStreamWriter(new FileOutputStream(metaFile), "UTF8");
+        yaml.dump(data, writer);
+        writer.close();
+    }
+
     private static void cleanUpTables(Connection conn) throws SQLException {
         String[] tables = {
                 "DAILY_MENU",
@@ -102,6 +116,7 @@ public class Utils {
     }
 
     private static void initializeSequence(Connection conn) throws SQLException {
+
         String[] sequences = {
                 "DAILY_MENU_SEQ",
                 "DAILY_MENU_ITEM_SEQ",
@@ -110,9 +125,22 @@ public class Utils {
                 "MENU_ITEM_SEQ",
         };
 
+        Boolean isH2 = false;
+        String dbUrl = conn.getMetaData().getURL();
+        if (dbUrl == null || dbUrl.contains(":h2:") == true) {
+            isH2 = true;
+        }
+
         for (String sequence : sequences) {
-            String query = String.format("SELECT setval('%s', 1, false)", sequence);
-            conn.createStatement().executeQuery(query);
+
+            if (isH2) {
+                String query = String.format("ALTER SEQUENCE %s RESTART WITH 1", sequence);
+                conn.createStatement().executeUpdate(query);
+            } else {
+                String query = String.format("SELECT setval('%s', 1, false)", sequence);
+                conn.createStatement().executeQuery(query);
+            }
+
         }
     }
 }
