@@ -95,7 +95,8 @@ public class Utils {
         };
 
         for (String table : tables) {
-            String query = "DELETE FROM " + table;
+            String query = String.format("TRUNCATE TABLE %s", table);
+            logger.debug("query: {}", query);
             conn.createStatement().executeUpdate(query);
         }
     }
