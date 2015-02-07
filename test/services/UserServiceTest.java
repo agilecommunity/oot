@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import play.Application;
 import play.test.FakeApplication;
+import utils.Utils;
 
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ public class UserServiceTest {
 
         FakeApplication app = fakeApplication(utils.Utils.getAdditionalApplicationSettings());
         start(app);
+        Utils.cleanUpDatabase();
 
         UserService service = new UserService(new Application(app.getWrappedApplication()));
 

@@ -18,6 +18,7 @@ import play.mvc.Result;
 import play.test.FakeRequest;
 import utils.Utils;
 import utils.controller.ParameterConverter;
+import utils.snakeyaml.YamlUtil;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,13 +35,13 @@ public class DailyMenusTest {
     @Before
     public void setUp() {
         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-
-        Ebean.save((List) Utils.loadYaml("fixtures/test/menu_item.yml"));
-        Ebean.save((List) Utils.loadYaml("fixtures/test/local_user.yml"));
-        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order.yml"));
-        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order_item.yml"));
-        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_menu.yml"));
-        Ebean.save((List) Utils.loadYaml("fixtures/test/daily_menu_item.yml"));
+        Utils.cleanUpDatabase();
+        Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu_item.yml"));
     }
 
     @After

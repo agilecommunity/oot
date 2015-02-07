@@ -5,6 +5,7 @@
   シナリオ: 商品登録から注文までの基本的な流れ
     前提    以下のユーザを登録する:
         | メールアドレス   | パスワード   | 姓               | 名         | ロール       |
+        | admin@localhost  | adminadmin   | お弁当           | 管理者     | 管理者       |
         | tom@localhost    | tomhoehoe    | ポッペンディーク | トム       | 一般メンバー |
         | mary@localhost   | maryhoehoe   | ポッペンディーク | メアリー   | 一般メンバー |
         | henrik@localhost | henrikhoehoe | クニベルグ       | ヘンリック | 一般メンバー |
