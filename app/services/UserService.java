@@ -135,7 +135,7 @@ public class UserService extends BaseUserService {
     public void doDeleteExpiredTokens() {
         logger.debug("#doDeleteExpiredTokens");
 
-        List<LocalToken> list = LocalToken.find.where().lt("expireAt", new DateTime().toString()).findList();
+        List<LocalToken> list = LocalToken.find.where().lt("expireAt", new DateTime()).findList();
 
         logger.debug("#doDeleteExpiredTokens num of expire: {}", list.size());
 

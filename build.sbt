@@ -35,9 +35,17 @@ unmanagedResourceDirectories in Test <+= baseDirectory( _ / "test" / "features" 
 // testからcucumberのテストを除外
 testOptions in Test := Seq(Tests.Filter(s => !(s startsWith "feature")))
 
-javaOptions in Test += "-XX:-UseSplitVerifier"
+javaOptions in Test ++= Seq("-XX:-UseSplitVerifier")
 
-javaOptions in Test += "-Dconfig.file=conf/unit-test.conf"
+// 設定ファイルの指定
+val appOptions = System.getProperty("config.file") match {
+  case s:String => "-Dconfig.file=" + s
+  case _ => "-Dconfig.file=conf/unit-test.conf"
+}
+
+javaOptions in Test += appOptions
+
+//javaOptions in Test ++= Seq("-Ddefault.db.driver=org.h2.Driver", "-Ddefault.db.url=jdbc:h2:mem:test")
 
 Keys.fork in Test := true
 
@@ -63,7 +71,11 @@ cucumberTask := {
     case s:String => "-Dselenium.baseUrl=" + s
     case _ => ""
   }
-  val appOptions = Seq("-Dlogger.resource=logger-test-features.xml", "-Dconfig.file=conf/unit-test.conf")
+  val configFileOption = System.getProperty("config.file") match {
+    case s:String => "-Dconfig.file=" + s
+    case _ => "-Dconfig.file=conf/unit-test.conf"
+  }
+  val appOptions = Seq("-Dlogger.resource=logger-test-features.xml", configFileOption)
   val jvmOptions = appOptions :+ cucumberOpts :+ seleniumDriverOptions :+ seleniumBaseUrlOptions
   logger.info("- jvmOptions: "  + jvmOptions)
   val cucumberRunner = "features.RunCucumber"

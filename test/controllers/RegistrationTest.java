@@ -12,6 +12,7 @@ import play.filters.csrf.CSRF;
 import play.libs.Json;
 import play.mvc.Result;
 import play.test.FakeRequest;
+import utils.Utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class RegistrationTest {
 
     public static void setUp() {
         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
+        Utils.cleanUpDatabase();
     }
 
     public static class startSignupとsignupの利用方法 {

@@ -1,8 +1,12 @@
 package utils;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Transaction;
 import models.LocalUser;
+import play.Configuration;
 import play.Logger;
+import play.Play;
 import play.mvc.Http.Cookie;
 import scala.Option;
 import scala.Some;
@@ -14,6 +18,8 @@ import securesocial.core.PasswordInfo;
 import securesocial.core.SocialUser;
 import utils.snakeyaml.JodaPropertyConstructor;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +33,7 @@ import static play.test.Helpers.inMemoryDatabase;
  */
 public class Utils {
 
-    Logger.ALogger logger = Logger.of("test.Utils");
+    private static final Logger.ALogger logger = Logger.of("test.Utils");
 
     public static Cookie fakeCookie(String id){
 
@@ -58,13 +64,55 @@ public class Utils {
 
     public static Map<String, String> getAdditionalApplicationSettings() {
         Map<String, String> settings = new HashMap<String, String>();
-        settings.putAll(inMemoryDatabase());
-
         return settings;
     }
 
-    public static Object loadYaml(String pathToFile) {
-        org.yaml.snakeyaml.Yaml yaml = new org.yaml.snakeyaml.Yaml(new JodaPropertyConstructor());
-        return yaml.load(play.Play.application().resourceAsStream(pathToFile));
+    public static void cleanUpDatabase() {
+        Transaction trans = Ebean.beginTransaction();
+        try {
+            Connection conn = trans.getConnection();
+
+            cleanUpTables(conn);
+            initializeSequence(conn);
+
+            Ebean.commitTransaction();
+        } catch (SQLException ex) {
+            logger.error("#cleanUpDatabase", ex);
+        } finally {
+            Ebean.endTransaction();
+        }
+    }
+
+    private static void cleanUpTables(Connection conn) throws SQLException {
+        String[] tables = {
+                "DAILY_MENU",
+                "DAILY_MENU_ITEM",
+                "DAILY_ORDER",
+                "DAILY_ORDER_ITEM",
+                "LOCAL_TOKEN",
+                "LOCAL_USER",
+                "MENU_ITEM",
+        };
+
+        for (String table : tables) {
+            String query = String.format("TRUNCATE TABLE %s", table);
+            logger.debug("query: {}", query);
+            conn.createStatement().executeUpdate(query);
+        }
+    }
+
+    private static void initializeSequence(Connection conn) throws SQLException {
+        String[] sequences = {
+                "DAILY_MENU_SEQ",
+                "DAILY_MENU_ITEM_SEQ",
+                "DAILY_ORDER_SEQ",
+                "DAILY_ORDER_ITEM_SEQ",
+                "MENU_ITEM_SEQ",
+        };
+
+        for (String sequence : sequences) {
+            String query = String.format("SELECT setval('%s', 1, false)", sequence);
+            conn.createStatement().executeQuery(query);
+        }
     }
 }

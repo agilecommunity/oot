@@ -12,6 +12,7 @@ import com.avaje.ebean.Ebean;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import utils.Utils;
 
 public class GlobalHooks {
 
@@ -25,8 +26,10 @@ public class GlobalHooks {
 
         WebBrowser.setUp();
 
-        TEST_SERVER = testServer(PORT, fakeApplication(inMemoryDatabase()));
+        TEST_SERVER = testServer(PORT, fakeApplication());
         start(TEST_SERVER);
+
+        Utils.cleanUpDatabase();
     }
 
     @After

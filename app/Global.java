@@ -19,6 +19,7 @@ import play.data.format.Formatters;
 import play.libs.Yaml;
 
 import com.avaje.ebean.Ebean;
+import utils.snakeyaml.YamlUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,6 +31,8 @@ public class Global extends GlobalSettings  {
     @Override
     public Configuration onLoadConfig(Configuration configuration, File file, ClassLoader classLoader) {
 
+        logger.debug("#onLoadConfig");
+
         Configuration modifiedConfig = modifySmtpConfiguration(configuration);
 
         return modifiedConfig;
@@ -38,7 +41,7 @@ public class Global extends GlobalSettings  {
     @Override
     public void onStart(Application app) {
 
-        logger.debug("onStart");
+        logger.debug("#onStart");
 
         registerFormatters();
 
@@ -48,10 +51,10 @@ public class Global extends GlobalSettings  {
 
         if(Play.isDev()) {
             if(MenuItem.find.findRowCount() == 0) {
-                Ebean.save((List) Yaml.load("fixtures/dev/menu_item.yml"));
-                Ebean.save((List) Yaml.load("fixtures/dev/daily_menu.yml"));
-                Ebean.save((List) Yaml.load("fixtures/dev/daily_menu_item.yml"));
-                Ebean.save((List) Yaml.load("fixtures/dev/local_user.yml"));
+                Ebean.save((List) YamlUtil.load("fixtures/dev/menu_item.yml"));
+                Ebean.save((List) YamlUtil.load("fixtures/dev/daily_menu.yml"));
+                Ebean.save((List) YamlUtil.load("fixtures/dev/daily_menu_item.yml"));
+                Ebean.save((List) YamlUtil.load("fixtures/dev/local_user.yml"));
             }
         }
     }

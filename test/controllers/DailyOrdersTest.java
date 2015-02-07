@@ -12,7 +12,6 @@ import models.DailyOrder;
 import models.DailyOrderItem;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import play.Logger;
 import play.api.libs.json.JsValue;
 import play.api.libs.json.Json;
 import play.filters.csrf.CSRF;
-import play.libs.Yaml;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
 import play.test.WithApplication;
@@ -30,6 +28,7 @@ import play.test.WithApplication;
 import com.avaje.ebean.Ebean;
 import utils.Utils;
 import utils.controller.ParameterConverter;
+import utils.snakeyaml.YamlUtil;
 
 @RunWith(JUnitParamsRunner.class)
 public class DailyOrdersTest extends WithApplication {
@@ -39,10 +38,11 @@ public class DailyOrdersTest extends WithApplication {
      @Before
      public void setUp() {
          start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-         Ebean.save((List) Utils.loadYaml("fixtures/test/menu_item.yml"));
-         Ebean.save((List) Utils.loadYaml("fixtures/test/local_user.yml"));
-         Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order.yml"));
-         Ebean.save((List) Utils.loadYaml("fixtures/test/daily_order_item.yml"));
+         Utils.cleanUpDatabase();
+         Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
+         Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
+         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
+         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
      }
 
      @After
