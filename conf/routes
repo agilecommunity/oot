@@ -6,6 +6,8 @@ GET           /uc-assets/images/*file                                   controll
 GET           /uc-assets/*file                                          controllers.UCAssets.at(file)
 
 # Api
+GET           /api/v1.0/app-metadata                                         controllers.Application.appMetadata()
+
 GET           /api/v1.0/shops                                                controllers.Shops.index()
 GET           /api/v1.0/shops/:shopName/menu-items                           controllers.MenuItems.indexByShopName(shopName)
 
