@@ -51,8 +51,8 @@ angular.module('MyControllers')
 
     DailyMenu.getByMenuDate(params,
         function (response) {
-            // 店名、品名の順に並び替え
-            response.detailItems = $filter('orderBy')(response.detailItems, ['menuItem.shopName', 'menuItem.name']);
+            // カテゴリ、店名、品名の順に並び替え(カテゴリはbento, sideの順に表示したい)
+            response.detailItems = $filter('orderBy')(response.detailItems, ['menuItem.category', 'menuItem.shopName', 'menuItem.name']);
             $scope.dailyMenu = response;
 
             $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: app.my.helpers.formatTimestamp($scope.menuDate)},
