@@ -30,6 +30,13 @@ public class ChecklistPage {
     @FindBy(how=How.CSS, using="div.content.admin-checklist")
     private WebElement base;
 
+    @FindBy(how=How.CLASS_NAME, using="total-price-on-order")
+    private WebElement totalPriceOnOrder;
+
+    public String getTotalPriceOnOrder() {
+        return totalPriceOnOrder.getText();
+    }
+
     public List<Map<String, String>> getList() {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
