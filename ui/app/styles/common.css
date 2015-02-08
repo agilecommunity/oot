@@ -83,6 +83,31 @@ td.price {
     cursor: pointer;
 }
 
+.page-footer {
+    background-color: #454545;
+}
+
+.page-footer {
+    background-color: #343434;
+    color: white;
+    margin-top: 2em;
+    text-align: right;
+}
+.page-footer > div{
+    margin: 0.5em;
+}
+
+.button {
+    background-color: #92D13D;
+
+    color: white;
+    padding: 0.5em 1em;
+    width: 160px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .content-header {
     background-color: #92D13D;
 
@@ -232,32 +257,6 @@ td.price {
 .menu-item-list .menu-item .num-orders .badge {
     font-size: 150%;
     vertical-align: top;
-}
-
-.page-footer {
-    background-color: #454545;
-}
-
-.page-footer {
-    background-color: #343434;
-    color: white;
-    margin-top: 2em;
-    padding: 1em;
-    text-align: center;
-}
-.page-footer > div{
-    margin: 0.5em;
-}
-
-.button {
-    background-color: #92D13D;
-
-    color: white;
-    padding: 0.5em 1em;
-    width: 160px;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .user-info {

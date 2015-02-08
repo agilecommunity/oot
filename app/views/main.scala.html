@@ -1,9 +1,9 @@
-@()
+@(appMetadata: AppMetadata)
 <!DOCTYPE html>
 <html  xmlns:ng="http://angularjs.org" id="ng-app">
     <head>
         <meta charset="utf-8">
-        <title>美味しいお弁当が食べたい！</title>
+        <title>美味しいお弁当を食べたい！</title>
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap-datetimepicker.min.css")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload.css")">
@@ -15,17 +15,28 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/helpers/console.js")"></script>
     </head>
     <body>
-        <div class="col-xs-12 col-sm-12 col-md-12"></div>
-        <div class="page-header row">
-            <h1>美味しいお弁当を食べたい！</h1>
-        </div>
-        <div class="row" ng-view ng-cloak></div>
-        <div class="page-footer row">
-            <div class="copyright">サイト開発者 : NES アジャイルコミュニティ</div>
-            <div class="powered-by">使用 F/W :  Play Framework 2.0</div>
-        </div>
-        <div class="user-info" ng-cloak>
-        {{$root.currentUser.lastName}} {{$root.currentUser.firstName}}
+        <div class="container-fluid">
+            <div class="page-header row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <h1>美味しいお弁当を食べたい！</h1>
+                </div>
+            </div>
+            <div class="row" ng-view ng-cloak></div>
+            <div class="page-footer row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div>
+                        <span class="powered-by">Powered by <a href="https://www.playframework.com/">Play Framework</a> & <a href="https://angularjs.org/">AngularJS</a></span>
+                        /
+                        <span class="copyright">Development by NES アジャイルコミュニティ</span>
+                    </div>
+                    <div class="app-metadata">
+                        <span class="version">App Version : @appMetadata.getVersion</span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-info" ng-cloak>
+                {{$root.currentUser.lastName}} {{$root.currentUser.firstName}}
+            </div>
         </div>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/jquery.ui.widget.js")"></script>

@@ -20,7 +20,9 @@ public class Application extends Controller {
   
     @AddCSRFToken
     public static Result index(String path) {
-        return ok(views.html.main.render());
+        AppMetadata metadata = new AppMetadata();
+        metadata.load();
+        return ok(views.html.main.render(metadata));
     }
 
     public static Result apiNotFound(String path) {
