@@ -30,6 +30,14 @@ public class ChecklistPage {
     @FindBy(how=How.CSS, using="div.content.admin-checklist")
     private WebElement base;
 
+    public String getTotalPriceOnOrder() throws Throwable {
+        By locator = By.cssSelector("span.total-price-on-order.ng-binding");
+        SeleniumUtils.waitForVisible(this.driver, locator);
+
+        WebElement totalPriceOnOrder = base.findElement(locator);
+        return totalPriceOnOrder.getText();
+    }
+
     public List<Map<String, String>> getList() {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 

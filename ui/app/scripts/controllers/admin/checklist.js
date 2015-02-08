@@ -96,6 +96,14 @@ angular.module('MyControllers')
         return false;
     };
 
+    $scope.totalPriceOnOrder = function() {
+        var total = 0;
+        angular.forEach($scope.dailyOrders, function (order) {
+            total += order.totalPrice();
+        });
+        return total;
+    };
+
     $scope.renderNumOrders = function(numOrders) {
         if ($filter('isEmptyOrUndefined')(numOrders) === true) {
             return "";

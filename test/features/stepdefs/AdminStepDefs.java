@@ -1,5 +1,6 @@
 package features.stepdefs;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import cucumber.api.DataTable;
 import cucumber.api.Transform;
 import cucumber.api.java.ja.ならば;
@@ -100,14 +101,18 @@ public class AdminStepDefs {
         } while (true);
     }
 
-    @ならば("^日付 \"(.*)\" のチェック表が以下の内容であること:$")
+    @ならば("^日付 \"(.*)\" のチェック表の総額が \"(.*)\" かつ、以下の内容であること:$")
     public void 日付_のチェック表が以下の内容であること(
             @Transform(JodaTimeConverter.class)DateTime menuDate,
+            String totalPriceOnOrder,
             DataTable checkListExpected
     ) throws Throwable {
+
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
         features.pages.admin.ChecklistPage checklistPage = indexPage.showCheckList(menuDate);
+
+        assertThat(checklistPage.getTotalPriceOnOrder()).isEqualTo(totalPriceOnOrder);
 
         List<Map<String, String>> actual = checklistPage.getList();
         checkListExpected.diff(actual);
