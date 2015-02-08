@@ -12,8 +12,10 @@ public class Application extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.Application");
 
     public static Result appMetadata() {
-        logger.debug("#appMetadata {}", AppMetadata.getInstance().version);
-        return ok(Json.toJson(AppMetadata.getInstance()));
+        AppMetadata metadata = new AppMetadata();
+        metadata.load();
+        logger.debug("#appMetadata {}", metadata.getVersion());
+        return ok(Json.toJson(metadata));
     }
   
     @AddCSRFToken

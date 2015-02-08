@@ -25,13 +25,6 @@ public class ApplicationTest {
 
     Logger.ALogger logger = Logger.of("application.controllers.DailyMenusTest");
 
-    @Before
-    public void setUp() {
-        start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-        Utils.cleanUpDatabase();
-        Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
-    }
-
     @Test
     public void appMetadataはアプリケーションの情報を返すこと() throws Throwable {
 
@@ -39,6 +32,10 @@ public class ApplicationTest {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("version", expectedVersion);
         Utils.createAppMetadata(data);
+
+        start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
+        Utils.cleanUpDatabase();
+        Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
 
         Result result = callAPI(fakeRequest(GET, "/api/v1.0/app-metadata"));
 

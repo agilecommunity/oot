@@ -10,15 +10,9 @@ public final class AppMetadata {
 
     public static final String pathToMetadata = "app-meta.yaml";
 
-    private static final AppMetadata instance = new AppMetadata();
+    private String version = "";
 
-    public static AppMetadata getInstance() {
-        return instance;
-    }
-
-    public String version = "";
-
-    private AppMetadata() {
+    public void load() {
         Map metaData = new HashMap();
         try {
             URL u = AppMetadata.class.getClassLoader().getResource(pathToMetadata);
@@ -36,5 +30,7 @@ public final class AppMetadata {
         }
     }
 
-
+    public String getVersion() {
+        return this.version;
+    }
 }

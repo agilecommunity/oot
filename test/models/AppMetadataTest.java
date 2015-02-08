@@ -19,6 +19,8 @@ public class AppMetadataTest {
         data.put("version", expectedVersion);
         Utils.createAppMetadata(data);
 
-        assertThat(AppMetadata.getInstance().version).isEqualTo(expectedVersion);
+        AppMetadata metadata = new AppMetadata();
+        metadata.load();
+        assertThat(metadata.getVersion()).isEqualTo(expectedVersion);
     }
 }

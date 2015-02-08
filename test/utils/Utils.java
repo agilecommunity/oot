@@ -90,9 +90,16 @@ public class Utils {
     }
 
     public static void createAppMetadata(Map<String, Object> data) throws Throwable {
-        Yaml yaml = new Yaml();
         File metaFile = new File("target/scala-2.10/classes/" + AppMetadata.pathToMetadata);
+
+        if (metaFile.exists()) {
+            metaFile.delete();
+            metaFile.createNewFile();
+        }
+
         Writer writer = new OutputStreamWriter(new FileOutputStream(metaFile), "UTF8");
+
+        Yaml yaml = new Yaml();
         yaml.dump(data, writer);
         writer.close();
     }
