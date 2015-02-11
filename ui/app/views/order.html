@@ -36,7 +36,7 @@
                                             </div>
                                             <div class="food-image">
                                                 <a href="" class="thumbnail" ng-bind-html="renderImage(dailyMenuItem)"></a>
-                                                <div class="ordered-mark"></div>
+                                                <div class="ordered-mark" ng-show="dailyMenuItem.ordered"><img src="/assets/images/ordered.png" width="276px" height="155px"></div>
                                             </div>
                                             <div class="comment label" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
                                         </div>
@@ -71,7 +71,7 @@
                                             </div>
                                             <div class="food-image">
                                                 <a href="" class="thumbnail" ng-bind-html="renderImage(dailyMenuItem)"></a>
-                                                <div class="ordered-mark"></div>
+                                                <div class="ordered-mark" ng-show="dailyMenuItem.ordered"><img src="/assets/images/ordered.png" width="276px" height="155px"></div>
                                             </div>
                                             <div class="comment label" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
                                         </div>
