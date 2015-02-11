@@ -28,5 +28,15 @@ angular.module('MyServices')
             }
     });
 
+    // メニューのリストから該当のメニューを探し、そのindexを返す
+    DailyOrderAggregate.findByMenuItem = function(list, menuItem) {
+        for (var i=0; i<list.length; i++) {
+            if (list[i].menuItemId === menuItem.id) {
+                return i;
+            }
+        }
+        return -1;
+    };
+
     return DailyOrderAggregate;
 }]);
