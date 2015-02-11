@@ -41,7 +41,7 @@ app.my.resolvers.AdminOrderAggregatesController = {
             initialData.dailyMenu = value;
             deferred.resolve(initialData);
         })
-        .catch(function(responseHeaders) {
+        ["catch"](function(responseHeaders) {
             deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
         });
 
