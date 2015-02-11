@@ -345,24 +345,20 @@ td.price {
 /*
  * 暫定「注文中」アイコン
  */
-.ordered {
+.menu-item.ordered {
     position: relative;
     border-color: #F3BFD6;
 }
 
 .ordered-mark {
-    display: none;
-
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
     width: 276px;
     height: 155px;
-
-    position: absolute;
-    left: 50px;
-    top: 5px;
-    background-repeat: no-repeat;
-    background-image: url('/assets/images/ordered.png');
-    background-position: left top;
-
     z-index: 10;
 }
 
@@ -418,11 +414,6 @@ td.price {
 .tile.empty {
     text-align: center;
     vertical-align: middle;
-}
-
-.ordered .ordered-mark,
-.selected .selected-mark {
-    display: block;
 }
 
 .ordered .food-name {
