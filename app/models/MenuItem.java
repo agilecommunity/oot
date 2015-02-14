@@ -35,6 +35,9 @@ public class MenuItem extends Model {
     public BigDecimal priceOnOrder;
 
     @Constraints.Required
+    public BigDecimal discountOnOrder = BigDecimal.ZERO;
+
+    @Constraints.Required
     @Constraints.MaxLength(20)
     public String status;
 
