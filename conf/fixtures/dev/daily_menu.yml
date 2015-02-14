@@ -1,11 +1,11 @@
 - !!models.DailyMenu
-    menuDate:   2014-02-09T00:00:00.0+09:00
-    status:     open
-
-- !!models.DailyMenu
     menuDate:   2014-02-10T00:00:00.0+09:00
     status:     open
 
 - !!models.DailyMenu
     menuDate:   2014-02-11T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2014-02-12T00:00:00.0+09:00
     status:     prepared
