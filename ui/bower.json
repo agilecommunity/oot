@@ -24,6 +24,7 @@
     "jquery-file-upload": "~9.8.0",
     "angular-bootstrap": "~0.11.2",
     "angular-spinner": "~0.5.1",
-    "blockui": "*"
+    "blockui": "*",
+    "underscore.string": "~3.0.3"
   }
 }

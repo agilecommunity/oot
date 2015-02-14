@@ -8,6 +8,9 @@
     angular.module('MyServices', ['ngResource', 'ngRoute']);
     angular.module('MyControllers', []);
     angular.module('MyFilters', []);
+    angular.module('MyDirectives', []);
+
+    angular.module('underscore.string', []).factory("_s", function(){ return s;});
 
     window.app = angular.module('oot',
         [  // アプリケーションの定義
@@ -16,9 +19,11 @@
             'ngSanitize',
             'ui.bootstrap',
             'angularSpinner',
+            'underscore.string',
             'MyServices',
             'MyControllers',
-            'MyFilters'
+            'MyFilters',
+            'MyDirectives'
         ]
     );
 

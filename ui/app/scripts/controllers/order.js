@@ -122,10 +122,10 @@ angular.module('MyControllers')
         return orderItem.numOrders;
     };
 
-    $scope.totalPriceOfTheDay = function (targetDate) {
+    $scope.totalReducedOfTheDay = function (targetDate) {
         var order = $filter('getByOrderDate')($scope.dailyOrders, targetDate);
         if (order !== null) {
-            return order.totalPrice();
+            return order.totalReducedOnOrder();
         }
         return 0;
     };

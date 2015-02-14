@@ -49,13 +49,15 @@ public class MenuItemsTest {
 
         assertThat(actual.size()).isEqualTo(4);
 
-        JsonNode actualOne = actual.get(0);
-        assertThat(actualOne.get("id").asLong()).isEqualTo(1L);
-        assertThat(actualOne.get("name").asText()).isEqualTo("カルビハンバーグ弁当");
+        JsonNode actualOne = actual.get(1);
+        assertThat(actualOne.get("id").asLong()).isEqualTo(2L);
+        assertThat(actualOne.get("name").asText()).isEqualTo("たっぷりサーモン丼");
+        assertThat(actualOne.get("reducedOnOrder").asDouble()).isEqualTo(530.0);
 
         actualOne = actual.get(3);
         assertThat(actualOne.get("id").asLong()).isEqualTo(4L);
         assertThat(actualOne.get("name").asText()).isEqualTo("カットフルーツ盛り合わせ");
+        assertThat(actualOne.get("reducedOnOrder").asDouble()).isEqualTo(280.0);
 
     }
 
@@ -68,7 +70,8 @@ public class MenuItemsTest {
             builder.append("{ \"category\": \"bento\"");
             builder.append(", \"shopName\": \"MOTTOMOTTO\"");
             builder.append(", \"name\": \"からあげ弁当\"");
-            builder.append(", \"priceOnOrder\":105");
+            builder.append(", \"fixedOnOrder\":105");
+            builder.append(", \"discountOnOrder\":5");
             builder.append(", \"code\": \"MOTTOMOTTO-B01\"");
             builder.append(", \"status\": \"valid\"");
             builder.append("}");
@@ -78,7 +81,8 @@ public class MenuItemsTest {
             builder.append("{ \"category\": \"side\"");
             builder.append(", \"shopName\": \"ポカポカ弁当\"");
             builder.append(", \"name\": \"108種類のサラダ\"");
-            builder.append(", \"priceOnOrder\":106");
+            builder.append(", \"fixedOnOrder\":106");
+            builder.append(", \"discountOnOrder\":null");
             builder.append(", \"code\": null");
             builder.append(", \"status\": \"valid\"");
             builder.append("}");
@@ -95,7 +99,7 @@ public class MenuItemsTest {
         List<MenuItem> items = MenuItem.find.where().or(
                 com.avaje.ebean.Expr.eq("shopName", "ポカポカ弁当"),
                 com.avaje.ebean.Expr.eq("shopName", "MOTTOMOTTO")
-        ).order("priceOnOrder").findList();
+        ).order("fixedOnOrder").findList();
 
         MenuItem item;
 
@@ -104,7 +108,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.category).describedAs("category").isEqualTo("bento");
         Assertions.assertThat(item.shopName).describedAs("shopName").isEqualTo("MOTTOMOTTO");
         Assertions.assertThat(item.name).describedAs("name").isEqualTo("からあげ弁当");
-        Assertions.assertThat(item.priceOnOrder).describedAs("priceOnOrder").isEqualTo(BigDecimal.valueOf(105L));
+        Assertions.assertThat(item.fixedOnOrder).describedAs("fixedOnOrder").isEqualTo(BigDecimal.valueOf(105L));
+        Assertions.assertThat(item.discountOnOrder).describedAs("discountOnOrder").isEqualTo(BigDecimal.valueOf(5L));
         Assertions.assertThat(item.code).describedAs("code").isEqualTo("MOTTOMOTTO-B01");
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
 
@@ -114,7 +119,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.category).describedAs("category").isEqualTo("side");
         Assertions.assertThat(item.shopName).describedAs("shopName").isEqualTo("ポカポカ弁当");
         Assertions.assertThat(item.name).describedAs("name").isEqualTo("108種類のサラダ");
-        Assertions.assertThat(item.priceOnOrder).describedAs("priceOnOrder").isEqualTo(BigDecimal.valueOf(106L));
+        Assertions.assertThat(item.fixedOnOrder).describedAs("fixedOnOrder").isEqualTo(BigDecimal.valueOf(106L));
+        Assertions.assertThat(item.discountOnOrder).describedAs("discountOnOrder").isEqualTo(BigDecimal.valueOf(0L));
         Assertions.assertThat(item.code).describedAs("code").isNull();
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
 
@@ -128,7 +134,8 @@ public class MenuItemsTest {
             builder.append("category");
             builder.append(",shopName");
             builder.append(",name");
-            builder.append(",priceOnOrder");
+            builder.append(",fixedOnOrder");
+            builder.append(",discountOnOrder");
             builder.append(",code");
             builder.append(",status");
             builder.append("\r\n");
@@ -138,6 +145,7 @@ public class MenuItemsTest {
             builder.append(",\"MOTTOMOTTO\"");
             builder.append(",\"からあげ弁当\"");
             builder.append(",105");
+            builder.append(",5");
             builder.append(",\"MOTTOMOTTO-B01\"");
             builder.append(",\"valid\"");
             builder.append("\r\n");
@@ -147,6 +155,7 @@ public class MenuItemsTest {
             builder.append(",\"ポカポカ弁当\"");
             builder.append(",\"108種類のサラダ\"");
             builder.append(",106");
+            builder.append(",0");
             builder.append(",");
             builder.append(",\"valid\"");
         }
@@ -160,7 +169,7 @@ public class MenuItemsTest {
         List<MenuItem> items = MenuItem.find.where().or(
                 com.avaje.ebean.Expr.eq("shopName", "ポカポカ弁当"),
                 com.avaje.ebean.Expr.eq("shopName", "MOTTOMOTTO")
-        ).order("priceOnOrder").findList();
+        ).order("fixedOnOrder").findList();
 
         Assertions.assertThat(items.size()).isEqualTo(2);
 
@@ -171,7 +180,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.category).isEqualTo("bento");
         Assertions.assertThat(item.shopName).isEqualTo("MOTTOMOTTO");
         Assertions.assertThat(item.name).isEqualTo("からあげ弁当");
-        Assertions.assertThat(item.priceOnOrder).isEqualTo(BigDecimal.valueOf(105L));
+        Assertions.assertThat(item.fixedOnOrder).isEqualTo(BigDecimal.valueOf(105L));
+        Assertions.assertThat(item.discountOnOrder).isEqualTo(BigDecimal.valueOf(5L));
         Assertions.assertThat(item.code).isEqualTo("MOTTOMOTTO-B01");
         Assertions.assertThat(item.status).isEqualTo("valid");
 
@@ -180,7 +190,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.category).isEqualTo("side");
         Assertions.assertThat(item.shopName).isEqualTo("ポカポカ弁当");
         Assertions.assertThat(item.name).isEqualTo("108種類のサラダ");
-        Assertions.assertThat(item.priceOnOrder).isEqualTo(BigDecimal.valueOf(106L));
+        Assertions.assertThat(item.fixedOnOrder).isEqualTo(BigDecimal.valueOf(106L));
+        Assertions.assertThat(item.discountOnOrder).isEqualTo(BigDecimal.valueOf(0L));
         Assertions.assertThat(item.code).isEmpty();
         Assertions.assertThat(item.status).isEqualTo("valid");
     }

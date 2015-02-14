@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -32,12 +33,14 @@ public class MenuItem extends Model {
     public String name;
 
     @Constraints.Required
-    public BigDecimal priceOnOrder;
+    public BigDecimal fixedOnOrder;
+
+    @Constraints.Required
+    public BigDecimal discountOnOrder = BigDecimal.ZERO;
 
     @Constraints.Required
     @Constraints.MaxLength(20)
     public String status;
-
 
     @Constraints.MaxLength(255)
     public String comment;
@@ -46,6 +49,14 @@ public class MenuItem extends Model {
     public String code;
 
     public String itemImagePath;
+
+    @JsonGetter
+    public BigDecimal reducedOnOrder() {
+        if (this.fixedOnOrder == null) {
+            return BigDecimal.ZERO;
+        }
+        return this.fixedOnOrder.subtract(this.discountOnOrder);
+    }
 
     /**
      * Generic query helper for entity Lunch with id Long

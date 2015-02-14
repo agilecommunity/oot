@@ -8,7 +8,7 @@
         </div>
 
         <div ng-show="!menuOrOrderIsEmpty()">
-            <div class="pull-right">総額: <span class="total-price-on-order">{{totalPriceOnOrder() | currencyNoFraction:""}}円</span></div>
+            <div class="pull-right">総額: <span class="total-price-on-order">{{totalReducedOnOrder() | currencyNoFraction:""}}円</span></div>
             <div class="clearfix"></div>
             <table class="table table-bordered table-condensed checklist" id="checklist">
                 <thead>
@@ -18,7 +18,7 @@
                         <th class="shop-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.shopName}}</th>
                     </tr>
                     <tr>
-                        <th class="food-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.name}}　{{item.menuItem.priceOnOrder}}円</th>
+                        <th class="food-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.name}}　<span oot-reduced-price menu-item="item.menuItem"></span></th>
                     </tr>
                 </thead>
                 <tbody>

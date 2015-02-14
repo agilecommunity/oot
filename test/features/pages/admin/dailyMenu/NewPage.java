@@ -144,10 +144,10 @@ public class NewPage {
      * 商品を追加する
      * @param shopName
      * @param itemName
-     * @param priceOnOrder  価格 単位を含めること (ex. "100円")
+     * @param reducedOnOrder  価格 単位を含めること (ex. "100円")
      * @throws Throwable
      */
-    public void addItem(String category, String shopName, String itemName, String priceOnOrder) throws Throwable {
+    public void addItem(String category, String shopName, String itemName, String reducedOnOrder) throws Throwable {
 
         By emptyTileLocator = By.xpath(String.format("//div[@class='category-row row' and div//div[text()='%s']]//div[contains(@class, 'menu-item-sm empty')][1]", category));
 
@@ -157,9 +157,9 @@ public class NewPage {
         SelectItemPage selectItemPage = new SelectItemPage(this.driver);
         SelectShopPage selectShopPage = selectItemPage.selectShop();
         selectShopPage.select(shopName);
-        selectItemPage.select(itemName, priceOnOrder);
+        selectItemPage.select(itemName, reducedOnOrder);
 
-        By itemTileLocator = By.xpath(String.format("//div[@class='menu-item-sm selected']/div[@class='tile']/div[@class='caption' and div[contains(@class, 'shop-name') and text()='%s'] and div[contains(@class, 'food-name')  and text()='%s %s']]", shopName, itemName, priceOnOrder));
+        By itemTileLocator = By.xpath(String.format("//div[@class='menu-item-sm selected']/div[@class='tile']/div[@class='caption' and div[contains(@class, 'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", shopName, itemName, reducedOnOrder));
         SeleniumUtils.waitForVisible(this.driver, itemTileLocator);
 
         return;

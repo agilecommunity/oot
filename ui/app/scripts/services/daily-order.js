@@ -64,10 +64,10 @@ angular.module('MyServices')
         }
     });
 
-    DailyOrder.prototype.totalPrice = function () {
+    DailyOrder.prototype.totalReducedOnOrder = function () {
         var price = 0;
         angular.forEach(this.detailItems, function (item) {
-            price += item.menuItem.priceOnOrder * item.numOrders;
+            price += item.menuItem.reducedOnOrder * item.numOrders;
         });
         return price;
     };

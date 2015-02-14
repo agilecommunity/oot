@@ -2,7 +2,6 @@ package features.pages.admin.menuItem;
 
 import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -38,8 +37,11 @@ public class EditPage {
     @FindBy(id="menuItem.name")
     private WebElement name;
 
-    @FindBy(id="menuItem.price_on_order")
-    private WebElement priceOnOrder;
+    @FindBy(id="menuItem.fixed_on_order")
+    private WebElement fixedOnOrder;
+
+    @FindBy(id="menuItem.discount_on_order")
+    private WebElement discountOnOrder;
 
     @FindBy(id="menuItem.code")
     private WebElement code;
@@ -74,8 +76,12 @@ public class EditPage {
         throw new IllegalArgumentException("存在しないカテゴリです: " + value);
     }
 
-    public void setPriceOnOrder(String value) {
-        this.priceOnOrder.sendKeys(value);
+    public void setFixedOnOrder(String value) {
+        this.fixedOnOrder.sendKeys(value);
+    }
+
+    public void setDiscountOnOrder(String value) {
+        this.discountOnOrder.sendKeys(value);
     }
 
     public void setCode(String value) {
