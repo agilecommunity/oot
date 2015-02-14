@@ -10,7 +10,7 @@
             <div class="day-header row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="date">{{dailyMenu.menuDate.format('YYYY/MM/DD (ddd)')}}</div>
-                    <div class="small-total">当日合計: <span class="price">{{totalPriceOfTheDay(dailyMenu.menuDate)}}円</span></div>
+                    <div class="small-total">当日合計: <span class="price">{{totalReducedOfTheDay(dailyMenu.menuDate)}}円</span></div>
                     <div class="clear"></div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
                                             <div class="caption">
                                                 <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                                                <div class="food-name">{{dailyMenuItem.menuItem.name}} {{dailyMenuItem.menuItem.priceOnOrder}}円</div>
+                                                <div class="food-name">{{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
                                             </div>
                                             <div class="food-image">
                                                 <a href="" class="thumbnail" ng-bind-html="renderImage(dailyMenuItem)"></a>
@@ -67,7 +67,7 @@
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
                                             <div class="caption">
                                                 <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                                                <div class="food-name">{{dailyMenuItem.menuItem.name}} {{dailyMenuItem.menuItem.priceOnOrder}}円</div>
+                                                <div class="food-name">{{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
                                             </div>
                                             <div class="food-image">
                                                 <a href="" class="thumbnail" ng-bind-html="renderImage(dailyMenuItem)"></a>

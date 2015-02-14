@@ -9,20 +9,14 @@ import cucumber.api.java.ja.前提;
 import features.pages.admin.HeaderModule;
 import features.pages.admin.OrderAggregatesPage;
 import features.pages.admin.dailyMenu.NewPage;
-import features.pages.admin.dailyMenu.SelectItemPage;
-import features.pages.admin.dailyMenu.SelectShopPage;
 import features.pages.admin.menuItem.EditPage;
 import features.support.JodaTimeConverter;
-import features.support.SeleniumUtils;
 import features.support.WebBrowser;
 import models.LocalUser;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.openqa.selenium.By;
-import play.libs.Scala;
 import securesocial.core.Registry;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +60,8 @@ public class AdminStepDefs {
             editPage.setShopName(product.get("店名"));
             editPage.setCategory(product.get("カテゴリ"));
             editPage.setName(product.get("商品名"));
-            editPage.setPriceOnOrder(product.get("注文価格"));
+            editPage.setFixedOnOrder(product.get("注文(定価)"));
+            editPage.setDiscountOnOrder(product.get("注文(割引額)"));
             editPage.setCode(product.get("商品コード"));
             editPage.setStatus(product.get("ステータス"));
             editPage.save();

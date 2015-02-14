@@ -29,10 +29,12 @@
                     <thead>
                     <tr>
                         <th class="id col-md-1">ステータス</th>
-                        <th class="shop_name col-md-3">店名</th>
+                        <th class="shop_name col-md-2">店名</th>
                         <th class="name col-md-1">カテゴリ</th>
-                        <th class="name col-md-4">品名</th>
-                        <th class="price_on_order col-md-1">注文価格</th>
+                        <th class="name col-md-3">品名</th>
+                        <th class="price_on_order">注文<br>(定価)</th>
+                        <th class="discount_on_order">注文<br>(割引)</th>
+                        <th class="reduced_on_order">注文<br>(実売)</th>
                         <th class="edit col-md-1">編集</th>
                         <th class="delete col-md-1">削除</th>
                     </tr>
@@ -43,7 +45,9 @@
                         <td class="shop_name">{{menuItem.shopName}}</td>
                         <td class="id">{{menuItem.category}}</td>
                         <td class="name">{{menuItem.name}}</td>
-                        <td class="price_on_order">{{menuItem.priceOnOrder}}</td>
+                        <td class="price_on_order price">{{menuItem.fixedOnOrder}}</td>
+                        <td class="discount_on_order price">{{menuItem.discountOnOrder}}</td>
+                        <td class="reduced_on_order price">{{menuItem.reducedOnOrder}}</td>
                         <td class="edit"><button class="btn btn-info" ng-click="editItem(menuItem)">編集</button></td>
                         <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
                     </tr>

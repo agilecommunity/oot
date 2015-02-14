@@ -22,11 +22,11 @@
             <div class="col-md-8 no-data">対象の商品がありません</div>
         </div>
         <div class="menu-item-list row" ng-hide="isEmpty()" ng-repeat="group in groupMenuItems">
-            <div class="menu-item-container col-xs-12 col-sm-6 col-md-4" ng-click="selectThis(menuItem)" ng-repeat="menuItem in group">
+            <div class="menu-item-container col-xs-12 col-sm-6 col-md-4" ng-click="selectThis(menuItem)" ng-repeat-start="menuItem in group track by $index">
                 <div class="menu-item-sm">
                     <div class="caption">
-                        <div class="shop-name">【{{menuItem.shopName}}】</div>
-                        <div class="food-name">{{menuItem.name}} {{menuItem.priceOnOrder}}円</div>
+                        <div class="shop-name">{{menuItem.shopName}}</div>
+                        <div class="food-name">{{menuItem.name}} <span oot-reduced-price menu-item="menuItem"></span></div>
                     </div>
                     <div class="food-image">
                         <a href="" class="thumbnail" ng-bind-html="renderImage(menuItem)"></a>
@@ -35,7 +35,9 @@
                     <div class="selected-mark" ng-show="isSelected(menuItem)"><p>選択中</p></div>
                 </div>
             </div>
-            <div class="clearfix visible-md" ng-show="$last"></div>
+            <div class="clearfix visible-md" ng-if="($index + 1) % 3 === 0"></div>
+            <div class="clearfix visible-sm" ng-if="($index + 1) % 2 === 0"></div>
+            <div ng-repeat-end=""></div>
         </div>
     </div>
     <span us-spinner spinner-key="spinner" style="position: absolute;display: block;top: 100px;left: 50%;"></span>

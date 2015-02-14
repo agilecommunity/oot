@@ -96,10 +96,10 @@ angular.module('MyControllers')
         return false;
     };
 
-    $scope.totalPriceOnOrder = function() {
+    $scope.totalReducedOnOrder = function() {
         var total = 0;
         angular.forEach($scope.dailyOrders, function (order) {
-            total += order.totalPrice();
+            total += order.totalReducedOnOrder();
         });
         return total;
     };

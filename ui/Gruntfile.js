@@ -72,6 +72,12 @@ module.exports = function (grunt) {
                     '<%= conf.javascripts %>/services/_helpers.js',
                     '<%= conf.javascripts %>/services/**/[a-z]*.js'
                 ]
+            },
+            directives: {
+                dest: '<%= conf.dist.javascripts %>/directives/directives.js',
+                src: [
+                    '<%= conf.javascripts %>/directives/**/[a-z]*.js'
+                ]
             }
         },
         copy: {
@@ -100,6 +106,7 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/html5shiv/dist/html5shiv.js',
                     '<%= conf.components %>/respond/dest/respond.min.js',
                     '<%= conf.components %>/underscore/underscore.js',
+                    '<%= conf.components %>/underscore.string/dist/underscore.string.js',
                     '<%= conf.components %>/bootbox/bootbox.js',
                     '<%= conf.components %>/blockui/jquery.blockUI.js',
                     '<%= conf.components %>/jquery-file-upload/js/vendor/jquery.ui.widget.js',

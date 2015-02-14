@@ -1,7 +1,7 @@
 angular.module('MyControllers')
     .controller('DailyMenuSelectItemController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem', 'category', 'selectedItems', 'currentItem',
-    function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem, category, selectedItems, currentItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', '_s', 'usSpinnerService', 'User', 'MenuItem', 'category', 'selectedItems', 'currentItem',
+    function ($scope, $location, $routeParams, $filter, $modal, _s, usSpinnerService, User, MenuItem, category, selectedItems, currentItem) {
 
     console.log("DailyMenuSelectItemController category: " + category);
     console.log("DailyMenuSelectItemController selectedItems: ");
