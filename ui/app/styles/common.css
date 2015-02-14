@@ -137,8 +137,17 @@ td.price {
 }
 
 .food-image {
-    text-align: center;
     position: relative;
+    border: none;
+}
+
+.food-image {
+    /* 注文中マークのサイズを最低サイズとする*/
+    min-width: 250px;
+    min-height: 140px;
+}
+
+.food-image .thumbnail {
     border: none;
 }
 
@@ -216,6 +225,17 @@ td.price {
     height: auto;
 }
 
+.menu-item-sm.empty {
+    background: #DDDDDD;
+    font-size: 1.2em;
+    height: 210px;
+}
+
+.menu-item-sm.empty .tile {
+    text-align: center;
+    margin-top: 90px; /* テキストを縦中央に配置する方法が分からない… */
+}
+
 .choose-list{
     margin-bottom: 2em;
     width: 98%;
@@ -230,7 +250,7 @@ td.price {
 }
 
 .menu-item-list .menu-item-container{
-    margin: 0px;
+    margin: 2.5px 0px;
     padding-left: 5px;
     padding-right: 5px;
 }
@@ -357,8 +377,8 @@ td.price {
     right: 0;
     bottom: 0;
     margin: auto;
-    width: 276px;
-    height: 155px;
+    width: 250px;
+    height: 140px;
     z-index: 10;
 }
 
@@ -402,18 +422,6 @@ td.price {
     top:-0.3em;
     right:0px;
     font-size:200%;
-}
-
-.menu-item-sm.empty {
-    background: #d3d3d3;
-    padding: 50px 30px;
-    font-size: 1.2em;
-    min-height: 250px;
-}
-
-.tile.empty {
-    text-align: center;
-    vertical-align: middle;
 }
 
 .ordered .food-name {
