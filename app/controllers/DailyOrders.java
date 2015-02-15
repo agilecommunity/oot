@@ -3,6 +3,9 @@ package controllers;
 import java.text.ParseException;
 import java.util.List;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Query;
+import models.DailyMenu;
 import models.DailyOrder;
 import models.LocalUser;
 import org.joda.time.DateTime;
@@ -11,19 +14,41 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
+import utils.controller.DateParameter;
 import utils.controller.ParameterConverter;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import filters.RequireCSRFCheck4Ng;
+import utils.controller.StatusParamater;
 
 public class DailyOrders extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyOrders");
+
+    private static class Parameters {
+        public DateParameter orderDate = null;
+        public StatusParamater status = null;
+
+        public Parameters(Http.Request request) throws ParseException {
+            if (request.getQueryString("orderDate") != null) {
+                this.orderDate = new DateParameter(request.getQueryString("orderDate"));
+                return;
+            }
+            if (request.getQueryString("from") != null || request.getQueryString("to") != null) {
+                this.orderDate = new DateParameter(request.getQueryString("from"), request.getQueryString("to"));
+                return;
+            }
+            if (request.getQueryString("status") != null) {
+                this.status = new StatusParamater(request.getQueryString("status"));
+            }
+        }
+    }
 
     @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByOrderDate(String orderDateStr) {
@@ -49,11 +74,40 @@ public class DailyOrders extends Controller {
 
         Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
+        Parameters parameters = null;
+        try {
+            parameters = new Parameters(request());
+        } catch (ParseException e) {
+            logger.error("#showMine failed to parse parameters", e);
+            return internalServerError();
+        }
+
         ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
 
+        if (parameters.orderDate != null) {
+            if (parameters.orderDate.isRange()) {
+                DateParameter.DateRange dateRange = parameters.orderDate.getRangeValue();
+                query.between("orderDate", dateRange.fromDate, dateRange.toDate);
 
-        if (request().queryString().containsKey("orderDate")) {
-            query.eq("orderDate", request().queryString().get("orderDate"));
+                logger.debug("#showMine orderDate(range) from : " + dateRange.fromDate.toString());
+                logger.debug("#showMine orderDate(range) to   : " + dateRange.toDate.toString());
+
+            } else {
+                query.eq("orderDate", parameters.orderDate.getValue());
+
+                logger.debug("#showMine orderDate(value) : " + parameters.orderDate.getValue().toString());
+            }
+        }
+
+        if (parameters.status != null) {
+            Query<DailyMenu> subQuery = Ebean.find(DailyMenu.class)
+                    .setDistinct(true)
+                    .select("menuDate")
+                    .where().eq("status", parameters.status.getValue())
+                    .query();
+            query.in("orderDate", subQuery);
+
+            logger.debug("#showMine status : " + parameters.status.getValue());
         }
 
         List<DailyOrder> orders = query.findList();

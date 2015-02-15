@@ -31,16 +31,22 @@ public class SelectItemPage {
     @FindBy(how= How.XPATH, using=baseXPath)
     private WebElement base;
 
-    @FindBy(how= How.CSS, using="button.navbar-btn.select-shops")
-    private WebElement showSelectShop;
-
     public SelectShopPage selectShop() throws Throwable {
-        this.showSelectShop.click();
+
+        By itemLocator = By.cssSelector("button.navbar-btn.select-shops");
+        SeleniumUtils.waitForVisible(this.driver, itemLocator);
+
+        WebElement button = this.base.findElement(itemLocator);
+        button.click();
+
         return new SelectShopPage(this.driver);
     }
 
-    public void select(String itemName, String reducedOnOrder) {
+    public void select(String itemName, String reducedOnOrder) throws Throwable {
         By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item-sm') and div[@class='caption']/div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", itemName, reducedOnOrder));
+
+        SeleniumUtils.waitForVisible(this.driver, itemLocator);
+
         WebElement button = this.base.findElement(itemLocator);
         button.click();
 

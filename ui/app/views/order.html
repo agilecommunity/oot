@@ -1,32 +1,58 @@
     <div class="content order container-fluid">
-        <div class="message">
-            <ul>
-                <li><span style="color:red;font-size:1.5em;">商品をクリックするだけで、すぐに注文登録</span>します。「確定」ボタンは必要ありません。</li>
-                <li>終了は、そのままウインドウを閉じるだけです。</li>
-                <li>キャンセルは、もう１回商品をクリックしてください。</li>
-            </ul>
+
+        <div class="order-summary row">
+            <div class="order-summary-header col-xs-12 col-sm-12 col-md-12" style="width:100%;background-color: #92D13D;color:white;font-size: 1.5em; padding: 0.2em 1em;">
+                注文済み(今週分)
+            </div>
+            <div class="order-summary-body col-xs-12 col-sm-12 col-md-12">
+                <table class="order-summary table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="day" ng-repeat="day in daysThisWeek">
+                                <div style="position:relative">
+                                    {{day.format('M/D (ddd)')}} <div class="total-reduced-on-order">{{renderTotalReducedOnOrderThisWeek(day)}}</div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td ng-repeat="day in daysThisWeek">
+                                <div style="position:relative;" oot-order-summary order="getOrderThisWeek(day)"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="day" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:menuDate">
-            <div class="day-header row">
-                <div class="col-xs-12 col-sm-12 col-md-12">
+
+        <div class="message row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <ul>
+                    <li><span style="color:red;font-size:1.5em;">商品をクリックするだけで、すぐに注文登録</span>します。「確定」ボタンは必要ありません。</li>
+                    <li>終了は、そのままウインドウを閉じるだけです。</li>
+                    <li>キャンセルは、もう１回商品をクリックしてください。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="day row" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:'menuDate'">
+            <div class="day-header col-xs-12 col-sm-12 col-md-12">
                     <div class="date">{{dailyMenu.menuDate.format('YYYY/MM/DD (ddd)')}}</div>
                     <div class="small-total">当日合計: <span class="price">{{totalReducedOfTheDay(dailyMenu.menuDate)}}円</span></div>
                     <div class="clear"></div>
-                </div>
             </div>
-            <div class="choose-list container-fluid">
-                <div class="col-xs-12 col-sm-12 col-md-12" ng-show="dailyMenu.detailItems.length == 0" >
+            <div class="day-body col-xs-12 col-sm-12 col-md-12">
+                <div ng-show="dailyMenu.detailItems.length == 0" >
                     <p class="no-data">選択できるお弁当がありません。</p>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-12" ng-show="dailyMenu.detailItems.length > 0" >
-                    <div class="category-row row">
+                <div ng-show="dailyMenu.detailItems.length > 0" >
+                    <div class="category-row row" ng-show="getDetailItems(dailyMenu, 'bento').length > 0">
                         <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="row">
-                                <div class="col-xs12 col-sm-12 col-md-12">
-                                    <div class="label-category label">お弁当</div>
-                                </div>
+                            <div class="category-header row">
+                                <div class="label-category label col-xs-12 col-sm-12 col-md-12">お弁当</div>
                             </div>
-                            <div class="menu-item-list row">
+                            <div class="category-body menu-item-list row">
                                 <div class="menu-item-container col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-repeat-start="dailyMenuItem in getDetailItems(dailyMenu, 'bento') track by $index">
                                     <div class="menu-item" ng-class="{'ordered':dailyMenuItem.ordered}">
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
@@ -54,14 +80,12 @@
                         </div>
                     </div>
 
-                    <div class="category-row row">
+                    <div class="category-row row" ng-show="getDetailItems(dailyMenu, 'side').length > 0">
                         <div class="col-xs-12 col-sm-12 col-md-12">
-                            <div class="row">
-                                <div class="col-xs12 col-sm-12 col-md-12">
-                                    <div class="label-category label">サイドメニュー</div>
-                                </div>
+                            <div class="category-header row">
+                                <div class="label-category label col-xs-12 col-sm-12 col-md-12">サイドメニュー</div>
                             </div>
-                            <div class="menu-item-list row">
+                            <div class="category-body menu-item-list row">
                                 <div class="menu-item-container col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-repeat-start="dailyMenuItem in getDetailItems(dailyMenu, 'side') track by $index">
                                     <div class="menu-item" ng-class="{'ordered':dailyMenuItem.ordered}">
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">

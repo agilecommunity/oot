@@ -17,53 +17,13 @@ import play.mvc.Http;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
+import utils.controller.DateParameter;
 import utils.controller.ParameterConverter;
 import filters.RequireCSRFCheck4Ng;
 
 public class DailyMenus extends Controller {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyMenus");
-
-    private static class DateRange {
-        public DateTime fromDate;
-        public DateTime toDate;
-
-        public DateRange(String fromStr, String toStr) throws ParseException {
-            this.fromDate = ParameterConverter.convertTimestampFrom(fromStr);
-            this.toDate = ParameterConverter.convertTimestampFrom(toStr);
-        }
-    }
-
-    private static class DateParameter {
-        private DateTime value = null;
-        private DateRange rangeValue = null;
-
-        public DateParameter(String value) throws ParseException {
-            if (value == null) {
-                return;
-            }
-            this.value = ParameterConverter.convertTimestampFrom(value);
-        }
-
-        public DateParameter(String from, String to) throws ParseException {
-            if (from == null && to == null) {
-                return;
-            }
-            this.rangeValue = new DateRange(from, to);
-        }
-
-        public boolean isRange() {
-            return (this.rangeValue != null);
-        }
-
-        public DateRange getRangeValue() {
-            return this.rangeValue;
-        }
-
-        public DateTime getValue() {
-            return this.value;
-        }
-    }
 
     private static class Parameters {
         public DateParameter menuDate = null;
@@ -88,7 +48,7 @@ public class DailyMenus extends Controller {
         try {
             parameters = new Parameters(request());
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("#showMine failed to parse parameters", e);
             return internalServerError();
         }
 
@@ -96,7 +56,7 @@ public class DailyMenus extends Controller {
 
         if (parameters.menuDate != null) {
             if (parameters.menuDate.isRange()) {
-                DateRange dateRange = parameters.menuDate.getRangeValue();
+                DateParameter.DateRange dateRange = parameters.menuDate.getRangeValue();
                 menus.between("menuDate", dateRange.fromDate, dateRange.toDate);
 
                 logger.debug("#index menuDate(range) from : " + dateRange.fromDate.toString());
