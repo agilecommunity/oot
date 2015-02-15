@@ -27,7 +27,8 @@
         .when('/order', {
             templateUrl: '/views/order',
             controller: 'OrderController',
-            access: AccessLevels.user
+            access: AccessLevels.user,
+            resolve: app.my.resolvers.OrderController
         })
         .when('/admin/index', {
             templateUrl: '/views/admin/index',

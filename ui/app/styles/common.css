@@ -178,7 +178,6 @@ td.price {
     display: inline-block;
     font-size: 1.5em;
     border-radius: 0;
-    margin-bottom: 0.2em;
 }
 
 .menu-item,
@@ -234,14 +233,6 @@ td.price {
 .menu-item-sm.empty .tile {
     text-align: center;
     margin-top: 90px; /* テキストを縦中央に配置する方法が分からない… */
-}
-
-.choose-list{
-    margin-bottom: 2em;
-    width: 98%;
-}
-.category-row{
-    margin-top: 0.5em;
 }
 
 .menu-item-list {
@@ -436,7 +427,59 @@ td.price {
     border-bottom-color:#F3BFD6 !important;
 }
 
-/* メニュー表示 */
+/* 注文 */
+.category-header .label-category {
+    text-align: left;
+    padding: 0.3em 0.5em;
+    padding-left: 1.5em;
+}
+
+.category-body {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* 注文サマリ */
+div.order-summary {
+    margin-bottom: 5px;
+}
+
+div.order-summary-body {
+    margin-bottom: 0;
+}
+
+table.order-summary {
+    margin-bottom: 0;
+}
+
+table.order-summary th.day {
+    width:20%;
+}
+
+table.order-summary th.day div.total-reduced-on-order {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+table.order-summary td {
+    padding-bottom: 0;
+}
+
+table.order-summary td img {
+    float: left;
+    margin-right: 5px;
+}
+
+table.order-summary td p.order-first-item {
+    overflow: hidden;
+    margin-bottom: 2px;
+}
+
+table.order-summary td div.order-other-items {
+    text-align:right;
+}
+
 
 /* Bootstrap補助 */
 ul.nav-pills li.divider {

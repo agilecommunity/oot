@@ -41,11 +41,11 @@ public class OrderPage {
         By dayBaseLocator = By.id(String.format("day-%s", orderDate.toString("yyyyMMdd")));
         WebElement dayBase = base.findElement(dayBaseLocator);
 
-        By itemLocator = By.xpath(String.format("div[contains(@class, 'choose-list')]//div[contains(@class,'menu-item')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", shopName, itemName, priceOnOrder));
+        By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item-list')]//div[contains(@class,'menu-item')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", shopName, itemName, priceOnOrder));
         WebElement item = dayBase.findElement(itemLocator);
         item.click();
 
-        By orderdItemLocator = By.xpath(String.format("//div[@id='day-%s']/div[contains(@class, 'choose-list')]//div[contains(@class,'menu-item') and contains(@class, 'ordered')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", orderDate.toString("yyyyMMdd"), shopName, itemName, priceOnOrder));
+        By orderdItemLocator = By.xpath(String.format("//div[@id='day-%s']//div[contains(@class, 'menu-item-list')]//div[contains(@class,'menu-item') and contains(@class, 'ordered')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", orderDate.toString("yyyyMMdd"), shopName, itemName, priceOnOrder));
         SeleniumUtils.waitForVisible(this.driver, orderdItemLocator);
 
     }
