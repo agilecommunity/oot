@@ -16,7 +16,7 @@ angular.module('MyControllers')
         moment(startDayThisWeek).add(1, "days"),
         moment(startDayThisWeek).add(2, "days"),
         moment(startDayThisWeek).add(3, "days"),
-        moment(startDayThisWeek).add(4, "days"),
+        moment(startDayThisWeek).add(4, "days")
     ];
 
     // メニューに注文状況を反映する
