@@ -15,7 +15,7 @@ angular.module('MyDirectives')
         var linker = function(scope, element, attrs) {
             scope.$watch('order', function(newValue, oldValue){
 
-                var template = "";
+                var template = "(なし)";
 
                 if (newValue !== undefined && newValue !== null && newValue.detailItems.length > 0) {
 
