@@ -42,6 +42,7 @@ public class OrderPage {
         WebElement dayBase = base.findElement(dayBaseLocator);
 
         By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item-list')]//div[contains(@class,'menu-item')]//div[@class='caption' and div[contains(@class,'shop-name') and text()='%s'] and div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", shopName, itemName, priceOnOrder));
+        SeleniumUtils.waitForVisible(this.driver, itemLocator);
         WebElement item = dayBase.findElement(itemLocator);
         item.click();
 
