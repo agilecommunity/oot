@@ -19,31 +19,12 @@ angular.module('MyControllers')
         $.unblockUI();
     };
 
-    var groupingItems  = function() {
-        var countPerRow = 4;
-        $scope.groupMenuItems = [];
-        var group = [];
-        for ( var i=0 ; i < $scope.menuItems.length ; i++ ) {
-            if ($scope.menuItems[i].category !== category) {
-                continue;
-            }
-
-            group.push($scope.menuItems[i]);
-
-            if ((group.length) % countPerRow === 0 || (i+1) === $scope.menuItems.length) {
-                $scope.groupMenuItems.push(group);
-                group = [];
-            }
-        }
-    };
-
     var showItems = function() {
         var filterShop = $scope.filters.shop;
         startBlock();
         $scope.menuItems = MenuItem.queryByShopName({shopName: filterShop.name, status: 'valid'},
             function (response) { // 成功時
                 // 表示のために5個ずつグルーピングする
-                groupingItems();
                 stopBlock();
             },
             function (response) {   // 失敗時
@@ -55,7 +36,6 @@ angular.module('MyControllers')
     };
 
     $scope.menuItems = [];
-    $scope.groupMenuItems = [];
 
     $scope.filters = {};
     $scope.filters.shop = {id: '@none', name: '選択してください'};

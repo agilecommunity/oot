@@ -36,6 +36,33 @@
 
 - !!models.MenuItem
     category:        bento
+    shopName:        銀座肉屋
+    name:            焼肉弁当
+    fixedOnOrder:    550
+    discountOnOrder: 0
+    itemImagePath:
+    status:          valid
+
+- !!models.MenuItem
+    category:        bento
+    shopName:        銀座肉屋
+    name:            焼肉弁当 大盛り
+    fixedOnOrder:    560
+    discountOnOrder: 0
+    itemImagePath:
+    status:          valid
+
+- !!models.MenuItem
+    category:        bento
+    shopName:        銀座肉屋
+    name:            豚肉生姜焼き弁当
+    fixedOnOrder:    490
+    discountOnOrder: 0
+    itemImagePath:
+    status:          valid
+
+- !!models.MenuItem
+    category:        bento
     shopName:        銀座魚屋
     name:            たっぷりサーモン丼
     fixedOnOrder:    530

@@ -21,8 +21,8 @@
         <div class="row" ng-show="isEmpty()">
             <div class="col-md-8 no-data">対象の商品がありません</div>
         </div>
-        <div class="menu-item-list row" ng-hide="isEmpty()" ng-repeat="group in groupMenuItems">
-            <div class="menu-item-container col-xs-12 col-sm-6 col-md-4" ng-click="selectThis(menuItem)" ng-repeat-start="menuItem in group track by $index">
+        <div class="menu-item-list row" ng-hide="isEmpty()">
+            <div class="menu-item-container col-xs-12 col-sm-6 col-md-4" ng-click="selectThis(menuItem)" ng-repeat-start="menuItem in menuItems track by $index">
                 <div class="menu-item-sm">
                     <div class="caption">
                         <div class="shop-name">{{menuItem.shopName}}</div>
