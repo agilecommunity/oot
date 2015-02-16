@@ -1,0 +1,32 @@
+
+<div class="content admin-users-index">
+    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+    <div class="content-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped users">
+                    <thead>
+                    <tr>
+                        <th class="email col-md-3">メールアドレス</th>
+                        <th class="last_name col-md-3">姓</th>
+                        <th class="first_name col-md-3">名</th>
+                        <th class="is_admin col-md-1">管理者</th>
+                        <th class="edit col-md-1">編集</th>
+                        <th class="delete col-md-1">削除</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr id="user-{{user.id}}" ng-repeat="user in users | orderBy:['lastName', 'firstName']">
+                        <td class="email">{{user.email}}</td>
+                        <td class="last_name">{{user.lastName}}</td>
+                        <td class="first_name">{{user.firstName}}</td>
+                        <td class="is_admin">{{user.isAdmin}}</td>
+                        <td class="edit"><button class="btn btn-info" disabled>編集</button></td>
+                        <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

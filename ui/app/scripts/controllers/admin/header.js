@@ -30,4 +30,8 @@ angular.module('MyControllers')
         $location.path("/admin/menu-item-images/import");
     };
 
+    $scope.showUsersIndex = function () {
+        $location.path("/admin/users/index");
+    };
+
 }]);
