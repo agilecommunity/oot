@@ -67,6 +67,12 @@
             controller: 'MenuItemImageImportController',
             access: AccessLevels.admin
         })
+        .when('/admin/users/index', {
+            templateUrl: '/views/admin/user/index',
+            controller: 'UserIndexController',
+            access: AccessLevels.admin,
+            resolve: app.my.resolvers.UserIndexController
+        })
         .otherwise({                           // その他のパスが指定された場合
             redirectTo: '/'                    // "/"に飛ぶ
         });

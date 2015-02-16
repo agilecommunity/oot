@@ -126,4 +126,13 @@ public class AdminStepDefs {
         orderAggregatesExpected.diff(actual);
     }
 
+    @ならば("^ユーザ一覧が以下の内容であること:$")
+    public void ユーザ一覧が以下の内容であること(DataTable usersExpected) throws Throwable {
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.user.IndexPage indexPage = headerModule.showUsersIndex();
+
+        List<Map<String, String>> actual = indexPage.getList();
+        usersExpected.diff(actual);
+    }
+
 }

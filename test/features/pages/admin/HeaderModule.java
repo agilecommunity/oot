@@ -34,6 +34,9 @@ public class HeaderModule {
     @FindBy(how=How.LINK_TEXT, using="メニュー作成")
     private WebElement showOrderMenuNew;
 
+    @FindBy(how=How.LINK_TEXT, using="ユーザ一覧")
+    private WebElement showUsersIndex;
+
     public features.pages.admin.IndexPage showAdminIndex() throws Throwable {
         this.showAdminIndex.click();
         return new features.pages.admin.IndexPage(this.driver);
@@ -47,6 +50,11 @@ public class HeaderModule {
     public features.pages.admin.dailyMenu.NewPage showOrderMenuNew() throws Throwable {
         this.showOrderMenuNew.click();
         return new features.pages.admin.dailyMenu.NewPage(this.driver);
+    }
+
+    public features.pages.admin.user.IndexPage showUsersIndex() throws Throwable {
+        this.showUsersIndex.click();
+        return new features.pages.admin.user.IndexPage(this.driver);
     }
 
 }
