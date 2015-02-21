@@ -4,6 +4,9 @@ angular.module('MyControllers')
     ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder',
     function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder) {
 
+    var maxNumOfBento = 9;
+    var maxNumOfSide = 8;
+
     var compactSelectedItems = function() {
         var compacted = [];
 
@@ -117,11 +120,11 @@ angular.module('MyControllers')
         $scope.selectedItems.bento = [];
         $scope.selectedItems.side = [];
 
-        for(i=0; i<12; i++) {
+        for(i=0; i<maxNumOfBento; i++) {
             $scope.selectedItems.bento.push(emptyItem);
         }
 
-        for(i=0; i<8; i++) {
+        for(i=0; i<maxNumOfSide; i++) {
             $scope.selectedItems.side.push(emptyItem);
         }
     };
