@@ -321,22 +321,33 @@ td.price {
 
 .checklist {
     border-collapse: collapse;
-    width: 90%;
 }
+
 .checklist .shop-name {
     border-bottom: none;
 }
+
 .checklist .item-name {
     border-top: none;
     border-bottom: none;
 }
+
+.checklist .user-name {
+    white-space: nowrap;
+}
+
 .checklist .price {
     border-top: none;
 }
+
 .checklist .order-status {
     text-align: center;
     vertical-align: middle;
     font-size: 130%;
+}
+
+.checklist .order-group-even {
+    background-color: #e9e9e9;
 }
 
 /* AngularJS用 */
@@ -479,7 +490,6 @@ table.order-summary td p.order-first-item {
 table.order-summary td div.order-other-items {
     text-align:right;
 }
-
 
 /* Bootstrap補助 */
 ul.nav-pills li.divider {

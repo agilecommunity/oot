@@ -13,19 +13,19 @@
             <table class="table table-bordered table-condensed checklist" id="checklist">
                 <thead>
                     <tr>
-                        <th class="check-status" rowspan=2>チェック</th>
-                        <th class="user-name" rowspan=2>氏名</th>
-                        <th class="shop-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.shopName}}</th>
+                        <th class="check-status" rowspan=2 width="5%">チェック</th>
+                        <th class="user-name" rowspan=2 width="20%">氏名</th>
+                        <th class="shop-name" ng-repeat="item in itemList" width="{{75/itemList.length}}%">{{item.shopName}}</th>
                     </tr>
                     <tr>
-                        <th class="food-name" ng-repeat="item in dailyMenu.detailItems">{{item.menuItem.name}}　<span oot-reduced-price menu-item="item.menuItem"></span></th>
+                        <th class="food-name" ng-repeat="item in itemList">{{item.name}}　<span oot-reduced-price menu-item="item"></span></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="checkitem in checklist">
+                    <tr ng-class="(checkitem.orderGroup % 2 === 0) ? 'order-group-even' : 'order-group-odd'" ng-repeat="checkitem in checklist">
                         <td></td>
                         <td class="user-name">{{checkitem.userName}}</td>
-                        <td class="order-status" ng-repeat="item in dailyMenu.detailItems">{{renderNumOrders(checkitem.orderStatuses[item.menuItem.id].numOrders)}}</td>
+                        <td class="order-status" ng-repeat="item in itemList">{{renderNumOrders(checkitem.orderStatuses[item.id].numOrders)}}</td>
                     </tr>
                 </tbody>
             </table>
