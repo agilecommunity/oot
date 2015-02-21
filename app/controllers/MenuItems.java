@@ -241,6 +241,16 @@ public class MenuItems extends Controller {
 
         List<Map<String, Object>> items = iterator.readAll();
 
+        for (Map<String, Object> item : items) {
+            if ("".equals(item.get("purchasePriceExcTax"))) {
+                item.remove("purchasePriceExcTax");
+            }
+
+            if ("".equals(item.get("purchasePriceIncTax"))) {
+                item.remove("purchasePriceIncTax");
+            }
+        }
+
         createFromJson(Json.toJson(items));
     }
 

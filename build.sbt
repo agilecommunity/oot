@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
   , "net.lingala.zip4j" % "zip4j" % "1.3.2"
   , "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
   , "joda-time" % "joda-time" % "2.3"
-  , "com.fasterxml.jackson.dataformat" % "jackson-dataformat-csv" % "2.4.0"
+  , "com.fasterxml.jackson.dataformat" % "jackson-dataformat-csv" % "2.5.1"
   , "commons-io" % "commons-io" % "2.4"
   , "commons-codec" % "commons-codec" % "1.9"
   , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
