@@ -11,6 +11,13 @@
                 <span class="help-block" id="error.menuItem.shop_name">{{errors.shopName}}</span>
             </div>
         </div>
+        <div class="form-group" ng-class="{'has-error': hasError('registerNumber')}">
+            <label for="menuItem.register_number" class="col-sm-3 control-label">レジ番号</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="menuItem.register_number" ng-model="menuItem.registerNumber">
+                <span class="help-block" id="error.menuItem.register_number">{{errors.registerNumber}}</span>
+            </div>
+        </div>
         <div class="form-group" ng-class="{'has-error': hasError('category')}">
             <label class="col-sm-3 control-label">カテゴリ</label>
             <div class="col-sm-9">
@@ -19,6 +26,13 @@
                     <button type="button" class="btn btn-default category" ng-class="{active: menuItem.category == 'side'}"  ng-click="setCategory('side')">サイドメニュー</button>
                 </div>
                 <span class="help-block" id="error.menuItem.category">{{errors.category}}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': hasError('itemNumber')}">
+            <label for="menuItem.item_number" class="col-sm-3 control-label">商品番号</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="menuItem.item_number" ng-model="menuItem.itemNumber">
+                <span class="help-block" id="error.menuItem.item_number">{{errors.itemNumber}}</span>
             </div>
         </div>
         <div class="form-group" ng-class="{'has-error': hasError('name')}">
@@ -40,6 +54,20 @@
             <div class="col-sm-9">
                 <input type="text" class="form-control" id="menuItem.discount_on_order" ng-model="menuItem.discountOnOrder">
                 <span class="help-block" id="error.menuItem.discount_on_order">{{errors.discountOnOrder}}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': hasError('fixedOnPurchaseExcTax')}">
+            <label for="menuItem.fixed_on_purchase_exc_tax" class="col-sm-3 control-label">発注(税抜)</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="menuItem.fixed_on_purchase_exc_tax" ng-model="menuItem.fixedOnPurchaseExcTax">
+                <span class="help-block" id="error.menuItem.fixed_on_purchase_exc_tax">{{errors.fixedOnPurchaseExcTax}}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': hasError('fixedOnPurchaseIncTax')}">
+            <label for="menuItem.fixed_on_purchase_inc_tax" class="col-sm-3 control-label">発注(税抜)</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" id="menuItem.fixed_on_purchase_inc_tax" ng-model="menuItem.fixedOnPurchaseIncTax">
+                <span class="help-block" id="error.menuItem.fixed_on_purchase_inc_tax">{{errors.fixedOnPurchaseIncTax}}</span>
             </div>
         </div>
         <div class="form-group" ng-class="{'has-error': hasError('code')}">

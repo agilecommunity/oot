@@ -56,10 +56,14 @@ public class AdminStepDefs {
             EditPage editPage = indexPage.addProduct(product);
 
             editPage.setShopName(product.get("店名"));
+            editPage.setRegisterNumber(product.get("レジ番号"));
             editPage.setCategory(product.get("カテゴリ"));
+            editPage.setItemNumber(product.get("商品番号"));
             editPage.setName(product.get("商品名"));
             editPage.setFixedOnOrder(product.get("注文(定価)"));
             editPage.setDiscountOnOrder(product.get("注文(割引額)"));
+            editPage.setFixedOnPurchaseExcTax(product.get("発注(税抜)"));
+            editPage.setFixedOnPurchaseIncTax(product.get("発注(税込)"));
             editPage.setCode(product.get("商品コード"));
             editPage.setStatus(product.get("ステータス"));
             editPage.save();
