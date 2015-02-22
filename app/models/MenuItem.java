@@ -28,6 +28,12 @@ public class MenuItem extends Model {
     @Constraints.MaxLength(255)
     public String shopName;
 
+    @Constraints.MaxLength(20)
+    public String registerNumber = "";
+
+    @Constraints.MaxLength(20)
+    public String itemNumber = "";
+
     @Constraints.Required
     @Constraints.MaxLength(255)
     public String name;
@@ -37,6 +43,10 @@ public class MenuItem extends Model {
 
     @Constraints.Required
     public BigDecimal discountOnOrder = BigDecimal.ZERO;
+
+    public BigDecimal fixedOnPurchaseIncTax = BigDecimal.ZERO;
+
+    public BigDecimal fixedOnPurchaseExcTax = BigDecimal.ZERO;
 
     @Constraints.Required
     @Constraints.MaxLength(20)

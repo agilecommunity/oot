@@ -29,10 +29,16 @@ public class EditPage {
     }
 
     @FindBy(id="menuItem.shop_name")
-    private WebElement shop_name;
+    private WebElement shopName;
+
+    @FindBy(id="menuItem.register_number")
+    private WebElement registerNumber;
 
     @FindBys(@FindBy(how=How.XPATH, using="//button[contains(@class, 'category')]"))
     private List<WebElement> categories;
+
+    @FindBy(id="menuItem.item_number")
+    private WebElement itemNumber;
 
     @FindBy(id="menuItem.name")
     private WebElement name;
@@ -42,6 +48,12 @@ public class EditPage {
 
     @FindBy(id="menuItem.discount_on_order")
     private WebElement discountOnOrder;
+
+    @FindBy(id="menuItem.fixed_on_purchase_exc_tax")
+    private WebElement fixedOnPurchaseExcTax;
+
+    @FindBy(id="menuItem.fixed_on_purchase_inc_tax")
+    private WebElement fixedOnPurchaseIncTax;
 
     @FindBy(id="menuItem.code")
     private WebElement code;
@@ -56,7 +68,11 @@ public class EditPage {
     private WebElement cancel;
 
     public void setShopName(String value) {
-        this.shop_name.sendKeys(value);
+        this.shopName.sendKeys(value);
+    }
+
+    public void setRegisterNumber(String value) {
+        this.registerNumber.sendKeys(value);
     }
 
     public void setCategory(String value) {
@@ -76,6 +92,14 @@ public class EditPage {
         throw new IllegalArgumentException("存在しないカテゴリです: " + value);
     }
 
+    public void setItemNumber(String value) {
+        this.itemNumber.sendKeys(value);
+    }
+
+    public void setName(String value) {
+        this.name.sendKeys(value);
+    }
+
     public void setFixedOnOrder(String value) {
         this.fixedOnOrder.sendKeys(value);
     }
@@ -84,12 +108,16 @@ public class EditPage {
         this.discountOnOrder.sendKeys(value);
     }
 
-    public void setCode(String value) {
-        this.code.sendKeys(value);
+    public void setFixedOnPurchaseExcTax(String value) {
+        this.fixedOnPurchaseExcTax.sendKeys(value);
     }
 
-    public void setName(String value) {
-        this.name.sendKeys(value);
+    public void setFixedOnPurchaseIncTax(String value) {
+        this.fixedOnPurchaseIncTax.sendKeys(value);
+    }
+
+    public void setCode(String value) {
+        this.code.sendKeys(value);
     }
 
     public void setStatus(String value) {

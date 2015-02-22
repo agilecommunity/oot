@@ -2,6 +2,7 @@ package features.stepdefs;
 
 import cucumber.api.java.ja.もし;
 import features.pages.OrderPage;
+import features.support.CucumberUtils;
 import features.support.WebBrowser;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -15,7 +16,7 @@ public class UserStepDefs {
 
         OrderPage orderPage = new OrderPage(WebBrowser.INSTANCE);
 
-        DateTime orderDate = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(orderParams.get("日付"));
+        DateTime orderDate = CucumberUtils.parseDate(orderParams.get("日付"));
 
         int itemIndex = 1;
         do {

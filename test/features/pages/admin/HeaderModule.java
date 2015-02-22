@@ -25,7 +25,7 @@ public class HeaderModule {
         this.driver = driver;
     }
 
-    @FindBy(how=How.LINK_TEXT, using="メニュー一覧")
+    @FindBy(how=How.LINK_TEXT, using="ダッシュボード")
     private WebElement showAdminIndex;
 
     @FindBy(how=How.LINK_TEXT, using="商品データ一覧")

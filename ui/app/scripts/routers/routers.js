@@ -52,6 +52,13 @@
             access: AccessLevels.admin,
             reloadOnSearch: false
         })
+        .when('/admin/purchase-order/:orderDate/confirmation', {
+            templateUrl: '/views/admin/purchase-order-confirmation',
+            controller: 'AdminPurchaseOrderConfirmationController',
+            access: AccessLevels.admin,
+            reloadOnSearch: false,
+            resolve: app.my.resolvers.AdminOrderAggregatesController
+        })
         .when('/admin/menu-items/index', {
             templateUrl: '/views/admin/menu-item/index',
             controller: 'MenuItemIndexController',

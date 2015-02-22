@@ -1,18 +1,26 @@
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
+    registerNumber:  11
+    itemNumber:      ①
     name:            カルビハンバーグ弁当
     fixedOnOrder:    580
     discountOnOrder: 0
+    fixedOnPurchaseExcTax: 570
+    fixedOnPurchaseIncTax: 615
     itemImagePath:   calvi.jpg
     status:          valid
 
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
+    registerNumber:  11
+    itemNumber:      ②
     name:            カルビハンバーグ弁当 大盛り
     fixedOnOrder:    600
     discountOnOrder: 0
+    fixedOnPurchaseExcTax: 590
+    fixedOnPurchaseIncTax: 637
     itemImagePath:   calvi.jpg
     status:          valid
 
@@ -20,44 +28,64 @@
     category:        bento
     shopName:        銀座肉屋
     name:            のり弁当
+    registerNumber:  11
+    itemNumber:      ③
     fixedOnOrder:    380
     discountOnOrder: 0
+    fixedOnPurchaseExcTax: 370
+    fixedOnPurchaseIncTax: 399
     itemImagePath:   calvi.jpg
     status:          valid
 
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
+    registerNumber:  11
+    itemNumber:      ④
     name:            のり弁当 大盛り
     fixedOnOrder:    400
     discountOnOrder: 0
+    fixedOnPurchaseExcTax: 390
+    fixedOnPurchaseIncTax: 421
     itemImagePath:   calvi.jpg
     status:          valid
 
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
+    registerNumber:  11
+    itemNumber:      ⑤
     name:            焼肉弁当
     fixedOnOrder:    550
     discountOnOrder: 0
+    fixedOnPurchaseExcTax:  540
+    fixedOnPurchaseIncTax:  583
     itemImagePath:
     status:          valid
 
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
+    registerNumber:  11
+    itemNumber:      ⑥
     name:            焼肉弁当 大盛り
     fixedOnOrder:    560
     discountOnOrder: 0
+    fixedOnPurchaseExcTax:  550
+    fixedOnPurchaseIncTax:  594
     itemImagePath:
     status:          valid
 
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
+    registerNumber:  11
+    itemNumber:      ⑦
     name:            豚肉生姜焼き弁当
     fixedOnOrder:    490
     discountOnOrder: 0
+    fixedOnPurchaseExcTax: 480
+    fixedOnPurchaseIncTax: 518
     itemImagePath:
     status:          valid
 
@@ -73,9 +101,13 @@
 - !!models.MenuItem
     category:        side
     shopName:        有楽町八百屋
+    registerNumber:  111
+    itemNumber:      A
     name:            八品目のサラダ
     fixedOnOrder:    230
     discountOnOrder: 0
+    fixedOnPurchaseExcTax:  220
+    fixedOnPurchaseIncTax:  237
     itemImagePath:   sarad.png
     status:          valid
 
