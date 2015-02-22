@@ -1,25 +1,48 @@
 
 angular.module('MyControllers')
 .controller('AdminIndexController',
-    ['$scope', '$location', '$filter', 'User', 'DailyMenu', 'DailyOrder',
-    function ($scope, $location, $filter, User, DailyMenu, DailyOrder) {
+    ['$scope', '$location', '$filter', 'User',
+    function ($scope, $location, $filter, User) {
 
-    $scope.dailyMenus = DailyMenu.query({},
-        function (response) { // 成功時
-        // 何もしない
-        },
-        function (response) {   // 失敗時
-            alert("メニューのデータが取得できませんでした。サインイン画面に戻ります。");
-            $location.path("/");
+    var createWeek = function(label, startDay) {
+
+        var days = [];
+        for(var index=0; index<5; index++) {
+            days.push(moment(startDay).add(index, "days"));
         }
-    );
 
-    $scope.showOrderAggregates = function (dailyMenu) {
-        $location.path("/admin/order-aggregates/order-date/" + dailyMenu.menuDate.format('YYYY-MM-DD'));
+        return {
+            label: label,
+            startDay: startDay,
+            endDay: _.last(days),
+            days: days
+        };
     };
 
-    $scope.showChecklist = function (dailyMenu) {
-        $location.path("/admin/checklist/menu-date/" + dailyMenu.menuDate.format('YYYY-MM-DD'));
+    var setUpWeeks = function() {
+        var startDayOfThisWeek = moment().startOf('week').add(1, "days");
+        var startDayOfNextWeek = moment(startDayOfThisWeek).add(1, "weeks");
+        var startDayOfLastWeek = moment(startDayOfThisWeek).add(-1, "weeks");
+
+        $scope.weeks = [
+            createWeek("来週", startDayOfNextWeek),
+            createWeek("今週", startDayOfThisWeek),
+            createWeek("先週", startDayOfLastWeek)
+        ];
+    };
+
+    var setUp = function() {
+        setUpWeeks();
+    };
+
+    setUp();
+
+    $scope.showPurchaseOrderConfirmation = function (targetDay) {
+        $location.path("/admin/purchase-order/" + targetDay.format('YYYY-MM-DD') + "/confirmation");
+    };
+
+    $scope.showChecklist = function (targetDay) {
+        $location.path("/admin/checklist/menu-date/" + targetDay.format('YYYY-MM-DD'));
     };
 
 }]);

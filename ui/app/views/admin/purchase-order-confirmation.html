@@ -1,0 +1,38 @@
+<div class="content admin-purchase-order-confirmation">
+    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+
+    <div class="content-header">発注確認シート</div>
+
+    <div class="content-body">
+
+        <div class="purchase-order-confirmation" id="purchase-order-confirmation-{{menu.menuDate.format('YYYYMMDD')}}" ng-repeat="menu in dailyMenus">
+            <div class="purchase-order-confirmation-header">{{menu.menuDate.format("M月D日 (ddd曜日)")}}</div>
+            <div class="purchase-order-confirmation-body">
+                <p class="no-data" ng-if="menu.detailItems.length === 0">メニューが登録されていません。</p>
+                <table class="table table-bordered table-condensed purchase-order-confirmation" id="purchase-order-confirmation-details-{{menu.menuDate.format('YYYYMMDD')}}" ng-if="menu.detailItems.length > 0">
+                    <thead>
+                    <tr>
+                        <th class="register-number" width="5%">レジ</th>
+                        <th class="shop-name" width="35%">ショップ名</th>
+                        <th class="item-number" width="5%">No</th>
+                        <th class="name" width="35%">品名</th>
+                        <th class="purchase-price-exc-tax" width="10%">税抜</th>
+                        <th class="purchase-price-inc-tax" width="10%">税込</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="detailItem in menu.detailItems | filter:{menuItem: {category: 'bento'}}">
+                        <td class="register-number">{{detailItem.menuItem.registerNumber}}</td>
+                        <td class="shop-name">{{detailItem.menuItem.shopName}}</td>
+                        <td class="item-number">{{detailItem.menuItem.itemNumber}}</td>
+                        <td class="name">{{detailItem.menuItem.name}}</td>
+                        <td class="purchase-price-exc-tax">{{detailItem.menuItem.purchasePriceExcTax}}</td>
+                        <td class="purchase-price-inc-tax">{{detailItem.menuItem.purchasePriceIncTax}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

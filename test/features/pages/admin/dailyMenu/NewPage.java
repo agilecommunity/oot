@@ -59,29 +59,27 @@ public class NewPage {
 
             logger.debug("#pickDate difference betweeen target:{} current:{} months:{}", value.withDayOfMonth(1), currentMonthDt.withDayOfMonth(1), months);
 
-            if (months == 0) {
-                return;
-            }
-
-            WebElement targetOperator = null;
-            if (months > 0) {
-                targetOperator = this.prevMonth;
-            }
-            if (months < 0) {
-                targetOperator = this.nextMonth;
-            }
-
-            for(int index=0; index<Math.abs(months); index++) {
-                targetOperator.click();
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException ex) {
-                    logger.warn("#pickDate", ex);
+            if (months != 0) {
+                WebElement targetOperator = null;
+                if (months > 0) {
+                    targetOperator = this.prevMonth;
                 }
-            }
+                if (months < 0) {
+                    targetOperator = this.nextMonth;
+                }
 
-            if (!currentMonth.getText().equals(value.toString("MMMM yyyy", Locale.JAPAN))) {
-                throw new Exception(String.format("目的の月に変更できませんでした current:[%s]", currentMonth.getText()));
+                for (int index = 0; index < Math.abs(months); index++) {
+                    targetOperator.click();
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        logger.warn("#pickDate", ex);
+                    }
+                }
+
+                if (!currentMonth.getText().equals(value.toString("MMMM yyyy", Locale.JAPAN))) {
+                    throw new Exception(String.format("目的の月に変更できませんでした current:[%s]", currentMonth.getText()));
+                }
             }
 
             By dayLocator = By.xpath("tbody/tr/td[@class='day' and text()='" + value.getDayOfMonth() + "']");

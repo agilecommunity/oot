@@ -445,6 +445,12 @@ td.price {
     border-bottom-color:#F3BFD6 !important;
 }
 
+/* ダッシュボード */
+.dashboard .week-info.panel .panel-heading {
+    font-size: 120%;
+    font-weight: bold;
+}
+
 /* 注文 */
 .category-header .label-category {
     text-align: left;
@@ -498,6 +504,29 @@ table.order-summary td div.order-other-items {
     text-align:right;
 }
 
+/* 注文確認シート */
+.purchase-order-confirmation {
+    margin-bottom: 20px;
+}
+
+.purchase-order-confirmation-header {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.purchase-order-confirmation-body {
+    padding: 10px 0;
+}
+
+.purchase-order-confirmation-body .no-data {
+    margin: 0 1.5em;
+}
+
+.purchase-order-confirmation-body table thead tr {
+    background-color: #c9f18e;
+    color: #59920a;
+}
+
 /* Bootstrap補助 */
 ul.nav-pills li.divider {
     margin: 2px 9px;
@@ -511,3 +540,4 @@ ul.nav-pills li.divider {
     border-color: #357ebd;
     color: #fff;
 }
+

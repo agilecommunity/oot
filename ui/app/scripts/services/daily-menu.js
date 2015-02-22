@@ -89,5 +89,10 @@ angular.module('MyServices')
         return -1;
     };
 
+    // 空のデータを作成する
+    DailyMenu.createEmptyData = function(targetDate) {
+        return {menuDate: targetDate, detailItems: []};
+    };
+
     return DailyMenu;
 }]);

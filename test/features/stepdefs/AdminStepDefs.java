@@ -2,19 +2,17 @@ package features.stepdefs;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import cucumber.api.DataTable;
-import cucumber.api.Transform;
 import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
 import cucumber.api.java.ja.前提;
 import features.pages.admin.HeaderModule;
-import features.pages.admin.OrderAggregatesPage;
+import features.pages.admin.PurchaseOrderConfirmationPage;
 import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.menuItem.EditPage;
-import features.support.JodaTimeConverter;
+import features.support.CucumberUtils;
 import features.support.WebBrowser;
 import models.LocalUser;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import securesocial.core.Registry;
 
 import java.util.List;
@@ -76,7 +74,8 @@ public class AdminStepDefs {
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         NewPage newPage = headerModule.showOrderMenuNew();
 
-        DateTime menuDate = DateTimeFormat.forPattern("yyyy/MM/dd").parseDateTime(menuParams.get("日付"));
+        DateTime menuDate = CucumberUtils.parseDate(menuParams.get("日付"));
+
         newPage.setWeek(menuDate);
         newPage.setDate(menuDate);
         newPage.setStatus(menuParams.get("ステータス"));
@@ -98,10 +97,12 @@ public class AdminStepDefs {
 
     @ならば("^日付 \"(.*)\" のチェック表の総額が \"(.*)\" かつ、以下の内容であること:$")
     public void 日付_のチェック表が以下の内容であること(
-            @Transform(JodaTimeConverter.class)DateTime menuDate,
+            String menuDateStr,
             String totalPriceOnOrder,
             DataTable checkListExpected
     ) throws Throwable {
+
+        DateTime menuDate = CucumberUtils.parseDate(menuDateStr);
 
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
@@ -113,16 +114,31 @@ public class AdminStepDefs {
         checkListExpected.diff(actual);
     }
 
-    @ならば("^日付 \"(.*)\" の注文表が以下の内容であること:$")
-    public void 日付_の注文表が以下の内容であること(
-            @Transform(JodaTimeConverter.class)DateTime menuDate,
-            DataTable orderAggregatesExpected
-    ) throws Throwable {
+    @ならば("^日付 \"(.*)\" の注文確認シートにデータがないこと$")
+    public void 日付_の注文確認シートにデータがないこと(String orderDateStr) throws Throwable {
+
+        DateTime orderDate = CucumberUtils.parseDate(orderDateStr);
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
-        OrderAggregatesPage orderAggregatesPage = indexPage.showOrderAggregates(menuDate);
+        PurchaseOrderConfirmationPage purchaseOrderConfirmationPage = indexPage.showPurchaseOrderConfirmation(orderDate);
 
-        List<Map<String, String>> actual = orderAggregatesPage.getList();
+        List<Map<String, String>> actual = purchaseOrderConfirmationPage.getList(orderDate);
+        assertThat(actual.size()).describedAs("リストのサイズ").isEqualTo(0);
+    }
+
+    @ならば("^日付 \"(.*)\" の注文確認シートが以下の内容であること:$")
+    public void 日付_の注文確認シートが以下の内容であること(
+            String orderDateStr,
+            DataTable orderAggregatesExpected
+    ) throws Throwable {
+
+        DateTime orderDate = CucumberUtils.parseDate(orderDateStr);
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        PurchaseOrderConfirmationPage purchaseOrderConfirmationPage = indexPage.showPurchaseOrderConfirmation(orderDate);
+
+        List<Map<String, String>> actual = purchaseOrderConfirmationPage.getList(orderDate);
         orderAggregatesExpected.diff(actual);
     }
 
