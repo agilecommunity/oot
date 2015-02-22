@@ -6,8 +6,8 @@
     name:            カルビハンバーグ弁当
     fixedOnOrder:    580
     discountOnOrder: 0
-    purchasePriceExcTax: 570
-    purchasePriceIncTax: 615
+    fixedOnPurchaseExcTax: 570
+    fixedOnPurchaseIncTax: 615
     itemImagePath:   calvi.jpg
     status:          valid
 
@@ -19,8 +19,8 @@
     name:            カルビハンバーグ弁当 大盛り
     fixedOnOrder:    600
     discountOnOrder: 0
-    purchasePriceExcTax: 590
-    purchasePriceIncTax: 637
+    fixedOnPurchaseExcTax: 590
+    fixedOnPurchaseIncTax: 637
     itemImagePath:   calvi.jpg
     status:          valid
 
@@ -32,8 +32,8 @@
     itemNumber:      ③
     fixedOnOrder:    380
     discountOnOrder: 0
-    purchasePriceExcTax: 370
-    purchasePriceIncTax: 399
+    fixedOnPurchaseExcTax: 370
+    fixedOnPurchaseIncTax: 399
     itemImagePath:   calvi.jpg
     status:          valid
 
@@ -45,8 +45,8 @@
     name:            のり弁当 大盛り
     fixedOnOrder:    400
     discountOnOrder: 0
-    purchasePriceExcTax: 390
-    purchasePriceIncTax: 421
+    fixedOnPurchaseExcTax: 390
+    fixedOnPurchaseIncTax: 421
     itemImagePath:   calvi.jpg
     status:          valid
 
@@ -58,8 +58,8 @@
     name:            焼肉弁当
     fixedOnOrder:    550
     discountOnOrder: 0
-    purchasePriceExcTax: 540
-    purchasePriceIncTax: 583
+    fixedOnPurchaseExcTax:  540
+    fixedOnPurchaseIncTax:  583
     itemImagePath:
     status:          valid
 
@@ -71,8 +71,8 @@
     name:            焼肉弁当 大盛り
     fixedOnOrder:    560
     discountOnOrder: 0
-    purchasePriceExcTax: 550
-    purchasePriceIncTax: 594
+    fixedOnPurchaseExcTax:  550
+    fixedOnPurchaseIncTax:  594
     itemImagePath:
     status:          valid
 
@@ -84,8 +84,8 @@
     name:            豚肉生姜焼き弁当
     fixedOnOrder:    490
     discountOnOrder: 0
-    purchasePriceExcTax: 480
-    purchasePriceIncTax: 518
+    fixedOnPurchaseExcTax: 480
+    fixedOnPurchaseIncTax: 518
     itemImagePath:
     status:          valid
 
@@ -106,8 +106,8 @@
     name:            八品目のサラダ
     fixedOnOrder:    230
     discountOnOrder: 0
-    purchasePriceExcTax: 220
-    purchasePriceIncTax: 237
+    fixedOnPurchaseExcTax:  220
+    fixedOnPurchaseIncTax:  237
     itemImagePath:   sarad.png
     status:          valid
 

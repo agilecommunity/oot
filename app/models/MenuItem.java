@@ -44,9 +44,9 @@ public class MenuItem extends Model {
     @Constraints.Required
     public BigDecimal discountOnOrder = BigDecimal.ZERO;
 
-    public BigDecimal purchasePriceIncTax = BigDecimal.ZERO;
+    public BigDecimal fixedOnPurchaseIncTax = BigDecimal.ZERO;
 
-    public BigDecimal purchasePriceExcTax = BigDecimal.ZERO;
+    public BigDecimal fixedOnPurchaseExcTax = BigDecimal.ZERO;
 
     @Constraints.Required
     @Constraints.MaxLength(20)

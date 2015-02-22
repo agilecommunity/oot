@@ -75,8 +75,8 @@ public class MenuItemsTest {
             builder.append(", \"name\": \"からあげ弁当\"");
             builder.append(", \"fixedOnOrder\":105");
             builder.append(", \"discountOnOrder\":5");
-            builder.append(", \"purchasePriceExcTax\":100");
-            builder.append(", \"purchasePriceIncTax\":108");
+            builder.append(", \"fixedOnPurchaseExcTax\":100");
+            builder.append(", \"fixedOnPurchaseIncTax\":108");
             builder.append(", \"code\": \"MOTTOMOTTO-B01\"");
             builder.append(", \"status\": \"valid\"");
             builder.append("}");
@@ -117,8 +117,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.name).describedAs("name").isEqualTo("からあげ弁当");
         Assertions.assertThat(item.fixedOnOrder).describedAs("fixedOnOrder").isEqualTo(BigDecimal.valueOf(105L));
         Assertions.assertThat(item.discountOnOrder).describedAs("discountOnOrder").isEqualTo(BigDecimal.valueOf(5L));
-        Assertions.assertThat(item.purchasePriceExcTax).describedAs("purchasePriceExcTax").isEqualTo(BigDecimal.valueOf(100L));
-        Assertions.assertThat(item.purchasePriceIncTax).describedAs("purchasePriceIncTax").isEqualTo(BigDecimal.valueOf(108L));
+        Assertions.assertThat(item.fixedOnPurchaseExcTax).describedAs("fixedOnPurchaseExcTax").isEqualTo(BigDecimal.valueOf(100L));
+        Assertions.assertThat(item.fixedOnPurchaseIncTax).describedAs("fixedOnPurchaseIncTax").isEqualTo(BigDecimal.valueOf(108L));
         Assertions.assertThat(item.code).describedAs("code").isEqualTo("MOTTOMOTTO-B01");
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
 
@@ -132,8 +132,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.name).describedAs("name").isEqualTo("108種類のサラダ");
         Assertions.assertThat(item.fixedOnOrder).describedAs("fixedOnOrder").isEqualTo(BigDecimal.valueOf(106L));
         Assertions.assertThat(item.discountOnOrder).describedAs("discountOnOrder").isEqualTo(BigDecimal.valueOf(0L));
-        Assertions.assertThat(item.purchasePriceExcTax).describedAs("purchasePriceExcTax").isEqualTo(BigDecimal.valueOf(0L));
-        Assertions.assertThat(item.purchasePriceIncTax).describedAs("purchasePriceIncTax").isEqualTo(BigDecimal.valueOf(0L));
+        Assertions.assertThat(item.fixedOnPurchaseExcTax).describedAs("fixedOnPurchaseExcTax").isEqualTo(BigDecimal.valueOf(0L));
+        Assertions.assertThat(item.fixedOnPurchaseIncTax).describedAs("fixedOnPurchaseIncTax").isEqualTo(BigDecimal.valueOf(0L));
         Assertions.assertThat(item.code).describedAs("code").isNull();
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
 
@@ -151,8 +151,8 @@ public class MenuItemsTest {
             builder.append(",name");
             builder.append(",fixedOnOrder");
             builder.append(",discountOnOrder");
-            builder.append(",purchasePriceExcTax");
-            builder.append(",purchasePriceIncTax");
+            builder.append(",fixedOnPurchaseExcTax");
+            builder.append(",fixedOnPurchaseIncTax");
             builder.append(",code");
             builder.append(",status");
             builder.append("\r\n");
@@ -210,8 +210,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.name).describedAs("name").isEqualTo("からあげ弁当");
         Assertions.assertThat(item.fixedOnOrder).describedAs("fixedOnOrder").isEqualTo(BigDecimal.valueOf(105L));
         Assertions.assertThat(item.discountOnOrder).describedAs("discountOnOrder").isEqualTo(BigDecimal.valueOf(5L));
-        Assertions.assertThat(item.purchasePriceExcTax).describedAs("purchasePriceExcTax").isEqualTo(BigDecimal.valueOf(100L));
-        Assertions.assertThat(item.purchasePriceIncTax).describedAs("purchasePriceIncTax").isEqualTo(BigDecimal.valueOf(108L));
+        Assertions.assertThat(item.fixedOnPurchaseExcTax).describedAs("fixedOnPurchaseExcTax").isEqualTo(BigDecimal.valueOf(100L));
+        Assertions.assertThat(item.fixedOnPurchaseIncTax).describedAs("fixedOnPurchaseIncTax").isEqualTo(BigDecimal.valueOf(108L));
         Assertions.assertThat(item.code).describedAs("code").isEqualTo("MOTTOMOTTO-B01");
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
 
@@ -224,8 +224,8 @@ public class MenuItemsTest {
         Assertions.assertThat(item.name).describedAs("name").isEqualTo("108種類のサラダ");
         Assertions.assertThat(item.fixedOnOrder).describedAs("fixedOnOrder").isEqualTo(BigDecimal.valueOf(106L));
         Assertions.assertThat(item.discountOnOrder).describedAs("discountOnOrder").isEqualTo(BigDecimal.valueOf(0L));
-        Assertions.assertThat(item.purchasePriceExcTax).describedAs("purchasePriceExcTax").isEqualTo(BigDecimal.valueOf(0L));
-        Assertions.assertThat(item.purchasePriceIncTax).describedAs("purchasePriceIncTax").isEqualTo(BigDecimal.valueOf(0L));
+        Assertions.assertThat(item.fixedOnPurchaseExcTax).describedAs("fixedOnPurchaseExcTax").isEqualTo(BigDecimal.valueOf(0L));
+        Assertions.assertThat(item.fixedOnPurchaseIncTax).describedAs("fixedOnPurchaseIncTax").isEqualTo(BigDecimal.valueOf(0L));
         Assertions.assertThat(item.code).describedAs("code").isEqualTo("");
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
     }

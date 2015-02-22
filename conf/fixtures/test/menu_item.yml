@@ -6,8 +6,8 @@
     name:            カルビハンバーグ弁当
     fixedOnOrder:    580
     discountOnOrder: 0
-    purchasePriceExcTax: 600
-    purchasePriceIncTax: 648
+    fixedOnPurchaseExcTax: 600
+    fixedOnPurchaseIncTax: 648
     code:            銀座肉屋　カルビハンバーグ弁当　580円
     itemImagePath:   JA60.jpg
 
@@ -28,8 +28,8 @@
     name:            八品目のサラダ
     fixedOnOrder:    230
     discountOnOrder: 0
-    purchasePriceExcTax: 250
-    purchasePriceIncTax: 270
+    fixedOnPurchaseExcTax: 250
+    fixedOnPurchaseIncTax: 270
     code:            有楽町八百屋　八品目のサラダ　230円
     itemImagePath:   sarad01.jpg
 
