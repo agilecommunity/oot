@@ -35,6 +35,7 @@ PUT           /api/v1.0/daily-orders/:id                                     con
 GET           /api/v1.0/daily-orders/mine                                    controllers.DailyOrders.showMine()
 GET           /api/v1.0/daily-orders/order-date/:orderDate                   controllers.DailyOrders.showByOrderDate(orderDate)
 
+GET           /api/v1.0/daily-order-aggregates                               controllers.DailyOrderAggregates.index()
 GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate         controllers.DailyOrderAggregates.showByOrderDate(orderDate)
 
 # SecureSocial

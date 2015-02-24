@@ -504,25 +504,30 @@ table.order-summary td div.order-other-items {
     text-align:right;
 }
 
-/* 注文確認シート */
-.purchase-order-confirmation {
+/* 注文確認シート、注文シート */
+.purchase-order-confirmation,
+.purchase-order {
     margin-bottom: 20px;
 }
 
-.purchase-order-confirmation-header {
+.purchase-order-confirmation-header,
+.purchase-order-header {
     font-size: 1.5em;
     font-weight: bold;
 }
 
-.purchase-order-confirmation-body {
+.purchase-order-confirmation-body,
+.purchase-order-body {
     padding: 10px 0;
 }
 
-.purchase-order-confirmation-body .no-data {
+.purchase-order-confirmation-body .no-data,
+.purchase-order-body .no-data {
     margin: 0 1.5em;
 }
 
-.purchase-order-confirmation-body table thead tr {
+.purchase-order-confirmation-body table thead tr,
+.purchase-order-body table thead tr {
     background-color: #c9f18e;
     color: #59920a;
 }

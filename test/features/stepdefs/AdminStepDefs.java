@@ -7,6 +7,7 @@ import cucumber.api.java.ja.もし;
 import cucumber.api.java.ja.前提;
 import features.pages.admin.HeaderModule;
 import features.pages.admin.PurchaseOrderConfirmationPage;
+import features.pages.admin.PurchaseOrderPage;
 import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.menuItem.EditPage;
 import features.support.CucumberUtils;
@@ -143,6 +144,39 @@ public class AdminStepDefs {
         PurchaseOrderConfirmationPage purchaseOrderConfirmationPage = indexPage.showPurchaseOrderConfirmation(orderDate);
 
         List<Map<String, String>> actual = purchaseOrderConfirmationPage.getList(orderDate);
+        orderAggregatesExpected.diff(actual);
+    }
+
+    @ならば("^日付 \"(.*)\" の注文シートにデータがないこと$")
+    public void 日付_の注文シートにデータがないこと(String orderDateStr) throws Throwable {
+
+        DateTime orderDate = CucumberUtils.parseDate(orderDateStr);
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        PurchaseOrderPage purchaseOrderPage = indexPage.showPurchaseOrder(orderDate);
+
+        List<Map<String, String>> actual = purchaseOrderPage.getList(orderDate);
+        assertThat(actual.size()).describedAs("リストのサイズ").isEqualTo(0);
+    }
+
+    @ならば("^日付 \"(.*)\" の注文シートの総数量が \"(.*)\" 総額が \"(.*)\" 円かつ、内訳が以下の内容であること:$")
+    public void 日付_の注文シートが以下の内容であること(
+            String orderDateStr,
+            String dayTotalNumOrders,
+            String dayTotalFixedOnPurchaseIncTax,
+            DataTable orderAggregatesExpected
+    ) throws Throwable {
+
+        DateTime orderDate = CucumberUtils.parseDate(orderDateStr);
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        PurchaseOrderPage purchaseOrderPage = indexPage.showPurchaseOrder(orderDate);
+
+        assertThat(purchaseOrderPage.getDayTotalNumOrders(orderDate)).describedAs("総数量").isEqualTo(dayTotalNumOrders);
+        assertThat(purchaseOrderPage.getDayTotalFixedOnPurchaseIncTax(orderDate)).describedAs("総額").isEqualTo(dayTotalFixedOnPurchaseIncTax);
+
+        List<Map<String, String>> actual = purchaseOrderPage.getList(orderDate);
         orderAggregatesExpected.diff(actual);
     }
 

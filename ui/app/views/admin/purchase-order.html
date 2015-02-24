@@ -1,0 +1,47 @@
+<div class="content admin-purchase-order">
+    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+
+    <div class="content-header">発注シート</div>
+
+    <div class="content-body">
+
+        <div class="purchase-order" id="purchase-order-{{order.orderDate.format('YYYYMMDD')}}" ng-repeat="order in purchaseOrders">
+            <div class="purchase-order-header">{{order.orderDate.format("M月D日 (ddd曜日)")}}</div>
+            <div class="purchase-order-body">
+                <p class="no-data" ng-if="order.detailItems.length === 0">メニューが登録されていません。</p>
+                <table class="table table-bordered table-condensed purchase-order" id="purchase-order-details-{{order.orderDate.format('YYYYMMDD')}}" ng-if="order.detailItems.length > 0">
+                    <thead>
+                    <tr>
+                        <th class="register-number" width="5%">レジ</th>
+                        <th class="shop-name" width="31%">ショップ名</th>
+                        <th class="item-number" width="5%">No</th>
+                        <th class="name" width="31%">品名</th>
+                        <th class="fixed-on-purchase-exc-tax" width="7%">税抜</th>
+                        <th class="fixed-on-purchase-inc-tax" width="7%">税込</th>
+                        <th class="num-orders" width="7%">数量</th>
+                        <th class="total-fixed-on-purchase-inc-tax" width="7%">金額</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="detailItem in order.detailItems">
+                        <td class="register-number">{{detailItem.menuItem.registerNumber}}</td>
+                        <td class="shop-name">{{detailItem.menuItem.shopName}}</td>
+                        <td class="item-number">{{detailItem.menuItem.itemNumber}}</td>
+                        <td class="name">{{detailItem.menuItem.name}}</td>
+                        <td class="fixed-on-purchase-exc-tax price">{{detailItem.menuItem.fixedOnPurchaseExcTax}}</td>
+                        <td class="fixed-on-purchase-inc-tax price">{{detailItem.menuItem.fixedOnPurchaseIncTax}}</td>
+                        <td class="num-orders count">{{detailItem.numOrders}}</td>
+                        <td class="total-fixed-on-purchase-inc-tax price">{{detailItem.totalFixedOnPurchaseIncTax}}</td>
+                    </tr>
+                    <tr class="day-total">
+                        <td colspan="6"></td>
+                        <td class="num-orders count">{{order.dayTotalNumOrders}}</td>
+                        <td class="total-fixed-on-purchase-inc-tax price">{{order.dayTotalFixedOnPurchaseIncTax}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
