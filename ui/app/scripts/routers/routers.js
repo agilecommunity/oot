@@ -40,12 +40,6 @@
             controller: 'DailyMenuNewController',
             access: AccessLevels.admin
         })
-        .when('/admin/order-aggregates/order-date/:orderDate', {
-            templateUrl: '/views/admin/order-aggregates',
-            controller: 'AdminOrderAggregatesController',
-            access: AccessLevels.admin,
-            resolve: app.my.resolvers.AdminOrderAggregatesController
-        })
         .when('/admin/checklist/menu-date/:menuDate', {
             templateUrl: '/views/admin/checklist',
             controller: 'AdminChecklistController',
@@ -57,7 +51,7 @@
             controller: 'AdminPurchaseOrderConfirmationController',
             access: AccessLevels.admin,
             reloadOnSearch: false,
-            resolve: app.my.resolvers.AdminOrderAggregatesController
+            resolve: app.my.resolvers.AdminPurchaseOrderConfirmationController
         })
         .when('/admin/menu-items/index', {
             templateUrl: '/views/admin/menu-item/index',

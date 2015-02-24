@@ -28,7 +28,7 @@ angular.module('MyControllers')
 
 }]);
 
-app.my.resolvers.AdminOrderAggregatesController = {
+app.my.resolvers.AdminPurchaseOrderConfirmationController = {
     initialData: function($route, $q, DailyMenu, DailyOrder) {
         var startDate = moment.tz($route.current.params.orderDate, moment.defaultZone.name); //日付のみの文字をパースするときはTimezoneを指定しないと、OSのデフォルトに影響される
         var endDate = moment(startDate).add(4, "days");
