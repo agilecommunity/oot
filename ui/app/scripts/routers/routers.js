@@ -53,6 +53,13 @@
             reloadOnSearch: false,
             resolve: app.my.resolvers.AdminPurchaseOrderConfirmationController
         })
+        .when('/admin/purchase-order/:orderDate', {
+            templateUrl: '/views/admin/purchase-order',
+            controller: 'AdminPurchaseOrderController',
+            access: AccessLevels.admin,
+            reloadOnSearch: false,
+            resolve: app.my.resolvers.AdminPurchaseOrderController
+        })
         .when('/admin/menu-items/index', {
             templateUrl: '/views/admin/menu-item/index',
             controller: 'MenuItemIndexController',

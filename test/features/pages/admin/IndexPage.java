@@ -34,8 +34,8 @@ public class IndexPage {
         return new features.pages.admin.ChecklistPage(this.driver);
     }
 
-    public features.pages.admin.PurchaseOrderConfirmationPage showPurchaseOrderConfirmation(DateTime menuDate) throws Throwable {
-        DateTime startDayOfWeek = menuDate.withDayOfWeek(1);
+    public features.pages.admin.PurchaseOrderConfirmationPage showPurchaseOrderConfirmation(DateTime orderDate) throws Throwable {
+        DateTime startDayOfWeek = orderDate.withDayOfWeek(1);
 
         By buttonLocator = By.id(String.format("show-purchase-order-confirmation-%s", startDayOfWeek.toString("yyyyMMdd")));
         WebElement button = base.findElement(buttonLocator);
@@ -44,4 +44,13 @@ public class IndexPage {
         return new features.pages.admin.PurchaseOrderConfirmationPage(this.driver);
     }
 
+    public PurchaseOrderPage showPurchaseOrder(DateTime orderDate) throws Throwable {
+        DateTime startDayOfWeek = orderDate.withDayOfWeek(1);
+
+        By buttonLocator = By.id(String.format("show-purchase-order-%s", startDayOfWeek.toString("yyyyMMdd")));
+        WebElement button = base.findElement(buttonLocator);
+        button.click();
+
+        return new features.pages.admin.PurchaseOrderPage(this.driver);
+    }
 }

@@ -82,7 +82,7 @@ public class NewPage {
                 }
             }
 
-            By dayLocator = By.xpath("tbody/tr/td[@class='day' and text()='" + value.getDayOfMonth() + "']");
+            By dayLocator = By.xpath("tbody/tr/td[contains(@class, 'day') and text()='" + value.getDayOfMonth() + "']");
             WebElement targetDay = this.daysTable.findElement(dayLocator);
 
             targetDay.click();

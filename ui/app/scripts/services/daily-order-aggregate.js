@@ -7,11 +7,12 @@ angular.module('MyServices')
     var transformResponse = {
         list: function (data, headersGetter) {
             var transformed = app.my.helpers.transformRequestDefault(data);
-            if (!angular.isArray(data)) {
+            if (!angular.isArray(transformed)) {
                 return transformed;
             }
             angular.forEach(transformed, function (item) {
                 item.orderDate = app.my.helpers.parseTimestamp(item.orderDate);
+                console.log(item.orderDate);
             });
             return transformed;
         }
@@ -19,6 +20,12 @@ angular.module('MyServices')
 
     var DailyOrderAggregate = $resource('/api/v1.0/daily-order-aggregates/:id',
         { id: "@id" }, {
+            query: {
+                method: "GET",
+                isArray: true,
+                transformResponse: transformResponse.list,
+                cache: false
+            },
             queryByOrderDate: {
                 method: "GET",
                 url: "/api/v1.0/daily-order-aggregates/order-date/:orderDate",
@@ -27,6 +34,16 @@ angular.module('MyServices')
                 cache: false
             }
     });
+
+    // メニューのリストから該当のメニューを探し、返す
+    DailyOrderAggregate.find = function(list, targetDate, menuItem) {
+        for (var i=0; i<list.length; i++) {
+            if (list[i].orderDate.valueOf() === targetDate.valueOf() && list[i].menuItemId === menuItem.id) {
+                return list[i];
+            }
+        }
+        return null;
+    };
 
     // メニューのリストから該当のメニューを探し、そのindexを返す
     DailyOrderAggregate.findByMenuItem = function(list, menuItem) {
