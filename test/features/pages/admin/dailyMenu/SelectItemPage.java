@@ -1,5 +1,6 @@
 package features.pages.admin.dailyMenu;
 
+import com.thoughtworks.selenium.Selenium;
 import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -34,21 +35,14 @@ public class SelectItemPage {
     public SelectShopPage selectShop() throws Throwable {
 
         By itemLocator = By.cssSelector("button.navbar-btn.select-shops");
-        SeleniumUtils.waitForVisible(this.driver, itemLocator);
-
-        WebElement button = this.base.findElement(itemLocator);
-        button.click();
+        SeleniumUtils.waitAndClick(this.driver, itemLocator);
 
         return new SelectShopPage(this.driver);
     }
 
     public void select(String itemName, String reducedOnOrder) throws Throwable {
         By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item-sm') and div[@class='caption']/div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", itemName, reducedOnOrder));
-
-        SeleniumUtils.waitForVisible(this.driver, itemLocator);
-
-        WebElement button = this.base.findElement(itemLocator);
-        button.click();
+        SeleniumUtils.waitAndClick(this.driver, itemLocator);
 
         SeleniumUtils.waitForInvisible(this.driver, By.xpath(baseXPath));
     }

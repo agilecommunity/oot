@@ -33,10 +33,7 @@ public class SelectShopPage {
 
     public void select(String value) throws Throwable {
         By shopLocator = By.xpath(String.format("//button[text()='%s']", value));
-
-        SeleniumUtils.waitForVisible(this.driver, shopLocator);
-        WebElement button = this.base.findElement(shopLocator);
-        button.click();
+        SeleniumUtils.waitAndClick(this.driver, shopLocator);
 
         SeleniumUtils.waitForInvisible(this.driver, By.xpath(baseXPath));
     }

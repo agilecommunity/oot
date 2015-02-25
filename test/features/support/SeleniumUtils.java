@@ -19,19 +19,31 @@ public class SeleniumUtils {
         wait.until(visibilityOfElementLocated(locator));
     }
 
-    public static void waitForInvisible(WebDriver driver, By locator) {
+    public static void waitForInvisible(WebDriver driver, By locator) throws Throwable {
         Wait<WebDriver> wait = new WebDriverWait(driver, DRIVER_WAIT);
         wait.until(invisibilityOfElementLocated(locator));
     }
 
-    // findElement().clickでClickができないときの回避策
-    public static void click(WebDriver driver, By locator) throws Throwable {
+    /**
+     * 要素が現れるのを待ってから、クリックする
+     * @param driver
+     * @param locator
+     * @throws Throwable
+     */
+    public static void waitAndClick(WebDriver driver, By locator) throws Throwable {
+        SeleniumUtils.waitForVisible(driver, locator);
         WebElement target = driver.findElement(locator);
-        SeleniumUtils.click(driver, target);
+        target.click();
     }
 
     // findElement().clickでClickができないときの回避策
-    public static void click(WebDriver driver, WebElement target) throws Throwable {
+    public static void clickUsingJavaScript(WebDriver driver, By locator) throws Throwable {
+        WebElement target = driver.findElement(locator);
+        SeleniumUtils.clickUsingJavaScript(driver, target);
+    }
+
+    // findElement().clickでClickができないときの回避策
+    public static void clickUsingJavaScript(WebDriver driver, WebElement target) throws Throwable {
         JavascriptExecutor js = (JavascriptExecutor)driver;
         js.executeScript("arguments[0].click();", target);
     }

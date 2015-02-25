@@ -28,8 +28,7 @@ public class IndexPage {
 
     public features.pages.admin.ChecklistPage showCheckList(DateTime menuDate) throws Throwable {
         By buttonLocator = By.id(String.format("show-checklist-%s", menuDate.toString("yyyyMMdd")));
-        WebElement button = base.findElement(buttonLocator);
-        button.click();
+        SeleniumUtils.waitAndClick(this.driver, buttonLocator);
 
         return new features.pages.admin.ChecklistPage(this.driver);
     }
@@ -38,8 +37,7 @@ public class IndexPage {
         DateTime startDayOfWeek = orderDate.withDayOfWeek(1);
 
         By buttonLocator = By.id(String.format("show-purchase-order-confirmation-%s", startDayOfWeek.toString("yyyyMMdd")));
-        WebElement button = base.findElement(buttonLocator);
-        button.click();
+        SeleniumUtils.waitAndClick(this.driver, buttonLocator);
 
         return new features.pages.admin.PurchaseOrderConfirmationPage(this.driver);
     }
@@ -48,8 +46,7 @@ public class IndexPage {
         DateTime startDayOfWeek = orderDate.withDayOfWeek(1);
 
         By buttonLocator = By.id(String.format("show-purchase-order-%s", startDayOfWeek.toString("yyyyMMdd")));
-        WebElement button = base.findElement(buttonLocator);
-        button.click();
+        SeleniumUtils.waitAndClick(this.driver, buttonLocator);
 
         return new features.pages.admin.PurchaseOrderPage(this.driver);
     }
