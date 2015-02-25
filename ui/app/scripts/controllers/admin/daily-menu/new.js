@@ -147,17 +147,19 @@ angular.module('MyControllers')
         deployToSelectedItems(dailyMenu);
     };
 
-    // カレンダーの初期化0
-    $("#datetimepicker").datetimepicker({language: 'ja', pickTime: false, daysOfWeekDisabled: [0,6], useCurrent: false});
-    $("#datetimepicker").on("dp.change",function (e) { // カレンダーで日付を変更した場合
-        changeMenuDate(moment(e.date));
-    });
+    var setUp = function() {
+        // カレンダーの初期化
+        $("#datetimepicker").datetimepicker({language: 'ja', pickTime: false, daysOfWeekDisabled: [0,6], useCurrent: false});
+        $("#datetimepicker").on("dp.change",function (e) { // カレンダーで日付を変更した場合
+            changeMenuDate(moment(e.date));
+        });
 
-    // 選択されている商品の初期化
-    resetSelectedItems();
+        // 選択されている商品の初期化
+        resetSelectedItems();
 
-    // 当日を起点としてメニューを表示する
-    changeMenuDate(moment().startOf('week').add("days", 1)); // startOfは日曜が取れるので月曜にシフト
+        // 来週の月曜日を起点としてメニューを表示する
+        changeMenuDate(moment().add(1, "weeks").startOf('week').add(1, "days")); // startOfは日曜が取れるので月曜にシフト
+    };
 
     //---- イベントハンドラ
     // カレンダーを表示する
@@ -258,5 +260,7 @@ angular.module('MyControllers')
         }
         return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
     };
+
+    setUp();
 
 }]);
