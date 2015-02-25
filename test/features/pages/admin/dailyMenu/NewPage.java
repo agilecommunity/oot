@@ -119,7 +119,7 @@ public class NewPage {
     public void setDate(DateTime value) throws Throwable {
         By dayLocator = By.xpath(String.format("//ul[contains(@class,'day-tabs')]/li[@id='day-%s']/a", value.toString("yyyyMMdd")));
         SeleniumUtils.waitForVisible(this.driver, dayLocator);
-        SeleniumUtils.click(this.driver, dayLocator); // 普通に click() 呼んでも押せないのでJavaScriptを起動する
+        SeleniumUtils.clickUsingJavaScript(this.driver, dayLocator); // 普通に clickUsingJavaScript() 呼んでも押せないのでJavaScriptを起動する
     }
 
     public void setStatus(String value) throws Throwable {
@@ -148,9 +148,7 @@ public class NewPage {
     public void addItem(String category, String shopName, String itemName, String reducedOnOrder) throws Throwable {
 
         By emptyTileLocator = By.xpath(String.format("//div[@class='category-row row' and div//div[text()='%s']]//div[contains(@class, 'menu-item-sm empty')][1]", category));
-
-        WebElement emptyTile = this.driver.findElement(emptyTileLocator);
-        emptyTile.click();
+        SeleniumUtils.waitAndClick(this.driver, emptyTileLocator);
 
         SelectItemPage selectItemPage = new SelectItemPage(this.driver);
         SelectShopPage selectShopPage = selectItemPage.selectShop();
