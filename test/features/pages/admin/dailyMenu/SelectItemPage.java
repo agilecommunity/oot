@@ -1,8 +1,10 @@
 package features.pages.admin.dailyMenu;
 
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.thoughtworks.selenium.Selenium;
 import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -44,6 +46,12 @@ public class SelectItemPage {
         By itemLocator = By.xpath(String.format("//div[contains(@class, 'menu-item-sm') and div[@class='caption']/div[contains(@class, 'food-name') and text()='%s ' and span/span[text()='%s']]]", itemName, reducedOnOrder));
         SeleniumUtils.waitAndClick(this.driver, itemLocator);
 
-        SeleniumUtils.waitForInvisible(this.driver, By.xpath(baseXPath));
+        try {
+            if (this.driver.findElement(By.xpath(baseXPath)) != null) {
+                SeleniumUtils.waitForInvisible(this.driver, By.xpath(baseXPath));
+            }
+        } catch (NoSuchElementException ex) {
+            // なくなっている場合は何もしなくてよい
+        }
     }
 }

@@ -1,0 +1,30 @@
+<div class="content admin-cash-book">
+    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+
+    <div class="content-header">入出金管理台帳</div>
+
+    <div class="content-body">
+
+        <div class="purchase-order" id="cash-book-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-repeat="cashBook in cashBooks">
+            <div class="cash-book-header">{{cashBook.targetDate.format("M月D日 (ddd曜日)")}}</div>
+            <div class="cash-book-body">
+                <p class="no-data" ng-if="cashBook.detailItems.length === 0">メニューが登録されていません。</p>
+                <table class="table table-bordered table-condensed cash-book" id="cash-book-details-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-if="cashBook.detailItems.length > 0">
+                    <thead>
+                    <tr>
+                        <th class="code" width="93%">コード</th>
+                        <th class="num-orders" width="7%">数量</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="detailItem in cashBook.detailItems">
+                        <td class="code">{{detailItem.menuItem.code | karamoji}}</td>
+                        <td class="num-orders count">{{detailItem.numOrders}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

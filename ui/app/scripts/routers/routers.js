@@ -60,6 +60,13 @@
             reloadOnSearch: false,
             resolve: app.my.resolvers.AdminPurchaseOrderController
         })
+        .when('/admin/cash-book/:targetDate', {
+            templateUrl: '/views/admin/cash-book',
+            controller: 'AdminCashBookController',
+            access: AccessLevels.admin,
+            reloadOnSearch: false,
+            resolve: app.my.resolvers.AdminCashBookController
+        })
         .when('/admin/menu-items/index', {
             templateUrl: '/views/admin/menu-item/index',
             controller: 'MenuItemIndexController',

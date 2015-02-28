@@ -1,7 +1,9 @@
 package features.pages.admin.dailyMenu;
 
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -35,6 +37,12 @@ public class SelectShopPage {
         By shopLocator = By.xpath(String.format("//button[text()='%s']", value));
         SeleniumUtils.waitAndClick(this.driver, shopLocator);
 
-        SeleniumUtils.waitForInvisible(this.driver, By.xpath(baseXPath));
+        try {
+            if (this.driver.findElement(By.xpath(baseXPath)) != null) {
+                SeleniumUtils.waitForInvisible(this.driver, By.xpath(baseXPath));
+            }
+        } catch (NoSuchElementException ex) {
+            // なくなっている場合は何もしなくてよい
+        }
     }
 }
