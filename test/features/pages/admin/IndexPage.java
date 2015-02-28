@@ -1,5 +1,6 @@
 package features.pages.admin;
 
+import features.pages.admin.checklist.DailyPage;
 import features.support.SeleniumUtils;
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;
@@ -26,11 +27,11 @@ public class IndexPage {
     @FindBy(how=How.CSS, using="div.content.admin-index")
     public WebElement base;
 
-    public features.pages.admin.ChecklistPage showCheckList(DateTime menuDate) throws Throwable {
+    public DailyPage showCheckList(DateTime menuDate) throws Throwable {
         By buttonLocator = By.id(String.format("show-checklist-%s", menuDate.toString("yyyyMMdd")));
         SeleniumUtils.waitAndClick(this.driver, buttonLocator);
 
-        return new features.pages.admin.ChecklistPage(this.driver);
+        return new DailyPage(this.driver);
     }
 
     public features.pages.admin.PurchaseOrderConfirmationPage showPurchaseOrderConfirmation(DateTime orderDate) throws Throwable {

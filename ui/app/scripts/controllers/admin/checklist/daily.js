@@ -1,6 +1,6 @@
 
 angular.module('MyControllers')
-.controller('AdminChecklistController',
+.controller('AdminChecklistDailyController',
     ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyMenu', 'DailyOrder', 'initialData',
     function ($scope, $location, $routeParams, $filter, User, DailyMenu, DailyOrder, initialData) {
 
@@ -123,7 +123,7 @@ angular.module('MyControllers')
     setUp();
 }]);
 
-app.my.resolvers.AdminChecklistController = {
+app.my.resolvers.AdminChecklistDailyController = {
     initialData: function($route, $q, DailyMenu, DailyOrder) {
         var menuDate = moment.tz($route.current.params.menuDate, moment.defaultZone.name); //日付のみの文字をパースするときはTimezoneを指定しないと、OSのデフォルトに影響される
 

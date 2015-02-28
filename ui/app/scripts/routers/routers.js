@@ -40,12 +40,12 @@
             controller: 'DailyMenuNewController',
             access: AccessLevels.admin
         })
-        .when('/admin/checklist/menu-date/:menuDate', {
-            templateUrl: '/views/admin/checklist',
-            controller: 'AdminChecklistController',
+        .when('/admin/checklist/:menuDate', {
+            templateUrl: '/views/admin/checklist/daily',
+            controller: 'AdminChecklistDailyController',
             access: AccessLevels.admin,
             reloadOnSearch: false,
-            resolve: app.my.resolvers.AdminChecklistController
+            resolve: app.my.resolvers.AdminChecklistDailyController
         })
         .when('/admin/purchase-order/:orderDate/confirmation', {
             templateUrl: '/views/admin/purchase-order-confirmation',

@@ -50,7 +50,7 @@ angular.module('MyControllers')
     };
 
     $scope.showChecklist = function (targetDay) {
-        $location.path("/admin/checklist/menu-date/" + targetDay.format('YYYY-MM-DD'));
+        $location.path("/admin/checklist/" + targetDay.format('YYYY-MM-DD'));
     };
 
 }]);
