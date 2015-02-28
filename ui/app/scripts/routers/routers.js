@@ -44,7 +44,8 @@
             templateUrl: '/views/admin/checklist',
             controller: 'AdminChecklistController',
             access: AccessLevels.admin,
-            reloadOnSearch: false
+            reloadOnSearch: false,
+            resolve: app.my.resolvers.AdminChecklistController
         })
         .when('/admin/purchase-order/:orderDate/confirmation', {
             templateUrl: '/views/admin/purchase-order-confirmation',

@@ -92,7 +92,7 @@ public class DailyMenus extends Controller {
 
         if (menu == null) {
             logger.debug(String.format("#showByMenuDate menu not found menu_date_str:%s", menuDateStr));
-            return notFound();
+            return ok(Json.toJson(new DailyMenu()));
         }
 
         return ok(Json.toJson(menu));

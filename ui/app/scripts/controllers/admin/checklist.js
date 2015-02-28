@@ -1,13 +1,13 @@
 
 angular.module('MyControllers')
 .controller('AdminChecklistController',
-    ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyMenu', 'DailyOrder',
-    function ($scope, $location, $routeParams, $filter, User, DailyMenu, DailyOrder) {
+    ['$scope', '$location', '$routeParams', '$filter', 'User', 'DailyMenu', 'DailyOrder', 'initialData',
+    function ($scope, $location, $routeParams, $filter, User, DailyMenu, DailyOrder, initialData) {
 
     // 注文状況の作成
     var createChecklist = function () {
 
-        var checklist = [];
+        var checklist = {detailItems: [], totalReducedOnOrder: 0};
 
         // その日注文しているユーザごとに姓名と、注文状況を調査する
         angular.forEach($scope.dailyOrders, function (order) {
@@ -24,11 +24,13 @@ angular.module('MyControllers')
             });
 
             checklistItem.orderStatuses = orderStatuses;
-            checklist.push(checklistItem);
+            checklist.detailItems.push(checklistItem);
+
+            checklist.totalReducedOnOrder += order.totalReducedOnOrder();
         });
 
         // 同じ商品を買った人は続けて表示されるよう、全商品の注文状況を文字列にまとめソートキーとする
-        angular.forEach(checklist, function(checkItem){
+        angular.forEach(checklist.detailItems, function(checkItem){
             var orderStatusesBits = "";
             angular.forEach($scope.dailyMenu.detailItems, function(menuItem){
                 if (checkItem.orderStatuses[menuItem.menuItem.id] !== undefined) {
@@ -41,13 +43,13 @@ angular.module('MyControllers')
         });
 
         // 全商品の注文状況と、ユーザ名でソートする
-        checklist = $filter('orderBy')(checklist, ["orderStatusesBits", "userName"]);
+        checklist.detailItems = $filter('orderBy')(checklist.detailItems, ["orderStatusesBits", "userName"]);
 
         // 自分の注文した商品を探しやすくするために、注文した人を商品でグルーピングする
         // ※ 複数商品を注文した人は、最初の商品(並び順的に)を使ってグルーピングする
         var prevGroup = -1;
         var orderGroup = 0;
-        angular.forEach(checklist, function(checkItem){
+        angular.forEach(checklist.detailItems, function(checkItem){
             if (prevGroup !== checkItem.orderStatusesBits.indexOf("0")) {
                 orderGroup += 1;
                 prevGroup = checkItem.orderStatusesBits.indexOf("0");
@@ -78,41 +80,16 @@ angular.module('MyControllers')
         return itemList;
     };
 
-    $scope.menuDate = moment.tz($routeParams.menuDate, moment.defaultZone.name); // 日付のみの文字をパースする場合、TimeZoneを指定しないとOSのタイムゾーンが影響するらしい
+    var setUp = function(){
+        $scope.menuDate = initialData.menuDate;
+        $scope.dailyMenu = initialData.dailyMenu;
+        $scope.dailyOrders = initialData.dailyOrders;
 
-    var params = {menuDate: app.my.helpers.formatTimestamp($scope.menuDate)};
+        $scope.dailyMenu.detailItems = $filter('orderBy')($scope.dailyMenu.detailItems, ['menuItem.category', 'menuItem.shopName', 'menuItem.name']);
 
-    DailyMenu.getByMenuDate(params,
-        function (response) {
-            // カテゴリ、店名、品名の順に並び替え(カテゴリはbento, sideの順に表示したい)
-            response.detailItems = $filter('orderBy')(response.detailItems, ['menuItem.category', 'menuItem.shopName', 'menuItem.name']);
-            $scope.dailyMenu = response;
-
-            $scope.dailyOrders = DailyOrder.queryByOrderDate({orderDate: app.my.helpers.formatTimestamp($scope.menuDate)},
-                function (response) {
-                    // メニューと注文状況を使ってチェックリストに必要なデータを作成する
-                    $scope.checklist = createChecklist();
-                    $scope.itemList = createItemList();
-                },
-                function (response) {
-                    if (response.status === 404) {
-                        //FIXME: データが存在しなかった場合は戻らないと
-                        return;
-                    } else {
-                        alert("注文のデータが取得できませんでした。");
-                    }
-                }
-            );
-        },
-        function (response) {
-            if (response.status === 404) {
-                //FIXME: データが存在しなかった場合は戻らないと
-                return;
-            } else {
-                alert("メニューのデータが取得できませんでした。");
-            }
-        }
-    );
+        $scope.checklist = createChecklist();
+        $scope.itemList = createItemList();
+    };
 
     $scope.menuOrOrderIsEmpty = function() {
         if ($scope.dailyMenu === undefined) {
@@ -131,14 +108,6 @@ angular.module('MyControllers')
         return false;
     };
 
-    $scope.totalReducedOnOrder = function() {
-        var total = 0;
-        angular.forEach($scope.dailyOrders, function (order) {
-            total += order.totalReducedOnOrder();
-        });
-        return total;
-    };
-
     $scope.renderNumOrders = function(numOrders) {
         if ($filter('isEmptyOrUndefined')(numOrders) === true) {
             return "";
@@ -150,5 +119,36 @@ angular.module('MyControllers')
 
         return numOrders;
     };
+
+    setUp();
 }]);
 
+app.my.resolvers.AdminChecklistController = {
+    initialData: function($route, $q, DailyMenu, DailyOrder) {
+        var menuDate = moment.tz($route.current.params.menuDate, moment.defaultZone.name); //日付のみの文字をパースするときはTimezoneを指定しないと、OSのデフォルトに影響される
+
+        var deferred = $q.defer();
+        var initialData = {};
+
+        initialData.menuDate = menuDate;
+
+        DailyMenu.getByMenuDate({
+            menuDate: app.my.helpers.formatTimestamp(menuDate)
+        }).$promise
+        .then(function(value) {
+            initialData.dailyMenu = value;
+            return DailyOrder.queryByOrderDate({
+                orderDate: app.my.helpers.formatTimestamp(menuDate)
+            }).$promise;
+        })
+        .then(function(value) {
+            initialData.dailyOrders = value;
+            deferred.resolve(initialData);
+        })
+        ["catch"](function(responseHeaders) {
+        deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+        });
+
+        return deferred.promise;
+    }
+};

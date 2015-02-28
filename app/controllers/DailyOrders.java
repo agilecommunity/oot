@@ -61,7 +61,7 @@ public class DailyOrders extends Controller {
 
         if (list == null || list.size() == 0) {
             logger.debug(String.format("#showByOrderDate order not found orderDateStr:%s", orderDateStr));
-            return notFound();
+            return ok("[]");
         }
 
         return ok(Json.toJson(list));

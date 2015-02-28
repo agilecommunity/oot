@@ -8,7 +8,7 @@
         </div>
 
         <div ng-show="!menuOrOrderIsEmpty()">
-            <div class="pull-right">総額: <span class="total-price-on-order">{{totalReducedOnOrder() | currencyNoFraction:""}}円</span></div>
+            <div class="pull-right">総額: <span class="total-price-on-order">{{checklist.totalReducedOnOrder | currencyNoFraction:""}}円</span></div>
             <div class="clearfix"></div>
             <table class="table table-bordered table-condensed checklist" id="checklist">
                 <thead>
@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-class="(checkitem.orderGroup % 2 === 0) ? 'order-group-even' : 'order-group-odd'" ng-repeat="checkitem in checklist">
+                    <tr ng-class="(checkitem.orderGroup % 2 === 0) ? 'order-group-even' : 'order-group-odd'" ng-repeat="checkitem in checklist.detailItems">
                         <td></td>
                         <td class="user-name">{{checkitem.userName}}</td>
                         <td class="order-status" ng-repeat="item in itemList">{{renderNumOrders(checkitem.orderStatuses[item.id].numOrders)}}</td>
