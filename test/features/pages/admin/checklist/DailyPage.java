@@ -22,12 +22,12 @@ public class DailyPage {
     private WebDriver driver;
 
     public DailyPage(WebDriver driver) throws Throwable {
-        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.content.admin-checklist"));
+        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.content.admin-checklist-daily"));
         PageFactory.initElements(driver, this);
         this.driver = driver;
     }
 
-    @FindBy(how=How.CSS, using="div.content.admin-checklist")
+    @FindBy(how=How.CSS, using="div.content.admin-checklist-daily")
     private WebElement base;
 
     public String getTotalPriceOnOrder() throws Throwable {

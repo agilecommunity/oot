@@ -47,6 +47,13 @@
             reloadOnSearch: false,
             resolve: app.my.resolvers.AdminChecklistDailyController
         })
+        .when('/admin/checklist/weekly/:startDate', {
+            templateUrl: '/views/admin/checklist/weekly',
+            controller: 'AdminChecklistWeeklyController',
+            access: AccessLevels.admin,
+            reloadOnSearch: false,
+            resolve: app.my.resolvers.AdminChecklistWeeklyController
+        })
         .when('/admin/purchase-order/:orderDate/confirmation', {
             templateUrl: '/views/admin/purchase-order-confirmation',
             controller: 'AdminPurchaseOrderConfirmationController',

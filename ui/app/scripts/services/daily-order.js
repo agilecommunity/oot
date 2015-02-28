@@ -106,5 +106,16 @@ angular.module('MyServices')
         }
     };
 
+    // メニューのリストから該当の日付のメニューを探し、そのindexを返す
+    DailyOrder.filterByOrderDate = function(list, targetDate) {
+        var results = [];
+        for (var i=0; i<list.length; i++) {
+            if (list[i].orderDate.unix() === targetDate.unix()) {
+                results.push(list[i]);
+            }
+        }
+        return results;
+    };
+
     return DailyOrder;
 }]);

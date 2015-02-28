@@ -28,7 +28,7 @@ public class IndexPage {
     public WebElement base;
 
     public DailyPage showCheckList(DateTime menuDate) throws Throwable {
-        By buttonLocator = By.id(String.format("show-checklist-%s", menuDate.toString("yyyyMMdd")));
+        By buttonLocator = By.id(String.format("show-checklist-daily-%s", menuDate.toString("yyyyMMdd")));
         SeleniumUtils.waitAndClick(this.driver, buttonLocator);
 
         return new DailyPage(this.driver);

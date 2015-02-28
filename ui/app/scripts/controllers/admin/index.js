@@ -49,9 +49,12 @@ angular.module('MyControllers')
         $location.path("/admin/cash-book/" + targetDay.format('YYYY-MM-DD'));
     };
 
-    $scope.showChecklist = function (targetDay) {
+    $scope.showChecklistDaily = function (targetDay) {
         $location.path("/admin/checklist/" + targetDay.format('YYYY-MM-DD'));
     };
 
+    $scope.showChecklistWeekly = function (targetDay) {
+        $location.path("/admin/checklist/weekly/" + targetDay.format('YYYY-MM-DD'));
+    };
 }]);
 
