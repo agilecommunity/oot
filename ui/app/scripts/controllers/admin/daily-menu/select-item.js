@@ -22,9 +22,9 @@ angular.module('MyControllers')
     var showItems = function() {
         var filterShop = $scope.filters.shop;
         startBlock();
-        $scope.menuItems = MenuItem.queryByShopName({shopName: filterShop.name, status: 'valid'},
+        MenuItem.queryByShopName({shopName: filterShop.name, status: 'valid'},
             function (response) { // 成功時
-                // 表示のために5個ずつグルーピングする
+                $scope.menuItems = $filter('filter')(response, {category: category});
                 stopBlock();
             },
             function (response) {   // 失敗時
@@ -55,7 +55,7 @@ angular.module('MyControllers')
     };
 
     $scope.isEmpty = function() {
-        return $scope.groupMenuItems.length === 0;
+        return $scope.menuItems.length === 0;
     };
 
     $scope.isSelected = function(item) {
