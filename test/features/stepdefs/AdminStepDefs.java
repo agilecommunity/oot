@@ -5,10 +5,8 @@ import cucumber.api.DataTable;
 import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
 import cucumber.api.java.ja.前提;
-import features.pages.admin.CashBookPage;
-import features.pages.admin.HeaderModule;
-import features.pages.admin.PurchaseOrderConfirmationPage;
-import features.pages.admin.PurchaseOrderPage;
+import features.pages.admin.*;
+import features.pages.admin.checklist.DailyPage;
 import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.menuItem.EditPage;
 import features.support.CucumberUtils;
@@ -112,7 +110,7 @@ public class AdminStepDefs {
 
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
-        features.pages.admin.ChecklistPage checklistPage = indexPage.showCheckList(menuDate);
+        DailyPage checklistPage = indexPage.showCheckList(menuDate);
 
         assertThat(checklistPage.getTotalPriceOnOrder()).isEqualTo(totalPriceOnOrder);
 

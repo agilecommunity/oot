@@ -1,4 +1,4 @@
-package features.pages.admin;
+package features.pages.admin.checklist;
 
 import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
@@ -15,19 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChecklistPage {
+public class DailyPage {
 
-    private static Logger logger = LoggerFactory.getLogger(ChecklistPage.class);
+    private static Logger logger = LoggerFactory.getLogger(DailyPage.class);
 
     private WebDriver driver;
 
-    public ChecklistPage(WebDriver driver) throws Throwable {
-        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.content.admin-checklist"));
+    public DailyPage(WebDriver driver) throws Throwable {
+        SeleniumUtils.waitForVisible(driver, By.cssSelector("div.content.admin-checklist-daily"));
         PageFactory.initElements(driver, this);
         this.driver = driver;
     }
 
-    @FindBy(how=How.CSS, using="div.content.admin-checklist")
+    @FindBy(how=How.CSS, using="div.content.admin-checklist-daily")
     private WebElement base;
 
     public String getTotalPriceOnOrder() throws Throwable {

@@ -1,0 +1,14 @@
+<div class="content admin-checklist-weekly">
+    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+
+    <div class="content-header">チェック表</div>
+
+    <div class="content-body">
+        <div class="checklist" id="checklist-{{group.targetDate.format('YYYYMMDD')}}" ng-repeat="group in groupedList">
+            <div class="checklist-header">{{group.targetDate.format("M月D日 (ddd曜日)")}}</div>
+            <div class="checklist-body">
+                <div oot-checklist-detail dailymenu="group.dailyMenu" dailyorders="group.dailyOrders"></div>
+            </div>
+        </div>
+    </div>
+</div>

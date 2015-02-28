@@ -17,8 +17,9 @@
                     <div class="form-group">
                         <label>チェックシート</label>
                         <div class="input-group">
+                            <button class="btn btn-primary btn-lg" id="show-checklist-weekly-{{week.startDay.format('YYYYMMDD')}}" ng-click="showChecklistWeekly(week.startDay)">1週間分</button>
                             <div class="btn-group" role="group">
-                                <button class="btn btn-primary btn-lg" id="show-checklist-{{day.format('YYYYMMDD')}}" ng-click="showChecklist(day)" ng-repeat="day in week.days">{{day.format("D (ddd)")}}</button>
+                                <button class="btn btn-primary btn-lg" id="show-checklist-daily-{{day.format('YYYYMMDD')}}" ng-click="showChecklistDaily(day)" ng-repeat="day in week.days">{{day.format("D (ddd)")}}</button>
                             </div>
                         </div>
                     </div>

@@ -506,23 +506,31 @@ table.order-summary td div.order-other-items {
 
 /* 注文確認シート、注文シート */
 .purchase-order-confirmation,
-.purchase-order {
+.purchase-order,
+.checklist,
+.cash-book {
     margin-bottom: 20px;
 }
 
 .purchase-order-confirmation-header,
-.purchase-order-header {
+.purchase-order-header,
+.checklist-header,
+.cash-book-header {
     font-size: 1.5em;
     font-weight: bold;
 }
 
 .purchase-order-confirmation-body,
-.purchase-order-body {
+.purchase-order-body,
+.checklist-body,
+.cash-book-body, {
     padding: 10px 0;
 }
 
 .purchase-order-confirmation-body .no-data,
-.purchase-order-body .no-data {
+.purchase-order-body .no-data,
+.checklist-body .no-data,
+.cash-book-body .no-data {
     margin: 0 1.5em;
 }
 

@@ -51,6 +51,27 @@ public class DailyOrders extends Controller {
     }
 
     @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result index() {
+
+        response().setHeader(CACHE_CONTROL, "no-cache");
+
+        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+
+        Parameters parameters = null;
+        try {
+            parameters = new Parameters(request());
+        } catch (ParseException e) {
+            logger.error("#index failed to parse parameters", e);
+            return internalServerError();
+        }
+
+        ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where(), parameters);
+        List<DailyOrder> orders = query.findList();
+
+        return ok(Json.toJson(orders));
+    }
+
+    @SecureSocial.SecuredAction(ajaxCall = true)
     public static Result showByOrderDate(String orderDateStr) {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -61,7 +82,7 @@ public class DailyOrders extends Controller {
 
         if (list == null || list.size() == 0) {
             logger.debug(String.format("#showByOrderDate order not found orderDateStr:%s", orderDateStr));
-            return notFound();
+            return ok("[]");
         }
 
         return ok(Json.toJson(list));
@@ -82,33 +103,9 @@ public class DailyOrders extends Controller {
             return internalServerError();
         }
 
-        ExpressionList<DailyOrder> query = DailyOrder.find.where().eq("user_id", user.identityId().userId());
+        ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where().eq("user_id", user.identityId().userId()), parameters);
 
-        if (parameters.orderDate != null) {
-            if (parameters.orderDate.isRange()) {
-                DateParameter.DateRange dateRange = parameters.orderDate.getRangeValue();
-                query.between("orderDate", dateRange.fromDate, dateRange.toDate);
-
-                logger.debug("#showMine orderDate(range) from : " + dateRange.fromDate.toString());
-                logger.debug("#showMine orderDate(range) to   : " + dateRange.toDate.toString());
-
-            } else {
-                query.eq("orderDate", parameters.orderDate.getValue());
-
-                logger.debug("#showMine orderDate(value) : " + parameters.orderDate.getValue().toString());
-            }
-        }
-
-        if (parameters.status != null) {
-            Query<DailyMenu> subQuery = Ebean.find(DailyMenu.class)
-                    .setDistinct(true)
-                    .select("menuDate")
-                    .where().eq("status", parameters.status.getValue())
-                    .query();
-            query.in("orderDate", subQuery);
-
-            logger.debug("#showMine status : " + parameters.status.getValue());
-        }
+        query = addConditions(query, parameters);
 
         List<DailyOrder> orders = query.findList();
 
@@ -221,6 +218,36 @@ public class DailyOrders extends Controller {
         object.delete();
 
         return ok();
+    }
+
+    private static ExpressionList<DailyOrder> addConditions(ExpressionList<DailyOrder> base, Parameters parameters) {
+        if (parameters.orderDate != null) {
+            if (parameters.orderDate.isRange()) {
+                DateParameter.DateRange dateRange = parameters.orderDate.getRangeValue();
+                base.between("orderDate", dateRange.fromDate, dateRange.toDate);
+
+                logger.debug("#addConditions orderDate(range) from : " + dateRange.fromDate.toString());
+                logger.debug("#addConditions orderDate(range) to   : " + dateRange.toDate.toString());
+
+            } else {
+                base.eq("orderDate", parameters.orderDate.getValue());
+
+                logger.debug("#addConditions orderDate(value) : " + parameters.orderDate.getValue().toString());
+            }
+        }
+
+        if (parameters.status != null) {
+            Query<DailyMenu> subQuery = Ebean.find(DailyMenu.class)
+                    .setDistinct(true)
+                    .select("menuDate")
+                    .where().eq("status", parameters.status.getValue())
+                    .query();
+            base.in("orderDate", subQuery);
+
+            logger.debug("#addConditions status : " + parameters.status.getValue());
+        }
+
+        return base;
     }
 
     private static boolean canEdit(DailyOrder order, Identity user) {
