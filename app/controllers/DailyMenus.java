@@ -17,8 +17,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
-import utils.controller.DateParameter;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.DateParameter;
+import utils.controller.parameters.ParameterConverter;
 import filters.RequireCSRFCheck4Ng;
 
 public class DailyMenus extends Controller {

@@ -39,7 +39,7 @@ public class MenuItemsTest {
 
     @Test
     public void indexは登録されているMenuItem全てを返すこと() throws Throwable {
-        Result result = callAPI(fakeRequest(GET, "/api/v1.0/menu-items"));
+        Result result = callAPIByAdmin(fakeRequest(GET, "/api/v1.0/menu-items"));
 
         assertThat(status(result)).isEqualTo(OK);
 
@@ -64,39 +64,9 @@ public class MenuItemsTest {
     @Test
     public void createは受け取ったJsonの内容からMenuItemオブジェクトを作成すること() throws Throwable {
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        {
-            // フル項目指定
-            builder.append("{ \"category\": \"bento\"");
-            builder.append(", \"shopName\": \"MOTTOMOTTO\"");
-            builder.append(", \"registerNumber\": \"21\"");
-            builder.append(", \"itemNumber\": \"①\"");
-            builder.append(", \"name\": \"からあげ弁当\"");
-            builder.append(", \"fixedOnOrder\":105");
-            builder.append(", \"discountOnOrder\":5");
-            builder.append(", \"fixedOnPurchaseExcTax\":100");
-            builder.append(", \"fixedOnPurchaseIncTax\":108");
-            builder.append(", \"code\": \"MOTTOMOTTO-B01\"");
-            builder.append(", \"status\": \"valid\"");
-            builder.append("}");
-        }
-        {
-            builder.append(",");
-            builder.append("{ \"category\": \"side\"");
-            builder.append(", \"shopName\": \"ポカポカ弁当\"");
-            builder.append(", \"name\": \"108種類のサラダ\"");
-            builder.append(", \"fixedOnOrder\":106");
-            builder.append(", \"discountOnOrder\":null");
-            builder.append(", \"code\": null");
-            builder.append(", \"status\": \"valid\"");
-            builder.append("}");
-        }
-        builder.append("]");
+        JsValue json = createRequestData();
 
-        JsValue json = Json.parse(builder.toString());
-
-        Result result = callAPI(fakeRequest(POST, "/api/v1.0/menu-items")
+        Result result = callAPIByAdmin(fakeRequest(POST, "/api/v1.0/menu-items")
                 .withJsonBody(json, POST));
 
         Assertions.assertThat(status(result)).isEqualTo(OK);
@@ -185,7 +155,7 @@ public class MenuItemsTest {
             builder.append(",\"valid\"");
         }
 
-        Result result = callAPI(fakeRequest(POST, "/api/v1.0/menu-items")
+        Result result = callAPIByAdmin(fakeRequest(POST, "/api/v1.0/menu-items")
                 .withTextBody(builder.toString())
                 .withHeader("Content-Type", "text/csv"));
 
@@ -230,7 +200,22 @@ public class MenuItemsTest {
         Assertions.assertThat(item.status).describedAs("status").isEqualTo("valid");
     }
 
-    private Result callAPI(FakeRequest baseRequest) {
+    @Test
+    public void createは一般ユーザでアクセスした場合に401エラーを返すこと() throws Throwable {
+
+        Result result = callAPIByUser(fakeRequest(POST, "/api/v1.0/menu-items")
+                .withJsonBody(createRequestData(), POST));
+
+        Assertions.assertThat(status(result)).isEqualTo(UNAUTHORIZED);
+
+        String jsonString = contentAsString(result);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode results = mapper.readTree(jsonString);
+
+        Assertions.assertThat(results.get("message").asText()).describedAs("message").isEqualTo("Current user can't create menu item.");
+    }
+
+    private Result callAPIByAdmin(FakeRequest baseRequest) {
         Http.Cookie fake_cookie = utils.Utils.fakeCookie("melissa@foo.bar");
         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
@@ -238,5 +223,49 @@ public class MenuItemsTest {
                 .withCookies(fake_cookie)
                 .withHeader("X-XSRF-TOKEN", token)
                 .withSession("XSRF-TOKEN", token));
+    }
+
+    private Result callAPIByUser(FakeRequest baseRequest) {
+        Http.Cookie fake_cookie = utils.Utils.fakeCookie("bob@foo.bar");
+        String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+
+        return route(baseRequest
+                .withCookies(fake_cookie)
+                .withHeader("X-XSRF-TOKEN", token)
+                .withSession("XSRF-TOKEN", token));
+    }
+
+    private JsValue createRequestData() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        {
+            // フル項目指定
+            builder.append("{ \"category\": \"bento\"");
+            builder.append(", \"shopName\": \"MOTTOMOTTO\"");
+            builder.append(", \"registerNumber\": \"21\"");
+            builder.append(", \"itemNumber\": \"①\"");
+            builder.append(", \"name\": \"からあげ弁当\"");
+            builder.append(", \"fixedOnOrder\":105");
+            builder.append(", \"discountOnOrder\":5");
+            builder.append(", \"fixedOnPurchaseExcTax\":100");
+            builder.append(", \"fixedOnPurchaseIncTax\":108");
+            builder.append(", \"code\": \"MOTTOMOTTO-B01\"");
+            builder.append(", \"status\": \"valid\"");
+            builder.append("}");
+        }
+        {
+            builder.append(",");
+            builder.append("{ \"category\": \"side\"");
+            builder.append(", \"shopName\": \"ポカポカ弁当\"");
+            builder.append(", \"name\": \"108種類のサラダ\"");
+            builder.append(", \"fixedOnOrder\":106");
+            builder.append(", \"discountOnOrder\":null");
+            builder.append(", \"code\": null");
+            builder.append(", \"status\": \"valid\"");
+            builder.append("}");
+        }
+        builder.append("]");
+
+        return Json.parse(builder.toString());
     }
 }

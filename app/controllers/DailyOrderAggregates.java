@@ -1,7 +1,6 @@
 package controllers;
 
 import com.avaje.ebean.*;
-import models.DailyMenu;
 import models.DailyOrderAggregate;
 import org.joda.time.DateTime;
 import play.Logger;
@@ -11,8 +10,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
-import utils.controller.DateParameter;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.DateParameter;
+import utils.controller.parameters.ParameterConverter;
 
 import java.text.ParseException;
 

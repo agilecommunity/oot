@@ -17,7 +17,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.test.FakeRequest;
 import utils.Utils;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.ParameterConverter;
 import utils.snakeyaml.YamlUtil;
 
 import java.io.IOException;

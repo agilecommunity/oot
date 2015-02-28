@@ -18,14 +18,14 @@ import play.mvc.Http;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
-import utils.controller.DateParameter;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.DateParameter;
+import utils.controller.parameters.ParameterConverter;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import filters.RequireCSRFCheck4Ng;
-import utils.controller.StatusParamater;
+import utils.controller.parameters.StatusParamater;
 
 public class DailyOrders extends Controller {
 

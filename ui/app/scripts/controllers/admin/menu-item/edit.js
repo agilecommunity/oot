@@ -18,11 +18,18 @@ angular.module('MyControllers')
 
             handler.error = function(error) {
                 console.log(error);
-                if (error.status == 400) {
-                    $scope.errors = error.data[0];
+                if (error.status == 422) {
+                    $scope.errors = error.data.errors[0];
                 } else {
-                    alert("データが保存できませんでした。");
-                    $scope.$close();
+                    bootbox.alert({
+                        message: "データが保存できませんでした。",
+                        backdrop: false,
+                        buttons: {
+                            ok: function () {
+                                $scope.$close();
+                            }
+                        }
+                    });
                 }
             };
 
@@ -34,11 +41,18 @@ angular.module('MyControllers')
 
             handler.error = function(error) {
                 console.log(error);
-                if (error.status == 400) {
-                    $scope.errors = error.data;
+                if (error.status === 422) {
+                    $scope.errors = error.data.errors;
                 } else {
-                    alert("データが保存できませんでした。");
-                    $scope.$close();
+                    bootbox.alert({
+                        message: "データが保存できませんでした。",
+                        backdrop: false,
+                        buttons: {
+                            ok: function () {
+                                $scope.$close();
+                            }
+                        }
+                    });
                 }
             };
             $scope.menuItem.$update({}, handler.success, handler.error);
