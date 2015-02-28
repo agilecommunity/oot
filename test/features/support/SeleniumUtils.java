@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -32,6 +33,11 @@ public class SeleniumUtils {
      */
     public static void waitAndClick(WebDriver driver, By locator) throws Throwable {
         SeleniumUtils.waitForVisible(driver, locator);
+
+        // クリックができるようになるまで待つ
+        Wait<WebDriver> wait = new WebDriverWait(driver, DRIVER_WAIT);
+        wait.until(elementToBeClickable(locator));
+
         WebElement target = driver.findElement(locator);
         target.click();
     }

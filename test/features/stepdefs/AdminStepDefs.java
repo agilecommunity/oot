@@ -5,6 +5,7 @@ import cucumber.api.DataTable;
 import cucumber.api.java.ja.ならば;
 import cucumber.api.java.ja.もし;
 import cucumber.api.java.ja.前提;
+import features.pages.admin.CashBookPage;
 import features.pages.admin.HeaderModule;
 import features.pages.admin.PurchaseOrderConfirmationPage;
 import features.pages.admin.PurchaseOrderPage;
@@ -189,4 +190,31 @@ public class AdminStepDefs {
         usersExpected.diff(actual);
     }
 
+    @ならば("^日付 \"(.*)\" の入出金管理台帳にデータがないこと$")
+    public void 日付_の入出金管理台帳にデータがないこと(String targetDateStr) throws Throwable {
+
+        DateTime targetDate = CucumberUtils.parseDate(targetDateStr);
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        CashBookPage cashBookPage = indexPage.showCashBook(targetDate);
+
+        List<Map<String, String>> actual = cashBookPage.getList(targetDate);
+        assertThat(actual.size()).describedAs("リストのサイズ").isEqualTo(0);
+    }
+
+    @ならば("^日付 \"(.*)\" の入出金管理台帳が以下の内容であること:$")
+    public void 日付_の入出金管理台帳が以下の内容であること(
+            String targetDateStr,
+            DataTable cashBookExpected
+    ) throws Throwable {
+
+        DateTime targetDate = CucumberUtils.parseDate(targetDateStr);
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+        CashBookPage cashBookPage = indexPage.showCashBook(targetDate);
+
+        List<Map<String, String>> actual = cashBookPage.getList(targetDate);
+        cashBookExpected.diff(actual);
+    }
 }

@@ -50,4 +50,13 @@ public class IndexPage {
 
         return new features.pages.admin.PurchaseOrderPage(this.driver);
     }
+
+    public CashBookPage showCashBook(DateTime targetDate) throws Throwable {
+        DateTime startDayOfWeek = targetDate.withDayOfWeek(1);
+
+        By buttonLocator = By.id(String.format("show-cash-book-%s", startDayOfWeek.toString("yyyyMMdd")));
+        SeleniumUtils.waitAndClick(this.driver, buttonLocator);
+
+        return new features.pages.admin.CashBookPage(this.driver);
+    }
 }

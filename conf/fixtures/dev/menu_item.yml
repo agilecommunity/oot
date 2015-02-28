@@ -4,6 +4,7 @@
     registerNumber:  11
     itemNumber:      ①
     name:            カルビハンバーグ弁当
+    code:            銀座肉屋　①　カルビハンバーグ弁当　580円
     fixedOnOrder:    580
     discountOnOrder: 0
     fixedOnPurchaseExcTax: 570
@@ -17,6 +18,7 @@
     registerNumber:  11
     itemNumber:      ②
     name:            カルビハンバーグ弁当 大盛り
+    code:            銀座肉屋　②　カルビハンバーグ弁当 大盛り　600円
     fixedOnOrder:    600
     discountOnOrder: 0
     fixedOnPurchaseExcTax: 590
@@ -27,9 +29,10 @@
 - !!models.MenuItem
     category:        bento
     shopName:        銀座肉屋
-    name:            のり弁当
     registerNumber:  11
     itemNumber:      ③
+    name:            のり弁当
+    code:            銀座肉屋　③　のり弁当　380円
     fixedOnOrder:    380
     discountOnOrder: 0
     fixedOnPurchaseExcTax: 370
@@ -43,6 +46,7 @@
     registerNumber:  11
     itemNumber:      ④
     name:            のり弁当 大盛り
+    code:            銀座肉屋　④　のり弁当 大盛り　400円
     fixedOnOrder:    400
     discountOnOrder: 0
     fixedOnPurchaseExcTax: 390
@@ -56,6 +60,7 @@
     registerNumber:  11
     itemNumber:      ⑤
     name:            焼肉弁当
+    code:            銀座肉屋　⑤　焼肉弁当　550円
     fixedOnOrder:    550
     discountOnOrder: 0
     fixedOnPurchaseExcTax:  540
@@ -69,6 +74,7 @@
     registerNumber:  11
     itemNumber:      ⑥
     name:            焼肉弁当 大盛り
+    code:            銀座肉屋　⑥　焼肉弁当 大盛り　560円
     fixedOnOrder:    560
     discountOnOrder: 0
     fixedOnPurchaseExcTax:  550
@@ -82,6 +88,7 @@
     registerNumber:  11
     itemNumber:      ⑦
     name:            豚肉生姜焼き弁当
+    code:            銀座肉屋　⑦　豚肉生姜焼き弁当　490円
     fixedOnOrder:    490
     discountOnOrder: 0
     fixedOnPurchaseExcTax: 480
@@ -104,6 +111,7 @@
     registerNumber:  111
     itemNumber:      A
     name:            八品目のサラダ
+    code:            有楽町八百屋　A 八品目のサラダ　230円
     fixedOnOrder:    230
     discountOnOrder: 0
     fixedOnPurchaseExcTax:  220

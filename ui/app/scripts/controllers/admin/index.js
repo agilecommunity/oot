@@ -45,6 +45,10 @@ angular.module('MyControllers')
         $location.path("/admin/purchase-order/" + targetDay.format('YYYY-MM-DD'));
     };
 
+    $scope.showCashBook = function (targetDay) {
+        $location.path("/admin/cash-book/" + targetDay.format('YYYY-MM-DD'));
+    };
+
     $scope.showChecklist = function (targetDay) {
         $location.path("/admin/checklist/menu-date/" + targetDay.format('YYYY-MM-DD'));
     };
