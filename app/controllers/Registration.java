@@ -79,7 +79,7 @@ public class Registration extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.debug("#startSignUp hasErrors:" + filledForm.errorsAsJson());
-            return badRequest(filledForm.errorsAsJson());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
         StartSignUpForm form = filledForm.get();
@@ -104,7 +104,7 @@ public class Registration extends Controller {
 
         if (UserService$.MODULE$.findToken(token).isEmpty()) {
             logger.debug("#signUp token not found token:" + token);
-            return forbidden(Messages.get("securesocial.signup.invalidLink"));
+            return utils.controller.Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
         }
 
         JsonNode json = request().body().asJson();
@@ -115,7 +115,7 @@ public class Registration extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.debug("#signUp hasErrors:" + filledForm.errorsAsJson());
-            return badRequest(filledForm.errorsAsJson());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
         SignUpForm form = filledForm.get();

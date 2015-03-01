@@ -1,7 +1,6 @@
 package controllers;
 
 import com.avaje.ebean.*;
-import models.DailyMenu;
 import models.DailyOrderAggregate;
 import org.joda.time.DateTime;
 import play.Logger;
@@ -11,8 +10,8 @@ import play.mvc.Http;
 import play.mvc.Result;
 import securesocial.core.Identity;
 import securesocial.core.java.SecureSocial;
-import utils.controller.DateParameter;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.DateParameter;
+import utils.controller.parameters.ParameterConverter;
 
 import java.text.ParseException;
 
@@ -43,7 +42,7 @@ public class DailyOrderAggregates extends Controller {
             parameters = new Parameters(request());
         } catch (ParseException e) {
             logger.error("#showMine failed to parse parameters", e);
-            return internalServerError();
+            return utils.controller.Results.faildToParseQueryStringError();
         }
 
         String sql = "select dor.order_date, doi.menu_item_id, mi.code, sum(doi.num_orders)"

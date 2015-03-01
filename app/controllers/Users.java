@@ -23,7 +23,7 @@ public class Users extends Controller {
         LocalUser localUser = LocalUser.find.byId(user.identityId().userId());
 
         if (!localUser.isAdmin) {
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't access user list");
         }
 
         return ok(Json.toJson(LocalUser.find.all()));
@@ -41,7 +41,7 @@ public class Users extends Controller {
 
         if (user == null) {
             logger.warn("current user not found");
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user doesn't exist");
         }
 
         logger.debug(String.format("#showMe user.email:%s", user.email().get()));
@@ -50,7 +50,7 @@ public class Users extends Controller {
 
         if (localUsers.size() != 1) {
             logger.warn(String.format("#showMe LocalUser not found or too many email:%s", user.email()));
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user doesn't exist");
         }
 
         logger.debug(String.format("#showMe localUser:%s", Json.toJson(localUsers.get(0)).toString()));

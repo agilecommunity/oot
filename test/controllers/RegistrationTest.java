@@ -67,7 +67,7 @@ public class RegistrationTest {
     }
 
     @RunWith(Parameterized.class)
-    public static class startSignupに不正な値を指定した場合_badRequestが返ること {
+    public static class startSignupに不正な値を指定した場合UnprocessableEntityが返ること {
 
         @Before
         public void setUp() {
@@ -93,7 +93,7 @@ public class RegistrationTest {
             JsonNode json = Json.toJson(params);
             Result result = callAPI(fakeRequest(POST, "/api/v1.0/start-signup").withJsonBody(json));
 
-            assertThat(status(result)).isEqualTo(BAD_REQUEST);
+            assertThat(status(result)).isEqualTo(422);
 
         }
 
@@ -114,7 +114,7 @@ public class RegistrationTest {
     }
 
     @RunWith(Parameterized.class)
-    public static class signupに不正な値を指定した場合_badRequestが返ること {
+    public static class signupに不正な値を指定した場合UnprocessableEntityが返ること {
 
         @Before
         public void setUp() {
@@ -158,11 +158,11 @@ public class RegistrationTest {
             JsonNode json = Json.toJson(params);
             Result result = callAPI(fakeRequest(POST, "/api/v1.0/signup/hoho").withJsonBody(json));
 
-            assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(BAD_REQUEST);
+            assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(422);
 
             JsonNode errors = Json.parse(contentAsString(result));
 
-            assertThat(errors.get(fixture.name)).describedAs("エラーの項目").isNotEmpty();
+            assertThat(errors.get("errors").get(fixture.name)).describedAs("エラーの項目").isNotEmpty();
 
         }
 
@@ -185,7 +185,7 @@ public class RegistrationTest {
 
     }
 
-    public static class signupに登録されていないtokenを渡した場合_forbiddenが返ること {
+    public static class signupに登録されていないtokenを渡した場合Forbiddenが返ること {
 
         @Before
         public void setUp() {

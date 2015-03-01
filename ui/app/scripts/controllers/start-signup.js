@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
 .controller('StartSignupController',
-    ['$scope', '$location', '$http',
-    function ($scope, $location, $http) {
+    ['$scope', '$location', '$http', 'dialogs',
+    function ($scope, $location, $http, dialogs) {
 
     $scope.formErrors = {};
 
@@ -21,23 +21,15 @@ angular.module('MyControllers')
 
         $http.post("/api/v1.0/start-signup", parameter)
         .success(function (data, status, header) {
-            bootbox.dialog({
-                message: "登録したアドレスに確認メールを送りました",
-                closeButton: false,
-                buttons: {
-                    success: {
-                        label: "OK",
-                        className: "btn-success",
-                        callback: function () {
-                            $location.path("/");
-                            $scope.$apply();
-                        }
-                    }
-                }
+            var dialog = dialogs.notify("メール送信完了", "登録したアドレスに確認メールを送りました");
+
+            dialog.result["finally"](function(config){
+                $location.path("/");
+                $scope.$apply();
             });
         })
         .error(function (data, status, header) {
-            $scope.formErrors = data;
+            $scope.formErrors = data.errors;
         });
 
     };

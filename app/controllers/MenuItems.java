@@ -99,7 +99,7 @@ public class MenuItems extends Controller {
 
         if (!localUser.isAdmin) {
             logger.warn(String.format("#create only admin can create menu. localUser.id:%s", localUser.email));
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't create menu item.");
         }
 
         if (contentType != null && contentType.contains("text/plain")) {
@@ -108,7 +108,7 @@ public class MenuItems extends Controller {
             try {
                 createFromCsv(request().body().asText());
             } catch (IOException e) {
-                return internalServerError(String.format("{error: \"%s\"", e.getLocalizedMessage()));
+                return utils.controller.Results.internalServerError(e.getLocalizedMessage());
             }
         } else if (contentType != null && contentType.contains("multipart/form-data;")) {
             // multipart/form-dataの場合はCSVファイルで指定したとみなす
@@ -116,7 +116,7 @@ public class MenuItems extends Controller {
             try {
                 createFromFile(request().body().asMultipartFormData());
             } catch (IOException e) {
-                return internalServerError(String.format("{error: \"%s\"", e.getLocalizedMessage()));
+                return utils.controller.Results.internalServerError(e.getLocalizedMessage());
             }
         } else {
             // どれでもない場合はJsonで指定したとみなす
@@ -139,7 +139,7 @@ public class MenuItems extends Controller {
 
         if (!localUser.isAdmin) {
             logger.warn(String.format("#update only admin can create menu. localUser.id:%s", localUser.email));
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't update menu item.");
         }
 
         JsonNode json = request().body().asJson();
@@ -150,7 +150,7 @@ public class MenuItems extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.debug(String.format("#update item has error. errors: %s", filledForm.errorsAsJson()));
-            return badRequest(filledForm.errorsAsJson());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
         MenuItem item = filledForm.get();
@@ -165,7 +165,7 @@ public class MenuItems extends Controller {
     public static Result delete(Long id) {
         logger.debug(String.format("#delete id:%d", id));
 
-        return ok();
+        return new Todo();
     }
 
     /**
@@ -221,7 +221,7 @@ public class MenuItems extends Controller {
         if (!hasError) {
             return ok(result.toString());
         } else {
-            return badRequest(result.toString());
+            return utils.controller.Results.validationError(result.toString());
         }
     }
 

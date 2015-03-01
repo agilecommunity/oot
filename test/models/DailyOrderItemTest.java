@@ -15,7 +15,7 @@ import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
 import utils.Utils;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.ParameterConverter;
 import utils.snakeyaml.YamlUtil;
 
 @RunWith(JUnit4.class)

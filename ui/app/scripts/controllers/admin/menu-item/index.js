@@ -29,10 +29,12 @@ angular.module('MyControllers')
             });
     };
 
-    $scope.menuItems = [];
+    var setUp = function() {
+        $scope.menuItems = [];
 
-    $scope.filters = {};
-    $scope.filters.shop = {id: '@none', name: '選択してください'};
+        $scope.filters = {};
+        $scope.filters.shop = {id: '@none', name: '選択してください'};
+    };
 
     $scope.selectShops = function() {
         var modalInstance = $modal.open({
@@ -75,7 +77,9 @@ angular.module('MyControllers')
 
         modalInstance.result.then(function (newItem){
             console.log(newItem);
-            $scope.menuItems.push(newItem);
+            if (newItem !== undefined) {
+                $scope.menuItems.push(newItem);
+            }
         });
     };
 
@@ -83,4 +87,5 @@ angular.module('MyControllers')
         return $scope.filters.shop.name;
     };
 
+    setUp();
 }]);

@@ -17,7 +17,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.test.FakeRequest;
 import utils.Utils;
-import utils.controller.ParameterConverter;
+import utils.controller.parameters.ParameterConverter;
 import utils.snakeyaml.YamlUtil;
 
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class DailyMenusTest {
     }
 
     @Test
-    public void createは同じ商品が登録された場合BadRequestを返すこと() throws Throwable {
+    public void createは同じ商品が登録された場合UnprocessableEntityを返すこと() throws Throwable {
         StringBuilder builder = new StringBuilder();
         builder.append("{ \"menuDate\":\"2014-02-12T00:00:00.000+09:00\"");
         builder.append(", \"status\":\"open\"");
@@ -78,13 +78,13 @@ public class DailyMenusTest {
 
         Result result = callAPI(fakeRequest(POST, "/api/v1.0/daily-menus").withJsonBody(Json.parse(builder.toString())));
 
-        assertThat(status(result)).isEqualTo(BAD_REQUEST);
+        assertThat(status(result)).isEqualTo(422);
 
         String jsonString = contentAsString(result);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode errorMessages = mapper.readTree(jsonString);
 
-        assertThat(errorMessages.get("detailItems").get(0).asText()).describedAs("エラーメッセージ").isEqualTo("同じ商品は登録できません");
+        assertThat(errorMessages.get("errors").get("detailItems").get(0).asText()).describedAs("エラーメッセージ").isEqualTo("同じ商品は登録できません");
     }
 
     @Test

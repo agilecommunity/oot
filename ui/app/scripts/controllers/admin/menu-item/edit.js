@@ -1,7 +1,7 @@
 angular.module('MyControllers')
     .controller('MenuItemEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'menuItem',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, menuItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'dialogs', 'User', 'MenuItem', 'menuItem',
+    function ($scope, $location, $routeParams, $filter, $modal, dialogs, User, MenuItem, menuItem) {
 
     $scope.menuItem = menuItem;
     var menuItemSaved = angular.copy($scope.menuItem);
@@ -18,11 +18,14 @@ angular.module('MyControllers')
 
             handler.error = function(error) {
                 console.log(error);
-                if (error.status == 400) {
-                    $scope.errors = error.data[0];
+                if (error.status == 422) {
+                    $scope.errors = error.data.errors[0];
                 } else {
-                    alert("データが保存できませんでした。");
-                    $scope.$close();
+                    var dialog = dialogs.error("データ登録・更新失敗", error.data.message);
+
+                    dialog.result["finally"](function(){
+                        $scope.$close();
+                    });
                 }
             };
 
@@ -34,13 +37,17 @@ angular.module('MyControllers')
 
             handler.error = function(error) {
                 console.log(error);
-                if (error.status == 400) {
-                    $scope.errors = error.data;
+                if (error.status === 422) {
+                    $scope.errors = error.data.errors;
                 } else {
-                    alert("データが保存できませんでした。");
-                    $scope.$close();
+                    var dialog = dialogs.error("データ登録・更新失敗", error.data.message);
+
+                    dialog.result["finally"](function(){
+                        $scope.$close();
+                    });
                 }
             };
+
             $scope.menuItem.$update({}, handler.success, handler.error);
         }
     };

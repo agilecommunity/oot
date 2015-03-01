@@ -18,6 +18,8 @@
             'ngResource',
             'ngSanitize',
             'ui.bootstrap',
+            'dialogs.main',
+            'dialogs.default-translations',
             'angularSpinner',
             'underscore.string',
             'MyServices',

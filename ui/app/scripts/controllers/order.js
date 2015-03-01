@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
 .controller('OrderController',
-    ['$scope', '$location', '$filter', '$modal', 'User', 'DailyMenu', 'DailyOrder', 'initialData',
-    function ($scope, $location, $filter, $modal, User, DailyMenu, DailyOrder, initialData) {
+    ['$scope', '$location', '$filter', '$modal', 'dialogs', 'User', 'DailyMenu', 'DailyOrder', 'initialData',
+    function ($scope, $location, $filter, $modal, dialogs, User, DailyMenu, DailyOrder, initialData) {
 
     // 初期データの取得
     $scope.dailyMenus = initialData.dailyMenus;
@@ -59,12 +59,58 @@ angular.module('MyControllers')
         // 注文オブジェクトがあるかどうかを調べる
         var target = $filter('getByOrderDate')($scope.dailyOrders, dailyMenu.menuDate);
 
-        var orderErrorHandler = function(response){
-            console.log(response);
-            bootbox.alert("注文に失敗しました。status:" + response.status, function () {});
+        var operation = target === null ? "create" : "update";
+
+        var backup = {
+            dailyOrder: angular.copy(target)
         };
 
-        if (target !== null) {
+        var errorHandler = function(result) {
+            console.log(result);
+
+            var errorDialog = null;
+            switch (result.status) {
+                case 422:
+                    var errorDetails = "";
+                    angular.forEach(result.data.errors, function(value, key){
+                        errorDetails += key + " => " + value;
+                    });
+                    errorDialog = dialogs.error("データ登録・更新失敗", errorDetails);
+                    break;
+
+                case 404:
+                    errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
+                    break;
+
+                default:
+                    var messages = [
+                        "処理中にエラーが発生しました",
+                        "画面をリロードした後、再度操作を行ってみてください",
+                        "問題が解消しない場合は管理者に連絡してください",
+                        "",
+                        "サーバ側のメッセージ: " + result.data.message
+                    ];
+                    errorDialog = dialogs.error("データ登録・更新失敗", messages.join("<br>"));
+                    break;
+            }
+
+            errorDialog.result["finally"](function(config){
+                // 対象のオブジェクトをいったん削除
+                console.log($scope.dailyOrders);
+                $scope.dailyOrders = $scope.dailyOrders.filter(function(order, index){
+                    // 更新対象のorderのorderDateが文字列になっているので moment で強制的に変換
+                    return (dailyMenu.menuDate.valueOf() !== moment(order.orderDate).valueOf());
+                });
+                // 更新・削除だったばあいは元に戻す
+                if (operation === "update") {
+                    $scope.dailyOrders.push(backup.dailyOrder);
+                }
+                // 状態を反映する
+                applyOrdered();
+            });
+        };
+
+        if (operation === "update") {
             if (new_state === true) {
                 target.detailItems.push({menuItem: dailyMenuItem.menuItem, numOrders: 1});
             } else {
@@ -75,26 +121,26 @@ angular.module('MyControllers')
 
             // あった場合は更新する
             if (target.detailItems.length > 0) {
-                target.$update({}, function(){}, orderErrorHandler);
+                target.$update({}, function(){}, errorHandler);
             } else {
                 target.$delete({}, function(){
                     $scope.dailyOrders = $scope.dailyOrders.filter(function(order, index){
                         return (order.id !== target.id);
-                    }, orderErrorHandler);
-                });
+                    });
+                }, errorHandler);
             }
         } else {
             // ない場合は新しく作る
-            var new_order = new DailyOrder();
-            new_order.orderDate = dailyMenu.menuDate;
-            new_order.localUser = User.currentUser();
-            new_order.detailItems = [
+            target = new DailyOrder();
+            target.orderDate = dailyMenu.menuDate;
+            target.localUser = User.currentUser();
+            target.detailItems = [
                 {menuItem: dailyMenuItem.menuItem, numOrders: 1}
             ];
 
-            new_order.$create(function(){
-                $scope.dailyOrders.push(new_order);
-            }, orderErrorHandler);
+            target.$create(function(){
+                $scope.dailyOrders.push(target);
+            }, errorHandler);
         }
     };
 
