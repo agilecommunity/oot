@@ -13,6 +13,7 @@
     "angular-bootstrap": "~0.11.2",
     "angular-spinner": "~0.5.1",
     "angular-translate": "2.1.0",
+    "angular-dialog-service": "5.2.6",
     "moment": "2.9.0",
     "moment-timezone": "~0.3.0",
     "bootstrap": "3.1.1",
@@ -26,5 +27,8 @@
     "jquery-file-upload": "~9.8.0",
     "blockui": "*",
     "underscore.string": "~3.0.3"
+  },
+  "resolutions": {
+    "angular": "1.2.14"
   }
 }
