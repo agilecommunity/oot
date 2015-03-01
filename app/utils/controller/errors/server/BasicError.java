@@ -1,6 +1,4 @@
-package models.errors.client;
-
-import ch.qos.logback.core.net.server.Client;
+package utils.controller.errors.server;
 
 public class BasicError {
     public String message;

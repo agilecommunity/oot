@@ -16,9 +16,13 @@ import org.joda.time.format.DateTimeFormat;
 import play.*;
 import play.api.PlayException;
 import play.data.format.Formatters;
+import play.libs.F;
 import play.libs.Yaml;
 
 import com.avaje.ebean.Ebean;
+import play.mvc.Http;
+import play.mvc.Result;
+import play.mvc.SimpleResult;
 import utils.snakeyaml.YamlUtil;
 
 import javax.crypto.Cipher;
@@ -57,6 +61,25 @@ public class Global extends GlobalSettings  {
                 Ebean.save((List) YamlUtil.load("fixtures/dev/local_user.yml"));
             }
         }
+    }
+
+    // 500 - internal server error
+    @Override
+    public F.Promise<SimpleResult> onError(Http.RequestHeader request, Throwable t) {
+        logger.error("#onError", t);
+        return F.Promise.<SimpleResult>pure(utils.controller.Results.internalServerError("Uncaught An error has occurred"));
+    }
+
+    @Override
+    public F.Promise<SimpleResult> onBadRequest(Http.RequestHeader request, String error) {
+        logger.error("#onBadRequest error: {}", error);
+        return F.Promise.<SimpleResult>pure(utils.controller.Results.badRequestError(error));
+    }
+
+    @Override
+    public F.Promise<SimpleResult> onHandlerNotFound(Http.RequestHeader request) {
+        logger.error("#onHandlerNotFound");
+        return F.Promise.<SimpleResult>pure(utils.controller.Results.notFoundError(String.format("Your request not Found uri:%s", request.uri())));
     }
 
     private Configuration modifySmtpConfiguration(Configuration configuration) {

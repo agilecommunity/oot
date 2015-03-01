@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
 .controller('DailyMenuNewController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'dialogs', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder',
+    function ($scope, $location, $routeParams, $filter, $modal, dialogs, User, MenuItem, DailyMenu, DailyOrder) {
 
     var maxNumOfBento = 9;
     var maxNumOfSide = 8;
@@ -25,6 +25,42 @@ angular.module('MyControllers')
     // 変更を反映する
     var applyChanges = function(currentMenu) {
 
+        var backup = {
+            dailyMenu: angular.copy(currentMenu)
+        };
+
+        var errorHandler = function(result) {
+            console.log(result);
+
+            var errorDialog = null;
+            var errorDialogOpts = { backdrop: false };
+            if (result.status === 422) {
+                var errorDetails = "";
+                angular.forEach(result.data.errors, function(value, key){
+                    errorDetails += key + " => " + value;
+                });
+                errorDialog = dialogs.error("内容に問題があります", errorDetails, errorDialogOpts);
+            } else if (result.status === 404) {
+                errorDialog = dialogs.error("内容に問題があります", result.data.message, errorDialogOpts);
+            } else {
+                var messages = [
+                    "画面をリロードした後、再度操作を行ってみてください",
+                    "問題が解消しない場合は管理者に連絡してください",
+                    "",
+                    "サーバ側のメッセージ: " + result.data.message
+                ];
+                errorDialog = dialogs.error("処理中にエラーが発生しました", messages.join("<br>"), errorDialogOpts);
+            }
+
+            errorDialog.result.then(function(config){
+                currentMenu = backup.dailyMenu;
+                setCurrent(currentMenu);
+            }, function(){
+                currentMenu = backup.dailyMenu;
+                setCurrent(currentMenu);
+            });
+        };
+
         var selectedItems = compactSelectedItems();
 
         currentMenu.detailItems = [];
@@ -38,7 +74,7 @@ angular.module('MyControllers')
             console.log("#applyChanges menu.id:" + currentMenu.id);
 
             if (currentMenu.id !== undefined) {
-                DailyMenu.remove({id: currentMenu.id});
+                DailyMenu.remove({id: currentMenu.id}, function(saved){/*何もしない*/}, errorHandler);
                 currentMenu.id = undefined;
             }
             return;
@@ -57,9 +93,9 @@ angular.module('MyControllers')
         console.log("#applyChanges size:" + menu.detailItems.length);
 
         if (menu.id === undefined) {
-            DailyMenu.create({}, menu, function (saved) { currentMenu.id = saved.id; });
+            DailyMenu.create({}, menu, function (saved) { currentMenu.id = saved.id; }, errorHandler);
         } else {
-            DailyMenu.update({}, menu, function (saved) { currentMenu.id = saved.id; });
+            DailyMenu.update({}, menu, function (saved) { currentMenu.id = saved.id; }, errorHandler);
         }
     };
     var lazyApplyChanges = _.debounce(applyChanges, 500);
@@ -134,9 +170,8 @@ angular.module('MyControllers')
 
         console.log("#deployToSelectedItems detailItems:" + dailyMenu.detailItems.length);
 
-        angular.forEach(dailyMenu.detailItems, function(item){
-            $scope.selectedItems[item.menuItem.category].unshift(item.menuItem);
-            $scope.selectedItems[item.menuItem.category].pop();
+        angular.forEach(dailyMenu.detailItems, function(item, key){
+            $scope.selectedItems[item.menuItem.category][key] = item.menuItem;
         });
     };
 
@@ -242,7 +277,7 @@ angular.module('MyControllers')
         if ($scope.currentDailyMenu === undefined) {
             return false;
         }
-        return ($scope.currentDailyMenu.menuDate === day);
+        return ($scope.currentDailyMenu.menuDate.valueOf() === day.valueOf());
     };
 
     $scope.classForMenuItem = function(item) {

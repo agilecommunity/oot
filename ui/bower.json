@@ -10,6 +10,9 @@
     "angular-route": "1.2.14",
     "angular-resource": "1.2.14",
     "angular-sanitize": "1.2.14",
+    "angular-bootstrap": "~0.11.2",
+    "angular-spinner": "~0.5.1",
+    "angular-translate": "2.1.0",
     "moment": "2.9.0",
     "moment-timezone": "~0.3.0",
     "bootstrap": "3.1.1",
@@ -20,10 +23,7 @@
     "respond": "~1.4.2",
     "holderjs": "~2.3.2",
     "underscore": "~1.6.0",
-    "bootbox": "~4.3.0",
     "jquery-file-upload": "~9.8.0",
-    "angular-bootstrap": "~0.11.2",
-    "angular-spinner": "~0.5.1",
     "blockui": "*",
     "underscore.string": "~3.0.3"
   }

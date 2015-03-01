@@ -1,4 +1,4 @@
-package models.errors.client;
+package utils.controller.errors.client;
 
 public class AuthenticationError extends BasicError {
 

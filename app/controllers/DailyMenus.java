@@ -49,7 +49,7 @@ public class DailyMenus extends Controller {
             parameters = new Parameters(request());
         } catch (ParseException e) {
             logger.error("#showMine failed to parse parameters", e);
-            return internalServerError();
+            return utils.controller.Results.faildToParseQueryStringError();
         }
 
         ExpressionList<DailyMenu> menus = DailyMenu.find.where();
@@ -92,7 +92,7 @@ public class DailyMenus extends Controller {
 
         if (menu == null) {
             logger.debug(String.format("#showByMenuDate menu not found menu_date_str:%s", menuDateStr));
-            return ok(Json.toJson(new DailyMenu()));
+            return ok(Json.toJson(new DailyMenu())); // 404ではなく、空のオブジェクトを返す
         }
 
         return ok(Json.toJson(menu));
@@ -112,7 +112,7 @@ public class DailyMenus extends Controller {
 
         if (!localUser.isAdmin) {
             logger.warn(String.format("#create only admin can create menu. localUser.id:%s", localUser.email));
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't create daily menu");
         }
 
         JsonNode json = request().body().asJson();
@@ -123,7 +123,7 @@ public class DailyMenus extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.warn(String.format("#create object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return badRequest(filledForm.errorsAsJson().toString());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
         DailyMenu object = filledForm.get();
@@ -132,7 +132,7 @@ public class DailyMenus extends Controller {
 
         if (DailyMenu.findBy(object.menuDate) != null) {
             logger.warn(String.format("#create object is already exists. %s", object.menuDate.toString()));
-            return badRequest();
+            return utils.controller.Results.resourceAlreadyExistsError();
         }
 
         object.save();
@@ -153,12 +153,12 @@ public class DailyMenus extends Controller {
 
         if (!localUser.isAdmin) {
             logger.warn(String.format("#update only admin can update menu. localUser.id:%s", localUser.email));
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't update daily menu");
         }
 
         if (DailyMenu.find.byId(id) == null) {
             logger.debug("#update object doesn't exist");
-            return badRequest();
+            return utils.controller.Results.resourceNotFoundError();
         }
 
         JsonNode json = request().body().asJson();
@@ -169,7 +169,7 @@ public class DailyMenus extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.warn(String.format("#update object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return badRequest(filledForm.errorsAsJson().toString());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson().toString());
         }
 
         DailyMenu object = filledForm.get();
@@ -194,7 +194,7 @@ public class DailyMenus extends Controller {
 
         if (!localUser.isAdmin) {
             logger.warn(String.format("#delete only admin can update menu. localUser.id:%s", localUser.email));
-            return unauthorized();
+            return utils.controller.Results.insufficientPermissionsError("Current user cant delete daily menu");
         }
 
         DailyMenu menu = DailyMenu.find.byId(id);

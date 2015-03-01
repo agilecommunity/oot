@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import filters.RequireCSRFCheck4Ng;
 import models.LocalUser;
 import models.MenuItem;
-import models.errors.server.BasicError;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;

@@ -1,4 +1,4 @@
-package models.errors.server;
+package utils.controller.errors.client;
 
 public class BasicError {
     public String message;
