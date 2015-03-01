@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
     .controller('MenuItemImageImportController',
-    ['$scope', '$location', '$routeParams', '$filter', 'usSpinnerService', 'User', 'MenuItem', 'DailyMenu',
-        function ($scope, $location, $routeParams, $filter, usSpinnerService, User, MenuItem, DailyMenu) {
+    ['$scope', '$location', '$routeParams', '$filter', 'dialogs', 'usSpinnerService', 'User', 'MenuItem', 'DailyMenu',
+        function ($scope, $location, $routeParams, $filter, dialogs, usSpinnerService, User, MenuItem, DailyMenu) {
 
     var startBlock = function() {
         $.blockUI({baseZ: 2000, message: null});
@@ -59,26 +59,42 @@ angular.module('MyControllers')
         .done(function( data, textStatus, jqXHR ) {
             var result = {statusCode: 200};
 
-            if (data !== "" || data[0] !== undefined) {
+            if (data !== undefined && (data !== "" || data[0] !== undefined)) {
                 result = $.parseJSON(data[0].body.innerText);
             }
 
             stopBlock();
 
+            var dialog;
+
             if (result.statusCode === 200) {
-                bootbox.alert("登録が完了しました", function () {
-                    $scope.clearForm();
-                });
+                dialog = dialogs.notify("登録成功", "登録が完了しました。");
             } else {
-                bootbox.alert("登録できませんでした status:" + result.statusCode, function () {
-                    $scope.clearForm();
-                });
+                var messages = [
+                    "登録できませんでした。",
+                    "status:" + result.statusCode,
+                    "message:" + result.message
+                ];
+
+                dialog = dialogs.error("登録失敗", messages.join("<br>"));
             }
+
+            dialog.result["finally"](function(){
+                $scope.clearForm();
+            });
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             stopBlock();
 
-            bootbox.alert("登録できませんでした status:" + errorThrown, function () {
+            var messages = [
+                "登録できませんでした。",
+                "status:" + jqXHR.status,
+                "message:" + jqXHR.responseText
+            ];
+
+            var dialog = dialogs.error("登録失敗", messages.join("<br>"));
+
+            dialog.result["finally"](function(){
                 $scope.clearForm();
             });
         });
@@ -87,7 +103,6 @@ angular.module('MyControllers')
     $scope.clearForm = function() {
         $scope.uploadData = null;
         $scope.menuItemImagesForm.$setPristine();
-        $scope.$apply();
     };
 
     }]

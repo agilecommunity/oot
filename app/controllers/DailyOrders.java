@@ -62,7 +62,7 @@ public class DailyOrders extends Controller {
             parameters = new Parameters(request());
         } catch (ParseException e) {
             logger.error("#index failed to parse parameters", e);
-            return internalServerError();
+            return utils.controller.Results.faildToParseQueryStringError();
         }
 
         ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where(), parameters);
@@ -100,7 +100,7 @@ public class DailyOrders extends Controller {
             parameters = new Parameters(request());
         } catch (ParseException e) {
             logger.error("#showMine failed to parse parameters", e);
-            return internalServerError();
+            return utils.controller.Results.faildToParseQueryStringError();
         }
 
         ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where().eq("user_id", user.identityId().userId()), parameters);
@@ -129,7 +129,7 @@ public class DailyOrders extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.warn(String.format("#create object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return badRequest(filledForm.errorsAsJson().toString());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
         DailyOrder object = filledForm.get();
@@ -138,12 +138,12 @@ public class DailyOrders extends Controller {
 
         if (!DailyOrders.canEdit(object, user)) {
             logger.warn(String.format("#create cant create localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
-            return badRequest();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't create other's daily order");
         }
 
         if (DailyOrder.findBy(object.orderDate, object.localUser.id) != null) {
             logger.debug("#create object already exists");
-            return badRequest();
+            return utils.controller.Results.resourceAlreadyExistsError();
         }
 
         logger.debug(String.format("#create order.localUser.id:%s", object.localUser.id));
@@ -162,7 +162,7 @@ public class DailyOrders extends Controller {
 
         if (DailyOrder.find.byId(id) == null) {
             logger.debug("#update object doesnt exist");
-            return badRequest();
+            return utils.controller.Results.resourceNotFoundError();
         }
 
         JsonNode json = request().body().asJson();
@@ -173,7 +173,7 @@ public class DailyOrders extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.warn(String.format("#update object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return badRequest(filledForm.errorsAsJson().toString());
+            return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
         DailyOrder object = filledForm.get();
@@ -182,7 +182,7 @@ public class DailyOrders extends Controller {
 
         if (! DailyOrders.canEdit(object, user)) {
             logger.warn(String.format("#update cant update localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
-            return badRequest();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't update other's daily order");
         }
 
         logger.debug(String.format("#update order.localUser.id:%s", object.localUser.id));
@@ -212,7 +212,7 @@ public class DailyOrders extends Controller {
 
         if (! DailyOrders.canEdit(object, user)) {
             logger.warn(String.format("#delete cant delete others order localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
-            return badRequest();
+            return utils.controller.Results.insufficientPermissionsError("Current user can't delete other's daily order");
         }
 
         object.delete();
@@ -258,7 +258,7 @@ public class DailyOrders extends Controller {
         LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
 
         // 管理者である
-        if (currentUser.isAdmin == true) {
+        if (currentUser.isAdmin) {
             return true;
         }
 

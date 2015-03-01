@@ -33,29 +33,32 @@ angular.module('MyControllers')
             console.log(result);
 
             var errorDialog = null;
-            var errorDialogOpts = { backdrop: false };
-            if (result.status === 422) {
-                var errorDetails = "";
-                angular.forEach(result.data.errors, function(value, key){
-                    errorDetails += key + " => " + value;
-                });
-                errorDialog = dialogs.error("内容に問題があります", errorDetails, errorDialogOpts);
-            } else if (result.status === 404) {
-                errorDialog = dialogs.error("内容に問題があります", result.data.message, errorDialogOpts);
-            } else {
-                var messages = [
-                    "画面をリロードした後、再度操作を行ってみてください",
-                    "問題が解消しない場合は管理者に連絡してください",
-                    "",
-                    "サーバ側のメッセージ: " + result.data.message
-                ];
-                errorDialog = dialogs.error("処理中にエラーが発生しました", messages.join("<br>"), errorDialogOpts);
+            switch (result.status) {
+                case 422:
+                    var errorDetails = "";
+                    angular.forEach(result.data.errors, function(value, key){
+                        errorDetails += key + " => " + value;
+                    });
+                    errorDialog = dialogs.error("データ登録・更新失敗", errorDetails);
+                    break;
+
+                case 404:
+                    errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
+                    break;
+
+                default:
+                    var messages = [
+                        "処理中にエラーが発生しました",
+                        "画面をリロードした後、再度操作を行ってみてください",
+                        "問題が解消しない場合は管理者に連絡してください",
+                        "",
+                        "サーバ側のメッセージ: " + result.data.message
+                    ];
+                    errorDialog = dialogs.error("データ登録・更新失敗", messages.join("<br>"));
+                    break;
             }
 
-            errorDialog.result.then(function(config){
-                currentMenu = backup.dailyMenu;
-                setCurrent(currentMenu);
-            }, function(){
+            errorDialog.result["finally"](function(config){
                 currentMenu = backup.dailyMenu;
                 setCurrent(currentMenu);
             });

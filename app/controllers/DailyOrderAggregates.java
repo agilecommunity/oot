@@ -42,7 +42,7 @@ public class DailyOrderAggregates extends Controller {
             parameters = new Parameters(request());
         } catch (ParseException e) {
             logger.error("#showMine failed to parse parameters", e);
-            return internalServerError();
+            return utils.controller.Results.faildToParseQueryStringError();
         }
 
         String sql = "select dor.order_date, doi.menu_item_id, mi.code, sum(doi.num_orders)"

@@ -1,7 +1,7 @@
 angular.module('MyControllers')
     .controller('MenuItemEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'menuItem',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, menuItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'dialogs', 'User', 'MenuItem', 'menuItem',
+    function ($scope, $location, $routeParams, $filter, $modal, dialogs, User, MenuItem, menuItem) {
 
     $scope.menuItem = menuItem;
     var menuItemSaved = angular.copy($scope.menuItem);
@@ -21,14 +21,10 @@ angular.module('MyControllers')
                 if (error.status == 422) {
                     $scope.errors = error.data.errors[0];
                 } else {
-                    bootbox.alert({
-                        message: "データが保存できませんでした。",
-                        backdrop: false,
-                        buttons: {
-                            ok: function () {
-                                $scope.$close();
-                            }
-                        }
+                    var dialog = dialogs.error("データ登録・更新失敗", error.data.message);
+
+                    dialog.result["finally"](function(){
+                        $scope.$close();
                     });
                 }
             };
@@ -44,17 +40,14 @@ angular.module('MyControllers')
                 if (error.status === 422) {
                     $scope.errors = error.data.errors;
                 } else {
-                    bootbox.alert({
-                        message: "データが保存できませんでした。",
-                        backdrop: false,
-                        buttons: {
-                            ok: function () {
-                                $scope.$close();
-                            }
-                        }
+                    var dialog = dialogs.error("データ登録・更新失敗", error.data.message);
+
+                    dialog.result["finally"](function(){
+                        $scope.$close();
                     });
                 }
             };
+
             $scope.menuItem.$update({}, handler.success, handler.error);
         }
     };

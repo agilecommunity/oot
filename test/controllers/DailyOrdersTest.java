@@ -3,174 +3,292 @@ package controllers;
 import static org.fest.assertions.api.Assertions.*;
 import static play.mvc.Http.Status.*;
 import static play.test.Helpers.*;
+import static play.test.Helpers.start;
 
+import java.util.Arrays;
 import java.util.List;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import models.DailyOrder;
 import models.DailyOrderItem;
 
 import org.joda.time.DateTime;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import org.junit.runners.Parameterized;
 import play.Logger;
 import play.api.libs.json.JsValue;
 import play.api.libs.json.Json;
 import play.filters.csrf.CSRF;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
-import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
 import utils.Utils;
 import utils.controller.parameters.ParameterConverter;
 import utils.snakeyaml.YamlUtil;
 
-@RunWith(JUnitParamsRunner.class)
-public class DailyOrdersTest extends WithApplication {
+@RunWith(Enclosed.class)
+public class DailyOrdersTest {
 
     Logger.ALogger logger = Logger.of("application.controllers.DailyOrdersTest");
 
-     @Before
-     public void setUp() {
-         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-         Utils.cleanUpDatabase();
-         Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
-     }
+    public static void setUp() {
+        start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
+        Utils.cleanUpDatabase();
+        Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
+    }
 
-     @After
-     public void tearDown() {
-     }
+    public static Result callUpdate(Long id, String jsonString) {
 
-     @Test
-     public void createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること() {
-         StringBuilder builder = new StringBuilder();
-         builder.append("{ \"localUser\":{\"id\": \"steve@foo.bar\"}");
-         builder.append(", \"orderDate\":\"2014-03-11T00:00:00.000+09:00\"");
-         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
-         builder.append("}");
+        JsValue json = Json.parse(jsonString);
+        Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
+        String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
-         JsValue json = Json.parse(builder.toString());
+        Result result = route(fakeRequest(PUT, String.format("/api/v1.0/daily-orders/%d", id))
+                .withJsonBody(json, PUT)  // PUTがないとPOSTしてしまうらしい(バグか?)
+                .withCookies(fake_cookie)
+                .withHeader("X-XSRF-TOKEN", token)
+                .withSession("XSRF-TOKEN", token));
 
-         Result result = callCreate(builder.toString());
+        return result;
+    }
 
-         assertThat(status(result)).isEqualTo(OK);
+    public static Result callCreate(String jsonString) {
 
-         DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-03-11T00:00:00.000+09:00");
-         DailyOrder order = DailyOrder.findBy(new DateTime(dateValue.getMillis()), "steve@foo.bar");
-         assertThat(order.localUser.firstName).isEqualTo("スティーブ");
+        JsValue json = Json.parse(jsonString);
+        Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
+        String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
-         assertThat(order.detailItems.size()).isEqualTo(1);
-         DailyOrderItem order_item = order.detailItems.get(0);
-         assertThat(order_item.menuItem.name).isEqualTo("たっぷりサーモン丼");
-     }
+        Result result = route(fakeRequest(POST, "/api/v1.0/daily-orders")
+                .withJsonBody(json)
+                .withCookies(fake_cookie)
+                .withHeader("X-XSRF-TOKEN", token)
+                .withSession("XSRF-TOKEN", token));
 
+        return result;
+    }
 
-     @Test
-     @Parameters(method = "illegal_json_data")
-     public void createはJsonの内容が不正であった場合400_BadRequestを返すこと(String jsonString) {
-         Result result = callCreate(jsonString);
+    public static Result callDelete(Long id) {
 
-         assertThat(status(result)).isEqualTo(BAD_REQUEST);
-     }
+        Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
+        String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
-     @Test
-     public void deleteは指定したIDのDailyOrderオブジェクトを削除すること() {
-         assertThat(DailyOrder.find.byId(1L)).isNotNull();
+        Result result = route(fakeRequest(DELETE, String.format("/api/v1.0/daily-orders/%d", id))
+                .withCookies(fake_cookie)
+                .withHeader("X-XSRF-TOKEN", token)
+                .withSession("XSRF-TOKEN", token));
 
-         Result result = callDelete(1L);
+        return result;
+    }
 
-         assertThat(status(result)).isEqualTo(OK);
+    public static class createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
 
-         DailyOrder order = DailyOrder.find.byId(1L);
+        @Test
+        public void 確認() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("{ \"localUser\":{\"id\": \"steve@foo.bar\"}");
+            builder.append(", \"orderDate\":\"2014-03-11T00:00:00.000+09:00\"");
+            builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
+            builder.append("}");
 
-         assertThat(order).isNull();
+            JsValue json = Json.parse(builder.toString());
 
-     }
+            Result result = callCreate(builder.toString());
 
-     @Test
-     public void updateは指定したIDのDailyOrderオブジェクトを更新すること() {
-         StringBuilder builder = new StringBuilder();
-         builder.append("{ \"id\":1");
-         builder.append(", \"orderDate\":\"2014-02-10T00:00:00.000+09:00\"");
-         builder.append(", \"localUser\":{\"id\": \"steve@foo.bar\"}");
-         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
-         builder.append("}");
+            assertThat(status(result)).isEqualTo(OK);
 
-         JsValue json = Json.parse(builder.toString());
+            DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-03-11T00:00:00.000+09:00");
+            DailyOrder order = DailyOrder.findBy(new DateTime(dateValue.getMillis()), "steve@foo.bar");
+            assertThat(order.localUser.firstName).isEqualTo("スティーブ");
 
-         Result result = callUpdate(1L, builder.toString());
+            assertThat(order.detailItems.size()).isEqualTo(1);
+            DailyOrderItem order_item = order.detailItems.get(0);
+            assertThat(order_item.menuItem.name).isEqualTo("たっぷりサーモン丼");
+        }
+    }
 
-         assertThat(status(result)).isEqualTo(OK);
+    public static class deleteは指定したIDのDailyOrderオブジェクトを削除すること {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
 
-         DailyOrder order = DailyOrder.find.byId(1L);
-         assertThat(order.localUser.firstName).isEqualTo("スティーブ");
+        @Test
+        public void 確認() {
 
-         assertThat(order.detailItems.size()).isEqualTo(1);
-         DailyOrderItem order_item = order.detailItems.get(0);
-         assertThat(order_item.menuItem.name).isEqualTo("たっぷりサーモン丼");
-     }
+            assertThat(DailyOrder.find.byId(1L)).isNotNull();
 
-     private Result callCreate(String jsonString) {
+            Result result = callDelete(1L);
 
-         JsValue json = Json.parse(jsonString);
-         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
-         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+            assertThat(status(result)).isEqualTo(OK);
 
-         Result result = route(fakeRequest(POST, "/api/v1.0/daily-orders")
-                                 .withJsonBody(json)
-                                 .withCookies(fake_cookie)
-                                 .withHeader("X-XSRF-TOKEN", token)
-                                 .withSession("XSRF-TOKEN", token));
+            DailyOrder order = DailyOrder.find.byId(1L);
 
-         return result;
-     }
+            assertThat(order).isNull();
+        }
+    }
 
-     private Result callDelete(Long id) {
+    public static class updateは指定したIDのDailyOrderオブジェクトを更新すること {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
 
-         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
-         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+        @Test
+        public void 確認() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("{ \"id\":1");
+            builder.append(", \"orderDate\":\"2014-02-10T00:00:00.000+09:00\"");
+            builder.append(", \"localUser\":{\"id\": \"steve@foo.bar\"}");
+            builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
+            builder.append("}");
 
-         Result result = route(fakeRequest(DELETE, String.format("/api/v1.0/daily-orders/%d", id))
-                                 .withCookies(fake_cookie)
-                                 .withHeader("X-XSRF-TOKEN", token)
-                                 .withSession("XSRF-TOKEN", token));
+            JsValue json = Json.parse(builder.toString());
 
-         return result;
-     }
+            Result result = callUpdate(1L, builder.toString());
 
-     private Result callUpdate(Long id, String jsonString) {
+            assertThat(status(result)).isEqualTo(OK);
 
-         JsValue json = Json.parse(jsonString);
-         Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
-         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+            DailyOrder order = DailyOrder.find.byId(1L);
+            assertThat(order.localUser.firstName).isEqualTo("スティーブ");
 
-         Result result = route(fakeRequest(PUT, String.format("/api/v1.0/daily-orders/%d", id))
-                                 .withJsonBody(json, PUT)  // PUTがないとPOSTしてしまうらしい(バグか?)
-                                 .withCookies(fake_cookie)
-                                 .withHeader("X-XSRF-TOKEN", token)
-                                 .withSession("XSRF-TOKEN", token));
+            assertThat(order.detailItems.size()).isEqualTo(1);
+            DailyOrderItem order_item = order.detailItems.get(0);
+            assertThat(order_item.menuItem.name).isEqualTo("たっぷりサーモン丼");
+        }
+    }
 
-         return result;
-     }
+    @RunWith(Parameterized.class)
+    public static class createはJsonの内容が不正であった場合UnprocessableEntityを返すこと {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
 
-     private Object[] illegal_json_data() {
-         return JUnitParamsRunner.$(
-                   JUnitParamsRunner.$("{ }") // 空のリクエスト
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"} }") // 必須項目(orderDate)なし
-                 , JUnitParamsRunner.$("{ \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }")             // 必須項目(localUser)なし
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }") // 存在しないユーザ
-                 , JUnitParamsRunner.$("{ \"orderDate\":\"aaa\" }") // 存在しない日付
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10T00:00:00.000+09:00\" }") // 登録済みの注文
-                 , JUnitParamsRunner.$("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10T00:00:00.000+09:00\" }") // ユーザが異なる
-                 );
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture("{}", "空オブジェクト")},
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"} }", "必須項目なし(orderDate)")},
+                    {new MyFixture("{ \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }", "必須項目なし(localUser)")},
+                    {new MyFixture("{ \"orderDate\":\"aaa\" }", "項目エラー(orderDate 存在しない日付)")}
+            });
+        }
 
-     }
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callCreate(fixture.jsonString);
+            assertThat(status(result)).isEqualTo(422);
+        }
+
+        static class MyFixture {
+            public String jsonString;
+            public String description;
+
+            public MyFixture(String jsonString, String description) {
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
+
+    }
+
+    @RunWith(Parameterized.class)
+    public static class createはJsonの内容が不正であった場合Unauthorizedを返すこと {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture("{ \"localUser\": {\"id\":\"hoge\"}, \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }", "ユーザが存在しない")},
+                    {new MyFixture("{ \"localUser\": {\"id\":\"bob@foo.bar\"}, \"orderDate\":\"2014-02-10T00:00:00.000+09:00\" }", "所有者と異なるユーザ")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callCreate(fixture.jsonString);
+            assertThat(status(result)).isEqualTo(UNAUTHORIZED);
+        }
+
+        static class MyFixture {
+            public String jsonString;
+            public String description;
+
+            public MyFixture(String jsonString, String description) {
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
+
+    }
+
+    @RunWith(Parameterized.class)
+    public static class createはJsonの内容が不正であった場合Conflictを返すこと {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-10T00:00:00.000+09:00\" }", "登録済みのオブジェクト")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callCreate(fixture.jsonString);
+            assertThat(status(result)).isEqualTo(CONFLICT);
+        }
+
+        static class MyFixture {
+            public String jsonString;
+            public String description;
+
+            public MyFixture(String jsonString, String description) {
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
+
+    }
 }

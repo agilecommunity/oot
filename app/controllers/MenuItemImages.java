@@ -37,6 +37,8 @@ public class MenuItemImages extends Controller {
 
         String contentType = request().getHeader("Content-Type");
 
+        logger.debug("#create User-Agent: {}", request().getHeader("User-Agent"));
+
         boolean canDetectRequestHeader = clientCanDetectResponseHeader(request().getHeader("User-Agent"));
 
         logger.debug(String.format("#create Content-Type: %s", contentType));

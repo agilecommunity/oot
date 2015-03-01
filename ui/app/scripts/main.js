@@ -8,8 +8,15 @@
 
     $(function () {
 
-        app.run(["$rootScope", "$location", "$window", "User", "RouteFinder",
-                 function ($rootScope, $location, $window, User, RouteFinder) {
+        app.config(['dialogsProvider',
+            function(dialogsProvider) {
+            dialogsProvider.useBackdrop('static');
+            dialogsProvider.useEscClose(false);
+            dialogsProvider.useCopy(false);
+        }]);
+
+        app.run(["$rootScope", "$location", "$window", "User", "RouteFinder", "dialogs",
+                 function ($rootScope, $location, $window, User, RouteFinder, dialogs) {
 
             // ブラウザのリロード対策
             $rootScope.$on('$locationChangeStart', function (ev, next, current) {
@@ -28,8 +35,8 @@
                     if (User.isAccessible(route.access, User.currentUser()) === true) {
                         return;
                     } else {
-                        alert("ページにアクセスできる権限がありません。");
                         ev.preventDefault();
+                        dialogs.error("エラー", "ページにアクセスできる権限がありません。");
                         return;
                     }
                 }
@@ -47,17 +54,38 @@
             });
 
             $rootScope.$on('$routeChangeError', function(event, current, previous, rejection){
-                var message = "画面の表示中にエラーが発生しました。元の画面に戻ります。";
 
-                if (rejection) {
-                    message += "<br/>" + "ステータス:" + rejection.status;
-                    message += "&nbsp;";
-                    message += "原因:" + rejection.reason;
+                console.log("$routeChangeError");
+                console.log(event);
+                console.log(current);
+                console.log(previous);
+                console.log(rejection);
+
+                var dialog = "";
+                var urlToGo = "";
+
+                if (rejection && rejection.status === 401) {
+                    dialog = dialogs.error("認証エラー", "サインインがまだか、セッションがタイムアウトしました。<br>サインイン画面に戻ります。");
+                    urlToGo = "/";
+                } else {
+                    var messages = ["画面の表示中にエラーが発生しました。元の画面に戻ります。"];
+
+                    if (rejection) {
+                        messages.push("ステータス:" + rejection.status);
+                        messages.push("原因:" + rejection.reason.message);
+                    }
+
+                    if (previous === undefined) {
+                        urlToGo = "/";
+                    } else {
+                        urlToGo = previous.originalPath;
+                    }
+
+                    dialog = dialogs.error("エラー", messages.join("<br>"));
                 }
 
-                bootbox.alert(message, function(){
-                    // $location.path だと上手く遷移してくれなかったので…
-                    $window.history.back();
+                dialog.result["finally"](function(){
+                    $location.path(urlToGo);
                 });
             });
         }]);

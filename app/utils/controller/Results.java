@@ -8,6 +8,10 @@ public class Results {
 
     static Codec utf8 = Codec.javaSupported("utf-8");
 
+    public static play.mvc.Results.Status invalidLinkError(String errors) {
+        return new play.mvc.Results.Status(play.core.j.JavaResults.Forbidden(), Json.toJson(new utils.controller.errors.client.BasicError(errors)) , utf8);
+    }
+
     public static play.mvc.Results.Status validationError(com.fasterxml.jackson.databind.JsonNode errors) {
         return new play.mvc.Results.Status(play.core.j.JavaResults.UnprocessableEntity(), Json.toJson(new ValidationError(errors)) , utf8);
     }

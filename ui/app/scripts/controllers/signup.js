@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
 .controller('SignupController',
-    ['$scope', '$location', '$routeParams', '$http',
-    function ($scope, $location, $routeParams, $http) {
+    ['$scope', '$location', '$routeParams', '$http', 'dialogs',
+    function ($scope, $location, $routeParams, $http, dialogs) {
 
     $scope.formErrors = {};
 
@@ -26,37 +26,29 @@ angular.module('MyControllers')
 
         $http.post('/api/v1.0/signup/' + $routeParams.token, parameter)
         .success(function (data, status, header) {
-            bootbox.dialog({
-                message: "アカウントの登録が完了しました。サインインしてください",
-                closeButton: false,
-                buttons: {
-                    success: {
-                        label: "OK",
-                        className: "btn-success",
-                        callback: function () {
-                            $location.path("/");
-                            $scope.$apply();
-                        }
-                    }
-                }
+            var dialog = dialogs.notify("サインアップ完了", "アカウントの登録が完了しました。サインインしてください");
+
+            dialog.result["finally"](function(config){
+                $location.path("/");
+                $scope.$apply();
             });
         })
         .error(function (data, status, header) {
             switch (status) {
-                case 400:
-                    $scope.formErrors = data;
-                    break;
-                default:
-                    bootbox.dialog({
-                        message: data,
-                        closeButton: false,
-                        buttons: {
-                            success: {
-                                label: "OK",
-                                className: "btn-success"
-                            }
-                        }
-                    });
+            case 422:
+                $scope.formErrors = data.errors;
+                break;
+            case 403:
+                dialogs.error("無効なリンク", data.message);
+                break;
+            default:
+                var messages = [
+                    "画面をリロードした後、再度操作を行ってみてください",
+                    "問題が解消しない場合は管理者に連絡してください",
+                    "",
+                    "サーバ側のメッセージ: " + data.message
+                ];
+                dialogs.error("処理中にエラーが発生しました", messages.join("<br>"));
             }
         });
     };
