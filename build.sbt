@@ -17,7 +17,6 @@ libraryDependencies ++= Seq(
   , "commons-io" % "commons-io" % "2.4"
   , "commons-codec" % "commons-codec" % "1.9"
   , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
-  , "pl.pragmatists" % "JUnitParams" % "1.0.2" % "test"
   , "info.cukes" % "cucumber-java" % "1.1.6" % "test"
   , "info.cukes" % "cucumber-junit" % "1.1.6" % "test"
   , "org.seleniumhq.selenium" % "selenium-java" % "2.44.0" % "test"

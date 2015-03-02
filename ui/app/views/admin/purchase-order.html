@@ -23,7 +23,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="detailItem in order.detailItems">
+                    <tr class="product" ng-repeat="detailItem in order.detailItems | orderBy:['menuItem.registerNumber', 'menuItem.shopName', 'menuItem.itemNumber']">
                         <td class="register-number">{{detailItem.menuItem.registerNumber}}</td>
                         <td class="shop-name">{{detailItem.menuItem.shopName}}</td>
                         <td class="item-number">{{detailItem.menuItem.itemNumber}}</td>
@@ -32,6 +32,17 @@
                         <td class="fixed-on-purchase-inc-tax price">{{detailItem.menuItem.fixedOnPurchaseIncTax}}</td>
                         <td class="num-orders count">{{detailItem.numOrders}}</td>
                         <td class="total-fixed-on-purchase-inc-tax price">{{detailItem.totalFixedOnPurchaseIncTax}}</td>
+                    </tr>
+                    <tr class="day-sub-total">
+                        <td colspan="6"></td>
+                        <td class="num-orders count">{{order.daySubTotalNumOrders}}</td>
+                        <td class="total-fixed-on-purchase-inc-tax price">{{order.daySubTotalFixedOnPurchaseIncTax}}</td>
+                    </tr>
+                    <tr class="additional-item" ng-repeat="item in order.additionalItems">
+                        <td class="name" colspan="4">{{item.name}}</td>
+                        <td colspan="2"></td>
+                        <td class="num-orders count">{{item.numOrders}}</td>
+                        <td class="total-fixed-on-purchase-inc-tax price">{{item.totalFixedOnPurchaseIncTax}}</td>
                     </tr>
                     <tr class="day-total">
                         <td colspan="6"></td>

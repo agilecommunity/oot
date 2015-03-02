@@ -540,6 +540,10 @@ table.order-summary td div.order-other-items {
     color: #59920a;
 }
 
+tr.additional-item td.name {
+    text-align: right;
+}
+
 /* Bootstrap補助 */
 ul.nav-pills li.divider {
     margin: 2px 9px;

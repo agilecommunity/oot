@@ -21,7 +21,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="detailItem in menu.detailItems | filter:{menuItem: {category: 'bento'}}">
+                    <tr ng-repeat="detailItem in menu.detailItems | filter:{menuItem: {category: 'bento'}} | orderBy:['menuItem.registerNumber', 'menuItem.shopName', 'menuItem.itemNumber']">
                         <td class="register-number">{{detailItem.menuItem.registerNumber}}</td>
                         <td class="shop-name">{{detailItem.menuItem.shopName}}</td>
                         <td class="item-number">{{detailItem.menuItem.itemNumber}}</td>

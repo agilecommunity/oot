@@ -118,8 +118,8 @@ public class AdminStepDefs {
         checkListExpected.diff(actual);
     }
 
-    @ならば("^日付 \"(.*)\" の注文確認シートにデータがないこと$")
-    public void 日付_の注文確認シートにデータがないこと(String orderDateStr) throws Throwable {
+    @ならば("^日付 \"(.*)\" の発注確認シートにデータがないこと$")
+    public void 日付_の発注確認シートにデータがないこと(String orderDateStr) throws Throwable {
 
         DateTime orderDate = CucumberUtils.parseDate(orderDateStr);
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
@@ -130,8 +130,8 @@ public class AdminStepDefs {
         assertThat(actual.size()).describedAs("リストのサイズ").isEqualTo(0);
     }
 
-    @ならば("^日付 \"(.*)\" の注文確認シートが以下の内容であること:$")
-    public void 日付_の注文確認シートが以下の内容であること(
+    @ならば("^日付 \"(.*)\" の発注確認シートが以下の内容であること:$")
+    public void 日付_の発注確認シートが以下の内容であること(
             String orderDateStr,
             DataTable orderAggregatesExpected
     ) throws Throwable {
@@ -146,8 +146,8 @@ public class AdminStepDefs {
         orderAggregatesExpected.diff(actual);
     }
 
-    @ならば("^日付 \"(.*)\" の注文シートにデータがないこと$")
-    public void 日付_の注文シートにデータがないこと(String orderDateStr) throws Throwable {
+    @ならば("^日付 \"(.*)\" の発注シートにデータがないこと$")
+    public void 日付_の発注シートにデータがないこと(String orderDateStr) throws Throwable {
 
         DateTime orderDate = CucumberUtils.parseDate(orderDateStr);
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
@@ -158,11 +158,9 @@ public class AdminStepDefs {
         assertThat(actual.size()).describedAs("リストのサイズ").isEqualTo(0);
     }
 
-    @ならば("^日付 \"(.*)\" の注文シートの総数量が \"(.*)\" 総額が \"(.*)\" 円かつ、内訳が以下の内容であること:$")
-    public void 日付_の注文シートが以下の内容であること(
+    @ならば("^日付 \"(.*)\" の発注シートが以下の内容であること:$")
+    public void 日付_の発注シートが以下の内容であること(
             String orderDateStr,
-            String dayTotalNumOrders,
-            String dayTotalFixedOnPurchaseIncTax,
             DataTable orderAggregatesExpected
     ) throws Throwable {
 
@@ -171,9 +169,6 @@ public class AdminStepDefs {
         HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
         features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
         PurchaseOrderPage purchaseOrderPage = indexPage.showPurchaseOrder(orderDate);
-
-        assertThat(purchaseOrderPage.getDayTotalNumOrders(orderDate)).describedAs("総数量").isEqualTo(dayTotalNumOrders);
-        assertThat(purchaseOrderPage.getDayTotalFixedOnPurchaseIncTax(orderDate)).describedAs("総額").isEqualTo(dayTotalFixedOnPurchaseIncTax);
 
         List<Map<String, String>> actual = purchaseOrderPage.getList(orderDate);
         orderAggregatesExpected.diff(actual);

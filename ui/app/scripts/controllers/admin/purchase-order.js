@@ -16,6 +16,10 @@ angular.module('MyControllers')
         $scope.endDate = initialData.endDate;
         $scope.orderAggregates = initialData.orderAggregates;
 
+        var additionalItems = [
+            {name: "送料", numOrders: 1, totalFixedOnPurchaseIncTax: 540}
+        ];
+
         // 1週間＝5日分のデータを作成する
         $scope.purchaseOrders = [];
         for (var index=0; index <5; index++) {
@@ -28,13 +32,13 @@ angular.module('MyControllers')
             if (targetMenu === null) {
                 targetMenu = DailyMenu.createEmptyData(targetDate);
             }
-            $scope.purchaseOrders.push({menu: targetMenu, orderDate: targetMenu.menuDate});
+            $scope.purchaseOrders.push({menu: targetMenu, orderDate: targetMenu.menuDate, additionalItems: additionalItems});
         }
 
         angular.forEach($scope.purchaseOrders, function(order){
             var detailItems = [];
-            var dayTotalNumOrders = 0;
-            var dayTotalFixedOnPurchaseIncTax = 0;
+            var daySubTotalNumOrders = 0;
+            var daySubTotalFixedOnPurchaseIncTax = 0;
             angular.forEach(order.menu.detailItems, function(detailItem){
                 var numOrders = getAmount(order.menu.menuDate, detailItem.menuItem);
 
@@ -43,13 +47,24 @@ angular.module('MyControllers')
                     detailItem.totalFixedOnPurchaseIncTax = detailItem.menuItem.fixedOnPurchaseIncTax * detailItem.numOrders;
                     detailItems.push(detailItem);
 
-                    dayTotalNumOrders += detailItem.numOrders;
-                    dayTotalFixedOnPurchaseIncTax += detailItem.totalFixedOnPurchaseIncTax;
+                    daySubTotalNumOrders += detailItem.numOrders;
+                    daySubTotalFixedOnPurchaseIncTax += detailItem.totalFixedOnPurchaseIncTax;
                 }
             });
             order.detailItems = detailItems;
+            order.daySubTotalNumOrders = daySubTotalNumOrders;
+            order.daySubTotalFixedOnPurchaseIncTax = daySubTotalFixedOnPurchaseIncTax;
+
+            var dayTotalNumOrders = order.daySubTotalNumOrders;
+            var dayTotalFixedOnPurchaseIncTax = order.daySubTotalFixedOnPurchaseIncTax;
+
+            angular.forEach(order.additionalItems, function(item){
+                dayTotalNumOrders += item.numOrders;
+                dayTotalFixedOnPurchaseIncTax += item.totalFixedOnPurchaseIncTax;
+            });
             order.dayTotalNumOrders = dayTotalNumOrders;
             order.dayTotalFixedOnPurchaseIncTax = dayTotalFixedOnPurchaseIncTax;
+
         });
     };
 
