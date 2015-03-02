@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/agilecommunity/oot.png?label=ready&title=Ready)](https://waffle.io/agilecommunity/oot)
 # 美味しいお弁当を食べたい
 
 [![Build Status](https://travis-ci.org/agilecommunity/oot.svg?branch=develop)](https://travis-ci.org/agilecommunity/oot)
