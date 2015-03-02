@@ -40,14 +40,15 @@ public class DailyOrdersTest {
         Utils.cleanUpDatabase();
         Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
         Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu.yml"));
         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
     }
 
-    public static Result callUpdate(Long id, String jsonString) {
+    public static Result callUpdate(Long id, String jsonString, String userId) {
 
         JsValue json = Json.parse(jsonString);
-        Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
+        Cookie fake_cookie = utils.Utils.fakeCookie(userId);
         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
         Result result = route(fakeRequest(PUT, String.format("/api/v1.0/daily-orders/%d", id))
@@ -59,10 +60,10 @@ public class DailyOrdersTest {
         return result;
     }
 
-    public static Result callCreate(String jsonString) {
+    public static Result callCreate(String jsonString, String userId) {
 
         JsValue json = Json.parse(jsonString);
-        Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
+        Cookie fake_cookie = utils.Utils.fakeCookie(userId);
         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
         Result result = route(fakeRequest(POST, "/api/v1.0/daily-orders")
@@ -74,9 +75,9 @@ public class DailyOrdersTest {
         return result;
     }
 
-    public static Result callDelete(Long id) {
+    public static Result callDelete(Long id, String userId) {
 
-        Cookie fake_cookie = utils.Utils.fakeCookie("steve@foo.bar");
+        Cookie fake_cookie = utils.Utils.fakeCookie(userId);
         String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
 
         Result result = route(fakeRequest(DELETE, String.format("/api/v1.0/daily-orders/%d", id))
@@ -85,6 +86,30 @@ public class DailyOrdersTest {
                 .withSession("XSRF-TOKEN", token));
 
         return result;
+    }
+
+    public static Result callCreate(String jsonString) {
+        return callCreate(jsonString, "steve@foo.bar");
+    }
+
+    public static Result callCreateByAdmin(String jsonString) {
+        return callCreate(jsonString, "melissa@foo.bar");
+    }
+
+    public static Result callUpdate(Long id, String jsonString) {
+        return callUpdate(id, jsonString, "steve@foo.bar");
+    }
+
+    public static Result callUpdateByAdmin(Long id, String jsonString) {
+        return callUpdate(id, jsonString, "melissa@foo.bar");
+    }
+
+    public static Result callDelete(Long id) {
+        return callDelete(id, "steve@foo.bar");
+    }
+
+    public static Result callDeleteByAdmin(Long id) {
+        return callDelete(id, "melissa@foo.bar");
     }
 
     public static class createは受け取ったJsonの内容からDailyOrderオブジェクトを作成すること {
@@ -97,7 +122,7 @@ public class DailyOrdersTest {
         public void 確認() {
             StringBuilder builder = new StringBuilder();
             builder.append("{ \"localUser\":{\"id\": \"steve@foo.bar\"}");
-            builder.append(", \"orderDate\":\"2014-03-11T00:00:00.000+09:00\"");
+            builder.append(", \"orderDate\":\"2014-03-10T00:00:00.000+09:00\"");
             builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
             builder.append("}");
 
@@ -107,7 +132,7 @@ public class DailyOrdersTest {
 
             assertThat(status(result)).isEqualTo(OK);
 
-            DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-03-11T00:00:00.000+09:00");
+            DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-03-10T00:00:00.000+09:00");
             DailyOrder order = DailyOrder.findBy(new DateTime(dateValue.getMillis()), "steve@foo.bar");
             assertThat(order.localUser.firstName).isEqualTo("スティーブ");
 
@@ -212,7 +237,7 @@ public class DailyOrdersTest {
     }
 
     @RunWith(Parameterized.class)
-    public static class createはJsonの内容が不正であった場合Unauthorizedを返すこと {
+    public static class createは認証したユーザとOrderの作成者が異なる場合Unauthorizedを返すこと {
         @Before
         public void setUp() {
             DailyOrdersTest.setUp();
@@ -253,7 +278,7 @@ public class DailyOrdersTest {
     }
 
     @RunWith(Parameterized.class)
-    public static class createはJsonの内容が不正であった場合Conflictを返すこと {
+    public static class createは登録済みのオブジェクトを作成しようとした場合Conflictを返すこと {
         @Before
         public void setUp() {
             DailyOrdersTest.setUp();
@@ -289,6 +314,171 @@ public class DailyOrdersTest {
                 return this.description;
             }
         }
+    }
 
+    @RunWith(Parameterized.class)
+    public static class createはメニューがないまたはメニューが締めきられた注文を生成しようとした場合Forbiddenを返すこと {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2015-02-10T00:00:00.000+09:00\" }", "メニューがない")},
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-03-11T00:00:00.000+09:00\" }", "メニューが準備中")},
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-03-12T00:00:00.000+09:00\" }", "メニューが締めきられた")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callCreate(fixture.jsonString);
+            assertThat(status(result)).isEqualTo(FORBIDDEN);
+        }
+
+        static class MyFixture {
+            public String jsonString;
+            public String description;
+
+            public MyFixture(String jsonString, String description) {
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class updateはメニューがないまたはメニューが締めきられた注文を更新しようとした場合Forbiddenを返すこと {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture(6L, "{ \"id\":6, \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2015-03-11T00:00:00.000+09:00\" }", "メニューがない")},
+                    {new MyFixture(2L, "{ \"id\":2, \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }", "メニューが準備中")},
+                    {new MyFixture(5L, "{ \"id\":5, \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-12T00:00:00.000+09:00\" }", "メニューが締めきられた")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callUpdate(fixture.id, fixture.jsonString);
+            assertThat(status(result)).isEqualTo(FORBIDDEN);
+        }
+
+        static class MyFixture {
+            public Long id;
+            public String jsonString;
+            public String description;
+
+            public MyFixture(Long id, String jsonString, String description) {
+                this.id = id;
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class createはメニューが締めきられても管理者の場合はオブジェクトを生成すること {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-03-11T00:00:00.000+09:00\" }", "メニューが準備中")},
+                    {new MyFixture("{ \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-03-12T00:00:00.000+09:00\" }", "メニューが締めきられた")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callCreateByAdmin(fixture.jsonString);
+            assertThat(status(result)).isEqualTo(OK);
+        }
+
+        static class MyFixture {
+            public String jsonString;
+            public String description;
+
+            public MyFixture(String jsonString, String description) {
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class updateはメニューが締めきられても管理者の場合はオブジェクトを更新すること {
+        @Before
+        public void setUp() {
+            DailyOrdersTest.setUp();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture(2L, "{ \"id\":2, \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-11T00:00:00.000+09:00\" }", "メニューが準備中")},
+                    {new MyFixture(5L, "{ \"id\":5, \"localUser\": {\"id\":\"steve@foo.bar\"}, \"orderDate\":\"2014-02-12T00:00:00.000+09:00\" }", "メニューが締めきられた")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+            Result result = callUpdateByAdmin(fixture.id, fixture.jsonString);
+            assertThat(status(result)).isEqualTo(OK);
+        }
+
+        static class MyFixture {
+            public Long id;
+            public String jsonString;
+            public String description;
+
+            public MyFixture(Long id, String jsonString, String description) {
+                this.id = id;
+                this.jsonString = jsonString;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return this.description;
+            }
+        }
     }
 }

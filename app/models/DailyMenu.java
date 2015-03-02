@@ -18,6 +18,10 @@ import utils.json.JodaTimestampOperator;
 @Entity
 public class DailyMenu extends Model {
 
+    public static final String StatusPrepared = "prepared";
+    public static final String StatusOpen = "open";
+    public static final String StatusClosed = "closed";
+
     private static final long serialVersionUID = 1L;
 
     @Id

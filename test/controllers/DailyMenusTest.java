@@ -51,7 +51,7 @@ public class DailyMenusTest {
     @Test
     public void createは受け取ったJsonの内容からDailyMenuオブジェクトを作成すること() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{ \"menuDate\":\"2014-02-12T00:00:00.000+09:00\"");
+        builder.append("{ \"menuDate\":\"2014-04-12T00:00:00.000+09:00\"");
         builder.append(", \"status\":\"open\"");
         builder.append(", \"detailItems\":[{\"menuItem\":{\"id\":2}}]");
         builder.append("}");
@@ -60,7 +60,7 @@ public class DailyMenusTest {
 
         assertThat(status(result)).isEqualTo(OK);
 
-        DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-02-12T00:00:00.000+09:00");
+        DateTime dateValue = ParameterConverter.convertTimestampFrom("2014-04-12T00:00:00.000+09:00");
         DailyMenu object = DailyMenu.findBy(new DateTime(dateValue.getMillis()));
 
         assertThat(object.detailItems.size()).isEqualTo(1);

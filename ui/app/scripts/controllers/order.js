@@ -82,6 +82,10 @@ angular.module('MyControllers')
                     errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
                     break;
 
+                case 403:
+                    errorDialog = dialogs.error("データ登録・更新失敗", "メニューが準備中または締めきられました");
+                    break;
+
                 default:
                     var messages = [
                         "処理中にエラーが発生しました",

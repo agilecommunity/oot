@@ -146,6 +146,23 @@ public class DailyOrders extends Controller {
             return utils.controller.Results.resourceAlreadyExistsError();
         }
 
+        DailyMenu menu = DailyMenu.findBy(object.orderDate);
+
+        if (menu == null) {
+            logger.debug("#create dailyMenu not found");
+            return utils.controller.Results.menuHasExpiredError();
+        }
+
+        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
+
+        // メニューが閉め切られていた場合、管理者以外は編集できない
+        if (!currentUser.isAdmin) {
+            if (! DailyMenu.StatusOpen.equals(menu.status)) {
+                logger.debug("#create dailyMenu status is not open status:{}", menu.status);
+                return utils.controller.Results.menuHasExpiredError();
+            }
+        }
+
         logger.debug(String.format("#create order.localUser.id:%s", object.localUser.id));
         logger.debug(String.format("#create order.orderDate:%s", object.orderDate));
 
@@ -185,6 +202,23 @@ public class DailyOrders extends Controller {
             return utils.controller.Results.insufficientPermissionsError("Current user can't update other's daily order");
         }
 
+        DailyMenu menu = DailyMenu.findBy(object.orderDate);
+
+        if (menu == null) {
+            logger.debug("#create dailyMenu not found");
+            return utils.controller.Results.menuHasExpiredError();
+        }
+
+        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
+
+        // メニューが閉め切られていた場合、管理者以外は編集できない
+        if (!currentUser.isAdmin) {
+            if (! DailyMenu.StatusOpen.equals(menu.status)) {
+                logger.debug("#create dailyMenu status is not open status:{}", menu.status);
+                return utils.controller.Results.menuHasExpiredError();
+            }
+        }
+
         logger.debug(String.format("#update order.localUser.id:%s", object.localUser.id));
         logger.debug(String.format("#update order.orderDate:%s", object.orderDate));
 
@@ -213,6 +247,23 @@ public class DailyOrders extends Controller {
         if (! DailyOrders.canEdit(object, user)) {
             logger.warn(String.format("#delete cant delete others order localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
             return utils.controller.Results.insufficientPermissionsError("Current user can't delete other's daily order");
+        }
+
+        DailyMenu menu = DailyMenu.findBy(object.orderDate);
+
+        if (menu == null) {
+            logger.debug("#create dailyMenu not found");
+            return utils.controller.Results.menuHasExpiredError();
+        }
+
+        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
+
+        // メニューが閉め切られていた場合、管理者以外は編集できない
+        if (!currentUser.isAdmin) {
+            if (! DailyMenu.StatusOpen.equals(menu.status)) {
+                logger.debug("#create dailyMenu status is not open status:{}", menu.status);
+                return utils.controller.Results.menuHasExpiredError();
+            }
         }
 
         object.delete();
