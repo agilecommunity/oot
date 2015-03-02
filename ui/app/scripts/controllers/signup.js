@@ -18,7 +18,6 @@ angular.module('MyControllers')
         $scope.formErrors = {};
 
         var parameter = {};
-        parameter.email = $scope.email;
         parameter.firstName = $scope.firstName;
         parameter.lastName = $scope.lastName;
         parameter.passWord1 = $scope.passWord1;
