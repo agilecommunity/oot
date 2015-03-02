@@ -50,7 +50,6 @@ public class RegistrationTest {
             LocalToken token = LocalToken.find.where().eq("email", "user1@foo.bar").findUnique();
 
             params.clear();
-            params.put("email", "user1@foo.bar");
             params.put("userName", "username1");
             params.put("firstName", "firstname1");
             params.put("lastName", "lastname1");
@@ -130,12 +129,10 @@ public class RegistrationTest {
         @Parameterized.Parameters(name="{0}")
         public static Iterable<Object[]> getParameters() {
             return Arrays.asList(new Object[][]{
-                    {new MyFixture("email", "", "空")},
                     {new MyFixture("firstName", "", "空")},
                     {new MyFixture("lastName", "", "空")},
                     {new MyFixture("passWord1", "", "空")},
                     {new MyFixture("passWord2", "", "空")},
-                    {new MyFixture("email", "foo", "不正な値")},
             });
         }
 
@@ -146,7 +143,6 @@ public class RegistrationTest {
         public void テスト() {
 
             Map<String, String> params = new HashMap<String, String>();
-            params.put("email", "user1@foo.bar");
             params.put("userName", "username1");
             params.put("firstName", "firstname1");
             params.put("lastName", "lastname1");
@@ -202,7 +198,6 @@ public class RegistrationTest {
         public void テスト() {
 
             Map<String, String> params = new HashMap<String, String>();
-            params.put("email", "user1@foo.bar");
             params.put("userName", "username1");
             params.put("firstName", "firstname1");
             params.put("lastName", "lastname1");

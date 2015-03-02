@@ -39,10 +39,6 @@ public class Registration extends Controller {
 
     public static class SignUpForm {
         @Constraints.Required
-        @Constraints.Email
-        public String email;
-
-        @Constraints.Required
         public String firstName;
 
         @Constraints.Required
@@ -102,7 +98,9 @@ public class Registration extends Controller {
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result signUp(String token) {
 
-        if (UserService$.MODULE$.findToken(token).isEmpty()) {
+        Option<securesocial.core.providers.Token> localToken = UserService$.MODULE$.findToken(token);
+
+        if (localToken.isEmpty()) {
             logger.debug("#signUp token not found token:" + token);
             return utils.controller.Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
         }
@@ -119,7 +117,8 @@ public class Registration extends Controller {
         }
 
         SignUpForm form = filledForm.get();
-        String id = form.email;
+
+        String id = localToken.get().email();
         IdentityId identityId = new IdentityId(id, "userpass");
 
         SocialUser user = new SocialUser(
@@ -127,8 +126,8 @@ public class Registration extends Controller {
             form.firstName,
             form.lastName,
             String.format("%s %s", form.firstName, form.lastName),
-            Scala.Option(form.email),
-            GravatarHelper$.MODULE$.avatarFor(form.email),
+            Scala.Option(id),
+            GravatarHelper$.MODULE$.avatarFor(id),
             AuthenticationMethod.UserPassword(),
             null,
             null,
