@@ -5,7 +5,7 @@
 
     <div class="content-body">
 
-        <div class="purchase-order print-page" print-title="発注シート" ng-class="{'no-print' : order.isEmpty()}" id="purchase-order-{{order.orderDate.format('YYYYMMDD')}}" ng-repeat="order in purchaseOrders">
+        <div class="purchase-order print-page" ng-class="{'no-print' : order.isEmpty()}" print-title="発注シート" id="purchase-order-{{order.orderDate.format('YYYYMMDD')}}" ng-repeat="order in purchaseOrders">
             <div class="purchase-order-header">{{order.orderDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="purchase-order-body">
                 <p class="no-data" ng-if="order.isEmpty()">メニューが登録されていません。</p>
