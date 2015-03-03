@@ -144,7 +144,8 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
                     '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload.css',
                     '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload-ui.css',
-                    '<%= conf.stylesheets %>/common.css'
+                    '<%= conf.stylesheets %>/common.css',
+                    '<%= conf.stylesheets %>/print.css'
                 ],
                 expand: true
             }, fonts: {

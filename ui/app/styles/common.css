@@ -355,14 +355,6 @@ td.price {
   display: none !important;
 }
 
-/* 印刷用 */
-@media print {
-    /* ヘッダとフッタは印刷しない */
-    .page-header, .page-footer {
-        display: none;
-    }
-}
-
 /*
  * Bootstrap打消し用
  */

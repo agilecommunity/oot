@@ -79,6 +79,10 @@ angular.module('MyServices')
         return -1;
     };
 
+    DailyMenu.prototype.isEmpty = function() {
+        return this.detailItems.length === 0;
+    };
+
     // メニューのリストから該当の日付のメニューを探し、そのindexを返す
     DailyMenu.findByMenuDate = function(list, menuDate) {
         for (var i=0; i<list.length; i++) {

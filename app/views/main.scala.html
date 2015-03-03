@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload.css")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/jquery.fileupload-ui.css")">
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/common.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/print.css")">
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/ie-shim.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/html5shiv.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/components/respond.min.js")"></script>
@@ -18,13 +19,13 @@
     </head>
     <body>
         <div class="container-fluid">
-            <div class="page-header row">
+            <div class="page-header row no-print">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <h1>美味しいお弁当を食べたい！</h1>
                 </div>
             </div>
             <div class="row" ng-view ng-cloak></div>
-            <div class="page-footer row">
+            <div class="page-footer row no-print">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div>
                         <span class="powered-by">Powered by <a href="https://www.playframework.com/">Play Framework</a> & <a href="https://angularjs.org/">AngularJS</a></span>
@@ -36,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div class="user-info" ng-cloak>
+            <div class="user-info no-print" ng-cloak>
                 {{$root.currentUser.lastName}} {{$root.currentUser.firstName}}
             </div>
         </div>

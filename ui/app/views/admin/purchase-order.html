@@ -1,14 +1,14 @@
 <div class="content admin-purchase-order">
-    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+    <div class="no-print" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
 
-    <div class="content-header">発注シート</div>
+    <div class="content-header no-print">発注シート</div>
 
     <div class="content-body">
 
-        <div class="purchase-order" id="purchase-order-{{order.orderDate.format('YYYYMMDD')}}" ng-repeat="order in purchaseOrders">
+        <div class="purchase-order print-page" print-title="発注シート" ng-class="{'no-print' : order.isEmpty()}" id="purchase-order-{{order.orderDate.format('YYYYMMDD')}}" ng-repeat="order in purchaseOrders">
             <div class="purchase-order-header">{{order.orderDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="purchase-order-body">
-                <p class="no-data" ng-if="order.detailItems.length === 0">メニューが登録されていません。</p>
+                <p class="no-data" ng-if="order.isEmpty()">メニューが登録されていません。</p>
                 <table class="table table-bordered table-condensed purchase-order" id="purchase-order-details-{{order.orderDate.format('YYYYMMDD')}}" ng-if="order.detailItems.length > 0">
                     <thead>
                     <tr>
