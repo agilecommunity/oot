@@ -9,7 +9,7 @@
             <div class="purchase-order-header">{{order.orderDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="purchase-order-body">
                 <p class="no-data" ng-if="order.isEmpty()">メニューが登録されていません。</p>
-                <table class="table table-bordered table-condensed purchase-order" id="purchase-order-details-{{order.orderDate.format('YYYYMMDD')}}" ng-if="order.detailItems.length > 0">
+                <table class="table table-bordered table-condensed purchase-order" id="purchase-order-details-{{order.orderDate.format('YYYYMMDD')}}" ng-if="!order.isEmpty()">
                     <thead>
                     <tr>
                         <th class="register-number" width="5%">レジ</th>
