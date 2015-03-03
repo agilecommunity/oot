@@ -18,6 +18,9 @@ angular.module('MyControllers')
             // データがない場合はダミーのデータを作成
             if (targetMenu === null) {
                 targetMenu = DailyMenu.createEmptyData(targetDate);
+            } else {
+                // 発注確認シートではbentoしかいらないのでフィルタリングしておく
+                targetMenu.detailItems = $filter('filter')(targetMenu.detailItems, {menuItem: {category: 'bento'}});
             }
 
             $scope.dailyMenus.push(targetMenu);

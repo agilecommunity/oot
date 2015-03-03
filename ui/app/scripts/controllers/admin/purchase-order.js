@@ -65,6 +65,9 @@ angular.module('MyControllers')
             order.dayTotalNumOrders = dayTotalNumOrders;
             order.dayTotalFixedOnPurchaseIncTax = dayTotalFixedOnPurchaseIncTax;
 
+            order.isEmpty = function() {
+                return this.detailItems.length === 0;
+            };
         });
     };
 
