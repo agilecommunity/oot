@@ -41,6 +41,9 @@ function ($scope, $filter, DailyMenu, DailyOrderAggregate, initialData) {
                 detailItems.push(detailItem);
             });
             cashBook.detailItems = detailItems;
+            cashBook.isEmpty = function() {
+                return this.detailItems.length === 0;
+            };
         });
     };
 

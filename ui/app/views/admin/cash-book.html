@@ -1,15 +1,15 @@
 <div class="content admin-cash-book">
-    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+    <div class="no-print" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
 
-    <div class="content-header">入出金管理台帳</div>
+    <div class="content-header no-print">入出金管理台帳</div>
 
     <div class="content-body">
 
-        <div class="purchase-order" id="cash-book-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-repeat="cashBook in cashBooks">
+        <div class="cash-book print-page" ng-class="{'no-print' : cashBook.isEmpty()}" print-title="入出金管理台帳" id="cash-book-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-repeat="cashBook in cashBooks">
             <div class="cash-book-header">{{cashBook.targetDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="cash-book-body">
-                <p class="no-data" ng-if="cashBook.detailItems.length === 0">メニューが登録されていません。</p>
-                <table class="table table-bordered table-condensed cash-book" id="cash-book-details-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-if="cashBook.detailItems.length > 0">
+                <p class="no-data" ng-if="cashBook.isEmpty()">メニューが登録されていません。</p>
+                <table class="table table-bordered table-condensed cash-book" id="cash-book-details-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-if="!cashBook.isEmpty()">
                     <thead>
                     <tr>
                         <th class="code" width="93%">コード</th>
