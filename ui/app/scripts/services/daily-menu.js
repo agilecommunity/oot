@@ -95,7 +95,7 @@ angular.module('MyServices')
 
     // 空のデータを作成する
     DailyMenu.createEmptyData = function(targetDate) {
-        return {menuDate: targetDate, detailItems: []};
+        return new DailyMenu({menuDate: targetDate, detailItems: []});
     };
 
     return DailyMenu;
