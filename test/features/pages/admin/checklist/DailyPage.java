@@ -41,11 +41,9 @@ public class DailyPage {
     public List<Map<String, String>> getList() {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
-        By shopNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'shop-name')]");
         By itemNameCellsLocator = By.xpath("//table[@id='checklist']/thead/tr/th[contains(@class, 'food-name')]");
         By statusRowsLocator = By.xpath("//table[@id='checklist']/tbody/tr");
 
-        List<WebElement> shopNameCells = this.base.findElements(shopNameCellsLocator);
         List<WebElement> itemNameCells = this.base.findElements(itemNameCellsLocator);
         List<WebElement> statusRows = this.base.findElements(statusRowsLocator);
 
@@ -55,9 +53,9 @@ public class DailyPage {
             checkRow.put("チェック", statusRow.findElement(By.xpath("td[1]")).getText());
             checkRow.put("氏名", statusRow.findElement(By.xpath("td[2]")).getText());
 
-            for (int index=0; index<shopNameCells.size(); index++) {
-                String shopName = shopNameCells.get(index).getText();
-                String itemName = itemNameCells.get(index).getText();
+            for (int index=0; index<itemNameCells.size(); index++) {
+                String shopName = itemNameCells.get(index).findElement(By.cssSelector("span.shop-name")).getText();
+                String itemName = itemNameCells.get(index).findElement(By.cssSelector("span.food-name-with-reduced-price")).getText();
 
                 checkRow.put(String.format("%s　%s", shopName, itemName), statusRow.findElement(By.xpath(String.format("td[%d]", index + 3))).getText());
             }
