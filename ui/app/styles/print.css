@@ -49,6 +49,10 @@
         position: relative; /* 固定ヘッダーの基準座標を定義 */
     }
 
+    .print_page:last-child{
+        page-break-after: auto; /* 最後のページの改ページを防ぐ */
+    }
+
     .print-page:before {
         position: absolute;
         top: 0;
@@ -57,4 +61,6 @@
         font-weight: bold;
         content: "【" attr(print-title) "】";
     }
+
+
 }
