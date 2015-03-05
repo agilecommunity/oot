@@ -43,6 +43,9 @@ GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate         con
 POST          /api/v1.0/start-signup                                         controllers.Registration.startSignUp()
 POST          /api/v1.0/signup/:token                                        controllers.Registration.signUp(token)
 POST          /api/v1.0/authenticate/:provider                               securesocial.controllers.ProviderController.authenticateByPost(provider)
+POST          /api/v1.0/start-reset                                          controllers.PasswordReset.startReset()
+POST          /api/v1.0/reset/:token                                         controllers.PasswordReset.reset(token)
+
 
 GET           /api/*path                                                     controllers.Application.apiNotFound(path)
 

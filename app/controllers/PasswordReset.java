@@ -4,8 +4,8 @@ import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import filters.RequireCSRFCheck4Ng;
 import play.Logger;
-import play.data.validation.Constraints;
 import play.data.Form;
+import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 import play.libs.Scala;
@@ -16,7 +16,6 @@ import play.mvc.Result;
 import scala.Option;
 import securesocial.core.*;
 import securesocial.core.java.Token;
-import securesocial.core.providers.UsernamePasswordProvider;
 import securesocial.core.providers.UsernamePasswordProvider$;
 import securesocial.core.providers.utils.GravatarHelper$;
 import securesocial.core.providers.utils.Mailer$;
@@ -25,23 +24,17 @@ import utils.controller.MailTokenBasedOperations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Registration extends Controller {
+public class PasswordReset extends Controller {
 
-    private static Logger.ALogger logger = Logger.of("application.controllers.Registration");
+    private static Logger.ALogger logger = Logger.of("application.controllers.PasswordReset");
 
-    public static class StartSignUpForm {
+    public static class StartResetForm {
         @Constraints.Required
         @Constraints.Email
         public String email;
     }
 
-    public static class SignUpForm {
-        @Constraints.Required
-        public String firstName;
-
-        @Constraints.Required
-        public String lastName;
-
+    public static class ResetForm {
         @Constraints.Required
         public String passWord1; // securesocialのデフォルトはpassword.password1で指定する
 
@@ -66,27 +59,27 @@ public class Registration extends Controller {
 
     @RequireCSRFCheck4Ng()
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result startSignUp() {
+    public static Result startReset() {
 
         JsonNode json = request().body().asJson();
-        Form<StartSignUpForm> filledForm = Form.form(StartSignUpForm.class).bind(json);
+        Form<StartResetForm> filledForm = Form.form(StartResetForm.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.debug("#startSignUp hasErrors:" + filledForm.errorsAsJson());
+            logger.debug("#startReset hasErrors:" + filledForm.errorsAsJson());
             return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
-        StartSignUpForm form = filledForm.get();
+        StartResetForm form = filledForm.get();
         String email = form.email.toLowerCase();
 
         Option<Identity> maybeUser = UserService$.MODULE$.findByEmailAndProvider(email, UsernamePasswordProvider$.MODULE$.UsernamePassword());
 
         if (maybeUser.nonEmpty()) {
-            Mailer$.MODULE$.sendAlreadyRegisteredEmail(maybeUser.get(), Http.Context.current()._requestHeader());
-        } else {
-            Token token = MailTokenBasedOperations.createToken(email, true);
+            Token token = MailTokenBasedOperations.createToken(email, false);
             UserService$.MODULE$.save(token.toScala());
-            Mailer$.MODULE$.sendSignUpEmail(email, token.uuid, Http.Context.current()._requestHeader());
+            Mailer$.MODULE$.sendPasswordResetEmail(maybeUser.get(), token.uuid, Http.Context.current()._requestHeader());
+        } else {
+            Mailer$.MODULE$.sendUnkownEmailNotice(email, Http.Context.current()._requestHeader());
         }
 
         return ok("");
@@ -94,36 +87,45 @@ public class Registration extends Controller {
 
     @RequireCSRFCheck4Ng()
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result signUp(String token) {
+    public static Result reset(String token) {
 
         Option<securesocial.core.providers.Token> localToken = UserService$.MODULE$.findToken(token);
 
         if (localToken.isEmpty()) {
-            logger.debug("#signUp token not found token:" + token);
+            logger.debug("#reset token not found token:" + token);
             return utils.controller.Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug("#signUp request:" + json.toString());
+        logger.debug("#reset request:" + json.toString());
 
-        Form<SignUpForm> filledForm = Form.form(SignUpForm.class).bind(json);
+        Form<ResetForm> filledForm = Form.form(ResetForm.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.debug("#signUp hasErrors:" + filledForm.errorsAsJson());
+            logger.debug("#reset hasErrors:" + filledForm.errorsAsJson());
             return utils.controller.Results.validationError(filledForm.errorsAsJson());
         }
 
-        SignUpForm form = filledForm.get();
+        ResetForm form = filledForm.get();
 
+        String email = localToken.get().email();
+
+        Option<Identity> maybeUser = UserService$.MODULE$.findByEmailAndProvider(email, UsernamePasswordProvider$.MODULE$.UsernamePassword());
+
+        if (maybeUser.isEmpty()) {
+            logger.error("#reset could not find user with email {} during password reset", email);
+            return utils.controller.Results.resourceNotFoundError();
+        }
+
+        Identity profile = maybeUser.get();
         String id = localToken.get().email();
-        IdentityId identityId = new IdentityId(id, "userpass");
 
         SocialUser user = new SocialUser(
-            identityId,
-            form.firstName,
-            form.lastName,
-            String.format("%s %s", form.firstName, form.lastName),
+            profile.identityId(),
+            profile.firstName(),
+            profile.lastName(),
+            profile.fullName(),
             Scala.Option(id),
             GravatarHelper$.MODULE$.avatarFor(id),
             AuthenticationMethod.UserPassword(),
@@ -142,11 +144,8 @@ public class Registration extends Controller {
             Ebean.endTransaction();
         }
 
-        if (UsernamePasswordProvider.sendWelcomeEmail()) {
-            Mailer$.MODULE$.sendWelcomeEmail(user, Http.Context.current()._requestHeader());
-        }
+        Mailer$.MODULE$.sendPasswordChangedNotice(user, Http.Context.current()._requestHeader());
 
         return ok();
     }
-
 }
