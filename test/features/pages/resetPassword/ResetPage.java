@@ -1,4 +1,4 @@
-package features.pages.reset;
+package features.pages.resetPassword;
 
 import features.pages.SigninPage;
 import features.pages.dialog.NotifyDialogPage;

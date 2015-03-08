@@ -1,7 +1,7 @@
 package features.pages;
 
 import features.pages.dialog.ErrorDialogPage;
-import features.pages.reset.StartResetPage;
+import features.pages.resetPassword.StartResetPage;
 import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,7 +13,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public class SigninPage {
@@ -54,14 +53,12 @@ public class SigninPage {
         SeleniumUtils.waitForInvisible(this.driver, By.id("user.email"));
     }
 
-    public void サインイン_ExpectingFailure(String email, String password) throws Throwable {
+    public ErrorDialogPage サインイン_ExpectingFailure(String email, String password) throws Throwable {
         this.userEmail.sendKeys(email);
         this.userPassword.sendKeys(password);
         this.signin.click();
 
-        // エラーダイアログがでることまで確認する
-        ErrorDialogPage dialogPage = new ErrorDialogPage(this.driver);
-        dialogPage.ok();
+        return new ErrorDialogPage(this.driver);
     }
 
     public StartResetPage パスワードのリセット() throws Throwable {

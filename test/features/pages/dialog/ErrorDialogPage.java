@@ -28,7 +28,7 @@ public class ErrorDialogPage {
     @FindBy(xpath=BASE_XPATH)
     WebElement base;
 
-    public void ok() throws Throwable {
+    public void close() throws Throwable {
         this.base.findElement(By.xpath("div[@class='modal-content']//button[text()='Close']")).click();
 
         try {

@@ -1,11 +1,11 @@
 (function(){
 
     angular.module('MyControllers')
-        .controller('StartResetController', StartResetController);
+        .controller('StartResetPasswordController', StartResetPasswordController);
 
-    StartResetController.$inject = ['$location', '$http', 'dialogs'];
+    StartResetPasswordController.$inject = ['$location', '$http', 'dialogs'];
 
-    function StartResetController($location, $http, dialogs) {
+    function StartResetPasswordController($location, $http, dialogs) {
         var vm = this;
 
         vm.email = null;
@@ -25,7 +25,13 @@
                 });
             })
             .error(function (data, status, header) {
-                vm.formErrors = data.errors;
+                switch(status) {
+                case 422:
+                    vm.formErrors = data.errors;
+                    break;
+                default:
+                    dialogs.error("初期化失敗", data.message);
+                }
             });
 
         };

@@ -25,11 +25,11 @@
             access: AccessLevels.anon
         })
         .when('/reset', {
-            templateUrl: '/views/reset/start-reset',
+            templateUrl: '/views/reset-password/start-reset',
             access: AccessLevels.anon
         })
         .when('/reset/:token', {
-            templateUrl: '/views/reset/reset',
+            templateUrl: '/views/reset-password/reset',
             access: AccessLevels.anon
         })
         .when('/order', {

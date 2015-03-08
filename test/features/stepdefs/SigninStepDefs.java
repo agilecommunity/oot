@@ -2,8 +2,9 @@ package features.stepdefs;
 
 import cucumber.api.java.ja.もし;
 import features.pages.SigninPage;
-import features.pages.reset.ResetPage;
-import features.pages.reset.StartResetPage;
+import features.pages.dialog.ErrorDialogPage;
+import features.pages.resetPassword.ResetPage;
+import features.pages.resetPassword.StartResetPage;
 import features.support.GlobalHooks;
 import features.support.WebBrowser;
 import models.LocalToken;
@@ -55,7 +56,8 @@ public class SigninStepDefs {
         WebBrowser.INSTANCE.get(String.format("http://localhost:%d/", GlobalHooks.PORT));
 
         SigninPage page = new SigninPage(WebBrowser.INSTANCE);
-        page.サインイン_ExpectingFailure(userEmail, userPassword);
+        ErrorDialogPage dialogPage = page.サインイン_ExpectingFailure(userEmail, userPassword);
+        dialogPage.close();
     }
 
 }
