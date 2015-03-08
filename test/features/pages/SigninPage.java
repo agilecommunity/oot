@@ -1,5 +1,8 @@
 package features.pages;
 
+import features.pages.dialog.ErrorDialogPage;
+import features.pages.reset.StartResetPage;
+import features.support.SeleniumUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -39,14 +42,34 @@ public class SigninPage {
     @FindBy(id="signin")
     private WebElement signin;
 
+    @FindBy(id="start_reset")
+    private WebElement startReset;
+
     public void サインイン(String email, String password) throws Throwable {
-        userEmail.sendKeys(email);
-        userPassword.sendKeys(password);
-        signin.click();
+        this.userEmail.sendKeys(email);
+        this.userPassword.sendKeys(password);
+        this.signin.click();
 
         // サインインが終了し、次の画面に遷移する(=入力欄が消える)まで待つ
-        Wait<WebDriver> wait = new WebDriverWait(driver, DRIVER_WAIT);
-        wait.until(invisibilityOfElementLocated(By.id("user.email")));
+        SeleniumUtils.waitForInvisible(this.driver, By.id("user.email"));
+    }
+
+    public void サインイン_ExpectingFailure(String email, String password) throws Throwable {
+        this.userEmail.sendKeys(email);
+        this.userPassword.sendKeys(password);
+        this.signin.click();
+
+        // エラーダイアログがでることまで確認する
+        ErrorDialogPage dialogPage = new ErrorDialogPage(this.driver);
+        dialogPage.ok();
+    }
+
+    public StartResetPage パスワードのリセット() throws Throwable {
+        this.startReset.click();
+
+        SeleniumUtils.waitForInvisible(this.driver, By.id("user.email"));
+
+        return new StartResetPage(this.driver);
     }
 
 }

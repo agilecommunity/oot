@@ -24,6 +24,14 @@
             controller: 'SignupController',
             access: AccessLevels.anon
         })
+        .when('/reset', {
+            templateUrl: '/views/reset/start-reset',
+            access: AccessLevels.anon
+        })
+        .when('/reset/:token', {
+            templateUrl: '/views/reset/reset',
+            access: AccessLevels.anon
+        })
         .when('/order', {
             templateUrl: '/views/order',
             controller: 'OrderController',

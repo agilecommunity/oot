@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import play.filters.csrf.CSRF;
 import play.libs.Json;
 import play.mvc.Http;
@@ -17,6 +18,7 @@ import securesocial.core.Registry;
 import utils.Utils;
 import utils.snakeyaml.YamlUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,4 +97,94 @@ public class PasswordResetTest {
         }
     }
 
+    @RunWith(Parameterized.class)
+    public static class resetに不正な値を指定した場合UnprocessableEntityが返ること {
+
+        @Before
+        public void setUp() {
+            PasswordResetTest.setUp();
+
+            LocalToken token = new LocalToken();
+            token.email = "steve@foo.bar";
+            token.isSignUp = true;
+            token.uuid = "hoho";
+            token.save();
+        }
+
+        @Parameterized.Parameters(name="{0}")
+        public static Iterable<Object[]> getParameters() {
+            return Arrays.asList(new Object[][]{
+                    {new MyFixture("passWord1", "", "空")},
+                    {new MyFixture("passWord2", "", "空")},
+            });
+        }
+
+        @Parameterized.Parameter
+        public MyFixture fixture;
+
+        @Test
+        public void テスト() {
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("passWord1", "hogehoge");
+            params.put("passWord2", "hogehoge");
+
+            params.put(fixture.name, fixture.value);
+
+            JsonNode json = Json.toJson(params);
+            Result result = Utils.callAPI(fakeRequest(POST, "/api/v1.0/signup/hoho").withJsonBody(json), "steve@foo.bar");
+
+            assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(422);
+
+            JsonNode errors = Json.parse(contentAsString(result));
+
+            assertThat(errors.get("errors").get(fixture.name)).describedAs("エラーの項目").isNotEmpty();
+
+        }
+
+        static class MyFixture {
+            public String name;
+            public String value;
+            public String description;
+
+            public MyFixture(String name, String value, String description) {
+                this.name = name;
+                this.value = value;
+                this.description = description;
+            }
+
+            @Override
+            public String toString() {
+                return String.format("項目:%s - %s", this.name, this.description);
+            }
+        }
+
+    }
+
+    public static class resetに登録されていないtokenを渡した場合Forbiddenが返ること {
+
+        @Before
+        public void setUp() {
+            PasswordResetTest.setUp();
+
+            LocalToken token = new LocalToken();
+            token.email = "steve@foo.bar";
+            token.isSignUp = false;
+            token.uuid = "hoho";
+            token.save();
+        }
+
+        @Test
+        public void テスト() {
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("passWord1", "hogehoge");
+            params.put("passWord2", "hogehoge");
+
+            JsonNode json = Json.toJson(params);
+            Result result = Utils.callAPI(fakeRequest(POST, "/api/v1.0/signup/fufu").withJsonBody(json), "steve@foo.bar");
+
+            assertThat(status(result)).describedAs("リクエストの結果").isEqualTo(FORBIDDEN);
+        }
+    }
 }

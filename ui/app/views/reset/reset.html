@@ -1,0 +1,24 @@
+<div class="content reset-password" ng-controller="ResetController as controller">
+    <div class="content-header">サインアップ</div>
+    <div class="login-form">
+        <form class="form-horizontal">
+            <div class="form-group" ng-class="controller.getErrorClass('passWord1')">
+                <label for="passWord1" class="col-sm-2 control-label">パスワード</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" ng-model="controller.passWord1" id="passWord1">
+                    <span class="help-block bg-danger" id="error-passWord1" ng-show="hasFormError('passWord1')">{{controller.formErrors.passWord1}}</span>
+                </div>
+            </div>
+            <div class="form-group" ng-class="controller.getErrorClass('passWord2')">
+                <label for="passWord2" class="col-sm-2 control-label">パスワード(確認)</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" ng-model="controller.passWord2" id="passWord2">
+                    <span class="help-block bg-danger" id="error-passWord2" ng-show="controller.hasFormError('passWord2')">{{controller.formErrors.passWord2}}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success button" id="reset" ng-click="controller.reset();">パスワード初期化</button>
+            </div>
+        </form>
+    </div>
+</div>
