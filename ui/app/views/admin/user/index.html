@@ -7,16 +7,18 @@
                 <table class="table table-bordered table-striped users">
                     <thead>
                     <tr>
-                        <th class="email col-md-3">メールアドレス</th>
-                        <th class="last_name col-md-3">姓</th>
-                        <th class="first_name col-md-3">名</th>
-                        <th class="is_admin col-md-1">管理者</th>
-                        <th class="edit col-md-1">編集</th>
-                        <th class="delete col-md-1">削除</th>
+                        <th class="number" width="5%">No.</th>
+                        <th class="email" width="30%">メールアドレス</th>
+                        <th class="last_name" width="25%">姓</th>
+                        <th class="first_name" width="25%">名</th>
+                        <th class="is_admin" width="5%">管理者</th>
+                        <th class="edit" width="5%">編集</th>
+                        <th class="delete" width="5%">削除</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr id="user-{{user.id}}" ng-repeat="user in users | orderBy:['lastName', 'firstName']">
+                    <tr id="user-{{user.id}}" ng-repeat="user in users | orderBy:['lastName', 'firstName'] track by $index">
+                        <td class="number">{{$index + 1}}</td>
                         <td class="email">{{user.email}}</td>
                         <td class="last_name">{{user.lastName}}</td>
                         <td class="first_name">{{user.firstName}}</td>

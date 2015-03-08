@@ -28,25 +28,27 @@
                 <table class="table table-bordered table-striped menu-items" ng-show="menuItems.length > 0">
                     <thead>
                     <tr>
-                        <th class="id col-md-1">ステータス</th>
-                        <th class="shop_name col-md-2">店名</th>
-                        <th class="name col-md-1">カテゴリ</th>
-                        <th class="name col-md-3">品名</th>
+                        <th class="number" width="5%">No.</th>
+                        <th class="status" width="5%">ステータス</th>
+                        <th class="shop_name" width="15%">店名</th>
+                        <th class="category" width="5%">カテゴリ</th>
+                        <th class="name" width="30%">品名</th>
                         <th class="fixed_on_order">注文<br>(定価)</th>
                         <th class="discount_on_order">注文<br>(割引)</th>
                         <th class="reduced_on_order">注文<br>(実売)</th>
                         <th class="fixed_on_purchase_exc_tax">発注<br>(税抜)</th>
                         <th class="fixed_on_purchase_inc_tax">発注<br>(税込)</th>
-                        <th class="edit col-md-1">編集</th>
-                        <th class="delete col-md-1">削除</th>
+                        <th class="edit" width="5%">編集</th>
+                        <th class="delete" width="5%">削除</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'itemNumber', 'name']">
-                        <td class="id">{{menuItem.status}}</td>
+                    <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'itemNumber', 'name'] track by $index">
+                        <td class="number">{{$index + 1}}</td>
+                        <td class="status">{{menuItem.status}}</td>
                         <td class="shop_name">{{menuItem.shopName}}</td>
                         <td class="category">{{menuItem.category}}</td>
-                        <td class="name">{{menuItem.itemNumber}} {{menuItem.name}}</td>
+                        <td class="name">{{menuItem.name}}</td>
                         <td class="fixed_on_order price">{{menuItem.fixedOnOrder}}</td>
                         <td class="discount_on_order price">{{menuItem.discountOnOrder}}</td>
                         <td class="reduced_on_order price">{{menuItem.reducedOnOrder}}</td>
