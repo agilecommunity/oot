@@ -106,6 +106,33 @@
     status:          valid
 
 - !!models.MenuItem
+    category:        bento
+    shopName:        銀座魚屋
+    itemNumber:      ②
+    name:            たっぷりサーモン丼 大盛り
+    fixedOnOrder:    550
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        bento
+    shopName:        銀座魚屋
+    itemNumber:      ③
+    name:            イクラ＆サーモン丼
+    fixedOnOrder:    650
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        bento
+    shopName:        銀座魚屋
+    itemNumber:      ④
+    name:            イクラ＆サーモン丼 大盛り
+    fixedOnOrder:    680
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
     category:        side
     shopName:        有楽町八百屋
     registerNumber:  111
@@ -126,4 +153,52 @@
     fixedOnOrder:    280
     discountOnOrder: 0
     itemImagePath:   sarad.png
+    status:          valid
+
+- !!models.MenuItem
+    category:        side
+    shopName:        鶴見フルーツ屋
+    name:            バナナ
+    fixedOnOrder:    100
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        side
+    shopName:        鶴見フルーツ屋
+    name:            みかん山盛り
+    fixedOnOrder:    200
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        side
+    shopName:        鶴見フルーツ屋
+    name:            ミックスジュース
+    fixedOnOrder:    180
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        side
+    shopName:        鶴見フルーツ屋
+    name:            グレープフルーツジュース
+    fixedOnOrder:    180
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        side
+    shopName:        鶴見フルーツ屋
+    name:            ミカンジュース
+    fixedOnOrder:    150
+    discountOnOrder: 0
+    status:          valid
+
+- !!models.MenuItem
+    category:        side
+    shopName:        鶴見フルーツ屋
+    name:            アップルジュース
+    fixedOnOrder:    180
+    discountOnOrder: 0
     status:          valid
