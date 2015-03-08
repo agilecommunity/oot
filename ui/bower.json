@@ -14,6 +14,7 @@
     "angular-spinner": "~0.5.1",
     "angular-translate": "2.1.0",
     "angular-dialog-service": "5.2.6",
+    "angular-cookie": "*",
     "moment": "2.9.0",
     "moment-timezone": "~0.3.0",
     "bootstrap": "3.1.1",

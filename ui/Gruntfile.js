@@ -92,6 +92,7 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/angular-route/angular-route.min.js',
                     '<%= conf.components %>/angular-sanitize/angular-sanitize.min.js',
                     '<%= conf.components %>/angular-translate/angular-translate.js',
+                    '<%= conf.components %>/angular-cookie/angular-cookie.js',
                     '<%= conf.components %>/angular-dialog-service/dist/dialogs.min.js',
                     '<%= conf.components %>/angular-dialog-service/dist/dialogs-default-translations.min.js',
                     '<%= conf.components %>/bootstrap/dist/js/bootstrap.min.js',
