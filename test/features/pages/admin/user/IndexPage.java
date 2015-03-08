@@ -41,10 +41,11 @@ public class IndexPage {
         for (WebElement userRow : userRows) {
             Map<String, String> row = new HashMap<String, String>();
 
-            row.put("メールアドレス", userRow.findElement(By.xpath("td[1]")).getText());
-            row.put("姓", userRow.findElement(By.xpath("td[2]")).getText());
-            row.put("名", userRow.findElement(By.xpath("td[3]")).getText());
-            row.put("管理者", userRow.findElement(By.xpath("td[4]")).getText());
+            row.put("No.", userRow.findElement(By.xpath("td[1]")).getText());
+            row.put("メールアドレス", userRow.findElement(By.xpath("td[2]")).getText());
+            row.put("姓", userRow.findElement(By.xpath("td[3]")).getText());
+            row.put("名", userRow.findElement(By.xpath("td[4]")).getText());
+            row.put("管理者", userRow.findElement(By.xpath("td[5]")).getText());
 
             list.add(row);
         }

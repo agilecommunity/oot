@@ -14,11 +14,11 @@
     # 姓、名の順で表示されること
     もし    ユーザ "admin@localhost" パスワード "adminadmin" でサインインする
     ならば  ユーザ一覧が以下の内容であること:
-        | メールアドレス   | 姓               | 名         | 管理者 |
-        | admin@localhost  | お弁当           | 管理者     | true   |
-        | henrik@localhost | クニベルグ       | ヘンリック | false  |
-        | tom@localhost    | ポッペンディーク | トム       | false  |
-        | mary@localhost   | ポッペンディーク | メアリー   | false  |
+        | No. | メールアドレス   | 姓               | 名         | 管理者 |
+        | 1   | admin@localhost  | お弁当           | 管理者     | true   |
+        | 2   | henrik@localhost | クニベルグ       | ヘンリック | false  |
+        | 3   | tom@localhost    | ポッペンディーク | トム       | false  |
+        | 4   | mary@localhost   | ポッペンディーク | メアリー   | false  |
     もし    サインアウトする
 
     # 商品の登録と、メニューの作成
