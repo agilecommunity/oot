@@ -56,7 +56,7 @@ angular.module('MyServices')
         })
         .error(function (data, status, header) {
             $rootScope.currentUser = null;
-            callback.error(status);
+            callback.error({data: data, status: status});
         });
     };
 

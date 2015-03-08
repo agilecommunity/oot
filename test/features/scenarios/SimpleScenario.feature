@@ -124,3 +124,13 @@
 
 
     かつ  サインアウトする
+
+  シナリオ: パスワードの初期化
+    前提    以下のユーザを登録する:
+      | メールアドレス   | パスワード   | 姓               | 名         | ロール       |
+      | admin@localhost  | adminadmin   | お弁当           | 管理者     | 管理者       |
+      | tom@localhost    | tomhoehoe    | ポッペンディーク | トム       | 一般メンバー |
+
+    もし    ユーザ "tom@localhost" パスワード "tomfugafuga" でパスワードの初期化をする
+    ならば  ユーザ "tom@localhost" パスワード "tomfugafuga" でサインインできること
+      かつ  ユーザ "tom@localhost" パスワード "tomhoehoe" でサインインできないこと

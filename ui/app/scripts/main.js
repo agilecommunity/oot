@@ -72,7 +72,11 @@
 
                     if (rejection) {
                         messages.push("ステータス:" + rejection.status);
-                        messages.push("原因:" + rejection.reason.message);
+                        messages.push("URL:" + rejection.config.url);
+
+                        if (rejection.reason !== undefined) {
+                            messages.push("原因:" + rejection.reason.message);
+                        }
                     }
 
                     if (previous === undefined) {

@@ -9,7 +9,11 @@ import org.yaml.snakeyaml.Yaml;
 import play.Configuration;
 import play.Logger;
 import play.Play;
+import play.filters.csrf.CSRF;
+import play.mvc.Http;
 import play.mvc.Http.Cookie;
+import play.mvc.Result;
+import play.test.FakeRequest;
 import scala.Option;
 import scala.Some;
 import scala.util.Either;
@@ -31,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import static play.test.Helpers.inMemoryDatabase;
+import static play.test.Helpers.route;
 
 /*
  * java - Unit-testing methods secured with Securesocial annotation - Stack Overflow
@@ -67,6 +72,23 @@ public class Utils {
         Cookie fake_cookie = new Cookie(auth.cookieName(), scala_cookie.value(), 120, scala_cookie.path(), "None", auth.cookieSecure(), auth.cookieHttpOnly());
         return fake_cookie;
     }
+
+    /**
+     * リクエストに指定したユーザの認証データとXSRF-TOKENを付与して呼び出します。
+     * @param baseRequest
+     * @param userId
+     * @return
+     */
+    public static Result callAPI(FakeRequest baseRequest, String userId) {
+        Http.Cookie fake_cookie = utils.Utils.fakeCookie(userId);
+        String token = CSRF.SignedTokenProvider$.MODULE$.generateToken();
+
+        return route(baseRequest
+                .withCookies(fake_cookie)
+                .withHeader("X-XSRF-TOKEN", token)
+                .withSession("XSRF-TOKEN", token));
+    }
+
 
     public static Map<String, String> getAdditionalApplicationSettings() {
         Map<String, String> settings = new HashMap<String, String>();
