@@ -33,10 +33,10 @@ public class SigninPage {
     }
 
     @FindBy(id="user.email")
-    private WebElement userEmail;
+    private WebElement email;
 
     @FindBy(id="user.password")
-    private WebElement userPassword;
+    private WebElement password;
 
     @FindBy(id="signin")
     private WebElement signin;
@@ -44,9 +44,19 @@ public class SigninPage {
     @FindBy(id="start_reset")
     private WebElement startReset;
 
+    public void setEmail(String value) {
+        this.email.clear();
+        this.email.sendKeys(value);
+    }
+
+    public void setPassword(String value) {
+        this.password.clear();
+        this.password.sendKeys(value);
+    }
+
     public void サインイン(String email, String password) throws Throwable {
-        this.userEmail.sendKeys(email);
-        this.userPassword.sendKeys(password);
+        this.setEmail(email);
+        this.setPassword(password);
         this.signin.click();
 
         // サインインが終了し、次の画面に遷移する(=入力欄が消える)まで待つ
@@ -54,8 +64,8 @@ public class SigninPage {
     }
 
     public ErrorDialogPage サインイン_ExpectingFailure(String email, String password) throws Throwable {
-        this.userEmail.sendKeys(email);
-        this.userPassword.sendKeys(password);
+        this.setEmail(email);
+        this.setPassword(password);
         this.signin.click();
 
         return new ErrorDialogPage(this.driver);

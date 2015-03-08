@@ -17,6 +17,7 @@
             'ngRoute',            // 依存するサービスを指定する
             'ngResource',
             'ngSanitize',
+            'ipCookie',
             'ui.bootstrap',
             'dialogs.main',
             'dialogs.default-translations',
