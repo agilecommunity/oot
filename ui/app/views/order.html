@@ -58,7 +58,7 @@
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
                                             <div class="caption">
                                                 <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                                                <div class="food-name">{{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
+                                                <div class="food-name">{{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
                                             </div>
                                             <div class="food-image">
                                                 <a href="" class="thumbnail" ng-bind-html="renderImage(dailyMenuItem)"></a>
@@ -91,7 +91,7 @@
                                         <div class="tile" ng-click="order(dailyMenu, dailyMenuItem);">
                                             <div class="caption">
                                                 <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                                                <div class="food-name">{{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
+                                                <div class="food-name">{{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
                                             </div>
                                             <div class="food-image">
                                                 <a href="" class="thumbnail" ng-bind-html="renderImage(dailyMenuItem)"></a>

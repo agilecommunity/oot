@@ -42,11 +42,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'name']">
+                    <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'itemNumber', 'name']">
                         <td class="id">{{menuItem.status}}</td>
                         <td class="shop_name">{{menuItem.shopName}}</td>
-                        <td class="id">{{menuItem.category}}</td>
-                        <td class="name">{{menuItem.name}}</td>
+                        <td class="category">{{menuItem.category}}</td>
+                        <td class="name">{{menuItem.itemNumber}} {{menuItem.name}}</td>
                         <td class="fixed_on_order price">{{menuItem.fixedOnOrder}}</td>
                         <td class="discount_on_order price">{{menuItem.discountOnOrder}}</td>
                         <td class="reduced_on_order price">{{menuItem.reducedOnOrder}}</td>
