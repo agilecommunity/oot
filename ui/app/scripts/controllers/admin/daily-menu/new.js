@@ -173,7 +173,11 @@ angular.module('MyControllers')
 
         console.log("#deployToSelectedItems detailItems:" + dailyMenu.detailItems.length);
 
-        angular.forEach(dailyMenu.detailItems, function(item, key){
+        angular.forEach($filter('filter')(dailyMenu.detailItems, {menuItem: {category: 'bento'}}), function(item, key){
+            $scope.selectedItems[item.menuItem.category][key] = item.menuItem;
+        });
+
+        angular.forEach($filter('filter')(dailyMenu.detailItems, {menuItem: {category: 'side'}}), function(item, key){
             $scope.selectedItems[item.menuItem.category][key] = item.menuItem;
         });
     };

@@ -40,3 +40,104 @@
     menuItem:  !!models.MenuItem
                   id: 1
 
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 1
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 2
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 3
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 4
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 5
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 6
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 7
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 8
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 9
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 12
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 13
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 14
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 15
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 16
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 17
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 18
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 4
+    menuItem:  !!models.MenuItem
+                  id: 19

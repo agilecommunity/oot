@@ -9,3 +9,7 @@
 - !!models.DailyMenu
     menuDate:   2014-02-12T00:00:00.0+09:00
     status:     prepared
+
+- !!models.DailyMenu
+    menuDate:   2015-03-02T00:00:00.0+09:00
+    status:     prepared
