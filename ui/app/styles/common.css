@@ -18,6 +18,10 @@ td.price {
     text-align: right;
 }
 
+.help-block {
+    text-align: left;
+}
+
 .clear {
     clear: both;
 }
@@ -47,6 +51,7 @@ td.price {
 }
 
 .page-header{
+    margin-bottom: 10px;
     border-top: solid 5px #92D13D;
     background-image: url('/assets/images/common/syoukadou_obentou.png');
     background-repeat: no-repeat;
@@ -108,11 +113,16 @@ td.price {
     cursor: pointer;
 }
 
-.content-header {
-    background-color: #92D13D;
+.content-header > div {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 
-    color: white;
+.content-header .title {
+    width: 100%;
     padding: 0.5em 1em;
+    background-color: #92D13D;
+    color: white;
     font-size: 2em;
     margin-bottom: 10px;
 }
@@ -236,14 +246,11 @@ td.price {
 }
 
 .menu-item-list {
-    line-height: normal;
-    padding: 0px;
 }
 
 .menu-item-list .menu-item-container{
-    margin: 2.5px 0px;
-    padding-left: 5px;
-    padding-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .menu-item-list .menu-item,
@@ -277,7 +284,6 @@ td.price {
 }
 
 .login-form {
-    margin: 1em;
     text-align: center;
 }
 

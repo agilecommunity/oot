@@ -1,34 +1,35 @@
+<div class="content admin-users-index col-xs-12 col-sm-12 col-md-12">
 
-<div class="content admin-users-index">
-    <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
-    <div class="content-body">
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered table-striped users">
-                    <thead>
-                    <tr>
-                        <th class="number" width="5%">No.</th>
-                        <th class="email" width="30%">メールアドレス</th>
-                        <th class="last_name" width="25%">姓</th>
-                        <th class="first_name" width="25%">名</th>
-                        <th class="is_admin" width="5%">管理者</th>
-                        <th class="edit" width="5%">編集</th>
-                        <th class="delete" width="5%">削除</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr id="user-{{user.id}}" ng-repeat="user in users | orderBy:['lastName', 'firstName'] track by $index">
-                        <td class="number">{{$index + 1}}</td>
-                        <td class="email">{{user.email}}</td>
-                        <td class="last_name">{{user.lastName}}</td>
-                        <td class="first_name">{{user.firstName}}</td>
-                        <td class="is_admin">{{user.isAdmin}}</td>
-                        <td class="edit"><button class="btn btn-info" disabled>編集</button></td>
-                        <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="content-header row">
+        <div class="nav-bar col-xs-12 col-sm-12 col-md-12" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+    </div>
+
+    <div class="content-body row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <table class="table table-bordered table-striped users">
+                <thead>
+                <tr>
+                    <th class="number" width="5%">No.</th>
+                    <th class="email" width="30%">メールアドレス</th>
+                    <th class="last_name" width="25%">姓</th>
+                    <th class="first_name" width="25%">名</th>
+                    <th class="is_admin" width="5%">管理者</th>
+                    <th class="edit" width="5%">編集</th>
+                    <th class="delete" width="5%">削除</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="user-{{user.id}}" ng-repeat="user in users | orderBy:['lastName', 'firstName'] track by $index">
+                    <td class="number">{{$index + 1}}</td>
+                    <td class="email">{{user.email}}</td>
+                    <td class="last_name">{{user.lastName}}</td>
+                    <td class="first_name">{{user.firstName}}</td>
+                    <td class="is_admin">{{user.isAdmin}}</td>
+                    <td class="edit"><button class="btn btn-info" disabled>編集</button></td>
+                    <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

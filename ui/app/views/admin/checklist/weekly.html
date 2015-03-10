@@ -1,14 +1,19 @@
-<div class="content admin-checklist-weekly">
-    <div class="no-print" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+<div class="content admin-checklist-weekly col-xs-12 col-sm-12 col-md-12">
 
-    <div class="content-header no-print">チェック表</div>
+    <div class="content-header no-print row">
+        <div class="nav-bar col-xs-12 col-sm-12 col-md-12" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="title">チェック表</div>
+        </div>
+    </div>
 
-    <div class="content-body">
-        <div class="checklist print-page" ng-class="{'no-print' : group.dailyMenu.isEmpty() || group.dailyOrders.length === 0 }" print-title="チェック表" id="checklist-{{group.targetDate.format('YYYYMMDD')}}" ng-repeat="group in groupedList">
+    <div class="content-body row">
+        <div class="checklist print-page col-xs-12 col-sm-12 col-md-12" ng-class="{'no-print' : group.dailyMenu.isEmpty() || group.dailyOrders.length === 0 }" print-title="チェック表" id="checklist-{{group.targetDate.format('YYYYMMDD')}}" ng-repeat="group in groupedList">
             <div class="checklist-header">{{group.targetDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="checklist-body">
                 <div oot-checklist-detail dailymenu="group.dailyMenu" dailyorders="group.dailyOrders"></div>
             </div>
         </div>
     </div>
+
 </div>

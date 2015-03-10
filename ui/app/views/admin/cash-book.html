@@ -1,11 +1,15 @@
-<div class="content admin-cash-book">
-    <div class="no-print" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+<div class="content admin-cash-book col-xs-12 col-sm-12 col-md-12">
 
-    <div class="content-header no-print">入出金管理台帳</div>
+    <div class="content-header no-print row">
+        <div class="nav-bar col-xs-12 col-sm-12 col-md-12" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="title">入出金管理台帳</div>
+        </div>
+    </div>
 
-    <div class="content-body">
+    <div class="content-body row">
 
-        <div class="cash-book print-page" ng-class="{'no-print' : cashBook.isEmpty()}" print-title="入出金管理台帳" id="cash-book-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-repeat="cashBook in cashBooks">
+        <div class="cash-book print-page col-xs-12 col-sm-12 col-md-12" ng-class="{'no-print' : cashBook.isEmpty()}" print-title="入出金管理台帳" id="cash-book-{{cashBook.targetDate.format('YYYYMMDD')}}" ng-repeat="cashBook in cashBooks">
             <div class="cash-book-header">{{cashBook.targetDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="cash-book-body">
                 <p class="no-data" ng-if="cashBook.isEmpty()">メニューが登録されていません。</p>
