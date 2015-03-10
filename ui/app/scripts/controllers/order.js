@@ -7,17 +7,9 @@ angular.module('MyControllers')
     // 初期データの取得
     $scope.dailyMenus = initialData.dailyMenus;
     $scope.dailyOrders = initialData.dailyOrders;
-    $scope.dailyOrdersThisWeek = initialData.dailyOrdersThisWeek;
 
     // 今週の日を一覧にする
     var startDayThisWeek = moment().startOf('week').add(1, "days");
-    $scope.daysThisWeek = [
-        startDayThisWeek,
-        moment(startDayThisWeek).add(1, "days"),
-        moment(startDayThisWeek).add(2, "days"),
-        moment(startDayThisWeek).add(3, "days"),
-        moment(startDayThisWeek).add(4, "days")
-    ];
 
     // メニューに注文状況を反映する
     var applyOrdered = function () {
@@ -209,10 +201,6 @@ angular.module('MyControllers')
         return $scope.getDetailItems(dailyMenu, category).length > 0;
     };
 
-    $scope.getOrderThisWeek = function(targetDate) {
-        return $filter('getByOrderDate')($scope.dailyOrdersThisWeek, targetDate);
-    };
-
     // 画像を表示するHTMLを出力
     $scope.renderImage = function(dailyMenuItem) {
         var imgFile = "no-image.png";
@@ -220,14 +208,6 @@ angular.module('MyControllers')
             imgFile = dailyMenuItem.menuItem.itemImagePath;
         }
         return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
-    };
-
-    $scope.renderTotalReducedOnOrderThisWeek = function(targetDate) {
-        var order = $scope.getOrderThisWeek(targetDate);
-        if (order === null) {
-            return "";
-        }
-        return order.totalReducedOnOrder() + "円";
     };
 
     // メニュー、または注文の内容が変わった場合は、メニューの注文状況を反映しなおす
@@ -253,18 +233,6 @@ app.my.resolvers.OrderController = {
         })
         .then(function(value) {
             initialData.dailyOrders = value;
-
-            var today = moment();
-            var dateBegin = moment(today).startOf('week').add(1, "days"); // startOfは日曜が取れるので月曜にシフト
-            var dateEnd = moment(dateBegin).add(4, "days");
-
-            return DailyOrder.queryMine({
-                "from": app.my.helpers.formatTimestamp(dateBegin),
-                "to": app.my.helpers.formatTimestamp(dateEnd)
-            }).$promise;
-        })
-        .then(function(value) {
-            initialData.dailyOrdersThisWeek = value;
             deferred.resolve(initialData);
         })
         ["catch"](function(responseHeaders) {

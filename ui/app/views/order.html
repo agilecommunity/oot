@@ -1,34 +1,17 @@
 <div class="content order col-xs-12 col-sm-12 col-md-12">
 
+    <div class="content-header row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="/#/order">注文する</a></li>
+                <li role="presentation"><a href="/#/view-order">注文を確認する</a></li>
+            </ul>
+        </div>
+    </div>
+
     <div class="content-body row">
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-
-            <div class="order-summary row">
-                <div class="order-summary-header col-xs-12 col-sm-12 col-md-12" style="width:100%;background-color: #92D13D;color:white;font-size: 1.5em; padding: 0.2em 1em;">
-                    注文済み(今週分)
-                </div>
-                <div class="order-summary-body col-xs-12 col-sm-12 col-md-12">
-                    <table class="order-summary table table-bordered">
-                        <thead>
-                        <tr>
-                            <th class="day" ng-repeat="day in daysThisWeek">
-                                <div style="position:relative">
-                                    {{day.format('M/D (ddd)')}} <div class="total-reduced-on-order">{{renderTotalReducedOnOrderThisWeek(day)}}</div>
-                                </div>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td ng-repeat="day in daysThisWeek">
-                                <div style="position:relative;" oot-order-summary order="getOrderThisWeek(day)"></div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
             <div class="message row">
                 <ul>
@@ -40,7 +23,7 @@
 
             <div class="day row" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:'menuDate'">
                 <div class="day-header col-xs-12 col-sm-12 col-md-12">
-                    <div class="date">{{dailyMenu.menuDate.format('YYYY/MM/DD (ddd)')}}</div>
+                    <div class="date">{{dailyMenu.menuDate.format('M月D日 (ddd曜日)')}}</div>
                     <div class="small-total">当日合計: <span class="price">{{totalReducedOfTheDay(dailyMenu.menuDate)}}円</span></div>
                     <div class="clear"></div>
                 </div>

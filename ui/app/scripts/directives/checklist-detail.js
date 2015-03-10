@@ -4,7 +4,13 @@ angular.module('MyDirectives')
 
     return {
         restrict: "A",
-        templateUrl: "/views/_partial/_checklist-detail",
+        templateUrl: function(element, attrs) {
+            console.log(attrs);
+            if (attrs.templateurl !== undefined) {
+                return attrs.templateurl;
+            }
+            return "/views/_partial/_checklist-detail";
+        },
         scope: {
             dailyMenu: "=dailymenu",
             dailyOrders: "=dailyorders"

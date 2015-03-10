@@ -9,10 +9,11 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="day-tab" style="border-bottom: 1px solid #DDDDDD; padding-bottom:5px; padding-left: 10px;">
                 <ul class="nav nav-pills day-tabs">
-                    <li><button type="button" class="btn btn-default show-calendar" ng-click="showCalendar();">
+                    <li>
+                        <button type="button" class="btn btn-default show-calendar" ng-click="showCalendar();">
                         <span class="glyphicon glyphicon-calendar"></span>
                         <div id='datetimepicker' style="display:inline;"><input type='text' class="form-control" style="visibility:hidden;width:1px;height:1px;padding:0;"/></div>
-                    </button>
+                        </button>
                     </li>
                     <li class="divider"></li>
                     <li id="day-{{dailyMenu.menuDate|localdate:'YYYYMMDD'}}" ng-class="{'active': isDaySelected(dailyMenu.menuDate)}" ng-repeat="dailyMenu in dailyMenus">

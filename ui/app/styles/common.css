@@ -3,6 +3,22 @@
     http://www.irasutoya.com/
  */
 
+/* Bootstrap補助 */
+ul.nav-pills li.divider {
+    margin: 2px 9px;
+    height: 1.5em;
+    padding: 1.5px;
+    background-color: #e5e5e5;
+}
+
+.badge-primary {
+    background-color: #428bca;
+    border-color: #357ebd;
+    color: #fff;
+}
+
+/* アプリ独自 */
+
 *{
     font-family: Meiryo;
 }
@@ -95,7 +111,7 @@ td.price {
 .page-footer {
     background-color: #343434;
     color: white;
-    margin-top: 2em;
+    margin-top: 20px;
     text-align: right;
 }
 .page-footer > div{
@@ -474,6 +490,7 @@ table.order-summary {
     margin-bottom: 0;
 }
 
+
 table.order-summary th.day {
     width:20%;
 }
@@ -541,18 +558,3 @@ table.order-summary td div.order-other-items {
 tr.additional-item td.name {
     text-align: right;
 }
-
-/* Bootstrap補助 */
-ul.nav-pills li.divider {
-    margin: 2px 9px;
-    height: 1.5em;
-    padding: 1.5px;
-    background-color: #e5e5e5;
-}
-
-.badge-primary {
-    background-color: #428bca;
-    border-color: #357ebd;
-    color: #fff;
-}
-

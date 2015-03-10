@@ -1,4 +1,4 @@
-<div class="content signin col-xs-12 col-sm-12 col-md-12" ng-controller="SigninController as controller">
+<div class="content signin col-xs-12 col-sm-12 col-md-12">
 
     <div class="content-header row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -9,30 +9,30 @@
     <div class="content-body row">
         <div class="login-form col-xs-12 col-sm-12 col-md-12">
             <form class="form-horizontal">
-                <div class="form-group" ng-class="{'has-error': controller.hasError('username')}">
+                <div class="form-group" ng-class="{'has-error': vm.hasError('username')}">
                     <label for="user.email" class="col-sm-2 control-label">メールアドレス</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" ng-model="controller.user_email" id="user.email">
-                        <span class="help-block" id="error.user.email" ng-show="controller.hasError('username')">{{controller.errors.username}}</span>
+                        <input type="text" class="form-control" ng-model="vm.user_email" id="user.email">
+                        <span class="help-block" id="error.user.email" ng-show="vm.hasError('username')">{{vm.errors.username}}</span>
                     </div>
                     <div class="col-sm-offset-2 col-md-offset-2 col-sm-10 col-md-10">
                         <div class="checkbox" style="text-align:left;">
                             <label>
-                                <input type="checkbox" id="register_email" ng-model="controller.register_email">
+                                <input type="checkbox" id="register_email" ng-model="vm.register_email">
                                 メールアドレスを記憶する
                             </label>
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-class="{'has-error': controller.hasError('password')}">
+                <div class="form-group" ng-class="{'has-error': vm.hasError('password')}">
                     <label for="user.password" class="col-sm-2 control-label">パスワード</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control" ng-model="controller.user_password" id="user.password">
-                        <span class="help-block" id="error.user.password" ng-show="controller.hasError('password')">{{controller.errors.password}}</span>
+                        <input type="password" class="form-control" ng-model="vm.user_password" id="user.password">
+                        <span class="help-block" id="error.user.password" ng-show="vm.hasError('password')">{{vm.errors.password}}</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-success button" id="signin" ng-click="controller.signin();">サインイン</button>
+                    <button class="btn btn-success button" id="signin" ng-click="vm.signin();">サインイン</button>
                 </div>
                 <p>アカウントをお持ちでない方は <a id="start_signup" ng-href="/#/signup">サインアップ</a>してください。<br/>
                     パスワードを忘れた方は <a id="start_reset" ng-href="/#/reset">パスワードの初期化</a>ができます。</p>
