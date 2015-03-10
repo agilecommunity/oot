@@ -1,17 +1,26 @@
-<div class="content">
-    <div class="content-header">サインアップ</div>
-    <div class="login-form">
-        <form class="form-horizontal">
-            <div class="form-group" ng-class="getErrorClass('email')">
-                <label for="email" class="col-sm-2 control-label">メールアドレス</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" ng-model="email" id="email">
-                    <span class="help-block bg-danger" id="error-email" ng-show="hasFormError('email')">{{formErrors.email}}</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-success button" id="signup" ng-click="signup();">サインアップ</button>
-            </div>
-        </form>
+<div class="content start-signup col-xs-12 col-sm-12 col-md-12">
+
+    <div class="content-header row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="title">サインアップ</div>
+        </div>
     </div>
+
+    <div class="content-body row">
+        <div class="login-form col-xs-12 col-sm-12 col-md-12">
+            <form class="form-horizontal">
+                <div class="form-group" ng-class="getErrorClass('email')">
+                    <label for="email" class="col-sm-2 control-label">メールアドレス</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="email" id="email">
+                        <span class="help-block bg-danger" id="error-email" ng-show="hasFormError('email')">{{formErrors.email}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success button" id="signup" ng-click="signup();">サインアップ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>

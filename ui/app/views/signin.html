@@ -1,6 +1,13 @@
-    <div class="content" ng-controller="SigninController as controller">
-        <div class="content-header">サインイン</div>
-        <div class="login-form">
+<div class="content signin col-xs-12 col-sm-12 col-md-12" ng-controller="SigninController as controller">
+
+    <div class="content-header row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="title">サインイン</div>
+        </div>
+    </div>
+
+    <div class="content-body row">
+        <div class="login-form col-xs-12 col-sm-12 col-md-12">
             <form class="form-horizontal">
                 <div class="form-group" ng-class="{'has-error': controller.hasError('username')}">
                     <label for="user.email" class="col-sm-2 control-label">メールアドレス</label>
@@ -26,14 +33,16 @@
                 </div>
                 <div class="form-group">
                     <button class="btn btn-success button" id="signin" ng-click="controller.signin();">サインイン</button>
-                    <p class="help-block">アカウントをお持ちでない方は <a id="start_signup" ng-href="/#/signup">サインアップ</a>してください。<br/>
-                    パスワードを忘れた方は <a id="start_reset" ng-href="/#/reset">パスワードの初期化</a>ができます。</p>
                 </div>
+                <p>アカウントをお持ちでない方は <a id="start_signup" ng-href="/#/signup">サインアップ</a>してください。<br/>
+                    パスワードを忘れた方は <a id="start_reset" ng-href="/#/reset">パスワードの初期化</a>ができます。</p>
             </form>
         </div>
-        <div class="message">
+        <div class="message col-xs-12 col-sm-12 col-md-12">
             <ul>
                 <li>このサイトは、IE(8以上)、Google Chrome、Firefoxでのご利用を推奨します。</li>
             </ul>
         </div>
     </div>
+
+</div>

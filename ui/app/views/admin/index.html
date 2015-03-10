@@ -1,32 +1,35 @@
-    <div class="content admin-index">
-        <div ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+<div class="content admin-index col-xs-12 col-sm-12 col-md-12">
 
-        <div class="content-body dashboard container">
+    <div class="content-header row">
+        <div class="nav-bar col-xs-12 col-sm-12 col-md-12" ng-include="'/views/admin/_header'" ng-controller="AdminHeaderController"></div>
+    </div>
 
+    <div class="content-body dashboard row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="panel panel-success week-info" ng-repeat="week in weeks">
                 <div class="panel-heading">{{week.label}} <span>{{week.startDay.format("M/D (ddd)")}} ～ {{week.endDay.format("M/D (ddd)")}}</span></div>
                 <div class="panel-body">
                     <form>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <button class="btn btn-primary btn-lg" id="show-purchase-order-confirmation-{{week.startDay.format('YYYYMMDD')}}" ng-click="showPurchaseOrderConfirmation(week.startDay)">発注確認シート</button>
-                            <button class="btn btn-primary btn-lg" id="show-purchase-order-{{week.startDay.format('YYYYMMDD')}}" ng-click="showPurchaseOrder(week.startDay)">発注シート</button>
-                            <button class="btn btn-primary btn-lg" id="show-cash-book-{{week.startDay.format('YYYYMMDD')}}" ng-click="showCashBook(week.startDay)">入出金管理台帳</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>チェック表</label>
-                        <div class="input-group">
-                            <button class="btn btn-primary btn-lg" id="show-checklist-weekly-{{week.startDay.format('YYYYMMDD')}}" ng-click="showChecklistWeekly(week.startDay)">1週間分</button>
-                            <div class="btn-group" role="group">
-                                <button class="btn btn-primary btn-lg" id="show-checklist-daily-{{day.format('YYYYMMDD')}}" ng-click="showChecklistDaily(day)" ng-repeat="day in week.days">{{day.format("D (ddd)")}}</button>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <button class="btn btn-primary btn-lg" id="show-purchase-order-confirmation-{{week.startDay.format('YYYYMMDD')}}" ng-click="showPurchaseOrderConfirmation(week.startDay)">発注確認シート</button>
+                                <button class="btn btn-primary btn-lg" id="show-purchase-order-{{week.startDay.format('YYYYMMDD')}}" ng-click="showPurchaseOrder(week.startDay)">発注シート</button>
+                                <button class="btn btn-primary btn-lg" id="show-cash-book-{{week.startDay.format('YYYYMMDD')}}" ng-click="showCashBook(week.startDay)">入出金管理台帳</button>
                             </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label>チェック表</label>
+                            <div class="input-group">
+                                <button class="btn btn-primary btn-lg" id="show-checklist-weekly-{{week.startDay.format('YYYYMMDD')}}" ng-click="showChecklistWeekly(week.startDay)">1週間分</button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-primary btn-lg" id="show-checklist-daily-{{day.format('YYYYMMDD')}}" ng-click="showChecklistDaily(day)" ng-repeat="day in week.days">{{day.format("D (ddd)")}}</button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
-
         </div>
-
     </div>
+
+</div>
