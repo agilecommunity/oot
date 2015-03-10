@@ -38,6 +38,13 @@
             access: AccessLevels.user,
             resolve: app.my.resolvers.OrderController
         })
+        .when('/view-order/:menuDate?', {
+            templateUrl: '/views/view-order',
+            access: AccessLevels.user,
+            controller: 'ViewOrderController',
+            controllerAs: 'vm',
+            resolve: app.my.resolvers.ViewOrderController
+        })
         .when('/admin/index', {
             templateUrl: '/views/admin/index',
             controller: 'AdminIndexController',
