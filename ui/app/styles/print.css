@@ -1,6 +1,17 @@
 /* http://responsivedesign.is/articles/the-printer-is-a-device-too! より */
 @media print {
 
+    /* bootstrapのtd,thの背景色を白にする設定を上書きする */
+    /* もし td, thに色を付けたい場合は、これより上で設定すること */
+    .table td,
+    .table th {
+        background-color: transparent !important;
+    }
+
+    .checklist .order-group-even {
+        background-color: #e9e9e9 !important;
+    }
+
     section {
         display: block;
         page-break-before: always;
@@ -44,7 +55,7 @@
     /* http://blog.asial.co.jp/1280 より */
     .print-page {
         width: 172mm;
-        height: 245mm;
+        height: 251mm;
         page-break-after: always;
         position: relative; /* 固定ヘッダーの基準座標を定義 */
     }
