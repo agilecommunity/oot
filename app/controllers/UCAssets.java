@@ -7,6 +7,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import java.io.File;
+import java.net.URL;
 
 public class UCAssets extends Controller {
     private static Logger.ALogger logger = Logger.of("application.controllers.UCAssets");
@@ -23,7 +24,8 @@ public class UCAssets extends Controller {
         File targetFile = new File(targetFilePath);
 
         if (!targetFile.exists()) {
-            targetFile = new File(UCAssets.NoImagePath);
+            logger.trace("#imagesAt not exists {}", targetFilePath);
+            return ok(UCAssets.class.getClassLoader().getResourceAsStream(UCAssets.NoImagePath));
         }
 
         return ok(targetFile);
