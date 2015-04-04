@@ -23,8 +23,11 @@
 
             <div class="day row" id="day-{{dailyMenu.menuDate.format('YYYYMMDD')}}" ng-repeat="dailyMenu in dailyMenus | orderBy:'menuDate'">
                 <div class="day-header col-xs-12 col-sm-12 col-md-12">
-                    <div class="date">{{dailyMenu.menuDate.format('M月D日 (ddd曜日)')}}</div>
+                    <div class="date">
+                        {{dailyMenu.menuDate.format('M月D日 (ddd曜日)')}}
+                    </div>
                     <div class="small-total">当日合計: <span class="price">{{totalReducedOfTheDay(dailyMenu.menuDate)}}円</span></div>
+                    <div oot-gathering-status gathering-settings="gatheringSettings" order-stat="getGatheringStatus(dailyMenu.menuDate)" class="gathering-status"></div>
                     <div class="clear"></div>
                 </div>
                 <div class="day-body col-xs-12 col-sm-12 col-md-12">

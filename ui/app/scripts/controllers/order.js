@@ -8,6 +8,19 @@ angular.module('MyControllers')
     $scope.dailyMenus = initialData.dailyMenus;
     $scope.dailyOrders = initialData.dailyOrders;
 
+    $scope.gatheringSettings = {
+        minOrders: 35,
+        discountPrice: 10,
+        isAchieved : function(numOrders) {
+            return (numOrders >= this.minOrders);
+        }
+    };
+
+    $scope.dailyOrderStats = [
+        { orderDate: moment('2014-02-10'), numOrders: 10, numUsers: 7 },
+        { orderDate: moment('2014-02-11'), numOrders: 40, numUsers: 7 }
+    ];
+
     // 今週の日を一覧にする
     var startDayThisWeek = moment().startOf('week').add(1, "days");
 
@@ -208,6 +221,14 @@ angular.module('MyControllers')
             imgFile = dailyMenuItem.menuItem.itemImagePath;
         }
         return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
+    };
+
+    $scope.getGatheringStatus = function(targetDate) {
+        var stat = $filter('getByOrderDate')($scope.dailyOrderStats, targetDate);
+        if (stat === null) {
+            stat = { orderDate: targetDate, numOrders: 0, numUsers: 0 };
+        }
+        return stat;
     };
 
     // メニュー、または注文の内容が変わった場合は、メニューの注文状況を反映しなおす
