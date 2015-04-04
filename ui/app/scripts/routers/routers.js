@@ -40,6 +40,7 @@
         .when('/order', {
             templateUrl: '/views/order',
             controller: 'OrderController',
+            controllerAs: 'vm',
             access: AccessLevels.user,
             resolve: app.my.resolvers.OrderController
         })
