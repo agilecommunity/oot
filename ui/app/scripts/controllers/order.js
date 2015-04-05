@@ -1,13 +1,26 @@
 (function(){
 
-    var DayGroup = function(day, menu, order, orderStat, $filter) {
+    var DayGroup = function($filter) {
+        this.$filter = $filter;
+
+        this.day = null;
+        this.menu = null;
+        this.order = null;
+        this.orderStat = null;
+        this.orderStatuses = [];
+    };
+
+    DayGroup.prototype.setData = function(day, menu, order, orderStat) {
         this.day = day;
         this.menu = menu;
         this.order = order;
         this.orderStat = orderStat;
-        this.orderStatuses = [];
-        this.$filter = $filter;
 
+        this.updateOrderStatus();
+    };
+
+    DayGroup.prototype.setOrderStat = function(value) {
+        this.orderStat = value;
         this.updateOrderStatus();
     };
 
@@ -57,9 +70,9 @@
     angular.module('MyControllers')
         .controller('OrderController', OrderController);
 
-    OrderController.$inject = ['$scope', '$filter', '$modal', 'dialogs', 'User', 'DailyMenu', 'DailyOrder', 'initialData'];
+    OrderController.$inject = ['$scope', '$filter', '$modal', 'dialogs', 'User', 'DailyMenu', 'DailyOrder', 'DailyOrderStat', 'initialData'];
 
-    function OrderController($scope, $filter, $modal, dialogs, User, DailyMenu, DailyOrder, initialData) {
+    function OrderController($scope, $filter, $modal, dialogs, User, DailyMenu, DailyOrder, DailyOrderStat, initialData) {
 
         var vm = this;
 
@@ -68,18 +81,8 @@
             { id: 'side',  name: 'サイドメニュー' }
         ];
 
-        vm.gatheringSettings = {
-            minOrders: 35,
-            discountPrice: 10,
-            isAchieved : function(numOrders) {
-                return (numOrders >= this.minOrders);
-            }
-        };
-
-        vm.dailyOrderStats = [
-            { orderDate: moment('2014-02-10'), numOrders: 10, numUsers: 7 },
-            { orderDate: moment('2014-02-11'), numOrders: 40, numUsers: 7 }
-        ];
+        vm.gatheringSetting = initialData.gatheringSetting;
+        vm.dailyOrderStats = initialData.dailyOrderStats;
 
         vm.dayGroups = [];
         angular.forEach(initialData.dailyMenus, function(dailyMenu){
@@ -92,7 +95,8 @@
                 dailyOrderStat = { orderDate: day, numOrders: 0, numUsers: 0 };
             }
 
-            var dayGroup = new DayGroup(day, dailyMenu, dailyOrder, dailyOrderStat, $filter);
+            var dayGroup = new DayGroup($filter);
+            dayGroup.setData(day, dailyMenu, dailyOrder, dailyOrderStat);
 
             vm.dayGroups.push(dayGroup);
         });
@@ -133,6 +137,14 @@
             return errorDialog;
         };
 
+        var updateOrderStat = function(dayGroup) {
+            DailyOrderStat.query({
+                orderDate: app.my.helpers.formatTimestamp(dayGroup.day)
+            }, function(response){
+                dayGroup.setOrderStat(response[0]);
+            });
+        };
+
         var createOrder = function(dayGroup, menuItem) {
 
             var order = new DailyOrder();
@@ -146,13 +158,12 @@
 
                 errorDialog.result["finally"](function(config){
                     dayGroup.order = null;
-                    dayGroup.updateOrderStatus();
                 });
             };
 
             order.$create(function(){
                 dayGroup.order = order;
-                dayGroup.updateOrderStatus();
+                updateOrderStat(dayGroup);
             }, errorHandler);
         };
 
@@ -166,30 +177,30 @@
 
             var menuItemOperation = dayGroup.hasOrder(menuItem) ? "delete" : "create";
 
+            var errorHandler = function(result) {
+                var errorDialog = showErrorDialog(result);
+
+                errorDialog.result["finally"](function(config){
+                    dayGroup.order = backup.order;
+                });
+            };
+
             if (menuItemOperation === "create") {
                 order.addItem(menuItem, 1);
             } else if (menuItemOperation === "delete") {
                 order.removeItem(menuItem);
             }
 
-            var errorHandler = function(result) {
-                var errorDialog = showErrorDialog(result);
-
-                errorDialog.result["finally"](function(config){
-                    dayGroup.order = backup.order;
-                    dayGroup.updateOrderStatus();
-                });
-            };
-
             // あった場合は更新する
             if (! order.isEmpty()) {
                 order.$update({}, function(){
-                    dayGroup.updateOrderStatus();
+                    updateOrderStat(dayGroup);
                 }, errorHandler);
+
             } else {
                 order.$delete({}, function(){
                     dayGroup.order = null;
-                    dayGroup.updateOrderStatus();
+                    updateOrderStat(dayGroup);
                 }, errorHandler);
             }
         };
@@ -228,13 +239,12 @@
                 var orderItem = order.updateItem(menuItem, numOrders);
 
                 order.$update({}, function(){
-                    dayGroup.orderStatuses[menuItem.id] = numOrders;
+                    updateOrderStat(dayGroup);
                 }, function(result){
                     var errorDialog = showErrorDialog(result);
 
                     errorDialog.result["finally"](function(config){
                         dayGroup.order = backup.order;
-                        dayGroup.updateOrderStatus();
                     });
                 });
             }, function () {
@@ -252,7 +262,7 @@
     }
 
     app.my.resolvers.OrderController = {
-        initialData: function($route, $q, DailyMenu, DailyOrder) {
+        initialData: function($route, $q, DailyMenu, DailyOrder, GatheringSetting, DailyOrderStat) {
 
             var deferred = $q.defer();
             var initialData = {};
@@ -267,8 +277,17 @@
                     status: "open"
                 }).$promise;
             })
-            .then(function(value) {
+            .then(function(value){
                 initialData.dailyOrders = value;
+
+                return DailyOrderStat.query({
+                    status: "open"
+                }).$promise;
+            })
+            .then(function(value) {
+                initialData.dailyOrderStats = value;
+
+                initialData.gatheringSetting = GatheringSetting.createDummy();
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {

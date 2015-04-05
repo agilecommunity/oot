@@ -39,6 +39,8 @@ GET           /api/v1.0/daily-orders/order-date/:orderDate                   con
 GET           /api/v1.0/daily-order-aggregates                               controllers.DailyOrderAggregates.index()
 GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate         controllers.DailyOrderAggregates.showByOrderDate(orderDate)
 
+GET           /api/v1.0/daily-order-stats                                    controllers.DailyOrderStats.index()
+
 # SecureSocial
 POST          /api/v1.0/start-signup                                         controllers.Registration.startSignUp()
 POST          /api/v1.0/signup/:token                                        controllers.Registration.signUp(token)
