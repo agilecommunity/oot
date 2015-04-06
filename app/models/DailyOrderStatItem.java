@@ -13,12 +13,6 @@ import javax.persistence.Id;
 @Entity
 public class DailyOrderStatItem extends Model {
 
-    @JodaTimestamp
-    @JsonSerialize(using=JodaTimestampOperator.JodaTimestampSerializer.class)
-    @JsonDeserialize(using=JodaTimestampOperator.JodaTimestampDeserializer.class)
-    @Id
-    public DateTime orderDate;
-
     public Integer numOrders;
 
     public Integer numUsers;

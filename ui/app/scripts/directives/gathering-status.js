@@ -7,7 +7,7 @@
 
         var defaultTemplate =
            "<span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span> " +
-           "<span class=\"gathering-status-remain\">あと{{gatheringSetting.minOrders - orderStat.bentoNumOrders}}個</span>で<br>" +
+           "<span class=\"gathering-status-remain\">あと{{gatheringSetting.minOrders - orderStat.bentoStat.numOrders}}個</span>で<br>" +
            "<span class=\"gathering-status-discount\">{{gatheringSetting.discountPrice}}円引き!!!<br></span>" +
            "<span class=\"gathering-status-min-orders\">目標 {{gatheringSetting.minOrders}}個</span>";
         var achievedTemplate =
@@ -19,11 +19,16 @@
 
             var doCompile = function() {
                 var template = defaultTemplate;
-                if (scope.gatheringSetting.isAchieved(scope.orderStat.bentoNumOrders)) {
+                if (scope.gatheringSetting.isAchieved(scope.orderStat.bentoStat.numOrders)) {
                     template = achievedTemplate;
                 }
 
-                element.html(template).show();
+                if (scope.gatheringSetting.enabled) {
+                    element.removeClass("hidden");
+                    element.html(template).show();
+                } else {
+                    element.addClass("hidden");
+                }
 
                 $compile(element.contents())(scope);
             };

@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.*;
 import models.DailyMenu;
 import models.DailyOrderStat;
+import models.DailyOrderStatForDB;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -14,6 +15,7 @@ import utils.controller.parameters.DateParameter;
 import utils.controller.parameters.StatusParameter;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DailyOrderStats extends Controller {
@@ -54,14 +56,19 @@ public class DailyOrderStats extends Controller {
             return utils.controller.Results.faildToParseQueryStringError();
         }
 
-        Query<DailyOrderStat> query = Ebean.find(DailyOrderStat.class);
-        ExpressionList<DailyOrderStat> objects = query.setRawSql(createRawSql()).where();
+        Query<DailyOrderStatForDB> query = Ebean.find(DailyOrderStatForDB.class);
+        ExpressionList<DailyOrderStatForDB> dbObjects = query.setRawSql(createRawSql()).where();
 
-        objects = DailyOrderStats.addConditions(objects, parameters);
+        dbObjects = DailyOrderStats.addConditions(dbObjects, parameters);
 
-        objects.order().asc("orderDate");
+        dbObjects.order().asc("orderDate");
 
-        return ok(Json.toJson(objects.findList()));
+        List<DailyOrderStat> objects = new ArrayList<DailyOrderStat>();
+        for (DailyOrderStatForDB dbObject : dbObjects.findList()) {
+            objects.add(dbObject.createOrderStat());
+        }
+
+        return ok(Json.toJson(objects));
     }
 
     private static RawSql createRawSql() {
@@ -90,7 +97,7 @@ public class DailyOrderStats extends Controller {
         String sql = ""
                 + " select"
                 +    " dm.menu_date, dm.status,"
-                +    " all_stat.orderDate, all_stat.numUsers, all_stat.numOrders, all_stat.totalFixedOnOrder, all_stat.totalDiscountOnOrder,"
+                +    " all_stat.numUsers, all_stat.numOrders, all_stat.totalFixedOnOrder, all_stat.totalDiscountOnOrder,"
                 +    " bento_stat.numUsers, bento_stat.numOrders, bento_stat.totalFixedOnOrder, bento_stat.totalDiscountOnOrder,"
                 +    " side_stat.numUsers, side_stat.numOrders, side_stat.totalFixedOnOrder, side_stat.totalDiscountOnOrder"
                 + " from daily_menu dm"
@@ -111,11 +118,10 @@ public class DailyOrderStats extends Controller {
         RawSql rawSql = RawSqlBuilder.parse(sql)
                 .columnMapping("dm.menu_date", "orderDate")
                 .columnMapping("dm.status", "menuStatus")
-                .columnMapping("all_stat.orderDate", "allStat.orderDate")
-                .columnMapping("all_stat.numUsers", "allStat.numUsers")
-                .columnMapping("all_stat.numOrders", "allStat.numOrders")
-                .columnMapping("all_stat.totalFixedOnOrder", "allStat.totalFixedOnOrder")
-                .columnMapping("all_stat.totalDiscountOnOrder", "allStat.totalDiscountOnOrder")
+                .columnMapping("all_stat.numUsers", "allNumUsers")
+                .columnMapping("all_stat.numOrders", "allNumOrders")
+                .columnMapping("all_stat.totalFixedOnOrder", "allTotalFixedOnOrder")
+                .columnMapping("all_stat.totalDiscountOnOrder", "allTotalDiscountOnOrder")
                 .columnMapping("bento_stat.numUsers", "bentoNumUsers")
                 .columnMapping("bento_stat.numOrders", "bentoNumOrders")
                 .columnMapping("bento_stat.totalFixedOnOrder", "bentoTotalFixedOnOrder")
@@ -131,7 +137,7 @@ public class DailyOrderStats extends Controller {
         return rawSql;
     }
 
-    private static ExpressionList<DailyOrderStat> addConditions(ExpressionList<DailyOrderStat> base, Parameters parameters) {
+    private static ExpressionList<DailyOrderStatForDB> addConditions(ExpressionList<DailyOrderStatForDB> base, Parameters parameters) {
         if (parameters.orderDate != null) {
             if (parameters.orderDate.isRange()) {
                 DateParameter.DateRange dateRange = parameters.orderDate.getRangeValue();

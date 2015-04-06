@@ -18,6 +18,7 @@
         MyClass.createDummy = function() {
             var object = new MyClass();
 
+            object.enabled = true;
             object.minOrders = 30;
             object.discountPrice = 20;
 
