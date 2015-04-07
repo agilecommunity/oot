@@ -1,37 +1,46 @@
+(function() {
 
-angular.module('MyControllers')
-    .controller('AdminHeaderController',
-    ['$scope', '$location', '$filter', 'User',
-    function ($scope, $location, $filter, User, DailyMenu, DailyOrder) {
+    angular.module('MyControllers')
+        .controller('AdminHeaderController', AdminHeaderController);
 
-    //---- ヘルパ
-    $scope.isActive = function(url) {
-        return $location.path() === url;
-    };
+    AdminHeaderController.$inject = ['$location'];
 
-    //---- イベントハンドラ
-    $scope.showAdminIndex = function () {
-        $location.path("/admin/index");
-    };
+    function AdminHeaderController($location) {
+        var vm = this;
 
-    $scope.showOrderMenuCreate = function () {
-        $location.path("/admin/daily-menus/new");
-    };
+        //---- ヘルパ
+        vm.isActive = function(url) {
+            return $location.path() === url;
+        };
 
-    $scope.showMenuItemsIndex = function () {
-        $location.path("/admin/menu-items/index");
-    };
+        //---- イベントハンドラ
+        vm.showAdminIndex = function () {
+            $location.path("/admin/index");
+        };
 
-    $scope.showMenuItemsImport = function () {
-        $location.path("/admin/menu-items/import");
-    };
+        vm.showOrderMenuCreate = function () {
+            $location.path("/admin/daily-menus/new");
+        };
 
-    $scope.showMenuItemImagesImport = function () {
-        $location.path("/admin/menu-item-images/import");
-    };
+        vm.showMenuItemsIndex = function () {
+            $location.path("/admin/menu-items/index");
+        };
 
-    $scope.showUsersIndex = function () {
-        $location.path("/admin/users/index");
-    };
+        vm.showMenuItemsImport = function () {
+            $location.path("/admin/menu-items/import");
+        };
 
-}]);
+        vm.showMenuItemImagesImport = function () {
+            $location.path("/admin/menu-item-images/import");
+        };
+
+        vm.showUsersIndex = function () {
+            $location.path("/admin/users/index");
+        };
+
+        vm.showSettings = function () {
+            $location.path("/admin/settings");
+        };
+    }
+
+})();
