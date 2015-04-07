@@ -11,10 +11,12 @@ import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.menuItem.EditPage;
 import features.support.CucumberUtils;
 import features.support.WebBrowser;
+import models.GatheringSetting;
 import models.LocalUser;
 import org.joda.time.DateTime;
 import securesocial.core.Registry;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,23 @@ public class AdminStepDefs {
                 throw new Exception("ユーザの作成に失敗しました");
             }
         }
+    }
+
+    @前提("^ギャザリングの設定を以下のようにする:$")
+    public void ギャザリングの設定を以下のようにする(DataTable gatheringParams) throws Throwable {
+        List<Map<String, String>> gatheringSettings = gatheringParams.asMaps(String.class, String.class);
+        Map<String, String> gatheringSetting = gatheringSettings.get(0);
+
+        GatheringSetting setting = new GatheringSetting();
+        setting.enabled = Boolean.getBoolean(gatheringSetting.get("有効"));
+        setting.minOrders = Integer.parseInt(gatheringSetting.get("目標件数"));
+        setting.discountPrice = new BigDecimal(gatheringSetting.get("値引き額"));
+        setting.createdAt = DateTime.now();
+        setting.createdBy = "cucumber";
+        setting.updatedAt = DateTime.now();
+        setting.updatedBy = "cucumber";
+
+        setting.save();
     }
 
     @もし("^以下の商品を登録する:$")
