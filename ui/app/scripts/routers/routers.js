@@ -117,6 +117,13 @@
             resolve: app.my.resolvers.UserIndexController,
             access: AccessLevels.admin
         })
+        .when('/admin/settings', {
+            templateUrl: '/views/admin/settings',
+            controller: 'AdminSettingsController',
+            controllerAs: 'vm',
+            resolve: app.my.resolvers.AdminSettingsController,
+            access: AccessLevels.admin
+        })
         .otherwise({                           // その他のパスが指定された場合
             redirectTo: '/'                    // "/"に飛ぶ
         });

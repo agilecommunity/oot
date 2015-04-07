@@ -13,7 +13,7 @@
         var achievedTemplate =
            "<span class=\"glyphicon glyphicon-ok-sign\" aria-hidden=\"true\"></span> " +
            "<span class=\"gathering-status-achieved\">{{gatheringSetting.discountPrice}}円引き達成!!!</span><br>" +
-           "<span class=\"gathering-status-current-orders\">現在 {{orderStat.numOrders}}個</span>";
+           "<span class=\"gathering-status-current-orders\">現在 {{orderStat.bentoStat.numOrders}}個</span>";
 
         var linker = function(scope, element, attrs) {
 

@@ -287,7 +287,11 @@
             .then(function(value) {
                 initialData.dailyOrderStats = value;
 
-                initialData.gatheringSetting = GatheringSetting.createDummy();
+                return GatheringSetting.get({
+                }).$promise;
+            })
+            .then(function(value) {
+                initialData.gatheringSetting = value;
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {
