@@ -1,0 +1,8 @@
+- !!models.GatheringSetting
+    enabled:       false
+    minOrders:     0
+    discountPrice: 0
+    createdAt:     2015-04-07T00:00:00.0+09:00
+    createdBy:     system
+    updatedAt:     2015-04-07T00:00:00.0+09:00
+    updatedBy:     system

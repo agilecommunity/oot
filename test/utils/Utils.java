@@ -135,6 +135,7 @@ public class Utils {
                 "LOCAL_TOKEN",
                 "LOCAL_USER",
                 "MENU_ITEM",
+                "GATHERING_SETTING"
         };
 
         for (String table : tables) {
