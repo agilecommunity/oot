@@ -135,6 +135,7 @@ public class Utils {
                 "LOCAL_TOKEN",
                 "LOCAL_USER",
                 "MENU_ITEM",
+                "GATHERING_SETTING"
         };
 
         for (String table : tables) {
@@ -152,6 +153,7 @@ public class Utils {
                 "DAILY_ORDER_SEQ",
                 "DAILY_ORDER_ITEM_SEQ",
                 "MENU_ITEM_SEQ",
+                "GATHERING_SETTING_SEQ"
         };
 
         Boolean isH2 = false;

@@ -11,17 +11,19 @@ import features.pages.admin.dailyMenu.NewPage;
 import features.pages.admin.menuItem.EditPage;
 import features.support.CucumberUtils;
 import features.support.WebBrowser;
+import models.GatheringSetting;
 import models.LocalUser;
 import org.joda.time.DateTime;
 import securesocial.core.Registry;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 public class AdminStepDefs {
 
-    @前提("^以下のユーザを登録する:$")
-    public void 以下のユーザを登録する(DataTable productParams) throws Throwable {
+    @前提("^初期データとして以下のユーザを登録する:$")
+    public void 初期データとして以下のユーザを登録する(DataTable productParams) throws Throwable {
         List<Map<String, String>> users = productParams.asMaps(String.class, String.class);
 
         for (Map<String, String>user : users) {
@@ -42,6 +44,40 @@ public class AdminStepDefs {
                 throw new Exception("ユーザの作成に失敗しました");
             }
         }
+    }
+
+    @前提("初期データとして以下のギャザリングの設定を登録する:")
+    public void 初期データとして以下のギャザリングの設定を登録する(DataTable gatheringParams) throws Throwable {
+        List<Map<String, String>> gatheringSettings = gatheringParams.asMaps(String.class, String.class);
+        Map<String, String> gatheringSetting = gatheringSettings.get(0);
+
+        GatheringSetting setting = new GatheringSetting();
+
+        setting.enabled = Boolean.parseBoolean(gatheringSetting.get("有効"));
+        setting.minOrders = Integer.parseInt(gatheringSetting.get("目標件数"));
+        setting.discountPrice = new BigDecimal(gatheringSetting.get("値引き額"));
+
+        setting.createdAt = DateTime.now();
+        setting.createdBy = "cucumber";
+        setting.updatedAt = DateTime.now();
+        setting.updatedBy = "cucumber";
+
+        setting.save();
+    }
+
+    @もし("^ギャザリングの設定を以下のようにする:$")
+    public void ギャザリングの設定を以下のようにする(DataTable gatheringParams) throws Throwable {
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        SettingsPage settingsPage = headerModule.showSettings();
+
+        List<Map<String, String>> gatheringSettings = gatheringParams.asMaps(String.class, String.class);
+        Map<String, String> gatheringSetting = gatheringSettings.get(0);
+
+        settingsPage.setGatheringSettingEnabled(Boolean.parseBoolean(gatheringSetting.get("有効")));
+        settingsPage.setGatheringSettingMinOrders(Integer.parseInt(gatheringSetting.get("目標件数")));
+        settingsPage.setGatheringSettingDiscountPrice(new BigDecimal(gatheringSetting.get("値引き額")));
+        settingsPage.saveGatheringSetting();
     }
 
     @もし("^以下の商品を登録する:$")
@@ -98,6 +134,21 @@ public class AdminStepDefs {
             itemIndex += 1;
         } while (true);
     }
+
+    @ならば("^ギャザリングの設定が以下であること:$")
+    public void ギャザリングの設定が以下であること(DataTable gatheringParams) throws Throwable {
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        SettingsPage settingsPage = headerModule.showSettings();
+
+        List<Map<String, String>> gatheringSettings = gatheringParams.asMaps(String.class, String.class);
+        Map<String, String> gatheringSetting = gatheringSettings.get(0);
+
+        assertThat(settingsPage.getGatheringSettingEnabled()).describedAs("有効").isEqualTo(Boolean.parseBoolean(gatheringSetting.get("有効")));
+        assertThat(settingsPage.getGatheringSettingMinOrders()).describedAs("目標件数").isEqualTo(Integer.parseInt(gatheringSetting.get("目標件数")));
+        assertThat(settingsPage.getGatheringSettingDiscountPrice()).describedAs("値引き額").isEqualTo(new BigDecimal(gatheringSetting.get("値引き額")));
+    }
+
 
     @ならば("^日付 \"(.*)\" のチェック表の総額が \"(.*)\" かつ、以下の内容であること:$")
     public void 日付_のチェック表が以下の内容であること(

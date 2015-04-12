@@ -1,0 +1,53 @@
+<div class="content admin-settings col-xs-12 col-sm-12 col-md-12">
+
+    <div class="content-header no-print row">
+        <div class="nav-bar col-xs-12 col-sm-12 col-md-12" ng-include="'/views/admin/_header'"></div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="title">設定</div>
+        </div>
+    </div>
+
+    <div class="content-body row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">ギャザリングの設定</div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group" ng-class="{'has-error': vm.hasError('errors.gatheringSetting.enabled')}">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label for="gatheringSetting.enabled">
+                                        <input type="checkbox" id="gatheringSetting.enabled" ng-model="vm.gatheringSetting.enabled">
+                                        ギャザリングを有効にする
+                                    </label>
+                                    <span class="help-block" id="error.vm.gatheringSetting.enabled">{{errors.gatheringSetting.enabled}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.hasError('errors.gatheringSetting.minOrders')}">
+                            <label for="gatheringSetting.minOrders" class="col-sm-2 control-label">目標件数</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="gatheringSetting.minOrders" placeholder="" ng-model="vm.gatheringSetting.minOrders">
+                                <span class="help-block" id="error.vm.gatheringSetting.minOrders">{{errors.gatheringSetting.minOrders}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.hasError('errors.gatheringSetting.discountPrice')}">
+                            <label for="gatheringSetting.discountPrice" class="col-sm-2 control-label">値引き額</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="gatheringSetting.discountPrice" placeholder="" ng-model="vm.gatheringSetting.discountPrice">
+                                <span class="help-block" id="error.vm.gatheringSetting.discountPrice">{{errors.gatheringSetting.discountPrice}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button class="btn btn-info" id="gatheringSetting.save" ng-click="vm.saveGathering()">保存</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

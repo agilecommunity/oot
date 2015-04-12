@@ -97,6 +97,16 @@ angular.module('MyServices')
         this.detailItems.push({menuItem: menuItem, numOrders: numOrders});
     };
 
+    DailyOrder.prototype.updateItem = function(menuItem, numOrders) {
+        targetItem = this.findItem(menuItem);
+
+        if (targetItem === null) {
+            return;
+        }
+
+        targetItem.numOrders = numOrders;
+    };
+
     DailyOrder.prototype.$save = function(params, success, error) {
         if ( !this.id ) {
             return this.$create(params, success, error);

@@ -40,6 +40,7 @@
         .when('/order', {
             templateUrl: '/views/order',
             controller: 'OrderController',
+            controllerAs: 'vm',
             access: AccessLevels.user,
             resolve: app.my.resolvers.OrderController
         })
@@ -114,6 +115,13 @@
             templateUrl: '/views/admin/user/index',
             controller: 'UserIndexController',
             resolve: app.my.resolvers.UserIndexController,
+            access: AccessLevels.admin
+        })
+        .when('/admin/settings', {
+            templateUrl: '/views/admin/settings',
+            controller: 'AdminSettingsController',
+            controllerAs: 'vm',
+            resolve: app.my.resolvers.AdminSettingsController,
             access: AccessLevels.admin
         })
         .otherwise({                           // その他のパスが指定された場合

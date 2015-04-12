@@ -155,7 +155,8 @@ td.price {
     float: left;
 }
 .content .day .day-header .small-total{
-    float: right;
+    margin-left: 10px;
+    float: left;
 }
 
 .food-price{
@@ -475,6 +476,54 @@ td.price {
 .category-body {
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+div.gathering-status {
+    padding: 3px 10px;
+    color: #ff5c34;
+    background-color: #ffee74;
+    font-size: 70%;
+
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+
+div.gathering-status .glyphicon {
+    font-size: 110%;
+}
+
+@media screen and (min-width: 769px) {
+    div.gathering-status {
+
+        position: absolute;
+        top: 0px;
+        right: 20px;
+
+        -webkit-transform: rotate(3deg);
+        -moz-transform: rotate(3deg);
+        -o-transform: rotate(3deg);
+        -ms-transform: rotate(3deg);
+        -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.9986295347545738, M12=-0.05233595624294437, M21=0.05233595624294437, M22=0.9986295347545738, SizingMethod='auto expand')";
+
+        z-index: 100;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    div.gathering-status {
+        float: right;
+    }
+}
+
+.gathering-status-discount,
+.gathering-status-remain,
+.gathering-status-achieved {
+    font-weight: bolder;
+}
+
+.gathering-status-min-orders,
+.gathering-status-current-orders {
+    font-size: 80%;
 }
 
 /* 注文サマリ */

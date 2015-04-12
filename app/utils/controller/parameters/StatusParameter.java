@@ -4,11 +4,11 @@ import org.joda.time.DateTime;
 
 import java.text.ParseException;
 
-public class StatusParamater {
+public class StatusParameter {
 
     private String value = "";
 
-    public StatusParamater(String value) throws ParseException {
+    public StatusParameter(String value) throws ParseException {
         if (value == null) {
             return;
         }

@@ -25,7 +25,7 @@ import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import filters.RequireCSRFCheck4Ng;
-import utils.controller.parameters.StatusParamater;
+import utils.controller.parameters.StatusParameter;
 
 public class DailyOrders extends Controller {
 
@@ -33,7 +33,7 @@ public class DailyOrders extends Controller {
 
     private static class Parameters {
         public DateParameter orderDate = null;
-        public StatusParamater status = null;
+        public StatusParameter status = null;
 
         public Parameters(Http.Request request) throws ParseException {
             if (request.getQueryString("orderDate") != null) {
@@ -45,7 +45,7 @@ public class DailyOrders extends Controller {
                 return;
             }
             if (request.getQueryString("status") != null) {
-                this.status = new StatusParamater(request.getQueryString("status"));
+                this.status = new StatusParameter(request.getQueryString("status"));
             }
         }
     }
