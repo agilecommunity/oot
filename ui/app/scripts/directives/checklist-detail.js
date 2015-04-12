@@ -1,23 +1,51 @@
+(function(){
 
-angular.module('MyDirectives')
-.directive('ootChecklistDetail', function ($compile, $filter) {
+    angular.module('MyDirectives')
+        .directive('ootChecklistDetail', ootChecklistDetail);
 
-    return {
-        restrict: "A",
-        templateUrl: function(element, attrs) {
-            console.log(attrs);
-            if (attrs.templateurl !== undefined) {
-                return attrs.templateurl;
-            }
-            return "/views/_partial/_checklist-detail";
-        },
-        scope: {
-            dailyMenu: "=dailymenu",
-            dailyOrders: "=dailyorders"
-        },
-        controller: ['$scope', function ($scope) {
+    ootChecklistDetail.$inject = ["$compile", "$filter"];
+
+    function ootChecklistDetail($compile, $filter) {
+
+        MyController.$inject = ["$scope", "$filter"];
+
+        function MyController($scope, $filter) {
+
+            $scope.dailyMenu.detailItems = $filter('orderBy')($scope.dailyMenu.detailItems, ['menuItem.category', 'menuItem.shopName', 'menuItem.name']);
+            $scope.checklist = createChecklist();
+            $scope.itemlist = createItemList();
+
+            $scope.menuOrOrderIsEmpty = function() {
+                if ($scope.dailyMenu === undefined) {
+                    return true;
+                }
+
+                if ($scope.dailyMenu.detailItems === null || $scope.dailyMenu.detailItems.length === 0)
+                {
+                    return true;
+                }
+
+                if ($scope.dailyOrders.length === 0) {
+                    return true;
+                }
+
+                return false;
+            };
+
+            $scope.renderNumOrders = function(numOrders) {
+                if ($filter('isEmptyOrUndefined')(numOrders) === true) {
+                    return "";
+                }
+
+                if (numOrders === 1) {
+                    return "○";
+                }
+
+                return numOrders;
+            };
+
             // 注文状況の作成
-            var createChecklist = function () {
+            function createChecklist() {
 
                 var checklist = {detailItems: [], totalReducedOnOrder: 0};
 
@@ -70,17 +98,10 @@ angular.module('MyDirectives')
                 });
 
                 return checklist;
-            };
-
-            var setUp = function() {
-                $scope.dailyMenu.detailItems = $filter('orderBy')($scope.dailyMenu.detailItems, ['menuItem.category', 'menuItem.shopName', 'menuItem.name']);
-
-                $scope.checklist = createChecklist();
-                $scope.itemlist = createItemList();
-            };
+            }
 
             // 注文のあった商品のリストの作成
-            var createItemList = function() {
+            function createItemList() {
                 var orderdItemIds = [];
                 angular.forEach($scope.dailyOrders, function (order) {
                     angular.forEach(order.detailItems, function (item) {
@@ -97,38 +118,24 @@ angular.module('MyDirectives')
                 });
 
                 return itemList;
-            };
+            }
+        }
 
-            $scope.menuOrOrderIsEmpty = function() {
-                if ($scope.dailyMenu === undefined) {
-                    return true;
+        return {
+            restrict: "A",
+            templateUrl: function(element, attrs) {
+                console.log(attrs);
+                if (attrs.templateurl !== undefined) {
+                    return attrs.templateurl;
                 }
+                return "/views/_partial/_checklist-detail";
+            },
+            scope: {
+                dailyMenu: "=dailymenu",
+                dailyOrders: "=dailyorders"
+            },
+            controller: MyController
+        };
+    }
 
-                if ($scope.dailyMenu.detailItems === null || $scope.dailyMenu.detailItems.length === 0)
-                {
-                    return true;
-                }
-
-                if ($scope.dailyOrders.length === 0) {
-                    return true;
-                }
-
-                return false;
-            };
-
-            $scope.renderNumOrders = function(numOrders) {
-                if ($filter('isEmptyOrUndefined')(numOrders) === true) {
-                    return "";
-                }
-
-                if (numOrders === 1) {
-                    return "○";
-                }
-
-                return numOrders;
-            };
-
-            setUp();
-        }]
-    };
-});
+})();

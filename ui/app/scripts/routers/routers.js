@@ -64,6 +64,7 @@
         .when('/admin/checklist/:menuDate', {
             templateUrl: '/views/admin/checklist/daily',
             controller: 'AdminChecklistDailyController',
+            controllerAs: 'vm',
             reloadOnSearch: false,
             resolve: app.my.resolvers.AdminChecklistDailyController,
             access: AccessLevels.admin
@@ -71,6 +72,7 @@
         .when('/admin/checklist/weekly/:startDate', {
             templateUrl: '/views/admin/checklist/weekly',
             controller: 'AdminChecklistWeeklyController',
+            controllerAs: 'vm',
             reloadOnSearch: false,
             resolve: app.my.resolvers.AdminChecklistWeeklyController,
             access: AccessLevels.admin

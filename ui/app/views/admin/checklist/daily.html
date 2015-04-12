@@ -3,15 +3,15 @@
     <div class="content-header no-print row">
         <div class="nav-bar col-xs-12 col-sm-12 col-md-12" ng-include="'/views/admin/_header'"></div>
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="title">チェック表 {{menuDate.format('YYYY/MM/DD (ddd)')}}</div>
+            <div class="title">チェック表 {{vm.menuDate.format('YYYY/MM/DD (ddd)')}}</div>
         </div>
     </div>
 
     <div class="content-body row">
-        <div class="checklist print-page col-xs-12 col-sm-12 col-md-12" print-title="チェック表" id="checklist-{{menuDate.format('YYYYMMDD')}}">
-            <div class="checklist-header visible-print-block">{{menuDate.format("M月D日 (ddd曜日)")}}</div>
+        <div class="checklist print-page col-xs-12 col-sm-12 col-md-12" print-title="チェック表" id="checklist-{{vm.menuDate.format('YYYYMMDD')}}">
+            <div class="checklist-header visible-print-block">{{vm.menuDate.format("M月D日 (ddd曜日)")}}</div>
             <div class="checklist-body">
-                <div oot-checklist-detail dailymenu="dailyMenu" dailyorders="dailyOrders"></div>
+                <div oot-checklist-detail dailymenu="vm.dailyMenu" dailyorders="vm.dailyOrders"></div>
             </div>
         </div>
     </div>

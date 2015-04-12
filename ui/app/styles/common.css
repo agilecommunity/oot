@@ -30,7 +30,8 @@ body{
 th.count,
 th.price,
 td.count,
-td.price {
+td.price,
+td.number {
     text-align: right;
 }
 
@@ -353,6 +354,10 @@ td.price {
 .checklist .item-name {
     border-top: none;
     border-bottom: none;
+}
+
+.checklist .number {
+    white-space: nowrap;
 }
 
 .checklist .user-name {
