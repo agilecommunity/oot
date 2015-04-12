@@ -49,4 +49,13 @@ public class OrderPage {
 
     }
 
+    public String getGatheringStatus(DateTime orderDate) {
+
+        By dayBaseLocator = By.id(String.format("day-%s", orderDate.toString("yyyyMMdd")));
+        WebElement dayBase = base.findElement(dayBaseLocator);
+
+        By itemLocator = By.cssSelector("div.day-header div.gathering-status");
+        return dayBase.findElement(itemLocator).getText().replace("\n", " ");
+    }
+
 }

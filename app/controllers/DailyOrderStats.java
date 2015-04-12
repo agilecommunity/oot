@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DailyOrderStats extends Controller {
 
-    private static Logger.ALogger logger = Logger.of("application.controllers.OrderLists");
+    private static Logger.ALogger logger = Logger.of("application.controllers.DailyOrderStats");
 
     private static class Parameters {
         public DateParameter orderDate = null;
@@ -67,6 +67,9 @@ public class DailyOrderStats extends Controller {
         for (DailyOrderStatForDB dbObject : dbObjects.findList()) {
             objects.add(dbObject.createOrderStat());
         }
+        
+        logger.debug("#index count: {}", objects.size());
+        logger.debug("#index json: {}", Json.toJson(objects));
 
         return ok(Json.toJson(objects));
     }
@@ -111,9 +114,9 @@ public class DailyOrderStats extends Controller {
                 +    "(" + sideSql + ") side_stat"
                 +    " on dm.menu_date = side_stat.orderDate"
                 + " where"
-                +    " all_stat.numUsers is not null";
+                + " all_stat.numUsers is not null";
 
-        logger.debug("#createRawSql sql: " + sql);
+        logger.trace("#createRawSql sql: " + sql);
 
         RawSql rawSql = RawSqlBuilder.parse(sql)
                 .columnMapping("dm.menu_date", "orderDate")

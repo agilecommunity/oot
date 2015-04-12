@@ -27,6 +27,8 @@ public class GatheringSettings extends Controller {
 
         GatheringSetting item = GatheringSetting.find.findUnique();
 
+        logger.debug("#get json:{}", Json.toJson(item));
+
         return ok(Json.toJson(item));
     }
 

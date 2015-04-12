@@ -45,6 +45,10 @@
             return objects;
         };
 
+        MyClass.createEmptyData = function(targetDate) {
+            return new MyClass({orderDate: targetDate, allStat: {}, bentoStat: {}, sideStat: {}});
+        };
+
         return MyClass;
     }
 

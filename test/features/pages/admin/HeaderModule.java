@@ -37,6 +37,9 @@ public class HeaderModule {
     @FindBy(how=How.LINK_TEXT, using="ユーザ一覧")
     private WebElement showUsersIndex;
 
+    @FindBy(how=How.LINK_TEXT, using="設定")
+    private WebElement showSettings;
+
     public features.pages.admin.IndexPage showAdminIndex() throws Throwable {
         this.showAdminIndex.click();
         return new features.pages.admin.IndexPage(this.driver);
@@ -57,4 +60,8 @@ public class HeaderModule {
         return new features.pages.admin.user.IndexPage(this.driver);
     }
 
+    public features.pages.admin.SettingsPage showSettings() throws Throwable {
+        this.showSettings.click();
+        return new features.pages.admin.SettingsPage(this.driver);
+    }
 }

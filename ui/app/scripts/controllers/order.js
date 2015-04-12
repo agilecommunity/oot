@@ -92,7 +92,7 @@
 
             var dailyOrderStat = $filter('getByOrderDate')(vm.dailyOrderStats, day);
             if (dailyOrderStat === null) {
-                dailyOrderStat = { orderDate: day, numOrders: 0, numUsers: 0 };
+                dailyOrderStat = DailyOrderStat.createEmptyData();
             }
 
             var dayGroup = new DayGroup($filter);

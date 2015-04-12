@@ -17,7 +17,7 @@
             var handler = {};
 
             handler.success = function(saved) {
-                // 何もしない
+                dialogs.notify("データ登録成功", "設定を保存しました");
             };
 
             handler.error = function(error) {
