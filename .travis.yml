@@ -13,15 +13,14 @@ before_install:
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
 before_script:
-- wget http://downloads.typesafe.com/typesafe-activator/${ACTIVATOR_VERSION}/typesafe-activator-${ACTIVATOR_VERSION}-minimal.zip -qO /tmp/activator.zip
-- unzip -qd /tmp /tmp/activator.zip
 - npm install -g grunt-cli
 - npm install -g bower
-- cd oot/ui
+- cd ui
 - npm install
 - bower install
 - grunt dev
-- cd ../
+- wget http://downloads.typesafe.com/typesafe-activator/${ACTIVATOR_VERSION}/typesafe-activator-${ACTIVATOR_VERSION}-minimal.zip -qO /tmp/activator.zip
+- unzip -qd /tmp /tmp/activator.zip
 - psql -c "CREATE USER oot WITH PASSWORD 'oot';" -U postgres
 - psql -c "CREATE DATABASE oot OWNER oot;" -U postgres
 script:
