@@ -12,16 +12,15 @@ import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import securesocial.core.Identity;
-import securesocial.core.java.SecureSocial;
+import securesocial.core.java.SecuredAction;
+import utils.controller.Results;
 import utils.controller.parameters.DateParameter;
 import utils.controller.parameters.ParameterConverter;
 import filters.RequireCSRFCheck4Ng;
 
-public class DailyMenus extends Controller {
+public class DailyMenus extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyMenus");
 
@@ -40,16 +39,17 @@ public class DailyMenus extends Controller {
         }
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result index() {
+
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         Parameters parameters = null;
         try {
             parameters = new Parameters(request());
         } catch (ParseException e) {
-            logger.error("#showMine failed to parse parameters", e);
-            return utils.controller.Results.faildToParseQueryStringError();
+            logger.error("#index failed to parse parameters", e);
+            return Results.faildToParseQueryStringError();
         }
 
         ExpressionList<DailyMenu> menus = DailyMenu.find.where();
@@ -59,21 +59,22 @@ public class DailyMenus extends Controller {
                 DateParameter.DateRange dateRange = parameters.menuDate.getRangeValue();
                 menus.between("menuDate", dateRange.fromDate, dateRange.toDate);
 
-                logger.debug("#index menuDate(range) from : " + dateRange.fromDate.toString());
-                logger.debug("#index menuDate(range) to   : " + dateRange.toDate.toString());
+                logger.debug("#index menuDate(range) from : {}", dateRange.fromDate.toString());
+                logger.debug("#index menuDate(range) to   : {}", dateRange.toDate.toString());
 
             } else {
                 menus.eq("menuDate", parameters.menuDate.getValue());
 
-                logger.debug("#index menuDate(value) : " + parameters.menuDate.getValue().toString());
+                logger.debug("#index menuDate(value) : {}", parameters.menuDate.getValue().toString());
             }
         }
 
         return ok(Json.toJson(menus.orderBy("menuDate").findList()));
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result indexByStatus(String status) {
+
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         List<DailyMenu> menus = DailyMenu.find.where().eq("status", status).findList();
@@ -81,8 +82,8 @@ public class DailyMenus extends Controller {
         return ok(Json.toJson(menus));
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showByMenuDate(String menuDateStr) {
+    @SecuredAction
+    public static Result getByMenuDate(String menuDateStr) {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -91,7 +92,7 @@ public class DailyMenus extends Controller {
         DailyMenu menu = DailyMenu.findBy(menuDate);
 
         if (menu == null) {
-            logger.debug(String.format("#showByMenuDate menu not found menu_date_str:%s", menuDateStr));
+            logger.debug("#getByMenuDate menu not found menu_date_str: {}", menuDateStr);
             return ok(Json.toJson(new DailyMenu())); // 404ではなく、空のオブジェクトを返す
         }
 
@@ -99,7 +100,7 @@ public class DailyMenus extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result create() {
 
@@ -107,32 +108,31 @@ public class DailyMenus extends Controller {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.email().get());
+        LocalUser currentUser = getCurrentUser();
 
-        if (!localUser.isAdmin) {
-            logger.warn(String.format("#create only admin can create menu. localUser.id:%s", localUser.email));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't create daily menu");
+        if (!currentUser.isAdmin) {
+            logger.warn("#create only admin can create menu. localUser.id:{}", currentUser.email);
+            return Results.insufficientPermissionsError("Current user can't create daily menu");
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("#create request-body:%s", request().body().toString()));
+        logger.debug("#create request-body: {}", request().body().toString());
 
         Form<DailyMenu> filledForm = Form.form(DailyMenu.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("#create object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.warn("#create object has some errors. {}", filledForm.errorsAsJson().toString());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         DailyMenu object = filledForm.get();
 
-        logger.debug("#create DailyMenu.menuDate: " + object.menuDate.toString());
+        logger.debug("#create DailyMenu.menuDate: {}", object.menuDate.toString());
 
         if (DailyMenu.findBy(object.menuDate) != null) {
-            logger.warn(String.format("#create object is already exists. %s", object.menuDate.toString()));
-            return utils.controller.Results.resourceAlreadyExistsError();
+            logger.warn("#create object is already exists. {}", object.menuDate.toString());
+            return Results.resourceAlreadyExistsError();
         }
 
         object.save();
@@ -141,40 +141,39 @@ public class DailyMenus extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result update(Long id) {
         logger.debug("#update id: {}", id);
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.email().get());
+        LocalUser currentUser = getCurrentUser();
 
-        if (!localUser.isAdmin) {
-            logger.warn(String.format("#update only admin can update menu. localUser.id:%s", localUser.email));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't update daily menu");
+        if (!currentUser.isAdmin) {
+            logger.warn("#update only admin can update menu. localUser.id: {}", currentUser.email);
+            return Results.insufficientPermissionsError("Current user can't update daily menu");
         }
 
         if (DailyMenu.find.byId(id) == null) {
             logger.debug("#update object doesn't exist");
-            return utils.controller.Results.resourceNotFoundError();
+            return Results.resourceNotFoundError();
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("#update request-body:%s", request().body().toString()));
+        logger.debug("#update request-body: {}", request().body().toString());
 
         Form<DailyMenu> filledForm = Form.form(DailyMenu.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("#update object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return utils.controller.Results.validationError(filledForm.errorsAsJson().toString());
+            logger.warn("#update object has some errors. {}", filledForm.errorsAsJson().toString());
+            return Results.validationError(filledForm.errorsAsJson().toString());
         }
 
         DailyMenu object = filledForm.get();
 
-        logger.debug(String.format("#update target_date:%s", object.menuDate.toString()));
+        logger.debug("#update target_date: {}", object.menuDate.toString());
 
         object.update();
 
@@ -182,19 +181,18 @@ public class DailyMenus extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result delete(Long id) {
 
-        logger.debug(String.format("#delete id: %s", id));
+        logger.debug("#delete id: {}", id);
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.email().get());
+        LocalUser currentUser = getCurrentUser();
 
-        if (!localUser.isAdmin) {
-            logger.warn(String.format("#delete only admin can update menu. localUser.id:%s", localUser.email));
-            return utils.controller.Results.insufficientPermissionsError("Current user cant delete daily menu");
+        if (!currentUser.isAdmin) {
+            logger.warn("#delete only admin can update menu. localUser.id: {}", currentUser.email);
+            return Results.insufficientPermissionsError("Current user cant delete daily menu");
         }
 
         DailyMenu menu = DailyMenu.find.byId(id);
@@ -204,7 +202,7 @@ public class DailyMenus extends Controller {
             return ok();
         }
 
-        logger.debug(String.format("#delete id:%d date:%s status:%s", menu.id, menu.menuDate.toString(), menu.status ));
+        logger.debug("#delete id: {} date: {} status: {}", menu.id, menu.menuDate.toString(), menu.status );
 
         menu.delete();
 

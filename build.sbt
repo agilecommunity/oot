@@ -2,13 +2,20 @@ name := "oot-webapp"
 
 version := "1.0-SNAPSHOT"
 
+lazy val root = (project in file(".")).enablePlugins(PlayJava)
+
+scalaVersion := "2.11.1"
+
+resolvers += Resolver.sonatypeRepo("snapshots")
+
 libraryDependencies ++= Seq(
     javaJdbc
   , javaEbean
   , cache
   , filters
   , "org.avaje.ebeanorm" % "avaje-ebeanorm-api" % "3.1.1"
-  , "ws.securesocial" %% "securesocial" % "2.1.4"
+  , "com.typesafe.play" %% "play-mailer" % "2.4.0"
+  , "ws.securesocial" %% "securesocial" % "master-SNAPSHOT"
   , "eu.medsea.mimeutil" % "mime-util" % "2.1.1"
   , "net.lingala.zip4j" % "zip4j" % "1.3.2"
   , "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
@@ -23,9 +30,9 @@ libraryDependencies ++= Seq(
   , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0" % "test"
 )
 
-play.Project.playJavaSettings
+unmanagedResourceDirectories in Assets += baseDirectory.value / "ui"
 
-playAssetsDirectories <+= baseDirectory / "ui"
+javacOptions in Compile ++= Seq("-Xlint:deprecation")
 
 // テストの設定
 // cucumberの使うフィーチャファイルを対象から除外

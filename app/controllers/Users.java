@@ -1,61 +1,49 @@
 package controllers;
 
-import java.util.List;
-
 import models.LocalUser;
 import play.Logger;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
-import securesocial.core.Identity;
-import securesocial.core.java.SecureSocial;
 import filters.RequireCSRFCheck4Ng;
+import securesocial.core.java.SecuredAction;
+import securesocial.core.java.UserAwareAction;
+import utils.controller.Results;
 
-public class Users extends Controller {
+public class Users extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.Users");
 
-    @RequireCSRFCheck4Ng()
-    @SecureSocial.UserAwareAction
+    @RequireCSRFCheck4Ng
+    @SecuredAction
     public static Result index() {
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.identityId().userId());
+        LocalUser localUser = getCurrentUser();
 
         if (!localUser.isAdmin) {
-            return utils.controller.Results.insufficientPermissionsError("Current user can't access user list");
+            return Results.insufficientPermissionsError("Current user can't access user list");
         }
 
         return ok(Json.toJson(LocalUser.find.all()));
     }
 
-    @RequireCSRFCheck4Ng()
-    @SecureSocial.UserAwareAction
-    public static Result showMe() {
+    @RequireCSRFCheck4Ng
+    @SecuredAction
+    public static Result getMine() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        logger.debug("#getMine Cookie ID: {}", request().cookie("id"));
+        logger.debug("#getMine Cookie XSRF-TOKEN: {}", request().cookie("XSRF-TOKEN"));
 
-        logger.debug(String.format("#showMe Cookie ID: %s", request().cookie("id")));
-        logger.debug(String.format("#showMe Cookie XSRF-TOKEN: %s", request().cookie("XSRF-TOKEN")));
+        LocalUser currentUser = getCurrentUser();
 
-        if (user == null) {
-            logger.warn("current user not found");
-            return utils.controller.Results.insufficientPermissionsError("Current user doesn't exist");
+        if (currentUser == null) {
+            logger.warn("currentUser not found");
+            return Results.insufficientPermissionsError("Current user doesn't exist");
         }
 
-        logger.debug(String.format("#showMe user.email:%s", user.email().get()));
+        logger.debug(String.format("#getMine currentUser: {}", Json.toJson(currentUser).toString()));
 
-        List<LocalUser> localUsers = LocalUser.find.where().eq("email", user.email().get()).findList();
-
-        if (localUsers.size() != 1) {
-            logger.warn(String.format("#showMe LocalUser not found or too many email:%s", user.email()));
-            return utils.controller.Results.insufficientPermissionsError("Current user doesn't exist");
-        }
-
-        logger.debug(String.format("#showMe localUser:%s", Json.toJson(localUsers.get(0)).toString()));
-
-        return ok(Json.toJson(localUsers.get(0)));
+        return ok(Json.toJson(currentUser));
     }
 
 }

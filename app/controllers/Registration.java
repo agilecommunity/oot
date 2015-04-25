@@ -8,24 +8,26 @@ import play.data.validation.Constraints;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
-import play.libs.Scala;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import scala.Option;
-import securesocial.core.*;
+import securesocial.core.AuthenticationMethod;
+import securesocial.core.BasicProfile;
 import securesocial.core.java.Token;
+import securesocial.core.java.UserAwareAction;
+import securesocial.core.providers.MailToken;
 import securesocial.core.providers.UsernamePasswordProvider;
 import securesocial.core.providers.UsernamePasswordProvider$;
-import securesocial.core.providers.utils.GravatarHelper$;
-import securesocial.core.providers.utils.Mailer$;
-import utils.controller.MailTokenBasedOperations;
+import securesocial.core.services.SaveMode;
+import utils.controller.Results;
+import utils.securesocial.BasicProfileBasedOperations;
+import utils.securesocial.MailTokenBasedOperations;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Registration extends Controller {
+public class Registration extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.Registration");
 
@@ -65,6 +67,7 @@ public class Registration extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
+    @UserAwareAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result startSignUp() {
 
@@ -73,69 +76,68 @@ public class Registration extends Controller {
 
         if (filledForm.hasErrors()) {
             logger.debug("#startSignUp hasErrors:" + filledForm.errorsAsJson());
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         StartSignUpForm form = filledForm.get();
         String email = form.email.toLowerCase();
 
-        Option<Identity> maybeUser = UserService$.MODULE$.findByEmailAndProvider(email, UsernamePasswordProvider$.MODULE$.UsernamePassword());
+        Option<BasicProfile> mayBeUser = findByEmailWithUserpassProvider(email);
 
-        if (maybeUser.nonEmpty()) {
-            Mailer$.MODULE$.sendAlreadyRegisteredEmail(maybeUser.get(), Http.Context.current()._requestHeader());
+        if (mayBeUser.nonEmpty()) {
+            getMailer().sendAlreadyRegisteredEmail(mayBeUser.get(), Http.Context.current()._requestHeader(), lang());
         } else {
             Token token = MailTokenBasedOperations.createToken(email, true);
-            UserService$.MODULE$.save(token.toScala());
-            Mailer$.MODULE$.sendSignUpEmail(email, token.uuid, Http.Context.current()._requestHeader());
+            getUserService().saveToken(token.toScala());
+            getMailer().sendSignUpEmail(email, token.uuid, Http.Context.current()._requestHeader(), lang());
         }
 
         return ok("");
     }
 
     @RequireCSRFCheck4Ng()
+    @UserAwareAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result signUp(String token) {
 
-        Option<securesocial.core.providers.Token> localToken = UserService$.MODULE$.findToken(token);
+        Option<MailToken> localToken = findToken(token);
 
         if (localToken.isEmpty()) {
-            logger.debug("#signUp token not found token:" + token);
-            return utils.controller.Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
+            logger.debug("#signUp token not found token: {}", token);
+            return Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug("#signUp request:" + json.toString());
+        logger.debug("#signUp request: {}", json.toString());
 
         Form<SignUpForm> filledForm = Form.form(SignUpForm.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.debug("#signUp hasErrors:" + filledForm.errorsAsJson());
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.debug("#signUp hasErrors: {}", filledForm.errorsAsJson());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         SignUpForm form = filledForm.get();
 
-        String id = localToken.get().email();
-        IdentityId identityId = new IdentityId(id, "userpass");
+        String email = localToken.get().email();
+        String fullName = BasicProfileBasedOperations.createFullName(form.firstName, form.lastName);
 
-        SocialUser user = new SocialUser(
-            identityId,
+        BasicProfile user = BasicProfileBasedOperations.createProfile(
+            UsernamePasswordProvider$.MODULE$.UsernamePassword(),
+            email,  // emailをIdとして利用する
             form.firstName,
             form.lastName,
-            String.format("%s %s", form.firstName, form.lastName),
-            Scala.Option(id),
-            GravatarHelper$.MODULE$.avatarFor(id),
+            fullName,
+            email,
             AuthenticationMethod.UserPassword(),
-            null,
-            null,
-            Scala.Option(Registry.hashers().get("bcrypt").get().hash(form.passWord1)) // カレントとるのどうやるの??
+            form.passWord1
         );
 
         Ebean.beginTransaction();
         try {
-            UserService$.MODULE$.save(user);
-            UserService$.MODULE$.deleteToken(token);
+            getUserService().save(user, SaveMode.SignUp());
+            getUserService().deleteToken(token);
 
             Ebean.commitTransaction();
         } finally {
@@ -143,7 +145,7 @@ public class Registration extends Controller {
         }
 
         if (UsernamePasswordProvider.sendWelcomeEmail()) {
-            Mailer$.MODULE$.sendWelcomeEmail(user, Http.Context.current()._requestHeader());
+            getMailer().sendWelcomeEmail(user, Http.Context.current()._requestHeader(), lang());
         }
 
         return ok();

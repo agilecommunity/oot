@@ -1,6 +1,7 @@
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -17,20 +18,23 @@ import play.*;
 import play.api.PlayException;
 import play.data.format.Formatters;
 import play.libs.F;
-import play.libs.Yaml;
 
 import com.avaje.ebean.Ebean;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.SimpleResult;
 import utils.snakeyaml.YamlUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+import securesocial.core.RuntimeEnvironment;
+import securesocial.custom.services.MyEnvironment;
+
 public class Global extends GlobalSettings  {
 
     private static Logger.ALogger logger = Logger.of("application.Global");
+
+    private RuntimeEnvironment env = new MyEnvironment();
 
     @Override
     public Configuration onLoadConfig(Configuration configuration, File file, ClassLoader classLoader) {
@@ -65,21 +69,37 @@ public class Global extends GlobalSettings  {
 
     // 500 - internal server error
     @Override
-    public F.Promise<SimpleResult> onError(Http.RequestHeader request, Throwable t) {
+    public F.Promise<Result> onError(Http.RequestHeader request, Throwable t) {
         logger.error("#onError", t);
-        return F.Promise.<SimpleResult>pure(utils.controller.Results.internalServerError("Uncaught An error has occurred"));
+        return F.Promise.<Result>pure(utils.controller.Results.internalServerError("Uncaught An error has occurred"));
     }
 
     @Override
-    public F.Promise<SimpleResult> onBadRequest(Http.RequestHeader request, String error) {
+    public F.Promise<Result> onBadRequest(Http.RequestHeader request, String error) {
         logger.error("#onBadRequest error: {}", error);
-        return F.Promise.<SimpleResult>pure(utils.controller.Results.badRequestError(error));
+        return F.Promise.<Result>pure(utils.controller.Results.badRequestError(error));
     }
 
     @Override
-    public F.Promise<SimpleResult> onHandlerNotFound(Http.RequestHeader request) {
+    public F.Promise<Result> onHandlerNotFound(Http.RequestHeader request) {
         logger.error("#onHandlerNotFound");
-        return F.Promise.<SimpleResult>pure(utils.controller.Results.notFoundError(String.format("Your request not Found uri:%s", request.uri())));
+        return F.Promise.<Result>pure(utils.controller.Results.notFoundError(String.format("Your request not Found uri:%s", request.uri())));
+    }
+
+    @Override
+    public <A> A getControllerInstance(Class<A> controllerClass) throws Exception {
+        A result;
+
+        logger.debug("#getControllerInstance className: {}", controllerClass.getName());
+
+        try {
+            result = controllerClass.getDeclaredConstructor(RuntimeEnvironment.class).newInstance(env);
+        } catch (NoSuchMethodException e) {
+            // the controller does not receive a RuntimeEnvironment, delegate creation to base class.
+            result = super.getControllerInstance(controllerClass);
+        }
+
+        return result;
     }
 
     private Configuration modifySmtpConfiguration(Configuration configuration) {

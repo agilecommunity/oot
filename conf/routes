@@ -1,7 +1,8 @@
 # Routes
 
 GET           /assets/*file                                                 controllers.Assets.at(path = "/public", file)
-GET           /views/*file                                                  controllers.UIViews.at(path = "/ui/app/views", file)
+GET           /assets/*file                                                 securesocial.controllers.Assets.at(path = "/public/securesocial", file)
+GET           /views/*file                                                  controllers.UIViews.at(path = "/public/views", file)
 GET           /uc-assets/images/*file                                       controllers.UCAssets.imagesAt(file)
 GET           /uc-assets/*file                                              controllers.UCAssets.at(file)
 
@@ -20,24 +21,24 @@ POST          /api/v1.0/menu-item-images                                    cont
 
 GET           /api/v1.0/daily-menus                                         controllers.DailyMenus.index()
 GET           /api/v1.0/daily-menus/status/:status                          controllers.DailyMenus.indexByStatus(status)
-GET           /api/v1.0/daily-menus/menu-date/:menuDate                     controllers.DailyMenus.showByMenuDate(menuDate)
+GET           /api/v1.0/daily-menus/menu-date/:menuDate                     controllers.DailyMenus.getByMenuDate(menuDate)
 POST          /api/v1.0/daily-menus                                         controllers.DailyMenus.create()
 PUT           /api/v1.0/daily-menus/:id                                     controllers.DailyMenus.update(id: Long)
 DELETE        /api/v1.0/daily-menus/:id                                     controllers.DailyMenus.delete(id: Long)
 
 GET           /api/v1.0/users                                               controllers.Users.index()
-GET           /api/v1.0/users/me                                            controllers.Users.showMe()
+GET           /api/v1.0/users/me                                            controllers.Users.getMine()
 
 GET           /api/v1.0/daily-orders                                        controllers.DailyOrders.index()
 POST          /api/v1.0/daily-orders                                        controllers.DailyOrders.create()
 DELETE        /api/v1.0/daily-orders/:id                                    controllers.DailyOrders.delete(id: Long)
 PUT           /api/v1.0/daily-orders/:id                                    controllers.DailyOrders.update(id: Long)
 
-GET           /api/v1.0/daily-orders/mine                                   controllers.DailyOrders.showMine()
-GET           /api/v1.0/daily-orders/order-date/:orderDate                  controllers.DailyOrders.showByOrderDate(orderDate)
+GET           /api/v1.0/daily-orders/mine                                   controllers.DailyOrders.getMine()
+GET           /api/v1.0/daily-orders/order-date/:orderDate                  controllers.DailyOrders.getByOrderDate(orderDate)
 
 GET           /api/v1.0/daily-order-aggregates                              controllers.DailyOrderAggregates.index()
-GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate        controllers.DailyOrderAggregates.showByOrderDate(orderDate)
+GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate        controllers.DailyOrderAggregates.getByOrderDate(orderDate)
 
 GET           /api/v1.0/daily-order-stats                                   controllers.DailyOrderStats.index()
 
@@ -47,7 +48,8 @@ PUT           /api/v1.0/settings/gathering                                  cont
 # SecureSocial
 POST          /api/v1.0/start-signup                                        controllers.Registration.startSignUp()
 POST          /api/v1.0/signup/:token                                       controllers.Registration.signUp(token)
-POST          /api/v1.0/authenticate/:provider                              securesocial.controllers.ProviderController.authenticateByPost(provider)
+POST          /api/v1.0/signin/:provider                                    @securesocial.controllers.ProviderController.authenticateByPost(provider, redirectTo: Option[String])
+GET           /api/v1.0/signout                                             @securesocial.controllers.LoginPage.logout
 POST          /api/v1.0/start-reset                                         controllers.PasswordReset.startReset()
 POST          /api/v1.0/reset/:token                                        controllers.PasswordReset.reset(token)
 
@@ -58,7 +60,4 @@ GET           /api/*path                                                    cont
 GET           /                                                             controllers.Application.index(path = "")
 
 # Misc
-GET           /signup                                                       securesocial.controllers.Registration.startSignUp
-GET           /login                                                        securesocial.controllers.LoginPage.login
-GET           /reset                                                        securesocial.controllers.Registration.startResetPassword
 GET           /*path                                                        controllers.Application.index(path)

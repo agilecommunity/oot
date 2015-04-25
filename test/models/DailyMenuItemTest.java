@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import play.test.FakeApplication;
 import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
@@ -18,26 +19,33 @@ import utils.Utils;
 import utils.controller.parameters.ParameterConverter;
 import utils.snakeyaml.YamlUtil;
 
-@RunWith(JUnit4.class)
 public class DailyMenuItemTest extends WithApplication {
 
-     @Before
-     public void setUp() {
-         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-         Utils.cleanUpDatabase();
-     }
+    @Override
+    protected FakeApplication provideFakeApplication() {
+        return fakeApplication(utils.Utils.getAdditionalApplicationSettings());
+    }
 
-     @After
-     public void tearDown() {
-     }
+    @Before
+    @Override
+    public void startPlay() {
+        super.startPlay();
+        Utils.cleanUpDatabase();
+    }
 
-     @Test
-     public void daily_menuは親となるDailyMenuオブジェクトを返すこと() {
-         Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu_item.yml"));
+    @After
+    @Override
+    public void stopPlay() {
+        super.stopPlay();
+    }
 
-         assertThat(DailyMenuItem.find.byId(1L).dailyMenu).isNotNull();
-         assertThat(DailyMenuItem.find.byId(1L).dailyMenu.menuDate.toString()).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+0900").toString());
+    @Test
+    public void daily_menuは親となるDailyMenuオブジェクトを返すこと() {
+        Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_menu_item.yml"));
+
+        assertThat(DailyMenuItem.find.byId(1L).dailyMenu).isNotNull();
+        assertThat(DailyMenuItem.find.byId(1L).dailyMenu.menuDate.toString()).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-10T00:00:00.000+0900").toString());
     }
 }

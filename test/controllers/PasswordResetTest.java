@@ -3,18 +3,13 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.LocalToken;
-import models.LocalUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import play.filters.csrf.CSRF;
 import play.libs.Json;
-import play.mvc.Http;
 import play.mvc.Result;
-import play.test.FakeRequest;
-import securesocial.core.Registry;
 import utils.Utils;
 import utils.snakeyaml.YamlUtil;
 
@@ -56,7 +51,7 @@ public class PasswordResetTest {
             params.clear();
             params.put("username", "steve@foo.bar");
             params.put("password", oldPassword);
-            Result result = route(fakeRequest(POST, "/api/v1.0/authenticate/userpass")
+            Result result = route(fakeRequest(POST, "/api/v1.0/signin/userpass")
                     .withFormUrlEncodedBody(params));
             assertThat(status(result)).describedAs("サインイン(現行パスワード)").isEqualTo(SEE_OTHER);
 
@@ -82,7 +77,7 @@ public class PasswordResetTest {
             params.clear();
             params.put("username", "steve@foo.bar");
             params.put("password", newPassword);
-            result = route(fakeRequest(POST, "/api/v1.0/authenticate/userpass")
+            result = route(fakeRequest(POST, "/api/v1.0/signin/userpass")
                     .withFormUrlEncodedBody(params));
 
             assertThat(status(result)).describedAs("サインイン(新パスワード)").isEqualTo(SEE_OTHER);
@@ -91,7 +86,7 @@ public class PasswordResetTest {
             params.clear();
             params.put("username", "steve@foo.bar");
             params.put("password", oldPassword);
-            result = route(fakeRequest(POST, "/api/v1.0/authenticate/userpass")
+            result = route(fakeRequest(POST, "/api/v1.0/signin/userpass")
                     .withFormUrlEncodedBody(params));
             assertThat(status(result)).describedAs("サインイン(現行パスワード)").isEqualTo(BAD_REQUEST);
         }

@@ -1,9 +1,11 @@
-package utils.controller;
+package utils.securesocial;
 
 import org.joda.time.DateTime;
 import play.api.Play;
 import scala.Option;
+import securesocial.core.java.SecureSocial;
 import securesocial.core.java.Token;
+import securesocial.core.providers.MailToken;
 
 import java.util.UUID;
 

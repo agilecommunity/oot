@@ -1,6 +1,5 @@
 package features.pages;
 
-import com.thoughtworks.selenium.Selenium;
 import features.support.SeleniumUtils;
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;

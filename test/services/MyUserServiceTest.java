@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import play.Application;
 import play.test.FakeApplication;
+import securesocial.custom.services.MyUserService;
 import utils.Utils;
 
 import java.util.UUID;
@@ -13,7 +14,7 @@ import static play.test.Helpers.*;
 import static play.test.Helpers.fakeApplication;
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class UserServiceTest {
+public class MyUserServiceTest {
 
     @Test
     public void doDeleteExpiredTokensは保存期間を超えたTokenのみ削除すること() throws Throwable {
@@ -22,7 +23,7 @@ public class UserServiceTest {
         start(app);
         Utils.cleanUpDatabase();
 
-        UserService service = new UserService(new Application(app.getWrappedApplication()));
+        MyUserService service = new MyUserService();
 
         Thread.sleep(2000); // doDeleteExpiredTokensが削除されるまで待つ
 

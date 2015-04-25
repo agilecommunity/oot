@@ -14,6 +14,11 @@
         vm.user_password = null;
         vm.errors = [];
 
+        User.signout({
+            success: function(){},
+            error: function(){}    // エラーが出ても無視(どうしようもないし)
+        });
+
         var saveCookie = function() {
             var cookieOptions = {expires: 90}; // 90日(ログインするたびに更新するからこれくらいで大丈夫だろう)
 
