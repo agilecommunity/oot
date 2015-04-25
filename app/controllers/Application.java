@@ -6,6 +6,7 @@ import play.filters.csrf.AddCSRFToken;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import securesocial.core.java.UserAwareAction;
 
 public class Application extends Controller {
 
@@ -19,6 +20,7 @@ public class Application extends Controller {
     }
   
     @AddCSRFToken
+    @UserAwareAction
     public static Result index(String path) {
         AppMetadata metadata = new AppMetadata();
         metadata.load();

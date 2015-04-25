@@ -10,11 +10,8 @@ import models.MenuItem;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import securesocial.core.Identity;
-import securesocial.core.java.SecureSocial;
 
 import java.io.*;
 import java.util.List;
@@ -22,8 +19,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import securesocial.core.java.SecuredAction;
+import utils.controller.Results;
 
-public class MenuItems extends Controller {
+public class MenuItems extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.MenuItems");
 
@@ -50,7 +49,7 @@ public class MenuItems extends Controller {
         }
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -66,7 +65,7 @@ public class MenuItems extends Controller {
         return ok(Json.toJson(menus.orderBy("id").findList()));
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result indexByShopName(String shopName) {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -78,28 +77,27 @@ public class MenuItems extends Controller {
         ExpressionList<MenuItem> menus = MenuItem.find.where();
 
         if (parameters.status != null) {
-            logger.debug(String.format("#indexByShopName filter enabled status:%s", parameters.status.value));
+            logger.debug("#indexByShopName filter enabled status: {}", parameters.status.value);
             menus.eq("status", parameters.status.value);
         }
 
         return ok(Json.toJson(menus.eq("shop_name", shopName).orderBy("id").findList()));
     }
 
-    //@RequireCSRFCheck4Ng  /* IE8でjquery file uploadを使うとヘッダにX-Requested-Withが使えないため、byPassも無理らしい */
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    //@RequireCSRFCheck4Ng  /* IE8でjquery file uploadを使うとヘッダにX-Requested-Withが使えないため設定しない、byPassも無理らしい */
+    @SecuredAction
     public static Result create() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
         String contentType = request().getHeader("Content-Type");
 
-        logger.debug(String.format("#create Content-Type: %s", contentType));
+        logger.debug("#create Content-Type: {}", contentType);
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.email().get());
+        LocalUser currentUser = getCurrentUser();
 
-        if (!localUser.isAdmin) {
-            logger.warn(String.format("#create only admin can create menu. localUser.id:%s", localUser.email));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't create menu item.");
+        if (!currentUser.isAdmin) {
+            logger.warn("#create only admin can create menu. currentUser.id: {}", currentUser.id);
+            return Results.insufficientPermissionsError("Current user can't create menu item.");
         }
 
         if (contentType != null && contentType.contains("text/plain")) {
@@ -108,7 +106,7 @@ public class MenuItems extends Controller {
             try {
                 createFromCsv(request().body().asText());
             } catch (IOException e) {
-                return utils.controller.Results.internalServerError(e.getLocalizedMessage());
+                return Results.internalServerError(e.getLocalizedMessage());
             }
         } else if (contentType != null && contentType.contains("multipart/form-data;")) {
             // multipart/form-dataの場合はCSVファイルで指定したとみなす
@@ -116,7 +114,7 @@ public class MenuItems extends Controller {
             try {
                 createFromFile(request().body().asMultipartFormData());
             } catch (IOException e) {
-                return utils.controller.Results.internalServerError(e.getLocalizedMessage());
+                return Results.internalServerError(e.getLocalizedMessage());
             }
         } else {
             // どれでもない場合はJsonで指定したとみなす
@@ -130,27 +128,26 @@ public class MenuItems extends Controller {
     }
 
     @RequireCSRFCheck4Ng
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result update(Long id) {
-        logger.debug(String.format("#update id:%d", id));
+        logger.debug("#update id: {}", id);
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.email().get());
+        LocalUser currentUser = getCurrentUser();
 
-        if (!localUser.isAdmin) {
-            logger.warn(String.format("#update only admin can create menu. localUser.id:%s", localUser.email));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't update menu item.");
+        if (!currentUser.isAdmin) {
+            logger.warn("#update only admin can create menu. currentUser.id: {}", currentUser.id);
+            return Results.insufficientPermissionsError("Current user can't update menu item.");
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("#update json:%s", json));
+        logger.debug("#update json: {}", json);
 
         Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.debug(String.format("#update item has error. errors: %s", filledForm.errorsAsJson()));
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.debug("#update item has error. errors: {}", filledForm.errorsAsJson());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         MenuItem item = filledForm.get();
@@ -161,9 +158,9 @@ public class MenuItems extends Controller {
     }
 
     @RequireCSRFCheck4Ng
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result delete(Long id) {
-        logger.debug(String.format("#delete id:%d", id));
+        logger.debug("#delete id: {}", id);
 
         return new Todo();
     }
@@ -174,7 +171,7 @@ public class MenuItems extends Controller {
      */
     private static Result createFromJson(JsonNode json) {
 
-        logger.debug(String.format("#createFromJson json:%s", json));
+        logger.debug("#createFromJson json: {}", json);
 
         StringBuilder result = new StringBuilder();
         result.append("[");
@@ -192,7 +189,7 @@ public class MenuItems extends Controller {
                 Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json.get(index));
 
                 if (filledForm.hasErrors()) {
-                    logger.debug(String.format("#createFromJson item has error. errors: %s", filledForm.errorsAsJson()));
+                    logger.debug("#createFromJson item has error. errors: {}", filledForm.errorsAsJson());
                     result.append(filledForm.errorsAsJson().toString());
                     hasError = true;
                     continue;
@@ -216,18 +213,18 @@ public class MenuItems extends Controller {
 
         result.append("]");
 
-        logger.debug(String.format("#createFromJson result:%s", result.toString()));
+        logger.debug("#createFromJson result: {}", result.toString());
 
         if (!hasError) {
             return ok(result.toString());
         } else {
-            return utils.controller.Results.validationError(result.toString());
+            return Results.validationError(result.toString());
         }
     }
 
     private static void createFromCsv(String text) throws IOException {
 
-        logger.debug(String.format("#createFromCsv text:%s", text));
+        logger.debug("#createFromCsv text: {}", text);
 
         if (text == null || text.isEmpty()) {
             logger.debug("#createFromCsv text is emtpy or null.");
@@ -262,12 +259,12 @@ public class MenuItems extends Controller {
         }
 
         for (Http.MultipartFormData.FilePart filePart : formData.getFiles()) {
-            logger.debug(String.format("#createFromFile files key:%s fileName:%s contentType:%s", filePart.getKey(), filePart.getFilename(), filePart.getContentType()));
+            logger.debug("#createFromFile files key: {} fileName: {} contentType: {}", filePart.getKey(), filePart.getFilename(), filePart.getContentType());
         }
 
         File csvFile = formData.getFile("menuItems").getFile();
 
-        logger.debug(String.format("#createFromFile fileName:%s", csvFile.getName()));
+        logger.debug("#createFromFile fileName: {}", csvFile.getName());
 
         BufferedReader bCsvFile;
         try {

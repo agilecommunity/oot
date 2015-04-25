@@ -78,4 +78,24 @@
         };
     }
 
+    app.my.resolvers.SigninController = {
+        initialData: function($q, User) {
+
+            var deferred = $q.defer();
+            var initialData = {};
+
+            // データはないけど、
+            User.signout({
+                success: function(){
+                    deferred.resolve(initialData);
+                },
+                error: function(responseHeaders){
+                    deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+                }
+            });
+
+            return deferred.promise;
+        }
+    };
+
 })();

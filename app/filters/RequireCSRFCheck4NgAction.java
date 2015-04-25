@@ -8,7 +8,7 @@ import play.filters.csrf.CSRFConf$;
 import play.libs.F;
 import play.mvc.Action;
 import play.mvc.Http;
-import play.mvc.SimpleResult;
+import play.mvc.Result;
 import scala.Option;
 
 public class RequireCSRFCheck4NgAction extends Action<RequireCSRFCheck4Ng> {
@@ -20,7 +20,7 @@ public class RequireCSRFCheck4NgAction extends Action<RequireCSRFCheck4Ng> {
     private final CSRFAction$ CSRFAction = CSRFAction$.MODULE$;
     private final TokenProvider tokenProvider = CSRFConf$.MODULE$.defaultTokenProvider();
     @Override
-    public F.Promise<SimpleResult> call(Http.Context ctx) throws Throwable {
+    public F.Promise<Result> call(Http.Context ctx) throws Throwable {
 
         logger.debug(String.format("call requestHeader:%s", ctx._requestHeader().toString()));
 
@@ -35,14 +35,14 @@ public class RequireCSRFCheck4NgAction extends Action<RequireCSRFCheck4Ng> {
 
         if (!headerToken.isDefined()) {
             logger.debug("CSRF token by Server not found");
-            return F.Promise.pure((SimpleResult) forbidden("CSRF token by Server not found"));
+            return F.Promise.pure((Result) forbidden("CSRF token by Server not found"));
         }
 
         Option<String> ngToken = request.headers().get("X-XSRF-TOKEN");
 
         if (!ngToken.isDefined()) {
             logger.debug("CSRF token by AngularJS not found");
-            return F.Promise.pure((SimpleResult) forbidden("CSRF token by AngularJS not found"));
+            return F.Promise.pure((Result) forbidden("CSRF token by AngularJS not found"));
         }
 
         if (tokenProvider.compareTokens(headerToken.get(), ngToken.get())) {
@@ -50,6 +50,6 @@ public class RequireCSRFCheck4NgAction extends Action<RequireCSRFCheck4Ng> {
         }
 
         logger.debug("CSRF tokens don't match");
-        return F.Promise.pure((SimpleResult) forbidden("CSRF tokens don't match"));
+        return F.Promise.pure((Result) forbidden("CSRF tokens don't match"));
     }
 }

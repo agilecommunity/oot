@@ -14,7 +14,6 @@ import features.support.WebBrowser;
 import models.GatheringSetting;
 import models.LocalUser;
 import org.joda.time.DateTime;
-import securesocial.core.Registry;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -32,7 +31,7 @@ public class AdminStepDefs {
             newUser.id = newUser.email;
             newUser.firstName = user.get("名");
             newUser.lastName = user.get("姓");
-            newUser.password = Registry.hashers().get("bcrypt").get().hash(user.get("パスワード")).password();
+            newUser.setPlainPassword(user.get("パスワード"));
             newUser.provider = "userpass";
             newUser.isAdmin = "管理者".equals(user.get("ロール"));
             newUser.save();

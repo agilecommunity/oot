@@ -21,7 +21,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="detailItem in cashBook.detailItems">
+                    <tr ng-repeat="detailItem in cashBook.detailItems | orderBy:['menuItem.registerNumber', 'menuItem.shopName', 'menuItem.itemNumber']">
                         <td class="code">{{detailItem.menuItem.code | karamoji}}</td>
                         <td class="num-orders count">{{detailItem.numOrders}}</td>
                     </tr>

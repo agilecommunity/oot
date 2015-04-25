@@ -11,35 +11,42 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import play.test.FakeApplication;
 import play.test.WithApplication;
 
 import com.avaje.ebean.Ebean;
 import utils.Utils;
 import utils.snakeyaml.YamlUtil;
 
-@RunWith(JUnit4.class)
 public class DailyOrderTest extends WithApplication {
 
-     @Before
-     public void setUp() {
-         start(fakeApplication(utils.Utils.getAdditionalApplicationSettings()));
-         Utils.cleanUpDatabase();
-     }
+    @Override
+    protected FakeApplication provideFakeApplication() {
+        return fakeApplication(utils.Utils.getAdditionalApplicationSettings());
+    }
 
-     @After
-     public void tearDown() {
-     }
+    @Before
+    @Override
+    public void startPlay() {
+        super.startPlay();
+        Utils.cleanUpDatabase();
+    }
 
-     @Test
-     public void local_userはLocalUserオブジェクトを返すこと() {
-         Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
-         Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
+    @After
+    @Override
+    public void stopPlay() {
+        super.stopPlay();
+    }
 
+    @Test
+    public void local_userはLocalUserオブジェクトを返すこと() {
+        Ebean.save((List) YamlUtil.load("fixtures/test/menu_item.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/local_user.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_order.yml"));
+        Ebean.save((List) YamlUtil.load("fixtures/test/daily_order_item.yml"));
 
-         assertThat(DailyOrder.find.byId(1L).localUser).isNotNull();
-         assertThat(DailyOrder.find.byId(1L).localUser.id).isEqualTo("steve@foo.bar");
-         assertThat(DailyOrder.find.byId(1L).localUser.firstName).isEqualTo("スティーブ");
+        assertThat(DailyOrder.find.byId(1L).localUser).isNotNull();
+        assertThat(DailyOrder.find.byId(1L).localUser.id).isEqualTo("steve@foo.bar");
+        assertThat(DailyOrder.find.byId(1L).localUser.firstName).isEqualTo("スティーブ");
     }
 }

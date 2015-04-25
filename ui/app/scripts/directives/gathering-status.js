@@ -28,6 +28,7 @@
                     element.html(template).show();
                 } else {
                     element.addClass("hidden");
+                    element.html("");
                 }
 
                 $compile(element.contents())(scope);

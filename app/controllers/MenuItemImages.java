@@ -10,12 +10,10 @@ import net.lingala.zip4j.model.UnzipParameters;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import play.Logger;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
-import securesocial.core.Identity;
-import securesocial.core.java.SecureSocial;
+import securesocial.core.java.SecuredAction;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -24,11 +22,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-public class MenuItemImages extends Controller {
+public class MenuItemImages extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.MenuItemImages");
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result create() {
         logger.debug("#create");
 
@@ -41,13 +39,12 @@ public class MenuItemImages extends Controller {
 
         boolean canDetectRequestHeader = clientCanDetectResponseHeader(request().getHeader("User-Agent"));
 
-        logger.debug(String.format("#create Content-Type: %s", contentType));
+        logger.debug("#create Content-Type: {}", contentType);
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
-        LocalUser localUser = LocalUser.find.byId(user.email().get());
+        LocalUser currentUser = getCurrentUser();
 
-        if (!localUser.isAdmin) {
-            logger.warn(String.format("#create only admin can create. localUser.id:%s", localUser.email));
+        if (!currentUser.isAdmin) {
+            logger.warn("#create only admin can create. currentUser.id: {}", currentUser.id);
             return createResult(UNAUTHORIZED, "", canDetectRequestHeader);
         }
 
@@ -59,7 +56,7 @@ public class MenuItemImages extends Controller {
         }
 
         File mayBeZipFile = formData.getFile("menuItemImages").getFile();
-        logger.debug(String.format("#create fileName:%s", mayBeZipFile.getName()));
+        logger.debug("#create fileName: {}", mayBeZipFile.getName());
 
         if (!isZipFile(mayBeZipFile)) {
             logger.debug("#create file isn't zip");
@@ -95,7 +92,7 @@ public class MenuItemImages extends Controller {
 
     private static Status createResult(int statusCode, String message, boolean canDetectRequestHeader) {
 
-        logger.debug(String.format("#createResult statusCode:%d message:%s canDetectRequestHeader:%b", statusCode, message, canDetectRequestHeader));
+        logger.debug("#createResult statusCode: {} message: {} canDetectRequestHeader: {}", statusCode, message, canDetectRequestHeader);
 
         if (canDetectRequestHeader) {
             logger.debug("#createResult create result by statusCode");
@@ -115,7 +112,7 @@ public class MenuItemImages extends Controller {
 
         Collection<String> mimeTypes = MimeUtil.getMimeTypes(mayBeZipFile);
 
-        logger.debug(String.format("#isZipFile file mimeTypes:%s contains(zip):%s", mimeTypes.toString(), mimeTypes.contains("application/zip")));
+        logger.debug("#isZipFile file mimeTypes: {} contains(zip): {}", mimeTypes.toString(), mimeTypes.contains("application/zip"));
 
         return mimeTypes.contains("application/zip");
     }
@@ -135,7 +132,7 @@ public class MenuItemImages extends Controller {
                 extractImage(zipFile, header.getFileName(), pathToImages);
             }
         } catch (ZipException e) {
-            logger.error(String.format("#extractImages zip operation error:%s", e.getLocalizedMessage()));
+            logger.error("#extractImages zip operation error: {}", e.getLocalizedMessage());
             throw e;
         }
     }
@@ -151,13 +148,13 @@ public class MenuItemImages extends Controller {
         MenuItem item = MenuItem.find.where().eq("code", menuItemCode).findUnique();
 
         if (item == null) {
-            logger.warn(String.format("#extractImage code not found in menu_items:%s", menuItemCode));
+            logger.warn("#extractImage code not found in menu_items: {}", menuItemCode);
             return;
         }
 
         String newFileNameBase = String.format("%010d", item.id);
 
-        logger.debug(String.format("#extractImage pathToExtract:%s originalFileName:%s newFileNameBase:%s", pathToExtract, fileName, newFileNameBase));
+        logger.debug("#extractImage pathToExtract: {} originalFileName: {} newFileNameBase: {}", pathToExtract, fileName, newFileNameBase);
 
         zipFile.extractFile(fileName,  pathToExtract, new UnzipParameters(), newFileNameBase);
 
@@ -165,7 +162,7 @@ public class MenuItemImages extends Controller {
             BufferedImage currentImage = ImageIO.read(new File(pathToExtract + "/" + newFileNameBase));
 
             if (currentImage == null) {
-                logger.warn(String.format("#extractImage invalid file type fileName:%s", fileName));
+                logger.warn("#extractImage invalid file type fileName: {}", fileName);
                 return;
             }
 
@@ -180,13 +177,13 @@ public class MenuItemImages extends Controller {
             item.update();
 
         } catch (IOException e) {
-            logger.error(String.format("#extractImage image conversion error:%s", e.getLocalizedMessage()));
+            logger.error("#extractImage image conversion error: {}", e.getLocalizedMessage());
             throw e;
         } finally {
             try {
                 FileUtils.forceDelete(new File(pathToExtract + "/" + newFileNameBase));
             } catch (IOException e) {
-                logger.warn(String.format("#extractImage failed to delete temp file [%s]", newFileNameBase), e);
+                logger.warn("#extractImage failed to delete temp file {}", newFileNameBase, e);
             }
         }
     }

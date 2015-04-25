@@ -5,17 +5,16 @@ import models.DailyOrderAggregate;
 import org.joda.time.DateTime;
 import play.Logger;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import securesocial.core.Identity;
-import securesocial.core.java.SecureSocial;
+import securesocial.core.java.SecuredAction;
+import utils.controller.Results;
 import utils.controller.parameters.DateParameter;
 import utils.controller.parameters.ParameterConverter;
 
 import java.text.ParseException;
 
-public class DailyOrderAggregates extends Controller {
+public class DailyOrderAggregates extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.OrderLists");
 
@@ -30,19 +29,17 @@ public class DailyOrderAggregates extends Controller {
         }
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result index() {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
-
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         Parameters parameters = null;
         try {
             parameters = new Parameters(request());
         } catch (ParseException e) {
-            logger.error("#showMine failed to parse parameters", e);
-            return utils.controller.Results.faildToParseQueryStringError();
+            logger.error("#index failed to parse parameters", e);
+            return Results.faildToParseQueryStringError();
         }
 
         String sql = "select dor.order_date, doi.menu_item_id, mi.code, sum(doi.num_orders)"
@@ -58,7 +55,7 @@ public class DailyOrderAggregates extends Controller {
                 .columnMapping("sum(doi.num_orders)", "numOrders")
                 .create();
 
-        logger.debug("#showByOrderDate rawSql: " + rawSql.getSql().toString());
+        logger.debug("#index rawSql: {}", rawSql.getSql().toString());
 
         Query<DailyOrderAggregate> query = Ebean.find(DailyOrderAggregate.class);
         ExpressionList<DailyOrderAggregate> aggregates = query.setRawSql(rawSql).where();
@@ -75,10 +72,10 @@ public class DailyOrderAggregates extends Controller {
         return ok(Json.toJson(aggregates.findList()));
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showByOrderDate(String orderDateStr) {
+    @SecuredAction
+    public static Result getByOrderDate(String orderDateStr) {
 
-        logger.debug("#showByOrderDate orderDateStr: " + orderDateStr);
+        logger.debug("#getByOrderDate orderDateStr: " + orderDateStr);
 
         String sql = "select dor.order_date, doi.menu_item_id, mi.code, sum(doi.num_orders)"
                 + " from daily_order_item doi"
@@ -93,7 +90,7 @@ public class DailyOrderAggregates extends Controller {
                             .columnMapping("sum(doi.num_orders)", "numOrders")
                             .create();
 
-        logger.debug("#showByOrderDate rawSql: " + rawSql.getSql().toString());
+        logger.debug("#getByOrderDate rawSql: {}", rawSql.getSql().toString());
 
         DateTime orderDate = ParameterConverter.convertTimestampFrom(orderDateStr);
 

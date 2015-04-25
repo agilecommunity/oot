@@ -14,12 +14,14 @@ module.exports = function (grunt) {
         components: 'app/bower_components',
         javascripts: 'app/scripts',
         stylesheets: 'app/styles',
+        views:       'app/views',
         dist: {
             components:  '../public/javascripts/components',
             javascripts: '../public/javascripts',
             stylesheets: '../public/stylesheets',
-            fonts:        '../public/fonts',
-            docs:         '../target/docs/ui'
+            fonts:       '../public/fonts',
+            views:       '../public/views',
+            docs:        '../target/docs/ui'
         }
     };
 
@@ -29,7 +31,8 @@ module.exports = function (grunt) {
             scripts: {
                 files: [
                     '<%= conf.javascripts %>/**',
-                    '<%= conf.stylesheets %>/*'
+                    '<%= conf.stylesheets %>/*',
+                    '<%= conf.views %>/**'
                 ],
                 tasks: ['jshint', 'concat', 'copy'],
                 options: {
@@ -124,7 +127,8 @@ module.exports = function (grunt) {
                 flatten: true,
                 src: [
                     '<%= conf.javascripts %>/*.js'
-                ], expand: true
+                ],
+                expand: true
             },
             javascriptsSubDirectories: {
                 dest: '<%= conf.dist.javascripts %>',
@@ -149,11 +153,20 @@ module.exports = function (grunt) {
                     '<%= conf.stylesheets %>/print.css'
                 ],
                 expand: true
-            }, fonts: {
+            },
+            fonts: {
                 dest: '<%= conf.dist.fonts %>/',
                 flatten: true,
                 src: [
                     '<%= conf.components %>/bootstrap/fonts/*'
+                ],
+                expand: true
+            },
+            views: {
+                dest: '<%= conf.dist.views %>/',
+                cwd: '<%= conf.views %>/',
+                src: [
+                    '**/*.html'
                 ],
                 expand: true
             }

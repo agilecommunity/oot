@@ -13,7 +13,8 @@
             templateUrl: '/views/signin',    // 利用するビュー
             controller: 'SigninController',  // 利用するコントローラー
             controllerAs: 'vm',
-            access: AccessLevels.anon        // アクセス権
+            access: AccessLevels.anon,       // アクセス権
+            resolve: app.my.resolvers.SigninController // データの事前読み込み
         })
         .when('/signup', {
             templateUrl: '/views/start-signup',

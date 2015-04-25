@@ -43,7 +43,7 @@ angular.module('MyServices')
 
         $http({
             method: 'POST',
-            url: '/api/v1.0/authenticate/userpass',
+            url: '/api/v1.0/signin/userpass',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
             transformRequest: function(data) {
                 return jQuery.param(data);
@@ -62,7 +62,6 @@ angular.module('MyServices')
 
     // 取得しているトークンで認証情報を所得してみる
     User.reSignin = function (callback) {
-
         $http.get("/api/v1.0/users/me")
         .success(function (data, status, header) {
             $rootScope.currentUser = data;
@@ -71,6 +70,25 @@ angular.module('MyServices')
         .error(function (data, status, header) {
             $rootScope.currentUser = null;
             callback.error();
+        });
+    };
+
+    User.signout = function(callback) {
+        if ($rootScope.currentUser === null) {
+            callback.success();
+        }
+
+        $http({
+            method: 'GET',
+            url: '/api/v1.0/signout'
+        })
+        .success(function (data, status, header) {
+            $rootScope.currentUser = null;
+            callback.success();
+        })
+        .error(function (data, status, header) {
+            $rootScope.currentUser = null;
+            callback.error({data: data, status: status});
         });
     };
 

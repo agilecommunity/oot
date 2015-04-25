@@ -1,12 +1,10 @@
 package utils;
 
 import com.avaje.ebean.Ebean;
-import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Transaction;
 import models.AppMetadata;
 import models.LocalUser;
 import org.yaml.snakeyaml.Yaml;
-import play.Configuration;
 import play.Logger;
 import play.Play;
 import play.filters.csrf.CSRF;
@@ -14,63 +12,58 @@ import play.mvc.Http;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
 import play.test.FakeRequest;
+import play.libs.Scala;
 import scala.Option;
-import scala.Some;
+import scala.concurrent.Future;
 import scala.util.Either;
 import securesocial.core.AuthenticationMethod;
-import securesocial.core.Authenticator;
-import securesocial.core.IdentityId;
+import securesocial.core.BasicProfile;
+import securesocial.core.authenticator.AuthenticatorBuilder;
+import securesocial.core.authenticator.CookieAuthenticator;
+import securesocial.core.authenticator.CookieAuthenticator$;
+import securesocial.core.java.SecureSocial;
+import securesocial.core.providers.utils.PasswordHasher;
 import securesocial.core.PasswordInfo;
-import securesocial.core.SocialUser;
-import utils.snakeyaml.JodaPropertyConstructor;
+import utils.securesocial.BasicProfileBasedOperations;
+import securesocial.core.RuntimeEnvironment;
+import securesocial.custom.services.MyEnvironment;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static play.test.Helpers.inMemoryDatabase;
-import static play.test.Helpers.route;
+import static play.test.Helpers.*;
 
-/*
- * java - Unit-testing methods secured with Securesocial annotation - Stack Overflow
- * http://stackoverflow.com/questions/19226110/unit-testing-methods-secured-with-securesocial-annotation
- * より拝借
- */
 public class Utils {
 
     private static final Logger.ALogger logger = Logger.of("test.Utils");
 
     public static Cookie fakeCookie(String id){
 
-        LocalUser local_user = LocalUser.find.byId(id);
+        LocalUser localUser = LocalUser.find.byId(id);
 
-        Logger.debug(String.format("LocalUser id:%s provider:%s", local_user.id, local_user.provider));
+        Logger.debug(String.format("LocalUser id:%s provider:%s", localUser.id, localUser.provider));
 
-        SocialUser social_user = new SocialUser(new IdentityId(local_user.id, local_user.provider),
-            local_user.firstName,
-            local_user.lastName,
-            String.format("%s %s", local_user.firstName, local_user.lastName),
-            Option.apply(local_user.email),
-            null,
-            new AuthenticationMethod("userPassword"),
-            null,
-            null,
-            Some.apply(new PasswordInfo("bcrypt", local_user.password, null))
-        );
+        Map<String, String> authParams = new HashMap();
+        authParams.put("username", localUser.id);
+        authParams.put("password", "hoehoehoe");
 
-        Either either = Authenticator.create(social_user);
-        Authenticator auth = (Authenticator) either.right().get();
-        play.api.mvc.Cookie scala_cookie = auth.toCookie();
+        FakeRequest authRequest = fakeRequest(POST, "/api/v1.0/signin/userpass")
+                .withFormUrlEncodedBody(authParams);
 
-        // secureSocial doesnt seem to set a maxAge or Domain so i set them myself.
-        Cookie fake_cookie = new Cookie(auth.cookieName(), scala_cookie.value(), 120, scala_cookie.path(), "None", auth.cookieSecure(), auth.cookieHttpOnly());
-        return fake_cookie;
+        Result result = route(authRequest);
+
+        logger.trace("#fakeCookie headers: {}", headers(result));
+
+        Cookie authCookie = cookies(result).get("id");
+
+        return authCookie;
     }
 
     /**
@@ -112,7 +105,11 @@ public class Utils {
     }
 
     public static void createAppMetadata(Map<String, Object> data) throws Throwable {
-        File metaFile = new File("target/scala-2.10/classes/" + AppMetadata.pathToMetadata);
+
+        File mine = new File(Utils.class.getResource("Utils.class").getPath());
+        String currentAppDir = Paths.get(mine.getParent(), "../../../../").normalize().toString();
+
+        File metaFile = new File(Paths.get(currentAppDir, "target/scala-2.11/classes" , AppMetadata.pathToMetadata).toString());
 
         if (metaFile.exists()) {
             metaFile.delete();

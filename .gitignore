@@ -20,5 +20,6 @@ public/javascripts/*
 public/stylesheets/*
 public/fonts/*
 public/images/menu-items/*
+public/views/*
 conf/application.smtp.conf
 uc-assets

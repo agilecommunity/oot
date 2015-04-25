@@ -3,28 +3,35 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
 import filters.RequireCSRFCheck4Ng;
+import models.LocalUser;
 import play.Logger;
+import play.Play;
 import play.data.Form;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
-import play.libs.Scala;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import scala.Option;
-import securesocial.core.*;
+import securesocial.core.AuthenticationMethod;
+import securesocial.core.BasicProfile;
+import securesocial.core.Events;
+import securesocial.core.PasswordResetEvent;
+import securesocial.core.java.SecureSocial;
 import securesocial.core.java.Token;
+import securesocial.core.java.UserAwareAction;
+import securesocial.core.providers.MailToken;
 import securesocial.core.providers.UsernamePasswordProvider$;
-import securesocial.core.providers.utils.GravatarHelper$;
-import securesocial.core.providers.utils.Mailer$;
-import utils.controller.MailTokenBasedOperations;
+import securesocial.core.services.SaveMode;
+import utils.controller.Results;
+import utils.securesocial.BasicProfileBasedOperations;
+import utils.securesocial.MailTokenBasedOperations;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PasswordReset extends Controller {
+public class PasswordReset extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.PasswordReset");
 
@@ -59,27 +66,28 @@ public class PasswordReset extends Controller {
 
     @RequireCSRFCheck4Ng()
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
+    @UserAwareAction
     public static Result startReset() {
 
         JsonNode json = request().body().asJson();
         Form<StartResetForm> filledForm = Form.form(StartResetForm.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.debug("#startReset hasErrors:" + filledForm.errorsAsJson());
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.debug("#startReset hasErrors: {}", filledForm.errorsAsJson());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         StartResetForm form = filledForm.get();
-        String email = form.email.toLowerCase();
+        String email = form.email;
 
-        Option<Identity> maybeUser = UserService$.MODULE$.findByEmailAndProvider(email, UsernamePasswordProvider$.MODULE$.UsernamePassword());
+        Option<BasicProfile> maybeUser = findByEmailWithUserpassProvider(email);
 
         if (maybeUser.nonEmpty()) {
             Token token = MailTokenBasedOperations.createToken(email, false);
-            UserService$.MODULE$.save(token.toScala());
-            Mailer$.MODULE$.sendPasswordResetEmail(maybeUser.get(), token.uuid, Http.Context.current()._requestHeader());
+            getUserService().saveToken(token.toScala());
+            getMailer().sendPasswordResetEmail(maybeUser.get(), token.uuid, Http.Context.current()._requestHeader(), lang());
         } else {
-            Mailer$.MODULE$.sendUnkownEmailNotice(email, Http.Context.current()._requestHeader());
+            getMailer().sendUnkownEmailNotice(email, Http.Context.current()._requestHeader(), lang());
         }
 
         return ok("");
@@ -87,64 +95,84 @@ public class PasswordReset extends Controller {
 
     @RequireCSRFCheck4Ng()
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
+    @UserAwareAction
     public static Result reset(String token) {
 
-        Option<securesocial.core.providers.Token> localToken = UserService$.MODULE$.findToken(token);
+        Option<MailToken> localToken = findToken(token);
 
         if (localToken.isEmpty()) {
-            logger.debug("#reset token not found token:" + token);
-            return utils.controller.Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
+            logger.debug("#reset token not found token: {}", token);
+            return Results.invalidLinkError(Messages.get("securesocial.signup.invalidLink"));
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug("#reset request:" + json.toString());
+        if (!Play.isProd()) {
+            logger.debug("#reset request: {}", json.toString());
+        }
 
         Form<ResetForm> filledForm = Form.form(ResetForm.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.debug("#reset hasErrors:" + filledForm.errorsAsJson());
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.debug("#reset hasErrors: {}", filledForm.errorsAsJson());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         ResetForm form = filledForm.get();
 
         String email = localToken.get().email();
 
-        Option<Identity> maybeUser = UserService$.MODULE$.findByEmailAndProvider(email, UsernamePasswordProvider$.MODULE$.UsernamePassword());
+        Option<BasicProfile> maybeUser = findByEmailWithUserpassProvider(email);
 
         if (maybeUser.isEmpty()) {
             logger.error("#reset could not find user with email {} during password reset", email);
-            return utils.controller.Results.resourceNotFoundError();
+            return Results.resourceNotFoundError();
         }
 
-        Identity profile = maybeUser.get();
-        String id = localToken.get().email();
+        BasicProfile profile = maybeUser.get();
 
-        SocialUser user = new SocialUser(
-            profile.identityId(),
-            profile.firstName(),
-            profile.lastName(),
-            profile.fullName(),
-            Scala.Option(id),
-            GravatarHelper$.MODULE$.avatarFor(id),
+        if (!Play.isProd()) {
+            logger.debug("#reset password: {}", form.passWord1);
+        }
+
+        BasicProfile newProfile = BasicProfileBasedOperations.createProfile(
+            profile.providerId(),
+            profile.userId(),
+            profile.firstName().get(),
+            profile.lastName().get(),
+            profile.fullName().get(),
+            profile.email().get(),
             AuthenticationMethod.UserPassword(),
-            null,
-            null,
-            Scala.Option(Registry.hashers().get("bcrypt").get().hash(form.passWord1)) // カレントとるのどうやるの??
+            form.passWord1
         );
+
+        if (Play.isTest()) {
+            logger.debug("#reset basicprofile password: {}", newProfile.passwordInfo().get().password());
+        }
 
         Ebean.beginTransaction();
         try {
-            UserService$.MODULE$.save(user);
-            UserService$.MODULE$.deleteToken(token);
+            getUserService().save(newProfile, SaveMode.PasswordChange());
+            getUserService().deleteToken(token);
 
             Ebean.commitTransaction();
+
+            Option<Http.Session> newSession = Events.fire(new PasswordResetEvent(newProfile), Http.Context.current()._requestHeader(), SecureSocial.env());
+            logger.debug("#reset eventSession: {}", newSession);
+        } catch (Exception ex) {
+            logger.error("#reset failed to update", ex);
+            Ebean.rollbackTransaction();
         } finally {
             Ebean.endTransaction();
         }
 
-        Mailer$.MODULE$.sendPasswordChangedNotice(user, Http.Context.current()._requestHeader());
+        if (!Play.isProd()) {
+            LocalUser localUser = LocalUser.findbyProviderIdAndUserId(newProfile.providerId(), newProfile.userId());
+            logger.debug("#reset after updated provider: {}", localUser.provider);
+            logger.debug("#reset after updated password: {}", localUser.password);
+        }
+
+        getMailer().sendPasswordChangedNotice(newProfile, Http.Context.current()._requestHeader(), lang());
 
         return ok();
     }

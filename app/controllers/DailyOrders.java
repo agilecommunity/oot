@@ -13,11 +13,10 @@ import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import securesocial.core.Identity;
-import securesocial.core.java.SecureSocial;
+import securesocial.core.java.SecuredAction;
+import utils.controller.Results;
 import utils.controller.parameters.DateParameter;
 import utils.controller.parameters.ParameterConverter;
 
@@ -27,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import filters.RequireCSRFCheck4Ng;
 import utils.controller.parameters.StatusParameter;
 
-public class DailyOrders extends Controller {
+public class DailyOrders extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyOrders");
 
@@ -50,19 +49,17 @@ public class DailyOrders extends Controller {
         }
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result index() {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
-
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
 
         Parameters parameters = null;
         try {
             parameters = new Parameters(request());
         } catch (ParseException e) {
             logger.error("#index failed to parse parameters", e);
-            return utils.controller.Results.faildToParseQueryStringError();
+            return Results.faildToParseQueryStringError();
         }
 
         ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where(), parameters);
@@ -71,8 +68,8 @@ public class DailyOrders extends Controller {
         return ok(Json.toJson(orders));
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showByOrderDate(String orderDateStr) {
+    @SecuredAction
+    public static Result getByOrderDate(String orderDateStr) {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -81,29 +78,29 @@ public class DailyOrders extends Controller {
         List<DailyOrder> list = DailyOrder.findBy(orderDate);
 
         if (list == null || list.size() == 0) {
-            logger.debug(String.format("#showByOrderDate order not found orderDateStr:%s", orderDateStr));
+            logger.debug(String.format("#getByOrderDate order not found orderDateStr:%s", orderDateStr));
             return ok("[]");
         }
 
         return ok(Json.toJson(list));
     }
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
-    public static Result showMine() {
+    @SecuredAction
+    public static Result getMine() {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser currentUser = getCurrentUser();
 
         Parameters parameters = null;
         try {
             parameters = new Parameters(request());
         } catch (ParseException e) {
-            logger.error("#showMine failed to parse parameters", e);
-            return utils.controller.Results.faildToParseQueryStringError();
+            logger.error("#getMine failed to parse parameters", e);
+            return Results.faildToParseQueryStringError();
         }
 
-        ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where().eq("user_id", user.identityId().userId()), parameters);
+        ExpressionList<DailyOrder> query = addConditions(DailyOrder.find.where().eq("user_id", currentUser.id), parameters);
 
         query = addConditions(query, parameters);
 
@@ -113,7 +110,7 @@ public class DailyOrders extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result create() {
 
@@ -123,41 +120,39 @@ public class DailyOrders extends Controller {
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("#create request-body:%s", request().body().toString()));
+        logger.debug("#create request-body: {}", request().body().toString());
 
         Form<DailyOrder> filledForm = Form.form(DailyOrder.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("#create object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.warn("#create object has some errors. {}", filledForm.errorsAsJson().toString());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         DailyOrder object = filledForm.get();
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser currentUser = getCurrentUser();
 
-        if (!DailyOrders.canEdit(object, user)) {
-            logger.warn(String.format("#create cant create localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId() ));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't create other's daily order");
+        if (!DailyOrders.canEdit(object, currentUser)) {
+            logger.warn("#create cant create localUser.id: {} currentUser.id: {}", object.localUser.id, currentUser.id);
+            return Results.insufficientPermissionsError("Current user can't create other's daily order");
         }
 
         if (DailyOrder.findBy(object.orderDate, object.localUser.id) != null) {
             logger.debug("#create object already exists");
-            return utils.controller.Results.resourceAlreadyExistsError();
+            return Results.resourceAlreadyExistsError();
         }
-
-        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
 
         // メニューが閉め切られていた場合、管理者以外は編集できない
         if (!currentUser.isAdmin) {
             if (hasMenuExpired(object.orderDate)) {
                 logger.debug("#create dailyMenu has expired");
-                return utils.controller.Results.menuHasExpiredError();
+                return Results.menuHasExpiredError();
             }
         }
 
-        logger.debug(String.format("#create order.localUser.id:%s", object.localUser.id));
-        logger.debug(String.format("#create order.orderDate:%s", object.orderDate));
+        logger.debug("#create order.localUser.id: {}", object.localUser.id);
+        logger.debug("#create order.orderDate: {}", object.orderDate);
 
         object.save();
 
@@ -165,48 +160,46 @@ public class DailyOrders extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result update(Long id) {
         logger.debug("#update");
 
         if (DailyOrder.find.byId(id) == null) {
             logger.debug("#update object doesnt exist");
-            return utils.controller.Results.resourceNotFoundError();
+            return Results.resourceNotFoundError();
         }
 
         JsonNode json = request().body().asJson();
 
-        logger.debug(String.format("#update request-body:%s", request().body().toString()));
+        logger.debug("#update request-body: {}", request().body().toString());
 
         Form<DailyOrder> filledForm = Form.form(DailyOrder.class).bind(json);
 
         if (filledForm.hasErrors()) {
-            logger.warn(String.format("#update object has some errors. %s", filledForm.errorsAsJson().toString()));
-            return utils.controller.Results.validationError(filledForm.errorsAsJson());
+            logger.warn("#update object has some errors. {}", filledForm.errorsAsJson().toString());
+            return Results.validationError(filledForm.errorsAsJson());
         }
 
         DailyOrder object = filledForm.get();
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser currentUser = getCurrentUser();
 
-        if (! DailyOrders.canEdit(object, user)) {
-            logger.warn(String.format("#update cant update localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId()));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't update other's daily order");
+        if (! DailyOrders.canEdit(object, currentUser)) {
+            logger.warn("#update cant update localUser.id: {} currentUser.id: {}", object.localUser.id, currentUser.id);
+            return Results.insufficientPermissionsError("Current user can't update other's daily order");
         }
-
-        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
 
         // メニューが閉め切られていた場合、管理者以外は編集できない
         if (!currentUser.isAdmin) {
             if (hasMenuExpired(object.orderDate)) {
                 logger.debug("#update dailyMenu has expired");
-                return utils.controller.Results.menuHasExpiredError();
+                return Results.menuHasExpiredError();
             }
         }
 
-        logger.debug(String.format("#update order.localUser.id:%s", object.localUser.id));
-        logger.debug(String.format("#update order.orderDate:%s", object.orderDate));
+        logger.debug("#update order.localUser.id: {}", object.localUser.id);
+        logger.debug("#update order.orderDate: {}", object.orderDate);
 
         object.update();
 
@@ -214,10 +207,10 @@ public class DailyOrders extends Controller {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result delete(Long id) {
 
-        logger.debug(String.format("#delete id: %s", id));
+        logger.debug("#delete id: {}", id);
 
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -228,20 +221,18 @@ public class DailyOrders extends Controller {
             return ok();
         }
 
-        Identity user = (Identity) ctx().args.get(SecureSocial.USER_KEY);
+        LocalUser currentUser = getCurrentUser();
 
-        if (! DailyOrders.canEdit(object, user)) {
-            logger.warn(String.format("#delete cant delete others order localUser.id:%s identity.user.id:%s", object.localUser.id, user.identityId().userId()));
-            return utils.controller.Results.insufficientPermissionsError("Current user can't delete other's daily order");
+        if (! DailyOrders.canEdit(object, currentUser)) {
+            logger.warn("#delete cant delete others order localUser.id: {} currentUser.id: {}", object.localUser.id, currentUser.id);
+            return Results.insufficientPermissionsError("Current user can't delete other's daily order");
         }
-
-        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
 
         // メニューが閉め切られていた場合、管理者以外は編集できない
         if (!currentUser.isAdmin) {
             if (hasMenuExpired(object.orderDate)) {
                 logger.debug("#update dailyMenu has expired");
-                return utils.controller.Results.menuHasExpiredError();
+                return Results.menuHasExpiredError();
             }
         }
 
@@ -256,13 +247,13 @@ public class DailyOrders extends Controller {
                 DateParameter.DateRange dateRange = parameters.orderDate.getRangeValue();
                 base.between("orderDate", dateRange.fromDate, dateRange.toDate);
 
-                logger.debug("#addConditions orderDate(range) from : " + dateRange.fromDate.toString());
-                logger.debug("#addConditions orderDate(range) to   : " + dateRange.toDate.toString());
+                logger.debug("#addConditions orderDate(range) from: {}", dateRange.fromDate.toString());
+                logger.debug("#addConditions orderDate(range) to  : {}", dateRange.toDate.toString());
 
             } else {
                 base.eq("orderDate", parameters.orderDate.getValue());
 
-                logger.debug("#addConditions orderDate(value) : " + parameters.orderDate.getValue().toString());
+                logger.debug("#addConditions orderDate(value) : {}", parameters.orderDate.getValue().toString());
             }
         }
 
@@ -274,26 +265,23 @@ public class DailyOrders extends Controller {
                     .query();
             base.in("orderDate", subQuery);
 
-            logger.debug("#addConditions status : " + parameters.status.getValue());
+            logger.debug("#addConditions status: {}", parameters.status.getValue());
         }
 
         return base;
     }
 
-    private static boolean canEdit(DailyOrder order, Identity user) {
+    private static boolean canEdit(DailyOrder order, LocalUser user) {
 
-        logger.debug(String.format("#canEdit identityId: %s", user.identityId()));
-        logger.debug(String.format("#canEdit identityId.userId: %s", user.identityId().userId()));
-
-        LocalUser currentUser = LocalUser.find.where().eq("id", user.identityId().userId()).findUnique();
+        logger.debug("#canEdit user.id: {}", user.id);
 
         // 管理者である
-        if (currentUser.isAdmin) {
+        if (user.isAdmin) {
             return true;
         }
 
         // オブジェクトの所有者である
-        if (order.localUser.id.equals(user.identityId().userId())) {
+        if (order.localUser.id.equals(user.id)) {
             return true;
         }
 
@@ -310,7 +298,7 @@ public class DailyOrders extends Controller {
         }
 
         if (! DailyMenu.StatusOpen.equals(menu.status)) {
-            logger.debug("#hasMenuExpired dailyMenu has expired status:{}", menu.status);
+            logger.debug("#hasMenuExpired dailyMenu has expired status: {}", menu.status);
             return true;
         }
 

@@ -10,14 +10,15 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.java.SecureSocial;
+import securesocial.core.java.SecuredAction;
 
 import java.util.List;
 
-public class Shops extends Controller {
+public class Shops extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyMenus");
 
-    @SecureSocial.SecuredAction(ajaxCall = true)
+    @SecuredAction
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
