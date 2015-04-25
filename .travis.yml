@@ -23,6 +23,7 @@ before_script:
 - unzip -qd /tmp /tmp/activator.zip
 - psql -c "CREATE USER oot WITH PASSWORD 'oot';" -U postgres
 - psql -c "CREATE DATABASE oot OWNER oot;" -U postgres
+- cd ..
 script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
