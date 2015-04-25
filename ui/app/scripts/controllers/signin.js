@@ -14,11 +14,6 @@
         vm.user_password = null;
         vm.errors = [];
 
-        User.signout({
-            success: function(){},
-            error: function(){}    // エラーが出ても無視(どうしようもないし)
-        });
-
         var saveCookie = function() {
             var cookieOptions = {expires: 90}; // 90日(ログインするたびに更新するからこれくらいで大丈夫だろう)
 
@@ -82,5 +77,25 @@
             return (vm.errors[name] !== undefined && vm.errors[name] !== null);
         };
     }
+
+    app.my.resolvers.SigninController = {
+        initialData: function($q, User) {
+
+            var deferred = $q.defer();
+            var initialData = {};
+
+            // データはないけど、
+            User.signout({
+                success: function(){
+                    deferred.resolve(initialData);
+                },
+                error: function(responseHeaders){
+                    deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+                }
+            });
+
+            return deferred.promise;
+        }
+    };
 
 })();

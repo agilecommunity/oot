@@ -75,7 +75,7 @@ angular.module('MyServices')
 
     User.signout = function(callback) {
         if ($rootScope.currentUser === null) {
-            return;
+            callback.success();
         }
 
         $http({
