@@ -30,7 +30,7 @@ libraryDependencies ++= Seq(
   , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0" % "test"
 )
 
-unmanagedResourceDirectories in Assets += baseDirectory.value / "ui"
+pipelineStages := Seq(digest)
 
 javacOptions in Compile ++= Seq("-Xlint:deprecation")
 

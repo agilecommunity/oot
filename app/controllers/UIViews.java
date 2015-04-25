@@ -9,6 +9,7 @@ public class UIViews {
     public static controllers.AssetsBuilder delegate = new controllers.AssetsBuilder();
 
     public static Action<AnyContent> at(String path, String file) {
+
         logger.debug(String.format("#at path:%s file:%s", path, file));
         return delegate.at(path, file + ".html", false);
     }

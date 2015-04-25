@@ -42,7 +42,7 @@ module.exports = function (grunt) {
         },
         concat: {
             options: {
-                separator: ';'
+                separator: ''
             }, ieshim: {
                 dest: '<%= conf.dist.components %>/ie-shim.min.js',
                 src: [
@@ -51,33 +51,45 @@ module.exports = function (grunt) {
                 ]
             },
             constants: {
-                dest: '<%= conf.dist.javascripts %>/constants/constants.js',
+                dest: '<%= conf.dist.javascripts %>/constants.js',
                 src: [
                     '<%= conf.javascripts %>/constants/user-roles.js',
                     '<%= conf.javascripts %>/constants/access-levels.js'
                 ]
             },
             filters: {
-                dest: '<%= conf.dist.javascripts %>/filters/filters.js',
+                dest: '<%= conf.dist.javascripts %>/filters.js',
                 src: [
                     '<%= conf.javascripts %>/filters/[a-z]*.js'
                 ]
             },
             controllers: {
-                dest: '<%= conf.dist.javascripts %>/controllers/controllers.js',
+                dest: '<%= conf.dist.javascripts %>/controllers.js',
                 src: [
                     '<%= conf.javascripts %>/controllers/**/[a-z]*.js'
                 ]
             },
             services: {
-                dest: '<%= conf.dist.javascripts %>/services/services.js',
+                dest: '<%= conf.dist.javascripts %>/services.js',
                 src: [
                     '<%= conf.javascripts %>/services/_helpers.js',
                     '<%= conf.javascripts %>/services/**/[a-z]*.js'
                 ]
             },
+            routers: {
+                dest: '<%= conf.dist.javascripts %>/routers.js',
+                src: [
+                    '<%= conf.javascripts %>/routers/**/[a-z]*.js'
+                ]
+            },
+            helpers: {
+                dest: '<%= conf.dist.javascripts %>/helpers.js',
+                src: [
+                    '<%= conf.javascripts %>/helpers/**/[a-z]*.js'
+                ]
+            },
             directives: {
-                dest: '<%= conf.dist.javascripts %>/directives/directives.js',
+                dest: '<%= conf.dist.javascripts %>/directives.js',
                 src: [
                     '<%= conf.javascripts %>/directives/**/[a-z]*.js'
                 ]
@@ -127,16 +139,6 @@ module.exports = function (grunt) {
                 flatten: true,
                 src: [
                     '<%= conf.javascripts %>/*.js'
-                ],
-                expand: true
-            },
-            javascriptsSubDirectories: {
-                dest: '<%= conf.dist.javascripts %>',
-                cwd: '<%= conf.javascripts %>/',
-                src: [
-                    'constants/*.js',
-                    'helpers/*.js',
-                    'routers/*.js'
                 ],
                 expand: true
             },
