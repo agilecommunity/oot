@@ -49,7 +49,8 @@ public class NewPage {
 
         public void pickDate(DateTime value) throws Throwable {
 
-            logger.debug("#pickDate currentMonth:" +  currentMonth.getText());
+            logger.debug("#pickDate targetDate: {} getDayOfMonth: {}", value, value.getDayOfMonth());
+            logger.debug("#pickDate currentMonth: {}", currentMonth.getText());
 
             DateTime currentMonthDt = DateTimeFormat.forPattern("MMMM yyyy").withLocale(Locale.JAPAN).parseDateTime(currentMonth.getText());
 
@@ -82,7 +83,7 @@ public class NewPage {
                 }
             }
 
-            By dayLocator = By.xpath("tbody/tr/td[contains(@class, 'day') and text()='" + value.getDayOfMonth() + "']");
+            By dayLocator = By.xpath("tbody/tr/td[contains(@class, 'day') and not(contains(@class, 'old')) and text()='" + value.getDayOfMonth() + "']");
             WebElement targetDay = this.daysTable.findElement(dayLocator);
 
             targetDay.click();
