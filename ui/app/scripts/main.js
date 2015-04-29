@@ -8,15 +8,23 @@
 
     $(function () {
 
-        app.config(['dialogsProvider',
-            function(dialogsProvider) {
+        app.config(appConfiguration);
+
+        appConfiguration.$inject = ['dialogsProvider'];
+
+        function appConfiguration(dialogsProvider) {
             dialogsProvider.useBackdrop('static');
             dialogsProvider.useEscClose(false);
             dialogsProvider.useCopy(false);
-        }]);
+        }
 
-        app.run(["$rootScope", "$location", "$window", "User", "RouteFinder", "dialogs",
-                 function ($rootScope, $location, $window, User, RouteFinder, dialogs) {
+        app.run(appRun);
+
+        appRun.$inject = ["$rootScope", "$location", "$window", "User", "RouteFinder", "dialogs", "Assets"];
+
+        function appRun($rootScope, $location, $window, User, RouteFinder, dialogs, Assets) {
+            // ViewでAssetsを呼び出せるようにする
+            $rootScope.Assets = Assets;
 
             // ブラウザのリロード対策
             $rootScope.$on('$locationChangeStart', function (ev, next, current) {
@@ -92,7 +100,7 @@
                     $location.path(urlToGo);
                 });
             });
-        }]);
+        }
 
         angular.bootstrap(document, ['oot']);
     });
