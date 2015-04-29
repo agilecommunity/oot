@@ -115,6 +115,9 @@ public class NewPage {
 
         DatePickerModule pickerModule = new DatePickerModule(this.driver);
         pickerModule.pickDate(value);
+
+        By dayLocator = By.xpath(String.format("//ul[contains(@class,'day-tabs')]/li[@id='day-%s']/a", value.toString("yyyyMMdd")));
+        SeleniumUtils.waitForVisible(this.driver, dayLocator);
     }
 
     public void setDate(DateTime value) throws Throwable {
