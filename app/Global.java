@@ -90,7 +90,7 @@ public class Global extends GlobalSettings  {
     public <A> A getControllerInstance(Class<A> controllerClass) throws Exception {
         A result;
 
-        logger.debug("#getControllerInstance className: {}", controllerClass.getName());
+        logger.trace("#getControllerInstance className: {}", controllerClass.getName());
 
         try {
             result = controllerClass.getDeclaredConstructor(RuntimeEnvironment.class).newInstance(env);

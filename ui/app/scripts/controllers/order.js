@@ -70,9 +70,9 @@
     angular.module('MyControllers')
         .controller('OrderController', OrderController);
 
-    OrderController.$inject = ['$scope', '$filter', '$modal', 'dialogs', 'User', 'DailyMenu', 'DailyOrder', 'DailyOrderStat', 'initialData'];
+    OrderController.$inject = ['$scope', '$filter', '$modal', 'dialogs', 'User', 'DailyMenu', 'DailyOrder', 'DailyOrderStat', 'Assets', 'initialData'];
 
-    function OrderController($scope, $filter, $modal, dialogs, User, DailyMenu, DailyOrder, DailyOrderStat, initialData) {
+    function OrderController($scope, $filter, $modal, dialogs, User, DailyMenu, DailyOrder, DailyOrderStat, Assets, initialData) {
 
         var vm = this;
 
@@ -227,8 +227,9 @@
             };
 
             var modalInstance = $modal.open({
-                templateUrl: "/views/select-num-orders",
-                controller: "SelectNumOrdersController"
+                templateUrl: Assets.versioned("/views/select-num-orders"),
+                controller: "SelectNumOrdersController",
+                controllerAs: "vm"
             });
 
             modalInstance.result.then(function (numOrders) {
@@ -249,15 +250,6 @@
                 });
             }, function () {
             });
-        };
-
-        // 画像を表示するHTMLを出力
-        vm.renderImage = function(menuItem) {
-            var imgFile = "no-image.png";
-            if ($filter("isEmptyOrUndefined")(menuItem.itemImagePath) !== true ) {
-                imgFile = menuItem.itemImagePath;
-            }
-            return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
         };
     }
 

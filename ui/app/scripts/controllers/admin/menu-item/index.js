@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
     .controller('MenuItemIndexController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem',
-    function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'usSpinnerService', 'User', 'MenuItem', 'Assets',
+    function ($scope, $location, $routeParams, $filter, $modal, usSpinnerService, User, MenuItem, Assets) {
 
     var startBlock = function() {
         $.blockUI({baseZ: 2000, message: null});
@@ -38,7 +38,7 @@ angular.module('MyControllers')
 
     $scope.selectShops = function() {
         var modalInstance = $modal.open({
-            templateUrl: "/views/admin/daily-menu/select-shop",
+            templateUrl: Assets.versioned("/views/admin/daily-menu/select-shop"),
             controller: "DailyMenuSelectShopController"
         });
 
@@ -52,7 +52,7 @@ angular.module('MyControllers')
 
     $scope.editItem = function(menuItem) {
         var modalInstance = $modal.open({
-            templateUrl: "/views/admin/menu-item/edit",
+            templateUrl: Assets.versioned("/views/admin/menu-item/edit"),
             controller: "MenuItemEditController",
             backdrop: "static",
             resolve: {
@@ -65,7 +65,7 @@ angular.module('MyControllers')
 
     $scope.addItem = function() {
         var modalInstance = $modal.open({
-            templateUrl: "/views/admin/menu-item/edit",
+            templateUrl: Assets.versioned("/views/admin/menu-item/edit"),
             controller: "MenuItemEditController",
             backdrop: "static",
             resolve: {

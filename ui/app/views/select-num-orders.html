@@ -5,10 +5,10 @@
 <div class="modal-body">
 
     <div class="btn-group btn-group-lg">
-        <button type="button" class="btn btn-primary" style="margin-right:5px;" ng-click="select_this(n+1)" ng-repeat="n in [] | range:5">{{n+1}}個</button>
+        <button type="button" class="btn btn-primary" style="margin-right:5px;" ng-click="vm.select_this(n+1)" ng-repeat="n in [] | range:5">{{n+1}}個</button>
     </div>
 
     <div class="btn-group btn-group-lg">
-        <button type="button" class="btn btn-primary" style="margin-right:5px;" ng-click="select_this(n+6)" ng-repeat="n in [] | range:5">{{n+6}}個</button>
+        <button type="button" class="btn btn-primary" style="margin-right:5px;" ng-click="vm.select_this(n+6)" ng-repeat="n in [] | range:5">{{n+6}}個</button>
     </div>
 </div>

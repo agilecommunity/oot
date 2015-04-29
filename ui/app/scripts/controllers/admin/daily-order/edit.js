@@ -1,8 +1,8 @@
 
 angular.module('MyControllers')
     .controller('DailyOrderEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder', 'dailyMenu',
-    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder, dailyMenu) {
+    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'User', 'MenuItem', 'DailyMenu', 'DailyOrder', 'Assets', 'dailyMenu',
+    function ($scope, $location, $routeParams, $filter, $modal, User, MenuItem, DailyMenu, DailyOrder, Assets, dailyMenu) {
 
     // チェックリストに使うデータの作成
     var createChecklist = function () {
@@ -64,7 +64,7 @@ angular.module('MyControllers')
     $scope.editItem = function(order, menuItem, orderStatuses) {
 
         var modalInstance = $modal.open({
-            templateUrl: "/views/select-num-orders",
+            templateUrl: Assets.versioned("/views/select-num-orders"),
             controller: "SelectNumOrdersController"
         });
 
@@ -103,7 +103,7 @@ angular.module('MyControllers')
     $scope.addUser = function() {
 
         var modalInstance = $modal.open({
-            templateUrl: "/views/admin/select-user",
+            templateUrl: Assets.versioned("/views/admin/select-user"),
             controller: "SelectUserController"
         });
 

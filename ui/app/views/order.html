@@ -49,7 +49,7 @@
                                                     <div class="food-name">{{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
                                                 </div>
                                                 <div class="food-image">
-                                                    <a href="" class="thumbnail" ng-bind-html="vm.renderImage(dailyMenuItem.menuItem)"></a>
+                                                    <a href="" class="thumbnail"><img oot-menu-item-image menu-item="dailyMenuItem.menuItem"/></a>
                                                     <div class="ordered-mark" ng-show="dayGroup.hasOrder(dailyMenuItem.menuItem)"><img src="/assets/images/ordered.png"></div>
                                                 </div>
                                                 <div class="comment label" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>

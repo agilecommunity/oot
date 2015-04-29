@@ -8,6 +8,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-notify');
+    grunt.loadNpmTasks('grunt-md5');
+    grunt.loadNpmTasks('grunt-ng-constant');
 
     // configurable paths
     var appConfig = {
@@ -15,6 +17,7 @@ module.exports = function (grunt) {
         javascripts: 'app/scripts',
         stylesheets: 'app/styles',
         views:       'app/views',
+        generatedFiles: '__generated_files',
         dist: {
             components:  '../public/javascripts/components',
             javascripts: '../public/javascripts',
@@ -24,6 +27,9 @@ module.exports = function (grunt) {
             docs:        '../target/docs/ui'
         }
     };
+
+    var path = require('path');
+    var views = {};
 
     grunt.initConfig({
         conf: appConfig,
@@ -40,9 +46,74 @@ module.exports = function (grunt) {
                 }
             }
         },
+        md5: {
+            compile: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= conf.views %>/',
+                        src: [
+                            '**/*.html'
+                        ],
+                        dest: '<%= conf.generatedFiles %>/views/'
+                    }
+                ],
+                options: {
+                    encoding: null,
+                    keepBasename: true,
+                    keepExtension: true,
+                    afterEach: function (fileChange, options) {
+                        // Called once for each file processed by the md5 task.
+
+                        var dirname = "/" + path.dirname(fileChange.oldPath).substr("app/".length);
+                        var ext = path.extname(fileChange.oldPath);
+
+                        var basename = path.basename(fileChange.oldPath, ext);
+                        var basenameWithHash = path.basename(fileChange.newPath, ext);
+                        var hash = basenameWithHash.substr(basename.length + 1);
+
+                        var playVersionedFilename = hash + "-" + basename;
+
+                        views[dirname + "/" + basename] = dirname + "/" + playVersionedFilename;
+
+                        //grunt.log.writeln("    " + fileChange.oldPath);
+                        //grunt.log.writeln("    " + dirname);
+                        //grunt.log.writeln("    " + views[dirname + "/" + basename + ext]);
+                    }
+                }
+            }
+        },
+        ngconstant: {
+            appConfigDev: {
+                options: {
+                    name: 'MyAppConfig',
+                    dest: '<%= conf.generatedFiles %>/constants/app-config.js',
+                    wrap: true
+                },
+                constants: {
+                    appConfig: {
+                        appMode: 'dev',
+                        versionedViews: views
+                    }
+                }
+            },
+            appConfigProd: {
+                options: {
+                    name: 'MyAppConfig',
+                    dest: '<%= conf.generatedFiles %>/constants/app-config.js',
+                    wrap: true
+                },
+                constants: {
+                    appConfig: {
+                        appMode: 'prod',
+                        versionedViews: views
+                    }
+                }
+            }
+        },
         concat: {
             options: {
-                separator: ';'
+                separator: ''
             }, ieshim: {
                 dest: '<%= conf.dist.components %>/ie-shim.min.js',
                 src: [
@@ -51,33 +122,46 @@ module.exports = function (grunt) {
                 ]
             },
             constants: {
-                dest: '<%= conf.dist.javascripts %>/constants/constants.js',
+                dest: '<%= conf.dist.javascripts %>/constants.js',
                 src: [
                     '<%= conf.javascripts %>/constants/user-roles.js',
-                    '<%= conf.javascripts %>/constants/access-levels.js'
+                    '<%= conf.javascripts %>/constants/access-levels.js',
+                    '<%= conf.generatedFiles %>/constants/*.js'
                 ]
             },
             filters: {
-                dest: '<%= conf.dist.javascripts %>/filters/filters.js',
+                dest: '<%= conf.dist.javascripts %>/filters.js',
                 src: [
                     '<%= conf.javascripts %>/filters/[a-z]*.js'
                 ]
             },
             controllers: {
-                dest: '<%= conf.dist.javascripts %>/controllers/controllers.js',
+                dest: '<%= conf.dist.javascripts %>/controllers.js',
                 src: [
                     '<%= conf.javascripts %>/controllers/**/[a-z]*.js'
                 ]
             },
             services: {
-                dest: '<%= conf.dist.javascripts %>/services/services.js',
+                dest: '<%= conf.dist.javascripts %>/services.js',
                 src: [
                     '<%= conf.javascripts %>/services/_helpers.js',
                     '<%= conf.javascripts %>/services/**/[a-z]*.js'
                 ]
             },
+            routers: {
+                dest: '<%= conf.dist.javascripts %>/routers.js',
+                src: [
+                    '<%= conf.javascripts %>/routers/**/[a-z]*.js'
+                ]
+            },
+            helpers: {
+                dest: '<%= conf.dist.javascripts %>/helpers.js',
+                src: [
+                    '<%= conf.javascripts %>/helpers/**/[a-z]*.js'
+                ]
+            },
             directives: {
-                dest: '<%= conf.dist.javascripts %>/directives/directives.js',
+                dest: '<%= conf.dist.javascripts %>/directives.js',
                 src: [
                     '<%= conf.javascripts %>/directives/**/[a-z]*.js'
                 ]
@@ -130,16 +214,6 @@ module.exports = function (grunt) {
                 ],
                 expand: true
             },
-            javascriptsSubDirectories: {
-                dest: '<%= conf.dist.javascripts %>',
-                cwd: '<%= conf.javascripts %>/',
-                src: [
-                    'constants/*.js',
-                    'helpers/*.js',
-                    'routers/*.js'
-                ],
-                expand: true
-            },
             stylesheets: {
                 dest: '<%= conf.dist.stylesheets %>/',
                 flatten: true,
@@ -188,15 +262,26 @@ module.exports = function (grunt) {
                 '!<%= conf.javascripts %>/**/_outro.js'
             ]
         },
+
         notify: {
 
         }
     });
 
     grunt.registerTask('dev', [
-       'jshint',
-       'concat',
-       'copy'
+        'jshint',
+        'md5',
+        'ngconstant:appConfigDev',
+        'concat',
+        'copy'
+    ]);
+
+    grunt.registerTask('prod', [
+        'jshint',
+        'md5',
+        'ngconstant:appConfigProd',
+        'concat',
+        'copy'
     ]);
 
     grunt.registerTask('default', ['dev', 'watch', 'notify']);

@@ -13,7 +13,7 @@
                 <button type="button" class="btn btn-default navbar-btn" disabled="disabled">魚</button>
                 <button type="button" class="btn btn-default navbar-btn" disabled="disabled">人気</button>
                 <button type="button" class="btn btn-default navbar-btn" disabled="disabled">新入荷</button>
-                <button type="button" class="btn btn-info navbar-btn select-shops" ng-click="selectShops()">店 : {{renderFilterShop()}}</button>
+                <button type="button" class="btn btn-info navbar-btn select-shops" ng-click="vm.selectShops()">店 : {{vm.renderFilterShop()}}</button>
             </div>
         </div>
     </nav>
@@ -22,17 +22,17 @@
             <div class="col-md-8 no-data">対象の商品がありません</div>
         </div>
         <div class="menu-item-list row" ng-hide="isEmpty()">
-            <div class="menu-item-container col-xs-12 col-sm-6 col-md-4 col-lg-4" ng-click="selectThis(menuItem)" ng-repeat-start="menuItem in menuItems | orderBy:['shopName', 'itemNumber', 'name'] track by $index">
+            <div class="menu-item-container col-xs-12 col-sm-6 col-md-4 col-lg-4" ng-click="vm.selectThis(menuItem)" ng-repeat-start="menuItem in vm.menuItems | orderBy:['shopName', 'itemNumber', 'name'] track by $index">
                 <div class="menu-item-sm">
                     <div class="caption">
                         <div class="shop-name">{{menuItem.shopName}}</div>
                         <div class="food-name">{{menuItem.itemNumber}} {{menuItem.name}} <span oot-reduced-price menu-item="menuItem"></span></div>
                     </div>
                     <div class="food-image">
-                        <a href="" class="thumbnail" ng-bind-html="renderImage(menuItem)"></a>
+                        <a href="" class="thumbnail"><img oot-menu-item-image menu-item="menuItem"/></a>
                     </div>
                     <div class="comment label label-success" ng-class="{'hidden':(menuItem.comment | isEmptyOrUndefined)}">{{menuItem.comment}}</div>
-                    <div class="selected-mark" ng-show="isSelected(menuItem)"><p>選択中</p></div>
+                    <div class="selected-mark" ng-show="vm.isSelected(menuItem)"><p>選択中</p></div>
                 </div>
             </div>
             <div class="clearfix visible-lg" ng-if="($index + 1) % 3 === 0"></div>
