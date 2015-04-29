@@ -22,7 +22,6 @@ import securesocial.core.java.SecureSocial;
 import securesocial.core.java.Token;
 import securesocial.core.java.UserAwareAction;
 import securesocial.core.providers.MailToken;
-import securesocial.core.providers.UsernamePasswordProvider$;
 import securesocial.core.services.SaveMode;
 import utils.controller.Results;
 import utils.securesocial.BasicProfileBasedOperations;
@@ -65,8 +64,8 @@ public class PasswordReset extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
+    @UserAwareAction  // RuntimeEnvironmentを利用するために必要
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    @UserAwareAction
     public static Result startReset() {
 
         JsonNode json = request().body().asJson();
@@ -94,8 +93,8 @@ public class PasswordReset extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
+    @UserAwareAction  // RuntimeEnvironmentを利用するために必要
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    @UserAwareAction
     public static Result reset(String token) {
 
         Option<MailToken> localToken = findToken(token);
