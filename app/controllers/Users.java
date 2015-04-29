@@ -5,8 +5,7 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import filters.RequireCSRFCheck4Ng;
-import securesocial.core.java.SecuredAction;
-import securesocial.core.java.UserAwareAction;
+import securesocial.custom.MySecuredAction;
 import utils.controller.Results;
 
 public class Users extends WithSecureSocialController {
@@ -14,7 +13,7 @@ public class Users extends WithSecureSocialController {
     private static Logger.ALogger logger = Logger.of("application.controllers.Users");
 
     @RequireCSRFCheck4Ng
-    @SecuredAction
+    @MySecuredAction
     public static Result index() {
 
         LocalUser localUser = getCurrentUser();
@@ -27,7 +26,7 @@ public class Users extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng
-    @SecuredAction
+    @MySecuredAction
     public static Result getMine() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 

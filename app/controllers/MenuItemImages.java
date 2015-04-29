@@ -13,7 +13,7 @@ import play.Logger;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
-import securesocial.core.java.SecuredAction;
+import securesocial.custom.MySecuredAction;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -26,7 +26,7 @@ public class MenuItemImages extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.MenuItemImages");
 
-    @SecuredAction
+    @MySecuredAction
     public static Result create() {
         logger.debug("#create");
 

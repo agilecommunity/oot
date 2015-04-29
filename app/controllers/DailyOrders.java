@@ -15,7 +15,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import securesocial.core.java.SecuredAction;
+import securesocial.custom.MySecuredAction;
 import utils.controller.Results;
 import utils.controller.parameters.DateParameter;
 import utils.controller.parameters.ParameterConverter;
@@ -49,7 +49,7 @@ public class DailyOrders extends WithSecureSocialController {
         }
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result index() {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -68,7 +68,7 @@ public class DailyOrders extends WithSecureSocialController {
         return ok(Json.toJson(orders));
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result getByOrderDate(String orderDateStr) {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -85,7 +85,7 @@ public class DailyOrders extends WithSecureSocialController {
         return ok(Json.toJson(list));
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result getMine() {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -110,7 +110,7 @@ public class DailyOrders extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecuredAction
+    @MySecuredAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result create() {
 
@@ -160,7 +160,7 @@ public class DailyOrders extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecuredAction
+    @MySecuredAction
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result update(Long id) {
         logger.debug("#update");
@@ -207,7 +207,7 @@ public class DailyOrders extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
-    @SecuredAction
+    @MySecuredAction
     public static Result delete(Long id) {
 
         logger.debug("#delete id: {}", id);

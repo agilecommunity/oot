@@ -7,10 +7,8 @@ import com.avaje.ebean.RawSqlBuilder;
 import models.Shop;
 import play.Logger;
 import play.libs.Json;
-import play.mvc.Controller;
 import play.mvc.Result;
-import securesocial.core.java.SecureSocial;
-import securesocial.core.java.SecuredAction;
+import securesocial.custom.MySecuredAction;
 
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class Shops extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.DailyMenus");
 
-    @SecuredAction
+    @MySecuredAction
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
