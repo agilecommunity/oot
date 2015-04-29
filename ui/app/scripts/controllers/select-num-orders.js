@@ -1,10 +1,17 @@
-angular.module('MyControllers')
-    .controller('SelectNumOrdersController',
-    ['$scope',
-    function ($scope) {
+(function(){
 
-    $scope.select_this = function(value) {
-        $scope.$close(value);
-    };
+    angular.module('MyControllers')
+        .controller('SelectNumOrdersController', SelectNumOrdersController);
 
-}]);
+    SelectNumOrdersController.$inject = ['$scope'];
+
+    function SelectNumOrdersController($scope) {
+
+        var vm = this;
+
+        vm.select_this = function(value) {
+            $scope.$close(value);
+        };
+    }
+
+})();

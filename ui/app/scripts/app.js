@@ -9,6 +9,7 @@
     angular.module('MyControllers', []);
     angular.module('MyFilters', []);
     angular.module('MyDirectives', []);
+    angular.module('MyProviders', []);
 
     angular.module('underscore.string', []).factory("_s", function(){ return s;});
 
@@ -26,7 +27,9 @@
             'MyServices',
             'MyControllers',
             'MyFilters',
-            'MyDirectives'
+            'MyDirectives',
+            'MyProviders',
+            'MyAppConfig'
         ]
     );
 

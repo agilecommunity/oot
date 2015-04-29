@@ -3,9 +3,9 @@
     angular.module('MyDirectives')
         .directive('ootChecklistDetail', ootChecklistDetail);
 
-    ootChecklistDetail.$inject = ["$compile", "$filter"];
+    ootChecklistDetail.$inject = ["$compile", "$filter", "Assets"];
 
-    function ootChecklistDetail($compile, $filter) {
+    function ootChecklistDetail($compile, $filter, Assets) {
 
         MyController.$inject = ["$scope", "$filter"];
 
@@ -128,7 +128,7 @@
                 if (attrs.templateurl !== undefined) {
                     return attrs.templateurl;
                 }
-                return "/views/_partial/_checklist-detail";
+                return Assets.versioned("/views/_partial/_checklist-detail");
             },
             scope: {
                 dailyMenu: "=dailymenu",
