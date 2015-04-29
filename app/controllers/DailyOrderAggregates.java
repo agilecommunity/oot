@@ -7,7 +7,7 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import securesocial.core.java.SecuredAction;
+import securesocial.custom.MySecuredAction;
 import utils.controller.Results;
 import utils.controller.parameters.DateParameter;
 import utils.controller.parameters.ParameterConverter;
@@ -29,7 +29,7 @@ public class DailyOrderAggregates extends WithSecureSocialController {
         }
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result index() {
 
         response().setHeader(CACHE_CONTROL, "no-cache");
@@ -72,7 +72,7 @@ public class DailyOrderAggregates extends WithSecureSocialController {
         return ok(Json.toJson(aggregates.findList()));
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result getByOrderDate(String orderDateStr) {
 
         logger.debug("#getByOrderDate orderDateStr: " + orderDateStr);

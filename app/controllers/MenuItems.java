@@ -19,7 +19,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import securesocial.core.java.SecuredAction;
+import securesocial.custom.MySecuredAction;
 import utils.controller.Results;
 
 public class MenuItems extends WithSecureSocialController {
@@ -49,7 +49,7 @@ public class MenuItems extends WithSecureSocialController {
         }
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result index() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -65,7 +65,7 @@ public class MenuItems extends WithSecureSocialController {
         return ok(Json.toJson(menus.orderBy("id").findList()));
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result indexByShopName(String shopName) {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -85,7 +85,7 @@ public class MenuItems extends WithSecureSocialController {
     }
 
     //@RequireCSRFCheck4Ng  /* IE8でjquery file uploadを使うとヘッダにX-Requested-Withが使えないため設定しない、byPassも無理らしい */
-    @SecuredAction
+    @MySecuredAction
     public static Result create() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -128,7 +128,7 @@ public class MenuItems extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng
-    @SecuredAction
+    @MySecuredAction
     public static Result update(Long id) {
         logger.debug("#update id: {}", id);
 
@@ -158,7 +158,7 @@ public class MenuItems extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng
-    @SecuredAction
+    @MySecuredAction
     public static Result delete(Long id) {
         logger.debug("#delete id: {}", id);
 

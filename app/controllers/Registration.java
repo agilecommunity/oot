@@ -67,7 +67,7 @@ public class Registration extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
-    @UserAwareAction
+    @UserAwareAction  // RuntimeEnvironmentを利用するために必要
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result startSignUp() {
 
@@ -96,7 +96,7 @@ public class Registration extends WithSecureSocialController {
     }
 
     @RequireCSRFCheck4Ng()
-    @UserAwareAction
+    @UserAwareAction  // RuntimeEnvironmentを利用するために必要
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public static Result signUp(String token) {
 

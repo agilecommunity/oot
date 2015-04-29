@@ -8,14 +8,14 @@ import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import securesocial.core.java.SecuredAction;
+import securesocial.custom.MySecuredAction;
 import utils.controller.Results;
 
 public class GatheringSettings extends WithSecureSocialController {
 
     private static Logger.ALogger logger = Logger.of("application.controllers.GatheringSettings");
 
-    @SecuredAction
+    @MySecuredAction
     public static Result get() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
@@ -26,7 +26,7 @@ public class GatheringSettings extends WithSecureSocialController {
         return ok(Json.toJson(item));
     }
 
-    @SecuredAction
+    @MySecuredAction
     public static Result update() {
         response().setHeader(CACHE_CONTROL, "no-cache");
 
