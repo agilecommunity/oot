@@ -1,0 +1,6 @@
+<div ng-controller="UserLinksController as userlinks">
+    <ul class="header-nav no-print" ng-if="userlinks.isSignedIn()">
+        <li class="header-nav-item user-link"><span class="full-name">{{$root.currentUser.lastName}} {{$root.currentUser.firstName}}</span></li>
+        <li class="header-nav-item user-link"><button class="btn btn-signout" tooltip-placement="bottom" tooltip="サインアウト" ng-click="userlinks.signout()"><span class="glyphicon glyphicon-log-out"></span></button></li>
+    </ul>
+</div>
