@@ -31,7 +31,7 @@
         vm.renderTotalReducedOnOrder = function(order) {
             var rendered = "";
             if (order !== null) {
-                rendered = order.totalReducedOnOrder() + "円";
+                rendered = $filter('currencyNoFraction')(order.totalReducedOnOrder(), "") + "円";
             }
             return rendered;
         };

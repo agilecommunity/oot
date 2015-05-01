@@ -30,8 +30,8 @@
                         <td class="shop-name">{{detailItem.menuItem.shopName}}</td>
                         <td class="item-number">{{detailItem.menuItem.itemNumber}}</td>
                         <td class="name">{{detailItem.menuItem.name}}</td>
-                        <td class="fixed-on-purchase-exc-tax price">{{detailItem.menuItem.fixedOnPurchaseExcTax}}</td>
-                        <td class="fixed-on-purchase-inc-tax price">{{detailItem.menuItem.fixedOnPurchaseIncTax}}</td>
+                        <td class="fixed-on-purchase-exc-tax price">{{detailItem.menuItem.fixedOnPurchaseExcTax | currencyNoFraction:""}}</td>
+                        <td class="fixed-on-purchase-inc-tax price">{{detailItem.menuItem.fixedOnPurchaseIncTax | currencyNoFraction:""}}</td>
                     </tr>
                     </tbody>
                 </table>

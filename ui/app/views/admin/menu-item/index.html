@@ -38,11 +38,11 @@
                         <th class="shop_name" width="15%">店名</th>
                         <th class="category" width="5%">カテゴリ</th>
                         <th class="name" width="30%">品名</th>
-                        <th class="fixed_on_order">注文<br>(定価)</th>
-                        <th class="discount_on_order">注文<br>(割引)</th>
-                        <th class="reduced_on_order">注文<br>(実売)</th>
-                        <th class="fixed_on_purchase_exc_tax">発注<br>(税抜)</th>
-                        <th class="fixed_on_purchase_inc_tax">発注<br>(税込)</th>
+                        <th class="fixed-on-order">注文<br>(定価)</th>
+                        <th class="discount-on-order">注文<br>(割引)</th>
+                        <th class="reduced-on-order">注文<br>(実売)</th>
+                        <th class="fixed-on-purchase-exc-tax">発注<br>(税抜)</th>
+                        <th class="fixed-on-purchase-inc-tax">発注<br>(税込)</th>
                         <th class="edit" width="5%">編集</th>
                         <th class="delete" width="5%">削除</th>
                     </tr>
@@ -51,14 +51,14 @@
                     <tr id="menu-item-{{menuItem.id}}" ng-repeat="menuItem in menuItems | orderBy:['shopName', 'itemNumber', 'name'] track by $index">
                         <td class="number">{{$index + 1}}</td>
                         <td class="status">{{menuItem.status}}</td>
-                        <td class="shop_name">{{menuItem.shopName}}</td>
+                        <td class="shop-name">{{menuItem.shopName}}</td>
                         <td class="category">{{menuItem.category}}</td>
                         <td class="name">{{menuItem.name}}</td>
-                        <td class="fixed_on_order price">{{menuItem.fixedOnOrder}}</td>
-                        <td class="discount_on_order price">{{menuItem.discountOnOrder}}</td>
-                        <td class="reduced_on_order price">{{menuItem.reducedOnOrder}}</td>
-                        <td class="fixed_on_purchase_exc_tax price">{{menuItem.fixedOnPurchaseExcTax}}</td>
-                        <td class="fixed_on_purchase_inc_tax price">{{menuItem.fixedOnPurchaseIncTax}}</td>
+                        <td class="fixed-on-order price">{{menuItem.fixedOnOrder | currencyNoFraction:""}}</td>
+                        <td class="discount-on-order price">{{menuItem.discountOnOrder | currencyNoFraction:""}}</td>
+                        <td class="reduced-on-order price">{{menuItem.reducedOnOrder | currencyNoFraction:""}}</td>
+                        <td class="fixed-on-purchase-exc-tax price">{{menuItem.fixedOnPurchaseExcTax | currencyNoFraction:""}}</td>
+                        <td class="fixed-on-purchase-inc-tax price">{{menuItem.fixedOnPurchaseIncTax | currencyNoFraction:""}}</td>
                         <td class="edit"><button class="btn btn-info" ng-click="editItem(menuItem)">編集</button></td>
                         <td class="delete"><button class="btn btn-danger" disabled>削除</button></td>
                     </tr>
