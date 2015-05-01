@@ -26,7 +26,7 @@
                     <div class="date">
                         {{dayGroup.day.format('M月D日 (ddd曜日)')}}
                     </div>
-                    <div class="small-total">当日合計: <span class="price">{{dayGroup.totalReducedOnOrder()}}円</span></div>
+                    <div class="small-total">当日合計: <span class="price">{{dayGroup.totalReducedOnOrder() | currencyNoFraction:""}}円</span></div>
                     <div class="gathering-status" oot-gathering-status gathering-setting="vm.gatheringSetting" order-stat="dayGroup.orderStat"></div>
                     <div class="clear"></div>
                 </div>
