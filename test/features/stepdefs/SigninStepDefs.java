@@ -2,6 +2,7 @@ package features.stepdefs;
 
 import cucumber.api.java.ja.もし;
 import features.pages.SigninPage;
+import features.pages.UserLinksModule;
 import features.pages.dialog.ErrorDialogPage;
 import features.pages.resetPassword.ResetPage;
 import features.pages.resetPassword.StartResetPage;
@@ -22,8 +23,9 @@ public class SigninStepDefs {
 
     @もし("^サインアウトする$")
     public void さいんあうとする() throws Throwable {
-        // まだサインアウトが実装されてないので、ひとまずルート画面に戻る
-        WebBrowser.INSTANCE.get(String.format("http://localhost:%d/", GlobalHooks.PORT));
+
+        UserLinksModule userLinksModule = new UserLinksModule(WebBrowser.INSTANCE);
+        SigninPage signinPage = userLinksModule.signout();
     }
 
     @もし("^ユーザ \"(.*?)\" パスワード \"(.*?)\" でパスワードの初期化をする$")

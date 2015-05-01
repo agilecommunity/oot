@@ -23,6 +23,12 @@ ul.nav-pills li.divider {
     padding-right: 5px;
 }
 
+/* ui.bootstrap 補助 */
+/* tooltipのサイズを拡張 */
+.tooltip-inner {
+    width: 8em;
+}
+
 /* アプリ独自 */
 
 *{
@@ -134,6 +140,28 @@ td.number {
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.header-nav {
+    list-style: outside none none;
+}
+
+.header-nav-item {
+    display: inline-block;
+}
+
+#user-links {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+}
+
+.user-link {
+    height: 29px;
+}
+
+.btn-signout {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
 }
 
 .content-header > div {
@@ -301,22 +329,9 @@ td.number {
     vertical-align: top;
 }
 
-.user-info {
-    position: absolute;
-    top: 50px;
-    right: 1em;
-}
-
 .login-form {
     text-align: center;
 }
-
-/*
-   172   bde38a
-   204   dcf0c1
-*/
-
-
 
 .order-management .title {
     margin: 0.5em;
