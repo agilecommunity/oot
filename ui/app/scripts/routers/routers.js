@@ -67,9 +67,9 @@
             resolve: app.my.resolvers.AdminIndexController,
             access: AccessLevels.admin
         })
-        .when('/admin/daily-menus/new', {
-            templateUrl: versionedTemplateUrl('/views/admin/daily-menu/new'),
-            controller: 'DailyMenuNewController',
+        .when('/admin/daily-menus/:menuDate?', {
+            templateUrl: versionedTemplateUrl('/views/admin/daily-menu/edit'),
+            controller: 'DailyMenuEditController',
             controllerAs: 'vm',
             access: AccessLevels.admin
         })

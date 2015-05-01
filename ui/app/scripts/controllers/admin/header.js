@@ -18,8 +18,8 @@
             $location.path("/admin/index");
         };
 
-        vm.showOrderMenuCreate = function () {
-            $location.path("/admin/daily-menus/new");
+        vm.showDailyMenuEdit = function () {
+            $location.path("/admin/daily-menus");
         };
 
         vm.showMenuItemsIndex = function () {

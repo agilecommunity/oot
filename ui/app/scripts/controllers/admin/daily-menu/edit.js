@@ -1,11 +1,11 @@
 (function(){
 
     angular.module('MyControllers')
-        .controller('DailyMenuNewController', DailyMenuNewController);
+        .controller('DailyMenuEditController', DailyMenuEditController);
 
-    DailyMenuNewController.$inject = ['$location', '$filter', '$modal', 'dialogs', 'MenuItem', 'DailyMenu', 'DailyOrder', 'Assets'];
+    DailyMenuEditController.$inject = ['$location', '$filter', '$modal', 'dialogs', 'MenuItem', 'DailyMenu', 'DailyOrder', 'Assets'];
 
-    function DailyMenuNewController($location, $filter, $modal, dialogs, MenuItem, DailyMenu, DailyOrder, Assets) {
+    function DailyMenuEditController($location, $filter, $modal, dialogs, MenuItem, DailyMenu, DailyOrder, Assets) {
 
         var vm = this;
 
