@@ -1,98 +1,111 @@
 <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">&times;</button>
+    <button type="button" class="close" ng-click="vm.cancel()">&times;</button>
     <h4>商品編集</h4>
 </div>
 <div class="modal-body">
     <form class="form-horizontal" role="form">
-        <div class="form-group" ng-class="{'has-error': hasError('shopName')}">
-            <label for="menuItem.shop_name" class="col-sm-3 control-label">店名</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.shop_name" ng-model="menuItem.shopName">
-                <span class="help-block" id="error.menuItem.shop_name">{{errors.shopName}}</span>
-            </div>
-        </div>
-        <div class="form-group" ng-class="{'has-error': hasError('registerNumber')}">
-            <label for="menuItem.register_number" class="col-sm-3 control-label">レジ番号</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.register_number" ng-model="menuItem.registerNumber">
-                <span class="help-block" id="error.menuItem.register_number">{{errors.registerNumber}}</span>
-            </div>
-        </div>
-        <div class="form-group" ng-class="{'has-error': hasError('category')}">
-            <label class="col-sm-3 control-label">カテゴリ</label>
-            <div class="col-sm-9">
+        <div class="form-group" ng-class="{'has-error': vm.hasError('category')}">
+            <label class="col-sm-2 control-label">カテゴリ</label>
+            <div class="col-sm-10">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default category" ng-class="{active: menuItem.category == 'bento'}" ng-click="setCategory('bento')">弁当</button>
-                    <button type="button" class="btn btn-default category" ng-class="{active: menuItem.category == 'side'}"  ng-click="setCategory('side')">サイドメニュー</button>
+                    <button type="button" class="btn btn-default category" ng-class="{active: vm.menuItem.category == 'bento'}" ng-click="vm.setCategory('bento')">弁当</button>
+                    <button type="button" class="btn btn-default category" ng-class="{active: vm.menuItem.category == 'side'}"  ng-click="vm.setCategory('side')">サイドメニュー</button>
                 </div>
-                <span class="help-block" id="error.menuItem.category">{{errors.category}}</span>
+                <span class="help-block" id="error.menuItem.category">{{vm.errors.category}}</span>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('itemNumber')}">
-            <label for="menuItem.item_number" class="col-sm-3 control-label">商品番号</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.item_number" ng-model="menuItem.itemNumber">
-                <span class="help-block" id="error.menuItem.item_number">{{errors.itemNumber}}</span>
+        <div class="form-group" ng-class="{'has-error': vm.hasError('shopName')}">
+            <label for="menuItem.shop_name" class="col-sm-2 control-label">店名</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="menuItem.shop_name" ng-model="vm.menuItem.shopName">
+                <span class="help-block" id="error.menuItem.shop_name">{{vm.errors.shopName}}</span>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('name')}">
-            <label for="menuItem.name" class="col-sm-3 control-label">商品名</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.name" ng-model="menuItem.name">
-                <span class="help-block" id="error.menuItem.name">{{errors.name}}</span>
+        <div class="form-group">
+            <div ng-class="{'has-error': vm.hasError('registerNumber')}">
+                <label for="menuItem.register_number" class="col-sm-2 control-label">レジ番号</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="menuItem.register_number" ng-model="vm.menuItem.registerNumber">
+                    <span class="help-block" id="error.menuItem.register_number">{{vm.errors.registerNumber}}</span>
+                </div>
+            </div>
+            <div ng-class="{'has-error': vm.hasError('itemNumber')}">
+                <label for="menuItem.item_number" class="col-sm-2 control-label">商品番号</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="menuItem.item_number" ng-model="vm.menuItem.itemNumber">
+                    <span class="help-block" id="error.menuItem.item_number">{{vm.errors.itemNumber}}</span>
+                </div>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('fixedOnOrder')}">
-            <label for="menuItem.fixed_on_order" class="col-sm-3 control-label">注文(定価)</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.fixed_on_order" ng-model="menuItem.fixedOnOrder">
-                <span class="help-block" id="error.menuItem.fixed_on_order">{{errors.fixedOnOrder}}</span>
+        <div class="form-group" ng-class="{'has-error': vm.hasError('name')}">
+            <label for="menuItem.name" class="col-sm-2 control-label">商品名</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="menuItem.name" ng-model="vm.menuItem.name">
+                <span class="help-block" id="error.menuItem.name">{{vm.errors.name}}</span>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('discountOnOrder')}">
-            <label for="menuItem.discount_on_order" class="col-sm-3 control-label">注文(割引額)</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.discount_on_order" ng-model="menuItem.discountOnOrder">
-                <span class="help-block" id="error.menuItem.discount_on_order">{{errors.discountOnOrder}}</span>
+        <div class="form-group">
+            <div ng-class="{'has-error': vm.hasError('fixedOnOrder')}">
+                <label for="menuItem.fixed_on_order" class="col-sm-2 control-label">注文(定価)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="menuItem.fixed_on_order" ng-model="vm.menuItem.fixedOnOrder">
+                    <span class="help-block" id="error.menuItem.fixed_on_order">{{vm.errors.fixedOnOrder}}</span>
+                </div>
+            </div>
+            <div ng-class="{'has-error': vm.hasError('discountOnOrder')}">
+                <label for="menuItem.discount_on_order" class="col-sm-2 control-label">注文(割引額)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="menuItem.discount_on_order" ng-model="vm.menuItem.discountOnOrder">
+                    <span class="help-block" id="error.menuItem.discount_on_order">{{vm.errors.discountOnOrder}}</span>
+                </div>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('fixedOnPurchaseExcTax')}">
-            <label for="menuItem.fixed_on_purchase_exc_tax" class="col-sm-3 control-label">発注(税抜)</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.fixed_on_purchase_exc_tax" ng-model="menuItem.fixedOnPurchaseExcTax">
-                <span class="help-block" id="error.menuItem.fixed_on_purchase_exc_tax">{{errors.fixedOnPurchaseExcTax}}</span>
+        <div class="form-group">
+            <div ng-class="{'has-error': vm.hasError('fixedOnPurchaseExcTax')}">
+                <label for="menuItem.fixed_on_purchase_exc_tax" class="col-sm-2 control-label">発注(税抜)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="menuItem.fixed_on_purchase_exc_tax" ng-model="vm.menuItem.fixedOnPurchaseExcTax">
+                    <span class="help-block" id="error.menuItem.fixed_on_purchase_exc_tax">{{vm.errors.fixedOnPurchaseExcTax}}</span>
+                </div>
+            </div>
+            <div ng-class="{'has-error': vm.hasError('fixedOnPurchaseIncTax')}">
+                <label for="menuItem.fixed_on_purchase_inc_tax" class="col-sm-2 control-label">発注(税抜)</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="menuItem.fixed_on_purchase_inc_tax" ng-model="vm.menuItem.fixedOnPurchaseIncTax">
+                    <span class="help-block" id="error.menuItem.fixed_on_purchase_inc_tax">{{vm.errors.fixedOnPurchaseIncTax}}</span>
+                </div>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('fixedOnPurchaseIncTax')}">
-            <label for="menuItem.fixed_on_purchase_inc_tax" class="col-sm-3 control-label">発注(税抜)</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.fixed_on_purchase_inc_tax" ng-model="menuItem.fixedOnPurchaseIncTax">
-                <span class="help-block" id="error.menuItem.fixed_on_purchase_inc_tax">{{errors.fixedOnPurchaseIncTax}}</span>
+        <div class="form-group" ng-class="{'has-error': vm.hasError('code')}">
+            <label for="menuItem.code" class="col-sm-2 control-label">商品コード</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="menuItem.code" ng-model="vm.menuItem.code">
+                <span class="help-block" id="error.menuItem.code">{{vm.errors.code}}</span>
             </div>
         </div>
-        <div class="form-group" ng-class="{'has-error': hasError('code')}">
-            <label for="menuItem.code" class="col-sm-3 control-label">商品コード</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="menuItem.code" ng-model="menuItem.code">
-                <span class="help-block" id="error.menuItem.code">{{errors.code}}</span>
-            </div>
-        </div>
-        <div class="form-group" ng-class="{'has-error': hasError('status')}">
-            <label class="col-sm-3 control-label">ステータス</label>
-            <div class="col-sm-9">
+        <div class="form-group" ng-class="{'has-error': vm.hasError('status')}">
+            <label class="col-sm-2 control-label">ステータス</label>
+            <div class="col-sm-10">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default status" ng-class="{active: menuItem.status == 'valid'}"     ng-click="setStatus('valid')">有効</button>
-                    <button type="button" class="btn btn-default status" ng-class="{active: menuItem.status == 'stopped'}"   ng-click="setStatus('stopped')">停止</button>
-                    <button type="button" class="btn btn-default status" ng-class="{active: menuItem.status == 'suspended'}" ng-click="setStatus('suspended')">休眠</button>
+                    <button type="button" class="btn btn-default status" ng-class="{active: vm.menuItem.status == 'valid'}"     ng-click="vm.setStatus('valid')">有効</button>
+                    <button type="button" class="btn btn-default status" ng-class="{active: vm.menuItem.status == 'stopped'}"   ng-click="vm.setStatus('stopped')">停止</button>
+                    <button type="button" class="btn btn-default status" ng-class="{active: vm.menuItem.status == 'suspended'}" ng-click="vm.setStatus('suspended')">休眠</button>
                 </div>
-                <span class="help-block" id="error.menuItem.status">{{errors.status}}</span>
+                <span class="help-block" id="error.menuItem.status">{{vm.errors.status}}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': vm.hasError('comment')}">
+            <label class="col-sm-2 control-label">コメント</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="menuItem.comment" rows="4" ng-model="vm.menuItem.comment"></textarea>
+                <span class="help-block" id="error.menuItem.comment">{{vm.errors.comment}}</span>
             </div>
         </div>
     </form>
 </div>
 <div class="modal-footer">
     <div class="pull-right">
-        <button class="btn btn-default" id="menuItem.cancel" ng-click="cancel()">Cancel</button>
-        <button class="btn btn-primary" id="menuItem.ok" ng-click="save()">OK</button>
+        <button class="btn btn-default" id="menuItem.cancel" ng-click="vm.cancel()">Cancel</button>
+        <button class="btn btn-primary" id="menuItem.ok" ng-click="vm.save()">OK</button>
     </div>
 </div>

@@ -43,7 +43,7 @@ public class CucumberUtils {
                 throw new IllegalArgumentException();
             }
 
-            result = DateTime.now();
+            result = DateTime.now().withTime(0, 0, 0, 0);
 
             if ("今週".equals(params[0])) {
                 result = result.withDayOfWeek(dayOfWeek);

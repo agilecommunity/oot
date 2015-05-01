@@ -1,17 +1,23 @@
-angular.module('MyControllers')
-    .controller('MenuItemEditController',
-    ['$scope', '$location', '$routeParams', '$filter', '$modal', 'dialogs', 'User', 'MenuItem', 'menuItem',
-    function ($scope, $location, $routeParams, $filter, $modal, dialogs, User, MenuItem, menuItem) {
+(function(){
 
-    $scope.menuItem = menuItem;
-    var menuItemSaved = angular.copy($scope.menuItem);
+    angular.module('MyControllers')
+        .controller('MenuItemEditController', MenuItemEditController);
 
-    $scope.errors = [];
+    MenuItemEditController.$inject = ['$scope', '$location', '$filter', 'dialogs', 'MenuItem', 'menuItem'];
 
-    $scope.save = function() {
-        var handler = {};
+    function MenuItemEditController($scope, $location, $filter, dialogs, MenuItem, menuItem) {
 
-        if ($scope.menuItem.id === undefined) {
+        var vm = this;
+
+        vm.menuItem = menuItem;
+        var menuItemSaved = angular.copy(vm.menuItem);
+
+        vm.errors = [];
+
+        var createItem = function(menuItem) {
+
+            var handler = {};
+
             handler.success = function(saved) {
                 $scope.$close(saved[0]);
             };
@@ -19,7 +25,7 @@ angular.module('MyControllers')
             handler.error = function(error) {
                 console.log(error);
                 if (error.status == 422) {
-                    $scope.errors = error.data.errors[0];
+                    vm.errors = error.data.errors[0];
                 } else {
                     var dialog = dialogs.error("データ登録・更新失敗", error.data.message);
 
@@ -29,8 +35,13 @@ angular.module('MyControllers')
                 }
             };
 
-            MenuItem.create({}, [$scope.menuItem], handler.success, handler.error);
-        } else {
+            MenuItem.create({}, [menuItem], handler.success, handler.error);
+        };
+
+        var updateItem = function(menuItem) {
+
+            var handler = {};
+
             handler.success = function(saved) {
                 $scope.$close(saved);
             };
@@ -38,7 +49,7 @@ angular.module('MyControllers')
             handler.error = function(error) {
                 console.log(error);
                 if (error.status === 422) {
-                    $scope.errors = error.data.errors;
+                    vm.errors = error.data.errors;
                 } else {
                     var dialog = dialogs.error("データ登録・更新失敗", error.data.message);
 
@@ -48,29 +59,38 @@ angular.module('MyControllers')
                 }
             };
 
-            $scope.menuItem.$update({}, handler.success, handler.error);
-        }
-    };
+            menuItem.$update({}, handler.success, handler.error);
+        };
 
-    $scope.cancel = function() {
-        angular.copy(menuItemSaved, $scope.menuItem);
-        $scope.$dismiss();
-    };
+        vm.save = function() {
+            if (vm.menuItem.id === undefined) {
+                createItem(vm.menuItem);
+            } else {
+                updateItem(vm.menuItem);
+            }
+        };
 
-    $scope.setCategory = function(value) {
-        $scope.menuItem.category = value;
-    };
+        vm.cancel = function() {
+            angular.copy(menuItemSaved, vm.menuItem);
+            $scope.$dismiss();
+        };
 
-    $scope.setStatus = function(value) {
-        $scope.menuItem.status = value;
-    };
+        vm.setCategory = function(value) {
+            vm.menuItem.category = value;
+        };
 
-    $scope.hasError = function(name) {
-        if ($scope.errors.length === 0) {
-            return false;
-        }
+        vm.setStatus = function(value) {
+            vm.menuItem.status = value;
+        };
 
-        return ($scope.errors[name] !== undefined && $scope.errors[name] !== null);
-    };
+        vm.hasError = function(name) {
+            if (vm.errors.length === 0) {
+                return false;
+            }
 
-}]);
+            return (vm.errors[name] !== undefined && vm.errors[name] !== null);
+        };
+
+    }
+
+})();

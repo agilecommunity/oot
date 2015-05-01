@@ -39,7 +39,8 @@ angular.module('MyControllers')
     $scope.selectShops = function() {
         var modalInstance = $modal.open({
             templateUrl: Assets.versioned("/views/admin/daily-menu/select-shop"),
-            controller: "DailyMenuSelectShopController"
+            controller: "DailyMenuSelectShopController",
+            controllerAs: "vm"
         });
 
         modalInstance.result.then(function (selectedItem) {
@@ -54,6 +55,7 @@ angular.module('MyControllers')
         var modalInstance = $modal.open({
             templateUrl: Assets.versioned("/views/admin/menu-item/edit"),
             controller: "MenuItemEditController",
+            controllerAs: "vm",
             backdrop: "static",
             resolve: {
                 menuItem: function() {
@@ -67,6 +69,7 @@ angular.module('MyControllers')
         var modalInstance = $modal.open({
             templateUrl: Assets.versioned("/views/admin/menu-item/edit"),
             controller: "MenuItemEditController",
+            controllerAs: "vm",
             backdrop: "static",
             resolve: {
                 menuItem: function() {

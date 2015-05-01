@@ -61,6 +61,9 @@ public class EditPage {
     @FindBys(@FindBy(how=How.XPATH, using="//button[contains(@class, 'status')]"))
     private List<WebElement> statuses;
 
+    @FindBy(id="menuItem.comment")
+    private WebElement comment;
+
     @FindBy(id="menuItem.ok")
     private WebElement ok;
 
@@ -130,6 +133,10 @@ public class EditPage {
             }
         }
 
+    }
+
+    public void setComment(String value) {
+        this.comment.sendKeys(value);
     }
 
     public void save() {
