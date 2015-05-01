@@ -138,7 +138,7 @@
                     for (var i = 0; i < 5; i++) {
                         var currentDate = moment(vm.menuDateBegin).add("days", i);
                         console.log(app.my.helpers.formatTimestamp(currentDate));
-                        var menuIndex = DailyMenu.findByMenuDate(response, currentDate);
+                        var menuIndex = DailyMenu.findIndexByMenuDate(response, currentDate);
 
                         var menu = null;
                         if (menuIndex === -1) {

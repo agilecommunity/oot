@@ -5,24 +5,24 @@
 
     DailyOrderStat.$inject = ['$resource', '$filter'];
 
-    var transformList = function (data, headersGetter) {
-        var list = angular.fromJson(data);
-        angular.forEach(list, function (item) {
-            item.orderDate = app.my.helpers.parseTimestamp(item.orderDate);
-        });
-        return list;
-    };
-
-    var transformOne = function (data, headersGetter) {
-        if ($filter('isEmptyOrUndefined')(data)) {
-            return null;
-        }
-        var one = angular.fromJson(data);
-        one.orderDate = app.my.helpers.parseTimestamp(one.orderDate);
-        return one;
-    };
-
     function DailyOrderStat($resource, $filter) {
+        var transformList = function (data, headersGetter) {
+            var list = angular.fromJson(data);
+            angular.forEach(list, function (item) {
+                item.orderDate = app.my.helpers.parseTimestamp(item.orderDate);
+            });
+            return list;
+        };
+
+        var transformOne = function (data, headersGetter) {
+            if ($filter('isEmptyOrUndefined')(data)) {
+                return null;
+            }
+            var one = angular.fromJson(data);
+            one.orderDate = app.my.helpers.parseTimestamp(one.orderDate);
+            return one;
+        };
+
         var MyClass = $resource(
             '/api/v1.0/daily-order-stats/:id',
             {id: "@id"},
@@ -35,6 +35,15 @@
                 }
             }
         );
+
+        MyClass.find = function(list, targetDate) {
+            for (var i=0; i<list.length; i++) {
+                if (list[i].orderDate.unix() === targetDate.unix()) {
+                    return list[i];
+                }
+            }
+            return null;
+        };
 
         MyClass.createDummy = function() {
             var objects = [

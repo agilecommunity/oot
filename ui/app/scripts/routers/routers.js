@@ -21,8 +21,8 @@
             templateUrl: versionedTemplateUrl('/views/signin'),    // 利用するビュー
             controller: 'SigninController',                        // 利用するコントローラー
             controllerAs: 'vm',                                    // ビュー上でのコントローラのエイリアス
-            access: AccessLevels.anon,                             // アクセス権 (アプリで追加した項目)
-            resolve: app.my.resolvers.SigninController             // データの事前読み込み
+            resolve: app.my.resolvers.SigninController,            // データの事前読み込み
+            access: AccessLevels.anon                              // アクセス権 (アプリで追加した項目)
         })
         .when('/signup', {
             templateUrl: versionedTemplateUrl('/views/start-signup'),
@@ -50,8 +50,8 @@
             templateUrl: versionedTemplateUrl('/views/order'),
             controller: 'OrderController',
             controllerAs: 'vm',
-            access: AccessLevels.user,
-            resolve: app.my.resolvers.OrderController
+            resolve: app.my.resolvers.OrderController,
+            access: AccessLevels.user
         })
         .when('/view-order/:menuDate?', {
             templateUrl: versionedTemplateUrl('/views/view-order'),
@@ -63,6 +63,8 @@
         .when('/admin/index', {
             templateUrl: versionedTemplateUrl('/views/admin/index'),
             controller: 'AdminIndexController',
+            controllerAs: 'vm',
+            resolve: app.my.resolvers.AdminIndexController,
             access: AccessLevels.admin
         })
         .when('/admin/daily-menus/new', {
