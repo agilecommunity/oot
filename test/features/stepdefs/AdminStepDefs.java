@@ -101,6 +101,7 @@ public class AdminStepDefs {
             editPage.setFixedOnPurchaseIncTax(product.get("発注(税込)"));
             editPage.setCode(product.get("商品コード"));
             editPage.setStatus(product.get("ステータス"));
+            editPage.setComment(product.get("コメント"));
             editPage.save();
 
             Thread.sleep(1000); //FIXME 何をもって完了と見做すのが良いか? 誰が完了したとみなすのか?

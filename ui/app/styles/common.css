@@ -17,6 +17,12 @@ ul.nav-pills li.divider {
     color: #fff;
 }
 
+/* モーダルダイアログのFormで利用するラベル */
+.modal-body form .control-label {
+    padding-left:  5px;
+    padding-right: 5px;
+}
+
 /* アプリ独自 */
 
 *{
