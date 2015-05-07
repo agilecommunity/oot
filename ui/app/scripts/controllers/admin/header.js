@@ -10,7 +10,7 @@
 
         //---- ヘルパ
         vm.isActive = function(url) {
-            return $location.path() === url;
+            return $location.path().lastIndexOf(url, 0) === 0;
         };
 
         //---- イベントハンドラ

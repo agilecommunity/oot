@@ -1,18 +1,60 @@
 (function(){
 
-    angular.module('MyControllers')
-        .controller('DailyMenuEditController', DailyMenuEditController);
+    // FIXME: UI.bootstrapがバージョンアップされてテンプレートの入れ替えができるようになったら書き換えること
+    // DatePickerのテンプレートを再定義
+    // ボタンにクラスを追加して、テストしやすくした
+    angular.module("template/datepicker/day.html", []).run(["$templateCache", function($templateCache) {
+        $templateCache.put("template/datepicker/day.html",
+            "<table class=\"tbl-datepicker-days\" role=\"grid\" aria-labelledby=\"{{uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
+            "  <thead>\n" +
+            "    <tr>\n" +
+            "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-left btn-datepicker-prev-month\" ng-click=\"move(-1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-left\"></i></button></th>\n" +
+            "      <th colspan=\"{{5 + showWeeks}}\"><button id=\"{{uniqueId}}-title\" role=\"heading\" aria-live=\"assertive\" aria-atomic=\"true\" type=\"button\" class=\"btn btn-default btn-sm btn-datepicker-toggle\" ng-click=\"toggleMode()\" tabindex=\"-1\" style=\"width:100%;\"><strong>{{title}}</strong></button></th>\n" +
+            "      <th><button type=\"button\" class=\"btn btn-default btn-sm pull-right btn-datepicker-next-month\" ng-click=\"move(1)\" tabindex=\"-1\"><i class=\"glyphicon glyphicon-chevron-right\"></i></button></th>\n" +
+            "    </tr>\n" +
+            "    <tr>\n" +
+            "      <th ng-show=\"showWeeks\" class=\"text-center\"></th>\n" +
+            "      <th ng-repeat=\"label in labels track by $index\" class=\"text-center\"><small aria-label=\"{{label.full}}\">{{label.abbr}}</small></th>\n" +
+            "    </tr>\n" +
+            "  </thead>\n" +
+            "  <tbody>\n" +
+            "    <tr ng-repeat=\"row in rows track by $index\">\n" +
+            "      <td ng-show=\"showWeeks\" class=\"text-center h6\"><em>{{ weekNumbers[$index] }}</em></td>\n" +
+            "      <td ng-repeat=\"dt in row track by dt.date\" class=\"text-center\" role=\"gridcell\" id=\"{{dt.uid}}\" aria-disabled=\"{{!!dt.disabled}}\">\n" +
+            "        <button type=\"button\" style=\"width:100%;\" class=\"btn btn-default btn-sm\" ng-class=\"{'btn-info': dt.selected, active: isActive(dt)}\" ng-click=\"select(dt.date)\" ng-disabled=\"dt.disabled\" tabindex=\"-1\"><span ng-class=\"{'text-muted': dt.secondary, 'text-info': dt.current}\">{{dt.label}}</span></button>\n" +
+            "      </td>\n" +
+            "    </tr>\n" +
+            "  </tbody>\n" +
+            "</table>\n" +
+            "");
+    }]);
 
-    DailyMenuEditController.$inject = ['$location', '$filter', '$modal', 'dialogs', 'MenuItem', 'DailyMenu', 'DailyOrder', 'Assets'];
+    // FIXME: UI.bootstrapがバージョンアップされてテンプレートの入れ替えができるようになったら書き換えること
+    // DatePickerのテンプレートを再定義
+    // 閉じるボタンを削除
+    // クラスを追加し、テストしやすくした
+    angular.module("template/datepicker/popup.html", []).run(["$templateCache", function($templateCache) {
+        $templateCache.put("template/datepicker/popup.html",
+            "<ul class=\"dropdown-menu dropdown-menu-datepicker\" ng-style=\"{display: (isOpen && 'block') || 'none', top: position.top+'px', left: position.left+'px'}\" ng-keydown=\"keydown($event)\">\n" +
+            "	<li ng-transclude></li>\n" +
+            "	<li ng-if=\"showButtonBar\" style=\"padding:10px 9px 2px\">\n" +
+            "		<span class=\"btn-group\">\n" +
+            "			<button type=\"button\" class=\"btn btn-sm btn-info\" ng-click=\"select('today')\">{{ getText('current') }}</button>\n" +
+            "		</span>\n" +
+            "	</li>\n" +
+            "</ul>\n" +
+            "");
+    }]);
 
-    function DailyMenuEditController($location, $filter, $modal, dialogs, MenuItem, DailyMenu, DailyOrder, Assets) {
-
-        var vm = this;
+    var DayGroup = (function() {
 
         var maxNumOfBento = 9;
         var maxNumOfSide = 8;
+        var emptyItem = {id: undefined, name: "商品が選択されていません"};
 
-        var compactSelectedItems = function () {
+        var compactItems = function(selectedItems) {
+            console.log(selectedItems);
+
             var compacted = [];
 
             var pushItem = function (item) {
@@ -21,222 +63,266 @@
                 }
             };
 
-            angular.forEach(vm.selectedItems.bento, pushItem);
-            angular.forEach(vm.selectedItems.side, pushItem);
+            angular.forEach(selectedItems.bento, pushItem);
+            angular.forEach(selectedItems.side, pushItem);
 
             return compacted;
         };
 
-        // 変更を反映する
-        var applyChanges = function (currentMenu) {
-
-            var backup = {
-                dailyMenu: angular.copy(currentMenu)
-            };
-
-            var errorHandler = function (result) {
-                console.log(result);
-
-                var errorDialog = null;
-                switch (result.status) {
-                    case 422:
-                        var errorDetails = "";
-                        angular.forEach(result.data.errors, function (value, key) {
-                            errorDetails += key + " => " + value;
-                        });
-                        errorDialog = dialogs.error("データ登録・更新失敗", errorDetails);
-                        break;
-
-                    case 404:
-                        errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
-                        break;
-
-                    default:
-                        var messages = [
-                            "処理中にエラーが発生しました",
-                            "画面をリロードした後、再度操作を行ってみてください",
-                            "問題が解消しない場合は管理者に連絡してください",
-                            "",
-                            "サーバ側のメッセージ: " + result.data.message
-                        ];
-                        errorDialog = dialogs.error("データ登録・更新失敗", messages.join("<br>"));
-                        break;
-                }
-
-                errorDialog.result["finally"](function (config) {
-                    currentMenu = backup.dailyMenu;
-                    setCurrent(currentMenu);
-                });
-            };
-
-            var selectedItems = compactSelectedItems();
-
-            currentMenu.detailItems = [];
-            angular.forEach(selectedItems, function (item) {
-                currentMenu.detailItems.push({menuItem: item});
+        var saveMenu = function(menu, selectedItems) {
+            menu.detailItems = [];
+            angular.forEach(selectedItems, function (selectedItem) {
+                menu.detailItems.push({menuItem: selectedItem});
             });
 
-            // 選択されていない場合はメニューを削除する
-            if (selectedItems.length === 0) {
-                console.log("#applyChanges selected items are empty.");
-                console.log("#applyChanges menu.id:" + currentMenu.id);
-
-                if (currentMenu.id !== undefined) {
-                    DailyMenu.remove({id: currentMenu.id}, function (saved) {/*何もしない*/
-                    }, errorHandler);
-                    currentMenu.id = undefined;
-                }
-                return;
-            }
-
-            var menu = {
-                id: currentMenu.id,
-                menuDate: app.my.helpers.formatTimestamp(currentMenu.menuDate),
-                status: currentMenu.status,
-                detailItems: []
-            };
-            angular.forEach(currentMenu.detailItems, function (item) {
-                menu.detailItems.push(item);
-            });
-
-            console.log("#applyChanges size:" + menu.detailItems.length);
-
-            if (menu.id === undefined) {
-                DailyMenu.create({}, menu, function (saved) {
-                    currentMenu.id = saved.id;
-                }, errorHandler);
+            if (menu.id === undefined || menu.id === null) {
+                return menu.$create();
             } else {
-                DailyMenu.update({}, menu, function (saved) {
-                    currentMenu.id = saved.id;
-                }, errorHandler);
+                return menu.$update();
             }
         };
-        var lazyApplyChanges = _.debounce(applyChanges, 500);
 
-        // 日付を変更する
-        var changeMenuDate = function (target) {
-            target = moment(target.format('YYYY-MM-DDT00:00:00.000Z'));
-            vm.menuDateBegin = moment(target).startOf('week').add("days", 1); // startOfは日曜が取れるので月曜にシフト
-            vm.menuDateEnd = moment(vm.menuDateBegin).add("days", 4);
-            vm.currentDailyMenu = new DailyMenu();
-
-            var params = {
-                "from": app.my.helpers.formatTimestamp(vm.menuDateBegin),
-                "to": app.my.helpers.formatTimestamp(vm.menuDateEnd)
-            };
-
-            DailyMenu.query(params,
-                function (response) {
-                    console.log("#changeMenuDate DailyMenu size:" + response.length);
-
-                    console.log("#changeMenuDate responses");
-                    angular.forEach(response, function (item) {
-                        console.log(app.my.helpers.formatTimestamp(item.menuDate));
-                    });
-
-                    vm.dailyMenus = [];
-                    for (var i = 0; i < 5; i++) {
-                        var currentDate = moment(vm.menuDateBegin).add("days", i);
-                        console.log(app.my.helpers.formatTimestamp(currentDate));
-                        var menuIndex = DailyMenu.findIndexByMenuDate(response, currentDate);
-
-                        var menu = null;
-                        if (menuIndex === -1) {
-                            menu = new DailyMenu({menuDate: currentDate, status: "prepared", detailItems: []});
-                        } else {
-                            menu = response[menuIndex];
-                            menu.detailItems = $filter('orderBy')(menu.detailItems, ['menuItem.shopName', 'menuItem.name']);
-                        }
-
-                        vm.dailyMenus.push(menu);
-                    }
-
-                    console.log("#changeMenuDate target: ");
-                    console.log(target);
-                    setCurrent($filter('getByMenuDate')(vm.dailyMenus, target));
-                },
-                function (response) {
-                    alert("データが取得できませんでした。サインイン画面に戻ります。");
-                    $location.path("/");
-                });
+        var deleteMenu = function(menu) {
+            return menu.$remove(function(saved){
+                // 削除したらオブジェクトは初期化する
+                menu.id = null;
+                menu.status = "prepared";
+            });
         };
 
-        var emptyItem = {id: undefined, name: "商品が選択されていません"};
+        var syncItems = function(menu, selectedItems) {
 
-        vm.selectedItems = {};
+            console.log("#syncToSelectedItems detailItems:" + menu.detailItems.length);
 
-        var resetSelectedItems = function () {
-            vm.selectedItems.bento = [];
-            vm.selectedItems.side = [];
+            angular.forEach(menu.filterDetailItems('bento'), function (item, index) {
+                selectedItems[item.menuItem.category][index] = item.menuItem;
+            });
+
+            angular.forEach(menu.filterDetailItems('side'), function (item, index) {
+                selectedItems[item.menuItem.category][index] = item.menuItem;
+            });
+        };
+
+
+        function MyClass($filter, $q, day, menu) {
+            this.$filter = $filter;
+            this.$q = $q;
+            this.day = day;
+            this.menu = menu;
+            this.resetItems();
+            syncItems(menu, this.selectedItems);
+        }
+
+        MyClass.prototype.syncServer = function() {
+
+            compactedItems = compactItems(this.selectedItems);
+
+            if (compactedItems.length === 0) {
+                if (this.menu.id) {
+                    return deleteMenu(this.menu);
+                } else {
+                    return this.$q.when(this.menu);
+                }
+            }
+
+            return saveMenu(this.menu, compactedItems);
+        };
+
+        MyClass.prototype.getItem = function(category, index) {
+            return this.selectedItems[category][index];
+        };
+
+        MyClass.prototype.getItems = function(category) {
+            return this.$filter("filter")(this.selectedItems[category], {category: category});
+        };
+
+        MyClass.prototype.itemIsSelected = function(category, index) {
+            return (this.getItem(category, index) !== emptyItem);
+        };
+
+        MyClass.prototype.setItem = function(category, index, menuItem) {
+            this.selectedItems[category][index] = menuItem;
+        };
+
+        MyClass.prototype.resetItem = function(category, index) {
+            this.selectedItems[category][index] = emptyItem;
+        };
+
+        MyClass.prototype.resetItems = function () {
+
+            this.selectedItems = {};
+            this.selectedItems.bento = [];
+            this.selectedItems.side = [];
 
             for (i = 0; i < maxNumOfBento; i++) {
-                vm.selectedItems.bento.push(emptyItem);
+                this.selectedItems.bento.push(emptyItem);
             }
 
             for (i = 0; i < maxNumOfSide; i++) {
-                vm.selectedItems.side.push(emptyItem);
+                this.selectedItems.side.push(emptyItem);
             }
         };
 
-        var deployToSelectedItems = function (dailyMenu) {
-            resetSelectedItems();
+        return MyClass;
+    })();
 
-            console.log("#deployToSelectedItems detailItems:" + dailyMenu.detailItems.length);
+    angular.module('MyControllers')
+        .controller('DailyMenuEditController', DailyMenuEditController);
 
-            angular.forEach($filter('filter')(dailyMenu.detailItems, {menuItem: {category: 'bento'}}), function (item, key) {
-                vm.selectedItems[item.menuItem.category][key] = item.menuItem;
-            });
+    DailyMenuEditController.$inject = ['$scope', '$location', '$filter', '$modal', '$q', 'dialogs', 'usSpinnerService', 'DailyMenu', 'Assets', 'initialData'];
 
-            angular.forEach($filter('filter')(dailyMenu.detailItems, {menuItem: {category: 'side'}}), function (item, key) {
-                vm.selectedItems[item.menuItem.category][key] = item.menuItem;
+    function DailyMenuEditController($scope, $location, $filter, $modal, $q, dialogs, usSpinnerService, DailyMenu, Assets, initialData) {
+
+        var vm = this;
+
+        var uiBlocker = {
+            start: function() {
+                $.blockUI({baseZ: 2000, message: null});
+                usSpinnerService.spin("spinner");
+            },
+            stop: function() {
+                usSpinnerService.stop("spinner");
+                $.unblockUI();
+            }
+        };
+
+        // 1週間のデータを作成する
+        var createWeek = function(beginDay) {
+
+            var days = [];
+            for(var index=0; index<5; index++) {
+                var currentDay = moment(beginDay).add(index, "days");
+
+                days.push({
+                    day: currentDay
+                });
+            }
+
+            return {
+                beginDay: beginDay,
+                endDay: _.last(days).day,
+                days: days
+            };
+        };
+
+        // エラーダイアログを表示する
+        var showErrorDialog = function (result) {
+            console.log(result);
+
+            var errorDialog = null;
+            switch (result.status) {
+                case 422:
+                    var errorDetails = "";
+                    angular.forEach(result.data.errors, function (value, key) {
+                        errorDetails += key + " => " + value;
+                    });
+                    errorDialog = dialogs.error("データ登録・更新失敗", errorDetails);
+                    break;
+
+                case 404:
+                    errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
+                    break;
+
+                default:
+                    var messages = [
+                        "処理中にエラーが発生しました",
+                        "画面をリロードした後、再度操作を行ってみてください",
+                        "問題が解消しない場合は管理者に連絡してください",
+                        "",
+                        "サーバ側のメッセージ:",
+                        "    status: " + result.status,
+                        "    message: " + result.data.message
+                    ];
+                    errorDialog = dialogs.error("データ登録・更新失敗", messages.join("<br>"));
+                    break;
+            }
+
+            return errorDialog;
+        };
+
+        // 変更を反映する
+        var applyChanges = function (customHandler) {
+
+            uiBlocker.start();
+
+            vm.currentGroup.syncServer()
+            .then(function(value){
+                console.log("syncServer success");
+                console.log(value);
+
+                uiBlocker.stop();
+
+                if (customHandler && customHandler.success) {
+                    customHandler.success();
+                }
+            })
+            ["catch"](function(responseHeaders) {
+                console.log("syncServer error");
+                console.log(responseHeaders);
+
+                uiBlocker.stop();
+
+                var dialog = showErrorDialog(responseHeaders);
+
+                dialog.result["finally"](function(config){
+                    if (customHandler && customHandler.error) {
+                        customHandler.error();
+                    }
+                });
             });
         };
 
-        var setCurrent = function (dailyMenu) {
-            console.log("#setCurrent");
-            console.log(dailyMenu);
-            vm.currentDailyMenu = dailyMenu;
-            deployToSelectedItems(dailyMenu);
+        vm.categories = [
+            { id: 'bento', name: 'お弁当' },
+            { id: 'side',  name: 'サイドメニュー' }
+        ];
+
+        vm.week = createWeek(initialData.beginDay);
+
+        vm.currentGroup = new DayGroup($filter, $q, initialData.currentDay, initialData.currentMenu);
+
+        vm.datePickerSettings = {
+            currentDay: vm.currentGroup.day.toDate(),
+            opened: false,
+            isUnavailableDay: function(day, mode) {
+                return ( mode === 'day' && ( day.getDay() === 0 || day.getDay() === 6 ) );
+            },
+            datePickerOptions: {
+                showWeeks: false
+            }
         };
 
-        var setUp = function () {
-            // カレンダーの初期化
-            $("#datetimepicker").datetimepicker({
-                language: 'ja',
-                pickTime: false,
-                daysOfWeekDisabled: [0, 6],
-                useCurrent: false
-            });
-            $("#datetimepicker").on("dp.change", function (e) { // カレンダーで日付を変更した場合
-                changeMenuDate(moment(e.date));
-            });
+        $scope.$watch(function(){
+            return vm.datePickerSettings.currentDay;
+        }, function(newVal, oldVal){
+            if (oldVal.valueOf() === newVal.valueOf()) {
+                return;
+            }
 
-            // 選択されている商品の初期化
-            resetSelectedItems();
+            $location.path("/admin/daily-menus/" + moment(newVal).format("YYYY-MM-DD"));
+        });
 
-            // 来週の月曜日を起点としてメニューを表示する
-            changeMenuDate(moment().add(1, "weeks").startOf('week').add(1, "days")); // startOfは日曜が取れるので月曜にシフト
-        };
-
-        //---- イベントハンドラ
+        //---- イベントハンドラ (カレンダー)
         // カレンダーを表示する
-        vm.showCalendar = function () {
-            $("#datetimepicker").data("DateTimePicker").show();
+        vm.showCalendar = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            vm.datePickerSettings.opened = true;
         };
 
-        // 日付を選択する
-        vm.chooseDay = function (dailyMenu) {
-            // 必ず保存する
-            applyChanges(vm.currentDailyMenu);
-
-            setCurrent(dailyMenu);
+        // 日付(タブ)の選択
+        vm.chooseDay = function (menuDate) {
+            this.datePickerSettings.currentDay = menuDate.toDate();
         };
 
+        //---- イベントハンドラ (ステータス)
         vm.changeMenuStatus = function (status) {
-            vm.currentDailyMenu.status = status;
-            lazyApplyChanges(vm.currentDailyMenu);
+            vm.currentGroup.menu.status = status;
+            applyChanges();
         };
 
+        //---- イベントハンドラ (商品)
         vm.selectItem = function (category, index) {
             var modalInstance = $modal.open({
                 templateUrl: Assets.versioned("/views/admin/daily-menu/select-item"),
@@ -248,28 +334,28 @@
                         return category;
                     },
                     selectedItems: function () {
-                        return vm.selectedItems[category];
+                        return vm.currentGroup.getItems(category);
                     },
                     currentItem: function () {
-                        return vm.selectedItems[category][index];
+                        return vm.currentGroup.getItem(category, index);
                     }
                 }
             });
 
             modalInstance.result.then(function (selectedItem) {
-                vm.selectedItems[category][index] = selectedItem;
-                applyChanges(vm.currentDailyMenu);
+                vm.currentGroup.setItem(category, index, selectedItem);
+                applyChanges();
             }, function () {
                 console.log('Modal dismissed at: ' + new Date());
             });
         };
 
-        vm.resetItem = function (category, index) {
-            vm.selectedItems[category][index] = emptyItem;
-            applyChanges(vm.currentDailyMenu);
+        vm.resetItem = function(category, index) {
+            vm.currentGroup.resetItem(category, index);
+            applyChanges();
         };
 
-
+        //---- イベントハンドラ (注文編集) ここにあるべきではないような…
         vm.editOrder = function (dailyMenu) {
             var modalInstance = $modal.open({
                 templateUrl: Assets.versioned("/views/admin/daily-order/edit"),
@@ -277,49 +363,64 @@
                 size: 'lg',
                 resolve: {
                     dailyMenu: function () {
-                        return vm.currentDailyMenu;
+                        return vm.currentGroup.menu;
                     }
                 }
             });
         };
 
-        vm.getCurrentMenuStatus = function () {
-            return vm.currentDailyMenu.status;
-        };
-
-        var itemIsSelected = function (item) {
-            return (item !== emptyItem);
-        };
-
-        vm.itemIsSelected = function (item) {
-            return itemIsSelected(item);
-        };
-
-        // 日付を選択しているか?
+        //---- 状態 日付を選択しているか?
         vm.isDaySelected = function (day) {
-            if (vm.currentDailyMenu === undefined) {
+            if (vm.currentGroup.menu === undefined) {
                 return false;
             }
-            return (vm.currentDailyMenu.menuDate.valueOf() === day.valueOf());
+            return (vm.currentGroup.day.valueOf() === day.valueOf());
         };
 
-        vm.classForMenuItem = function (item) {
+        vm.classForMenuItem = function (category, index) {
             return {
-                'empty': !itemIsSelected(item),
-                'selected': itemIsSelected(item)
+                'empty': !vm.currentGroup.itemIsSelected(category, index),
+                'selected': vm.currentGroup.itemIsSelected(category, index)
             };
         };
 
-        // 画像を表示するHTMLを出力
-        vm.renderImage = function (menuItem) {
-            var imgFile = "no-image.png";
-            if (menuItem.itemImagePath !== undefined && menuItem.itemImagePath !== null) {
-                imgFile = menuItem.itemImagePath;
-            }
-            return "<img src=\"/uc-assets/images/menu-items/" + imgFile + "\" alt=\"...\">";
-        };
-
-        setUp();
     }
 
+    app.my.resolvers.DailyMenuEditController = {
+        initialData: function($route, $q, DailyMenu) {
+
+            var menuDate = moment().startOf('week').add(1, "days").add(1, "weeks").format("YYYY-MM-DD");
+            if ($route.current.params.menuDate !== undefined) {
+                menuDate = $route.current.params.menuDate;
+            }
+
+            var currentDate = moment.tz(menuDate, moment.defaultZone.name); //日付のみの文字をパースするときはTimezoneを指定しないと、OSのデフォルトに影響される
+
+            var deferred = $q.defer();
+            var initialData = {};
+
+            initialData.beginDay = moment(currentDate).startOf('week').add(1, "days");
+            initialData.endDay = moment(initialData.beginDate).add(4, "days");
+            initialData.currentDay = currentDate;
+
+            DailyMenu.getByMenuDate({
+                menuDate: app.my.helpers.formatTimestamp(initialData.currentDay)
+            }).$promise
+            .then(function(value){
+                initialData.currentMenu = value;
+
+                // データがない場合はデータを生成する
+                if (!initialData.currentMenu || initialData.currentMenu.id === null) {
+                    initialData.currentMenu = DailyMenu.createEmptyData(initialData.currentDay);
+                }
+
+                deferred.resolve(initialData);
+            })
+            ["catch"](function(responseHeaders) {
+                deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+            });
+
+            return deferred.promise;
+        }
+    };
 })();

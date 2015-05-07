@@ -71,6 +71,7 @@
             templateUrl: versionedTemplateUrl('/views/admin/daily-menu/edit'),
             controller: 'DailyMenuEditController',
             controllerAs: 'vm',
+            resolve: app.my.resolvers.DailyMenuEditController,
             access: AccessLevels.admin
         })
         .when('/admin/checklist/:menuDate', {

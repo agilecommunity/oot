@@ -116,8 +116,7 @@ public class AdminStepDefs {
 
         DateTime menuDate = CucumberUtils.parseDate(menuParams.get("日付"));
 
-        newPage.setWeek(menuDate);
-        newPage.setDate(menuDate);
+        newPage = newPage.setDateByCalendar(menuDate); // カレンダーで切り替え
         newPage.setStatus(menuParams.get("ステータス"));
 
         int itemIndex = 1;

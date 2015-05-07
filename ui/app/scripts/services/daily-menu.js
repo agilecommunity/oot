@@ -13,21 +13,29 @@
 
     function DailyMenu($resource, $filter) {
 
-        var transformList = function (data, headersGetter) {  // 結果を変換したい場合はtransformResponseを使う
-            var list = angular.fromJson(data);
-            angular.forEach(list, function (item) {
-                item.menuDate = app.my.helpers.parseTimestamp(item.menuDate);
-            });
-            return list;
+        var transformRequest = {
+            one: function (data, headersGetter) {
+                data.menuDate = app.my.helpers.formatTimestamp(data.menuDate);
+                return angular.toJson(data);
+            }
         };
 
-        var transformOne = function (data, headersGetter) {
-            if ($filter('isEmptyOrUndefined')(data)) {
-                return null;
+        var transformResponse = {
+            list: function (data, headersGetter) {  // 結果を変換したい場合はtransformResponseを使う
+                var list = angular.fromJson(data);
+                angular.forEach(list, function (item) {
+                    item.menuDate = app.my.helpers.parseTimestamp(item.menuDate);
+                });
+                return list;
+            },
+            one: function (data, headersGetter) {
+                if ($filter('isEmptyOrUndefined')(data)) {
+                    return null;
+                }
+                var one = angular.fromJson(data);
+                one.menuDate = app.my.helpers.parseTimestamp(one.menuDate);
+                return one;
             }
-            var one = angular.fromJson(data);
-            one.menuDate = app.my.helpers.parseTimestamp(one.menuDate);
-            return one;
         };
 
         var MyClass = $resource(                 // RESTのAPIを簡単に扱える$resourceサービスを利用する
@@ -37,30 +45,32 @@
                 query: {                           // queryはオブジェクト全件を取り出す
                     method: "GET",
                     isArray: true,                 // 結果が配列になる場合は必ずtrueにする(でないと、エラーが発生する)
-                    transformResponse: transformList,
+                    transformResponse: transformResponse.list,
                     cache: false
                 },
                 queryByStatus: {
                     method: "GET",
                     url: "/api/v1.0/daily-menus/status/:status",
                     isArray: true,
-                    transformResponse: transformList
+                    transformResponse: transformResponse.list
                 },
                 getByMenuDate: {
                     method: "GET",
                     url: "/api/v1.0/daily-menus/menu-date/:menuDate",
                     isArray: false,
                     cache: false,
-                    transformResponse: transformOne
+                    transformResponse: transformResponse.one
                 },
                 create: {
                     method: "POST",
-                    transformResponse: transformOne
+                    transformRequest: transformRequest.one,
+                    transformResponse: transformResponse.one
                 },
                 update: {
                     method: "PUT",
                     isArray: false,
-                    transformResponse: transformOne
+                    transformRequest: transformRequest.one,
+                    transformResponse: transformResponse.one
                 }
             }
         );
@@ -71,6 +81,10 @@
 
         MyClass.prototype.isEmpty = function() {
             return this.detailItems.length === 0;
+        };
+
+        MyClass.prototype.filterDetailItems = function(category) {
+            return $filter('filter')(this.detailItems, {menuItem: {category: category}});
         };
 
         MyClass.find = function(list, menuDate) {
@@ -94,7 +108,7 @@
 
         // 空のデータを作成する
         MyClass.createEmptyData = function(targetDate) {
-            return new MyClass({menuDate: targetDate, detailItems: []});
+            return new MyClass({status: "prepared", menuDate: targetDate, detailItems: []});
         };
 
         return MyClass;

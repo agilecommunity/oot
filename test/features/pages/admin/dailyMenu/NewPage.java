@@ -27,24 +27,24 @@ public class NewPage {
         private WebDriver driver;
 
         public DatePickerModule(WebDriver driver) throws Throwable {
-            SeleniumUtils.waitForVisible(driver, By.cssSelector("div.datepicker"));
-            PageFactory.initElements(new DefaultElementLocatorFactory(driver.findElement(By.cssSelector("div.datepicker"))), this);
+            SeleniumUtils.waitForVisible(driver, By.cssSelector("ul.dropdown-menu-datepicker"));
+            PageFactory.initElements(new DefaultElementLocatorFactory(driver.findElement(By.cssSelector("ul.dropdown-menu-datepicker"))), this);
             this.driver = driver;
         }
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table")
+        @FindBy(how=How.CSS, using="table.tbl-datepicker-days")
         private WebElement daysTable;
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.prev")
+        @FindBy(how=How.CSS, using="button.btn-datepicker-prev-month")
         private WebElement prevMonth;
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.next")
+        @FindBy(how=How.CSS, using="button.btn-datepicker-next-month")
         private WebElement nextMonth;
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.picker-switch")
+        @FindBy(how=How.CSS, using="button.btn-datepicker-toggle")
         private WebElement currentMonth;
 
-        @FindBy(how=How.CSS, using="div.datepicker-days > table > thead > tr > th.picker-switch")
+        @FindBy(how=How.CSS, using="button.btn-datepicker-toggle")
         private WebElement switchScale;
 
         public void pickDate(DateTime value) throws Throwable {
@@ -83,7 +83,7 @@ public class NewPage {
                 }
             }
 
-            By dayLocator = By.xpath("tbody/tr/td[contains(@class, 'day') and not(contains(@class, 'old')) and text()='" + value.getDayOfMonth() + "']");
+            By dayLocator = By.xpath("tbody/tr/td/button[span[not(contains(@class, 'text-muted')) and text()='" + String.format("%02d", value.getDayOfMonth()) + "']]");
             WebElement targetDay = this.daysTable.findElement(dayLocator);
 
             targetDay.click();
@@ -101,29 +101,36 @@ public class NewPage {
         this.driver = driver;
     }
 
-    @FindBy(how=How.CSS, using="button.show-calendar")
+    @FindBy(how=How.CSS, using="button.btn-show-calendar")
     private WebElement showCalendar;
-
-    @FindBy(how=How.CSS, using="div#datetimepicker > input")
-    private WebElement calendarDate;
 
     @FindBys(@FindBy(how=How.CSS, using="div.menu-statuses > button.btn"))
     private List<WebElement> menuStatues;
 
-    public void setWeek(DateTime value) throws Throwable {
+    public NewPage setDateByCalendar(DateTime value) throws Throwable {
         showCalendar.click();
 
         DatePickerModule pickerModule = new DatePickerModule(this.driver);
         pickerModule.pickDate(value);
 
+        this.waitForSyncServer();
+
         By dayLocator = By.xpath(String.format("//ul[contains(@class,'day-tabs')]/li[@id='day-%s']/a", value.toString("yyyyMMdd")));
         SeleniumUtils.waitForVisible(this.driver, dayLocator);
+
+        // 日付が切り替わると画面の再構築が行われるため、新しいページを返す
+        return new NewPage(this.driver);
     }
 
-    public void setDate(DateTime value) throws Throwable {
+    public NewPage setDate(DateTime value) throws Throwable {
         By dayLocator = By.xpath(String.format("//ul[contains(@class,'day-tabs')]/li[@id='day-%s']/a", value.toString("yyyyMMdd")));
         SeleniumUtils.waitForVisible(this.driver, dayLocator);
         SeleniumUtils.clickUsingJavaScript(this.driver, dayLocator); // 普通に clickUsingJavaScript() 呼んでも押せないのでJavaScriptを起動する
+
+        this.waitForSyncServer();
+
+        // 日付が切り替わると画面の再構築が行われるため、新しいページを返す
+        return new NewPage(this.driver);
     }
 
     public void setStatus(String value) throws Throwable {
@@ -135,6 +142,9 @@ public class NewPage {
         for (WebElement item : this.menuStatues) {
             if (item.getText().equals(value)) {
                 item.click();
+
+                this.waitForSyncServer();
+
                 return;
             }
         }
@@ -151,7 +161,7 @@ public class NewPage {
      */
     public void addItem(String category, String shopName, String itemName, String reducedOnOrder) throws Throwable {
 
-        By emptyTileLocator = By.xpath(String.format("//div[@class='category-row row' and div//div[text()='%s']]//div[contains(@class, 'menu-item-sm empty')][1]", category));
+        By emptyTileLocator = By.xpath(String.format("//div[contains(@class, 'category-row row') and div//div[text()='%s']]//div[contains(@class, 'menu-item-sm empty')][1]", category));
         SeleniumUtils.waitAndClick(this.driver, emptyTileLocator);
 
         SelectItemPage selectItemPage = new SelectItemPage(this.driver);
@@ -163,6 +173,12 @@ public class NewPage {
         SeleniumUtils.waitForVisible(this.driver, itemTileLocator);
 
         return;
+    }
+
+    private void waitForSyncServer() throws Throwable {
+        // 処理中はスピナーが表示されるので、それが消えるまで待つ
+        By spinnerLocator = By.cssSelector("span.us-spinner");
+        SeleniumUtils.waitForInvisible(this.driver, spinnerLocator);
     }
 
 }

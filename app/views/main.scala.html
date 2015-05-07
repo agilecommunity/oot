@@ -6,7 +6,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>美味しいお弁当を食べたい！</title>
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap-datetimepicker.min.css")">
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/dialogs.min.css")">
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/jquery.fileupload.css")">
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/jquery.fileupload-ui.css")">
@@ -38,6 +37,7 @@
                 </div>
             </div>
             <div id="user-links" ng-include="Assets.versioned('/views/_partial/_user-links')"></div>
+            <span us-spinner spinner-key="spinner" class="us-spinner" style="position: absolute;display: block;top: 100px;left: 50%;"></span>
         </div>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/jquery.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/jquery.ui.widget.js")"></script>
@@ -54,14 +54,13 @@
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/bootstrap.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/collapse.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/transition.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/ui-bootstrap.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/ui-bootstrap-tpls.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/angular-locale_ja-jp.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/spin.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/angular-spinner.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/moment-with-locales.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/moment-timezone.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/moment-timezone-utils.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/bootstrap-datetimepicker.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/holder.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/html5shiv.js")"></script>
         <script type="text/javascript" src="@routes.Assets.versioned("javascripts/components/respond.min.js")"></script>

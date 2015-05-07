@@ -64,6 +64,10 @@
             $location.path("/admin/checklist/weekly/" + targetDay.format('YYYY-MM-DD'));
         };
 
+        vm.editDailyMenu = function (targetDay) {
+            $location.path("/admin/daily-menus/" + targetDay.format('YYYY-MM-DD'));
+        };
+
     }
 
     app.my.resolvers.AdminIndexController = {

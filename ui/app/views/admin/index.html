@@ -26,7 +26,6 @@
                             <th class="th-day text-center" colspan="2" width="18%" style="position: relative;" ng-repeat="day in week.days">
                                 <div class="day">{{day.day.format("D (ddd)")}}</div>
                                 <ul class="day-links">
-                                    <li class="day-link"><button class="btn btn-glyphicon" id="edit-daily-menu-{{day.day.format('YYYYMMDD')}}" tooltip-placement="bottom" tooltip="メニュー編集"><span class="glyphicon glyphicon-edit"></span></button><br></li>
                                     <li class="day-link"><button class="btn btn-glyphicon" id="show-checklist-daily-{{day.day.format('YYYYMMDD')}}" tooltip-placement="bottom" tooltip="チェック表" ng-click="vm.showChecklistDaily(day.day)"><span class="glyphicon glyphicon glyphicon-th-list"></span></button></li>
                                 </ul>
                             </th>
@@ -35,7 +34,10 @@
                         <tbody>
                         <tr>
                             <th class="text-nowrap">ステータス</th>
-                            <td class="status text-center" colspan="2" ng-repeat="day in week.days">{{day.status}}</td>
+                            <td class="status text-center" colspan="2" ng-repeat="day in week.days">
+                                {{day.status}}
+                                <button class="btn btn-glyphicon" id="edit-daily-menu-{{day.day.format('YYYYMMDD')}}" tooltip-placement="bottom" tooltip="メニュー編集" ng-click="vm.editDailyMenu(day.day)"><span class="glyphicon glyphicon-edit"></span></button>
+                            </td>
                         </tr>
                         <tr>
                             <th class="text-nowrap" rowspan="2">注文人数</th>
