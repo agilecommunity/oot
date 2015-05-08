@@ -504,7 +504,37 @@ td.number {
     vertical-align: middle;
 }
 
+.table-day-status .th-day .day {
+    font-size: 130%;
+}
+
+.table-day-status .status,
+.table-day-status .gathering-status {
+    vertical-align: middle;
+}
+
+.label-menu-status {
+    font-size: 110%;
+}
+
+.label-menu-status-prepared {
+    background-color: #f0ad4e;
+}
+
+.label-menu-status-open {
+    background-color: #5cb85c;
+}
+
+.label-menu-status-closed {
+    background-color: #777;
+}
+
+.label-menu-status-none {
+    background-color: #d9534f;
+}
+
 .day-links {
+    margin-top: 5px;
     margin-bottom: 0px;
     padding: 0px;
     list-style: outside none none;

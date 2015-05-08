@@ -50,6 +50,7 @@ public class DailyOrderStatsTest {
         assertThat(node.get(0).get("allStat").get("numOrders").asInt()).isEqualTo(1);
         assertThat(node.get(0).get("allStat").get("totalFixedOnOrder").asLong()).isEqualTo(580);
         assertThat(node.get(0).get("allStat").get("totalDiscountOnOrder").asLong()).isEqualTo(0);
+        assertThat(node.get(0).get("allStat").get("totalReducedOnOrder").asLong()).isEqualTo(580);
 
     }
 
@@ -71,12 +72,14 @@ public class DailyOrderStatsTest {
         assertThat(node.get(0).get("allStat").get("numUsers").asInt()).isEqualTo(1);
         assertThat(node.get(0).get("allStat").get("totalFixedOnOrder").asLong()).isEqualTo(580);
         assertThat(node.get(0).get("allStat").get("totalDiscountOnOrder").asLong()).isEqualTo(0);
+        assertThat(node.get(0).get("allStat").get("totalReducedOnOrder").asLong()).isEqualTo(580);
 
         assertThat(ParameterConverter.convertTimestampFrom(node.get(1).get("orderDate").asText())).isEqualTo(ParameterConverter.convertTimestampFrom("2014-02-11T00:00:00.000+0900"));
         assertThat(node.get(1).get("allStat").get("numOrders").asInt()).isEqualTo(6);
         assertThat(node.get(1).get("allStat").get("numUsers").asInt()).isEqualTo(2);
         assertThat(node.get(1).get("allStat").get("totalFixedOnOrder").asLong()).isEqualTo(550 * 2 + 230 * 1 + 550 * 3);
         assertThat(node.get(1).get("allStat").get("totalDiscountOnOrder").asLong()).isEqualTo(20 * 2 + 0 + 20 * 3);
+        assertThat(node.get(1).get("allStat").get("totalReducedOnOrder").asLong()).isEqualTo((550 * 2 + 230 * 1 + 550 * 3) - (20 * 2 + 0 + 20 * 3));
     }
 
     @Test
@@ -96,6 +99,7 @@ public class DailyOrderStatsTest {
         assertThat(node.get(0).get("allStat").get("numOrders").asInt()).isEqualTo(1);
         assertThat(node.get(0).get("allStat").get("totalFixedOnOrder").asLong()).isEqualTo(580);
         assertThat(node.get(0).get("allStat").get("totalDiscountOnOrder").asLong()).isEqualTo(0);
+        assertThat(node.get(0).get("allStat").get("totalReducedOnOrder").asLong()).isEqualTo(580);
 
     }
 

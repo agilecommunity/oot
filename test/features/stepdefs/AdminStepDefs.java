@@ -14,12 +14,18 @@ import features.support.WebBrowser;
 import models.GatheringSetting;
 import models.LocalUser;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AdminStepDefs {
+
+    private static Logger logger = LoggerFactory.getLogger(AdminStepDefs.class);
 
     @前提("^初期データとして以下のユーザを登録する:$")
     public void 初期データとして以下のユーザを登録する(DataTable productParams) throws Throwable {
@@ -146,6 +152,23 @@ public class AdminStepDefs {
         assertThat(settingsPage.getGatheringSettingEnabled()).describedAs("有効").isEqualTo(Boolean.parseBoolean(gatheringSetting.get("有効")));
         assertThat(settingsPage.getGatheringSettingMinOrders()).describedAs("目標件数").isEqualTo(Integer.parseInt(gatheringSetting.get("目標件数")));
         assertThat(settingsPage.getGatheringSettingDiscountPrice()).describedAs("値引き額").isEqualTo(new BigDecimal(gatheringSetting.get("値引き額")));
+    }
+
+    @ならば("^日付 \"(.*)\" のダッシュボードの内容が以下であること:$")
+    public void 日付_のダッシュボードの内容が以下であること(String menuDateStr, Map<String, String> statusExpected) throws Throwable {
+
+        DateTime menuDate = CucumberUtils.parseDate(menuDateStr);
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        features.pages.admin.IndexPage indexPage = headerModule.showAdminIndex();
+
+        Map<String, String> actual = indexPage.getStatus(menuDate);
+
+        assertThat(actual.size()).describedAs("マップのサイズ").isEqualTo(statusExpected.size());
+
+        for (Map.Entry<String, String> entry : statusExpected.entrySet()) {
+            assertThat(actual.get(entry.getKey())).describedAs("キーの値 [" + entry.getKey() + "]").isEqualTo(entry.getValue());
+        }
     }
 
 

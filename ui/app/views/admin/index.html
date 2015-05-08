@@ -6,7 +6,7 @@
 
     <div class="content-body dashboard row">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="panel panel-success week-info" ng-repeat="week in vm.weeks">
+            <div class="panel panel-success week-info" id="dashboard-panel-{{week.startDay.format('YYYYMMDD')}}" ng-repeat="week in vm.weeks">
                 <div class="panel-heading">
                     {{week.label}}
                     <span>{{week.startDay.format("M/D (ddd)")}} ～ {{week.endDay.format("M/D (ddd)")}}</span>
@@ -24,8 +24,10 @@
                         <tr>
                             <th></th>
                             <th class="th-day text-center" colspan="2" width="18%" style="position: relative;" ng-repeat="day in week.days">
+                                <label class="label label-menu-status label-menu-status-{{vm.getStatusClass(day.menu)}} pull-right">{{day.status}}</label>
                                 <div class="day">{{day.day.format("D (ddd)")}}</div>
                                 <ul class="day-links">
+                                    <li class="day-link"><button class="btn btn-glyphicon" id="edit-daily-menu-{{day.day.format('YYYYMMDD')}}" tooltip-placement="bottom" tooltip="メニュー編集" ng-click="vm.editDailyMenu(day.day)"><span class="glyphicon glyphicon-edit"></span></button></li>
                                     <li class="day-link"><button class="btn btn-glyphicon" id="show-checklist-daily-{{day.day.format('YYYYMMDD')}}" tooltip-placement="bottom" tooltip="チェック表" ng-click="vm.showChecklistDaily(day.day)"><span class="glyphicon glyphicon glyphicon-th-list"></span></button></li>
                                 </ul>
                             </th>
@@ -33,19 +35,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <th class="text-nowrap">ステータス</th>
-                            <td class="status text-center" colspan="2" ng-repeat="day in week.days">
-                                {{day.status}}
-                                <button class="btn btn-glyphicon" id="edit-daily-menu-{{day.day.format('YYYYMMDD')}}" tooltip-placement="bottom" tooltip="メニュー編集" ng-click="vm.editDailyMenu(day.day)"><span class="glyphicon glyphicon-edit"></span></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="text-nowrap" rowspan="2">注文人数</th>
-                            <td class="num-users count" rowspan="2" width="9%" ng-repeat-start="day in week.days">{{day.orderStat.allStat.numUsers | null2nbsp}}</td>
-                            <td class="num-users count" ng-repeat-end>{{day.orderStat.bentoStat.numUsers | null2nbsp}}</td>
-                        </tr>
-                        <tr>
-                            <td class="num-users count" ng-repeat="day in week.days">{{day.orderStat.sideStat.numUsers | null2nbsp}}</td>
+                            <th class="text-nowrap">注文人数</th>
+                            <td class="num-users count" colspan=2 width="18%" ng-repeat="day in week.days">{{day.orderStat.allStat.numUsers | null2nbsp}}</td>
                         </tr>
                         <tr>
                             <th class="text-nowrap" rowspan="2">注文数</th>
@@ -57,11 +48,17 @@
                         </tr>
                         <tr>
                             <th class="text-nowrap" rowspan="2">注文(定価)</th>
-                            <td class="total-fixed-on-order price" rowspan="2" width="9%" ng-repeat-start="day in week.days">{{day.orderStat.allStat.totalFixedOnOrder | currencyNoFraction:"" | null2nbsp}}</td>
-                            <td class="total-fixed-on-order price" ng-repeat-end>{{day.orderStat.bentoStat.totalFixedOnOrder | currencyNoFraction:"" | null2nbsp}}</td>
+                            <td class="total-fixed-on-order price" rowspan="2" width="9%" ng-repeat-start="day in week.days">{{day.orderStat.allStat.totalReducedOnOrder | currencyNoFraction:"" | null2nbsp}}</td>
+                            <td class="total-fixed-on-order price" ng-repeat-end>{{day.orderStat.bentoStat.totalReducedOnOrder | currencyNoFraction:"" | null2nbsp}}</td>
                         </tr>
                         <tr>
-                            <td class="num-users count" ng-repeat="day in week.days">{{day.orderStat.sideStat.totalFixedOnOrder | currencyNoFraction:"" | null2nbsp}}</td>
+                            <td class="num-users count" ng-repeat="day in week.days">{{day.orderStat.sideStat.totalReducedOnOrder | currencyNoFraction:"" | null2nbsp}}</td>
+                        </tr>
+                        <tr ng-if="vm.gatheringSetting.enabled">
+                            <th class="text-nowrap">ギャザリング<br><span class="gathering-minorders small">目標: {{vm.gatheringSetting.minOrders}}件</span></th>
+                            <td class="gathering-status text-center" colspan="2" ng-repeat="day in week.days">
+                                {{day.gatheringStatus}}
+                            </td>
                         </tr>
                         </tbody>
                     </table>
