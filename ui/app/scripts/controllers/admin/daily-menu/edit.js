@@ -205,6 +205,10 @@
             };
         };
 
+        var toUTCDate = function(day) {
+            return moment(day).utc().add(9, "hours").toDate();
+        };
+
         // エラーダイアログを表示する
         var showErrorDialog = function (result) {
             console.log(result);
@@ -282,7 +286,7 @@
         vm.currentGroup = new DayGroup($filter, $q, initialData.currentDay, initialData.currentMenu);
 
         vm.datePickerSettings = {
-            currentDay: vm.currentGroup.day.toDate(),
+            currentDay: toUTCDate(vm.currentGroup.day),
             opened: false,
             isUnavailableDay: function(day, mode) {
                 return ( mode === 'day' && ( day.getDay() === 0 || day.getDay() === 6 ) );
@@ -299,7 +303,8 @@
                 return;
             }
 
-            $location.path("/admin/daily-menus/" + moment(newVal).format("YYYY-MM-DD"));
+            var localDate = moment({ year: newVal.getUTCFullYear(), month: newVal.getUTCMonth(), day: newVal.getUTCDate()});
+            $location.path("/admin/daily-menus/" + localDate.format("YYYY-MM-DD"));
         });
 
         //---- イベントハンドラ (カレンダー)
@@ -313,7 +318,7 @@
 
         // 日付(タブ)の選択
         vm.chooseDay = function (menuDate) {
-            this.datePickerSettings.currentDay = menuDate.toDate();
+            this.datePickerSettings.currentDay = toUTCDate(menuDate);
         };
 
         //---- イベントハンドラ (ステータス)
