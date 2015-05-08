@@ -26,8 +26,8 @@ libraryDependencies ++= Seq(
   , "org.easytesting" % "fest-assert-core" % "2.0M10" % "test"
   , "info.cukes" % "cucumber-java" % "1.1.6" % "test"
   , "info.cukes" % "cucumber-junit" % "1.1.6" % "test"
-  , "org.seleniumhq.selenium" % "selenium-java" % "2.44.0" % "test"
-  , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.44.0" % "test"
+  , "org.seleniumhq.selenium" % "selenium-java" % "2.45.0" % "test"
+  , "org.seleniumhq.selenium" % "selenium-firefox-driver" % "2.45.0" % "test"
 )
 
 pipelineStages := Seq(digest)
