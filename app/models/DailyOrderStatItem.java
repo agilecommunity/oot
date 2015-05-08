@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import models.annotations.JodaTimestamp;
@@ -21,4 +22,11 @@ public class DailyOrderStatItem extends Model {
 
     public Integer totalDiscountOnOrder;
 
+    @JsonGetter
+    public Integer totalReducedOnOrder() {
+        if (totalDiscountOnOrder == null) {
+            return this.totalFixedOnOrder;
+        }
+        return this.totalFixedOnOrder - this.totalDiscountOnOrder;
+    }
 }

@@ -36,7 +36,7 @@ public class DailyMenu extends Model {
 
     @Constraints.Required
     @Constraints.MaxLength(10)
-    public String status;
+    public String status = StatusPrepared;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dailyMenu")
     @OrderBy("id")

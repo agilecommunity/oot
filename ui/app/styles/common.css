@@ -160,8 +160,11 @@ td.number {
     height: 29px;
 }
 
-.btn-signout {
+.btn-signout,
+.btn-glyphicon {
+    font-size: 120%;
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr=#99ffffff,EndColorStr=#99ffffff);/*IE8以下用*/
 }
 
 .content-header > div {
@@ -490,6 +493,61 @@ td.number {
 .dashboard .week-info.panel .panel-heading {
     font-size: 120%;
     font-weight: bold;
+}
+
+.table-day-status caption {
+    text-align: right;
+}
+
+.table-day-status .th-day {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table-day-status .th-day .day {
+    font-size: 130%;
+}
+
+.table-day-status .status,
+.table-day-status .gathering-status {
+    vertical-align: middle;
+}
+
+.label-menu-status {
+    font-size: 110%;
+}
+
+.label-menu-status-prepared {
+    background-color: #f0ad4e;
+}
+
+.label-menu-status-open {
+    background-color: #5cb85c;
+}
+
+.label-menu-status-closed {
+    background-color: #777;
+}
+
+.label-menu-status-none {
+    background-color: #d9534f;
+}
+
+.day-links {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding: 0px;
+    list-style: outside none none;
+    text-align: right;
+}
+
+.day-link {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.day-link .btn {
+    padding: 1px;
 }
 
 /* 注文 */
