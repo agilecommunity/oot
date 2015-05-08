@@ -115,7 +115,7 @@ public class NewPage {
 
         this.waitForSyncServer();
 
-        By dayLocator = By.xpath(String.format("//ul[contains(@class,'day-tabs')]/li[@id='day-%s']/a", value.toString("yyyyMMdd")));
+        By dayLocator = By.xpath(String.format("//ul[contains(@class,'day-tabs')]/li[@id='day-%s' and contains(@class, 'active')]/a", value.toString("yyyyMMdd")));
         SeleniumUtils.waitForVisible(this.driver, dayLocator);
 
         // 日付が切り替わると画面の再構築が行われるため、新しいページを返す
