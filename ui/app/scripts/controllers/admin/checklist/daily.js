@@ -36,7 +36,7 @@
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {
-                deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+                deferred.reject(responseHeaders);
             });
 
             return deferred.promise;

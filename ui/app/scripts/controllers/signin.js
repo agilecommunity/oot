@@ -90,7 +90,7 @@
                     deferred.resolve(initialData);
                 },
                 error: function(responseHeaders){
-                    deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+                    deferred.reject(responseHeaders);
                 }
             });
 

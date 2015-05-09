@@ -3,19 +3,19 @@
     angular.module('MyControllers')
         .controller('DailyOrderEditController', DailyOrderEditController);
 
-    DailyOrderEditController.$inject = ['$scope', '$filter', '$modal', 'MyDialogs', 'DailyOrder', 'Assets', 'dailyMenu'];
+    DailyOrderEditController.$inject = ['$scope', '$filter', '$modal', 'MyDialogs', 'DailyOrder', 'Assets', 'initialData'];
 
-    function DailyOrderEditController($scope, $filter, $modal, MyDialogs, DailyOrder, Assets, dailyMenu) {
+    function DailyOrderEditController($scope, $filter, $modal, MyDialogs, DailyOrder, Assets, initialData) {
 
         var vm = this;
 
         // チェックリストに使うデータの作成
-        var createChecklist = function () {
+        var createChecklist = function (menu, orders) {
 
             var checklist = [];
 
             // その日注文しているユーザごとに姓名と、注文状況を調査する
-            angular.forEach(vm.dailyOrders, function (order) {
+            angular.forEach(orders, function (order) {
 
                 var checklistItem = [];
                 checklistItem.order = order;
@@ -35,7 +35,7 @@
             // 同じ商品を買った人は続けて表示されるよう、全商品の注文状況を文字列にまとめソートキーとする
             angular.forEach(checklist, function(checkItem){
                 var orderStatusesBits = "";
-                angular.forEach(vm.dailyMenu.detailItems, function(menuItem){
+                angular.forEach(menu.detailItems, function(menuItem){
                     if (checkItem.orderStatuses[menuItem.menuItem.id] !== undefined) {
                         orderStatusesBits += "0";
                     } else {
@@ -51,23 +51,9 @@
         };
 
         vm.checklist = [];
-        vm.dailyMenu = dailyMenu;
-        vm.dailyOrders = DailyOrder.queryByOrderDate({orderDate: app.my.helpers.formatTimestamp(vm.dailyMenu.menuDate)},
-            function (response) {
-                vm.checklist = createChecklist();
-            },
-            function (response) {
-                if (response.status === 404) {
-                    return [];
-                } else {
-                    var errorDialog = MyDialogs.error("データ取得失敗", "注文データが取得できませんでした");
-
-                    errorDialog.result["finally"](function(config){
-                        $scope.$dismiss("注文データが取得できませんでした。");
-                    });
-                }
-            }
-        );
+        vm.dailyMenu = initialData.menu;
+        vm.dailyOrders = initialData.orders;
+        vm.checklist = createChecklist(vm.dailyMenu, vm.dailyOrders);
 
         vm.editItem = function(order, menuItem, orderStatuses) {
 
@@ -132,12 +118,46 @@
                 vm.dailyOrders.push(checklistItem.order);
                 vm.checklist.push(checklistItem);
             })
-            ["catch"](function(reason) {
-                if (reason && reason.source === "resolve") { // dismissの場合に表示しないよう、発生源を確認する
-                    MyDialogs.resolveError("ダイアログ表示失敗", reason);
+            ["catch"](function(result) {
+                if (result && result.caller === "resolver") { // dismissの場合に表示しないよう、発生源を確認する
+                    MyDialogs.serverError("ダイアログ表示失敗", result);
                 }
             });
         };
     }
+
+    app.my.resolvers.DailyOrderEditController = function(currentDay) {
+        return {
+            initialData: function($q, DailyMenu, DailyOrder) {
+
+                var deferred = $q.defer();
+                var initialData = {};
+
+                initialData.currentDay = currentDay;
+
+                DailyMenu.getByMenuDate({
+                    menuDate: app.my.helpers.formatTimestamp(initialData.currentDay)
+                }).$promise
+                .then(function(value) {
+                    initialData.menu = value;
+
+                    return DailyOrder.queryByOrderDate({
+                        orderDate: app.my.helpers.formatTimestamp(initialData.currentDay)
+                    }).$promise;
+                })
+                .then(function(value) {
+                    initialData.orders = value;
+
+                    deferred.resolve(initialData);
+                })
+                ["catch"](function(responseHeaders) {
+                    responseHeaders.caller = "resolver";
+                    deferred.reject(responseHeaders);
+                });
+
+                return deferred.promise;
+            }
+        };
+    };
 
 })();

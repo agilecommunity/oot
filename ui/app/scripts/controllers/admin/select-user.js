@@ -29,7 +29,8 @@
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {
-                deferred.reject({source: "resolve", url: responseHeaders.config.url, status: responseHeaders.status, reason: responseHeaders.data});
+                responseHeaders.caller = "resolver";
+                deferred.reject(responseHeaders);
             });
 
             return deferred.promise;

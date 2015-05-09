@@ -169,9 +169,9 @@
     angular.module('MyControllers')
         .controller('DailyMenuEditController', DailyMenuEditController);
 
-    DailyMenuEditController.$inject = ['$scope', '$location', '$filter', '$modal', '$q', 'dialogs', 'usSpinnerService', 'DailyMenu', 'Assets', 'initialData'];
+    DailyMenuEditController.$inject = ['$scope', '$location', '$filter', '$modal', '$q', 'MyDialogs', 'usSpinnerService', 'Assets', 'initialData'];
 
-    function DailyMenuEditController($scope, $location, $filter, $modal, $q, dialogs, usSpinnerService, DailyMenu, Assets, initialData) {
+    function DailyMenuEditController($scope, $location, $filter, $modal, $q, MyDialogs, usSpinnerService, Assets, initialData) {
 
         var vm = this;
 
@@ -211,8 +211,6 @@
 
         // エラーダイアログを表示する
         var showErrorDialog = function (result) {
-            console.log(result);
-
             var errorDialog = null;
             switch (result.status) {
                 case 422:
@@ -220,24 +218,15 @@
                     angular.forEach(result.data.errors, function (value, key) {
                         errorDetails += key + " => " + value;
                     });
-                    errorDialog = dialogs.error("データ登録・更新失敗", errorDetails);
+                    errorDialog = MyDialogs.error("データ登録・更新失敗", errorDetails);
                     break;
 
                 case 404:
-                    errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
+                    errorDialog = MyDialogs.error("データ登録・更新失敗", result.data.message);
                     break;
 
                 default:
-                    var messages = [
-                        "処理中にエラーが発生しました",
-                        "画面をリロードした後、再度操作を行ってみてください",
-                        "問題が解消しない場合は管理者に連絡してください",
-                        "",
-                        "サーバ側のメッセージ:",
-                        "    status: " + result.status,
-                        "    message: " + result.data.message
-                    ];
-                    errorDialog = dialogs.error("データ登録・更新失敗", messages.join("<br>"));
+                    errorDialog = MyDialogs.serverError("データ登録・更新失敗", result);
                     break;
             }
 
@@ -367,10 +356,13 @@
                 controller: "DailyOrderEditController",
                 controllerAs: "vm",
                 size: 'lg',
-                resolve: {
-                    dailyMenu: function () {
-                        return vm.currentGroup.menu;
-                    }
+                resolve: app.my.resolvers.DailyOrderEditController(vm.currentGroup.day)
+            });
+
+            modalInstance.result
+            ["catch"](function(result) {
+                if (result && result.caller === "resolver") { // dismissの場合に表示しないよう、発生源を確認する
+                    MyDialogs.serverError("ダイアログ表示失敗", result);
                 }
             });
         };
@@ -423,7 +415,7 @@
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {
-                deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+                deferred.reject(responseHeaders);
             });
 
             return deferred.promise;

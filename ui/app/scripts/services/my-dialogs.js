@@ -10,19 +10,25 @@
         var MyClass = {};
         angular.extend(MyClass, dialogs);
 
-        MyClass.resolveError = function(header, reason, opts) {
+        MyClass.serverError = function(header, result, opts) {
             var addMessages = [];
 
-            if (reason.url) {
-                addMessages.push("URL: " + reason.url);
+            console.log(result);
+
+            if (result.config && result.config.url) {
+                addMessages.push("URL: " + result.config.url);
             }
 
-            if (reason.status) {
-                addMessages.push("ステータスコード: " + reason.status);
+            if (result.status) {
+                addMessages.push("ステータスコード: " + result.status);
             }
 
-            if (reason.reason) {
-                addMessages.push("理由: " + reason.reason);
+            if (result.data) {
+                if (angular.isString(result.data)) {
+                    addMessages.push("理由: " + result.data);
+                } else if (result.data.message) {
+                    addMessages.push("理由: " + result.data.message);
+                }
             }
 
             return MyClass.systemError(header, addMessages.join("<br>"), opts);

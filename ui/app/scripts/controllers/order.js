@@ -70,9 +70,9 @@
     angular.module('MyControllers')
         .controller('OrderController', OrderController);
 
-    OrderController.$inject = ['$scope', '$filter', '$modal', 'dialogs', 'User', 'DailyMenu', 'DailyOrder', 'DailyOrderStat', 'Assets', 'initialData'];
+    OrderController.$inject = ['$scope', '$filter', '$modal', 'MyDialogs', 'User', 'DailyOrder', 'DailyOrderStat', 'Assets', 'initialData'];
 
-    function OrderController($scope, $filter, $modal, dialogs, User, DailyMenu, DailyOrder, DailyOrderStat, Assets, initialData) {
+    function OrderController($scope, $filter, $modal, MyDialogs, User, DailyOrder, DailyOrderStat, Assets, initialData) {
 
         var vm = this;
 
@@ -102,7 +102,6 @@
         });
 
         var showErrorDialog = function(result) {
-            console.log(result);
 
             var errorDialog = null;
             switch (result.status) {
@@ -111,26 +110,19 @@
                     angular.forEach(result.data.errors, function(value, key){
                         errorDetails += key + " => " + value;
                     });
-                    errorDialog = dialogs.error("データ登録・更新失敗", errorDetails);
+                    errorDialog = MyDialogs.error("データ登録・更新失敗", errorDetails);
                     break;
 
                 case 404:
-                    errorDialog = dialogs.error("データ登録・更新失敗", result.data.message);
+                    errorDialog = MyDialogs.error("データ登録・更新失敗", result.data.message);
                     break;
 
                 case 403:
-                    errorDialog = dialogs.error("データ登録・更新失敗", "メニューが準備中または締めきられました");
+                    errorDialog = MyDialogs.error("データ登録・更新失敗", "メニューが準備中または締めきられました");
                     break;
 
                 default:
-                    var messages = [
-                        "処理中にエラーが発生しました",
-                        "画面をリロードした後、再度操作を行ってみてください",
-                        "問題が解消しない場合は管理者に連絡してください",
-                        "",
-                        "サーバ側のメッセージ: " + result.data.message
-                    ];
-                    errorDialog = dialogs.error("データ登録・更新失敗", messages.join("<br>"));
+                    errorDialog = MyDialogs.serverError("データ登録・更新失敗", result);
                     break;
             }
 
@@ -287,7 +279,7 @@
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {
-                deferred.reject({status: responseHeaders.status, reason: responseHeaders.data});
+                deferred.reject(responseHeaders);
             });
 
             return deferred.promise;
