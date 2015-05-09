@@ -9,7 +9,8 @@
 
         var vm = this;
 
-        vm.select_this = function(value) {
+        vm.selectThis = function(value) {
+            console.log(value);
             $scope.$close(value);
         };
     }

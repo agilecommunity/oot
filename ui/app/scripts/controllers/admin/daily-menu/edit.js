@@ -365,6 +365,7 @@
             var modalInstance = $modal.open({
                 templateUrl: Assets.versioned("/views/admin/daily-order/edit"),
                 controller: "DailyOrderEditController",
+                controllerAs: "vm",
                 size: 'lg',
                 resolve: {
                     dailyMenu: function () {
