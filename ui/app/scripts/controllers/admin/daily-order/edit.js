@@ -3,9 +3,9 @@
     angular.module('MyControllers')
         .controller('DailyOrderEditController', DailyOrderEditController);
 
-    DailyOrderEditController.$inject = ['$scope', '$filter', '$modal', 'dialogs', 'DailyOrder', 'Assets', 'dailyMenu'];
+    DailyOrderEditController.$inject = ['$scope', '$filter', '$modal', 'MyDialogs', 'DailyOrder', 'Assets', 'dailyMenu'];
 
-    function DailyOrderEditController($scope, $filter, $modal, dialogs, DailyOrder, Assets, dailyMenu) {
+    function DailyOrderEditController($scope, $filter, $modal, MyDialogs, DailyOrder, Assets, dailyMenu) {
 
         var vm = this;
 
@@ -60,7 +60,7 @@
                 if (response.status === 404) {
                     return [];
                 } else {
-                    var errorDialog = dialogs.error("データ取得失敗", "注文データが取得できませんでした");
+                    var errorDialog = MyDialogs.error("データ取得失敗", "注文データが取得できませんでした");
 
                     errorDialog.result["finally"](function(config){
                         $scope.$dismiss("注文データが取得できませんでした。");
@@ -114,7 +114,8 @@
             var modalInstance = $modal.open({
                 templateUrl: Assets.versioned("/views/admin/select-user"),
                 controller: "SelectUserController",
-                controllerAs: "vm"
+                controllerAs: "vm",
+                resolve: app.my.resolvers.SelectUserController
             });
 
             modalInstance.result.then(function (user) {
@@ -130,6 +131,11 @@
 
                 vm.dailyOrders.push(checklistItem.order);
                 vm.checklist.push(checklistItem);
+            })
+            ["catch"](function(reason) {
+                if (reason && reason.source === "resolve") { // dismissの場合に表示しないよう、発生源を確認する
+                    MyDialogs.resolveError("ダイアログ表示失敗", reason);
+                }
             });
         };
     }
