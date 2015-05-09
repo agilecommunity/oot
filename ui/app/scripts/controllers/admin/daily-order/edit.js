@@ -113,7 +113,8 @@
 
             var modalInstance = $modal.open({
                 templateUrl: Assets.versioned("/views/admin/select-user"),
-                controller: "SelectUserController"
+                controller: "SelectUserController",
+                controllerAs: "vm"
             });
 
             modalInstance.result.then(function (user) {

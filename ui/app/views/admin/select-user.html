@@ -7,7 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <button class="btn btn-info" style="margin:10px 5px;" ng-click="selectThis(user)" ng-repeat="user in users">{{user.lastName}} {{user.firstName}}</button>
+                <button class="btn btn-info" style="margin:10px 5px;" ng-click="vm.selectThis(user)" ng-repeat="user in vm.users">{{user.lastName}} {{user.firstName}}</button>
             </div>
         </div>
     </div>
