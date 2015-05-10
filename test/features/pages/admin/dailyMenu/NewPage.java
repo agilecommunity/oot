@@ -1,5 +1,6 @@
 package features.pages.admin.dailyMenu;
 
+import features.pages.admin.dailyOrder.EditPage;
 import features.support.SeleniumUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
@@ -107,6 +108,9 @@ public class NewPage {
     @FindBys(@FindBy(how=How.CSS, using="div.menu-statuses > button.btn"))
     private List<WebElement> menuStatues;
 
+    @FindBy(how=How.CSS, using="button.btn-edit-order")
+    private WebElement editOrder;
+
     public NewPage setDateByCalendar(DateTime value) throws Throwable {
         showCalendar.click();
 
@@ -173,6 +177,12 @@ public class NewPage {
         SeleniumUtils.waitForVisible(this.driver, itemTileLocator);
 
         return;
+    }
+
+    public EditPage showEditOrder() throws Throwable {
+        this.editOrder.click();
+
+        return new features.pages.admin.dailyOrder.EditPage(this.driver);
     }
 
     private void waitForSyncServer() throws Throwable {

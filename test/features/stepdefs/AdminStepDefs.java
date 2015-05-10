@@ -18,8 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -138,6 +136,33 @@ public class AdminStepDefs {
 
             itemIndex += 1;
         } while (true);
+    }
+
+    @もし("^代理で以下の内容で注文する:$")
+    public void 代理で以下の内容で注文する(Map<String, String> orderParams) throws Throwable {
+
+        DateTime menuDate = CucumberUtils.parseDate(orderParams.get("日付"));
+
+        HeaderModule headerModule = new HeaderModule(WebBrowser.INSTANCE);
+        NewPage newPage = headerModule.showOrderMenuNew();
+
+        newPage = newPage.setDateByCalendar(menuDate); // カレンダーで切り替え
+        features.pages.admin.dailyOrder.EditPage editPage = newPage.showEditOrder();
+
+        int itemIndex = 1;
+        do {
+            String keyName = String.format("商品-%d", itemIndex);
+
+            if (!orderParams.containsKey(keyName)) {
+                break;
+            }
+
+            editPage.addOrder(orderParams.get("ユーザ"), orderParams.get(keyName), 1);
+
+            itemIndex += 1;
+        } while (true);
+
+        editPage.close();
     }
 
     @ならば("^ギャザリングの設定が以下であること:$")

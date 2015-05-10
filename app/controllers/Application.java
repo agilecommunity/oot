@@ -26,6 +26,6 @@ public class Application extends Controller {
     }
 
     public static Result apiNotFound(String path) {
-        return notFound("指定したパスが存在しません");
+        return utils.controller.Results.notFoundError("指定したパスは存在しません");
     }
 }

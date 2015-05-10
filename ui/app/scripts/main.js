@@ -20,9 +20,9 @@
 
         app.run(appRun);
 
-        appRun.$inject = ["$rootScope", "$location", "$window", "User", "RouteFinder", "dialogs", "Assets"];
+        appRun.$inject = ["$rootScope", "$location", "$window", "User", "RouteFinder", "MyDialogs", "Assets"];
 
-        function appRun($rootScope, $location, $window, User, RouteFinder, dialogs, Assets) {
+        function appRun($rootScope, $location, $window, User, RouteFinder, MyDialogs, Assets) {
             // ViewでAssetsを呼び出せるようにする
             $rootScope.Assets = Assets;
 
@@ -44,7 +44,7 @@
                         return;
                     } else {
                         ev.preventDefault();
-                        dialogs.error("エラー", "ページにアクセスできる権限がありません。");
+                        MyDialogs.error("エラー", "ページにアクセスできる権限がありません。");
                         return;
                     }
                 }
@@ -73,32 +73,14 @@
                 var urlToGo = "";
 
                 if (rejection && rejection.status === 401) {
-                    dialog = dialogs.error("認証エラー", "サインインがまだか、セッションがタイムアウトしました。<br>サインイン画面に戻ります。");
-                    urlToGo = "/";
+                    dialog = MyDialogs.error("認証エラー", "サインインがまだか、セッションがタイムアウトしました。<br>サインイン画面に戻ります。");
+                    dialog.result["finally"](function(){
+                        $location.path("/");
+                    });
                 } else {
-                    var messages = ["画面の表示中にエラーが発生しました。元の画面に戻ります。"];
-
-                    if (rejection) {
-                        messages.push("ステータス:" + rejection.status);
-                        messages.push("URL:" + rejection.config.url);
-
-                        if (rejection.reason !== undefined) {
-                            messages.push("原因:" + rejection.reason.message);
-                        }
-                    }
-
-                    if (previous === undefined) {
-                        urlToGo = "/";
-                    } else {
-                        urlToGo = previous.originalPath;
-                    }
-
-                    dialog = dialogs.error("エラー", messages.join("<br>"));
+                    dialog = MyDialogs.serverError("サーバーエラー", rejection);
+                    // 何しても無駄かもしれないので、パスの移動はしないことにする
                 }
-
-                dialog.result["finally"](function(){
-                    $location.path(urlToGo);
-                });
             });
         }
 
