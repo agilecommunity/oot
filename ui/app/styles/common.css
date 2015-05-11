@@ -620,7 +620,25 @@ div.order-summary-body {
 }
 
 table.order-summary {
-    margin-bottom: 0;
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+table.order-summary > thead > tr > th,
+table.order-summary > tbody > tr > th,
+table.order-summary > tbody > tr > td {
+    padding: 8px;
+    vertical-align: top;
+    border: 1px solid white;
+}
+
+table.order-summary > thead > tr > th,
+table.order-summary > tbody > tr > th {
+    vertical-align: bottom;
+    background-color: #92d13d;
+}
+
+table.order-summary > tbody > tr > td {
+    background-color: #f0fab7;
 }
 
 
@@ -651,6 +669,15 @@ table.order-summary td p.order-first-item {
 table.order-summary td div.order-other-items {
     text-align:right;
 }
+
+table.order-summary th.active {
+    background-color: #F3BFD6;
+}
+
+table.order-summary td.active {
+    background-color: #f8dde9;
+}
+
 
 /* 注文確認シート、注文シート */
 .purchase-order-confirmation,
