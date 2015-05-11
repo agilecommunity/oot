@@ -15,7 +15,7 @@
             <div class="order-summary" style="margin: 5px;">
                 <div class="order-summary-header" style="margin-bottom: 10px;">
                     <div class="row">
-                        <div class="order-summary-title col-xs-12 col-sm-12 col-md-12" style="width:100%;background-color: #92D13D;color:white;font-size: 1.5em; font-weight: bold; padding: 0.2em 1em; margin-bottom:5px;">あなたの注文</div>
+                        <div class="order-summary-title col-xs-12 col-sm-12 col-md-12">あなたの注文</div>
                         <a class="btn btn-default col-md-2" style="font-size: 120%;" href="/#/view-order/{{vm.firstDayLastWeek.format('YYYY-MM-DD')}}"><span class="glyphicon glyphicon-arrow-left"></span> 前の週</a>
                         <a class="btn btn-default col-md-2 col-md-offset-3" style="font-size: 120%;" href="/#/view-order/{{vm.firstDayThisWeek.format('YYYY-MM-DD')}}">今週</span></a>
                         <a class="btn btn-default col-md-2 col-md-offset-3" style="font-size: 120%;" href="/#/view-order/{{vm.firstDayNextWeek.format('YYYY-MM-DD')}}">次の週 <span class="glyphicon glyphicon-arrow-right"></span></a>
@@ -23,24 +23,23 @@
                 </div>
                 <div class="order-summary-body">
                     <div class="row">
-                        <table class="order-summary col-xs-12 col-sm-12 col-md-12">
+                        <table class="week-summary col-xs-12 col-sm-12 col-md-12">
                             <thead>
                             </thead>
                             <tbody>
                             <tr>
-                                <td style="width:20%;" ng-class="{'active' : dayInfo.day.valueOf() == vm.currentDate.valueOf()}"  ng-repeat="dayInfo in vm.daysCurrentWeek">
+                                <td class="day-summary" style="width:20%;" ng-class="{'active' : vm.isCurrentDay(dayInfo.day)}"  ng-repeat="dayInfo in vm.daysCurrentWeek">
                                     <div style="position:relative;" oot-order-summary order="dayInfo.dailyOrder"></div>
-                                    {{vm.renderTotalReducedOnOrder(dayInfo.dailyOrder)}}
                                 </td>
                             </tr>
                             <tr>
-                                <th class="text-center" ng-class="{'active' : dayInfo.day.valueOf() == vm.currentDate.valueOf()}"  ng-repeat="dayInfo in vm.daysCurrentWeek">
-                                    <a href="/#/view-order/{{dayInfo.day.format('YYYY-MM-DD')}}" style="font-size:150%;color:white;">{{dayInfo.day.format('M/D (ddd)')}}</a>
+                                <th class="day text-center" ng-class="{'active' : vm.isCurrentDay(dayInfo.day)}"  ng-repeat="dayInfo in vm.daysCurrentWeek">
+                                    <a class="day" href="/#/view-order/{{dayInfo.day.format('YYYY-MM-DD')}}">{{dayInfo.day.format('M/D (ddd)')}}</a>
                                 </th>
                             </tr>
                             <tr>
-                                <td class="text-center" style="background-color: white;" ng-repeat="dayInfo in vm.daysCurrentWeek">
-                                    <span class="glyphicon glyphicon-chevron-down" style="font-size: 200%; color: #F3BFD6;" ng-if="dayInfo.day.valueOf() == vm.currentDate.valueOf()"></span>
+                                <td class="day-cursor text-center" ng-repeat="dayInfo in vm.daysCurrentWeek">
+                                    <span class="glyphicon glyphicon-chevron-down" ng-if="vm.isCurrentDay(dayInfo.day)"></span>
                                 </td>
                             </tr>
                             </tbody>
@@ -52,7 +51,7 @@
             <div class="order-summary" style="margin: 5px;">
                 <div class="order-summary-header" style="margin-bottom: 10px;">
                     <div class="row">
-                        <div class="order-summary-title col-xs-12 col-sm-12 col-md-12" style="width:100%;background-color: #F3BFD6;color:white;font-size: 1.5em; font-weight: bold; padding: 0.2em 1em;">{{vm.currentDate.format('M月D日 (ddd)')}}の、みんなの注文</div>
+                        <div class="order-summary-title order-summary-title-everyone col-xs-12 col-sm-12 col-md-12">{{vm.currentDate.format('M月D日 (ddd)')}} のみんなの注文</div>
                     </div>
                 </div>
                 <div class="order-summary-body">

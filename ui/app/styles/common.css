@@ -619,65 +619,102 @@ div.order-summary-body {
     margin-bottom: 0;
 }
 
-table.order-summary {
+.order-summary-title {
+    width: 100%;
+    background-color: #92D13D;
+    color: white;
+    font-size: 1.7em;
+    font-weight: bold;
+    padding: 0.2em 1em;
+    margin-bottom:5px;
+}
+
+.order-summary-title-everyone {
+    background-color: #F3BFD6;
+    color: #8D4536;
+}
+
+table.week-summary {
     border-spacing: 0px;
     border-collapse: collapse;
 }
-table.order-summary > thead > tr > th,
-table.order-summary > tbody > tr > th,
-table.order-summary > tbody > tr > td {
+table.week-summary > thead > tr > th,
+table.week-summary > tbody > tr > th,
+table.week-summary > tbody > tr > td {
     padding: 8px;
     vertical-align: top;
-    border: 1px solid white;
+    border: 2px solid white;
 }
 
-table.order-summary > thead > tr > th,
-table.order-summary > tbody > tr > th {
+table.week-summary > thead > tr > th,
+table.week-summary > tbody > tr > th {
     vertical-align: bottom;
     background-color: #92d13d;
 }
 
-table.order-summary > tbody > tr > td {
+table.week-summary > tbody > tr > td {
     background-color: #f0fab7;
-}
-
-
-table.order-summary th.day {
-    width:20%;
-}
-
-table.order-summary th.day div.total-reduced-on-order {
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-table.order-summary td {
     padding-bottom: 0;
+    height: 80px;  /* 最小と言う意味でつけている */
 }
 
-table.order-summary td img {
+table.week-summary .day {
+    color: white;
+    font-size: 120%;
+}
+
+table.week-summary .day-summary {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.week-summary .order-first-item-image {
     float: left;
     margin-right: 5px;
 }
 
-table.order-summary td p.order-first-item {
+table.week-summary .order-first-item {
     overflow: hidden;
     margin-bottom: 2px;
 }
 
-table.order-summary td div.order-other-items {
+table.week-summary .order-other-items,
+table.week-summary .order-item-reduced-on-order {
     text-align:right;
 }
 
-table.order-summary th.active {
+table.week-summary .active {
     background-color: #F3BFD6;
 }
 
-table.order-summary td.active {
-    background-color: #f8dde9;
+table.week-summary .active a {
+    color: #8D4536;
 }
 
+table.week-summary td.active {
+    color: #8D4536;
+}
+
+table.week-summary .day-cursor {
+    font-size: 200%;
+    background-color: white;
+    color: #8D4536;
+}
+
+.order-summary table.checklist {
+    font-size: 110%;
+}
+
+.order-summary table.checklist th {
+    background-color: #92d13d;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.order-summary .checklist .order-group-even {
+    background-color: #f0fab7;
+}
 
 /* 注文確認シート、注文シート */
 .purchase-order-confirmation,
