@@ -1,9 +1,6 @@
 package features.support;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -21,8 +18,13 @@ public class SeleniumUtils {
     }
 
     public static void waitForInvisible(WebDriver driver, By locator) throws Throwable {
-        Wait<WebDriver> wait = new WebDriverWait(driver, DRIVER_WAIT);
-        wait.until(invisibilityOfElementLocated(locator));
+        try {
+            driver.findElement(locator);
+            Wait<WebDriver> wait = new WebDriverWait(driver, DRIVER_WAIT);
+            wait.until(invisibilityOfElementLocated(locator));
+        } catch (NoSuchElementException ex) {
+            // なければ待つ必要はない
+        }
     }
 
     /**

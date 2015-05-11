@@ -1,8 +1,8 @@
 
 angular.module('MyServices')
 .factory('MenuItem',
-    ['$resource',
-    function ($resource) {  // メニューにある弁当、サラダ
+    ['$resource', '$filter', 'Assets',
+    function ($resource, $filter, Assets) {  // メニューにある弁当、サラダ
 
     var transformResponse = {
         one: function (data, headersGetter) {
@@ -38,6 +38,15 @@ angular.module('MyServices')
             isArray: false
         }
     });
+
+    MenuItem.getImagePath = function(menuItem) {
+        var imgFile = "no-image.png";
+        if ($filter("isEmptyOrUndefined")(menuItem.itemImagePath) !== true ) {
+            imgFile = menuItem.itemImagePath;
+        }
+
+        return Assets.versioned("/uc-assets/images/menu-items/" + imgFile);
+    };
 
     return MenuItem;
 }]);
