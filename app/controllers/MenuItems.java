@@ -4,9 +4,11 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import filters.RequireCSRFCheck4Ng;
 import models.LocalUser;
 import models.MenuItem;
+import models.MenuItemImage;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -141,7 +143,10 @@ public class MenuItems extends WithSecureSocialController {
 
         JsonNode json = request().body().asJson();
 
+        String base64Image = extractImage(json); // 長すぎる文字列があると Form.bind が失敗するようなのでここで抽出しておく
+
         logger.debug("#update json: {}", json);
+        logger.debug("#update hasImage: {}", (base64Image != null && base64Image.length() > 0));
 
         Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json);
 
@@ -151,6 +156,13 @@ public class MenuItems extends WithSecureSocialController {
         }
 
         MenuItem item = filledForm.get();
+
+        try {
+            MenuItems.saveImage(item, base64Image);
+        } catch (IOException ex) {
+            logger.error("#update save image", ex);
+            return Results.internalServerError("画像の保存に失敗しました");
+        }
 
         item.update();
 
@@ -186,7 +198,11 @@ public class MenuItems extends WithSecureSocialController {
                     result.append(",");
                 }
 
-                Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(json.get(index));
+                JsonNode current = json.get(index);
+
+                String base64Image = extractImage(current); // 長すぎる文字列があると Form.bind が失敗するようなのでここで抽出しておく
+
+                Form<MenuItem> filledForm = Form.form(MenuItem.class).bind(current);
 
                 if (filledForm.hasErrors()) {
                     logger.debug("#createFromJson item has error. errors: {}", filledForm.errorsAsJson());
@@ -199,6 +215,14 @@ public class MenuItems extends WithSecureSocialController {
 
                 item.save();
 
+                try {
+                    MenuItems.saveImage(item, base64Image);
+                    item.update();
+                } catch (IOException ex) {
+                    logger.error("#createFromJson save image", ex);
+                    throw ex;
+                }
+
                 result.append(Json.toJson(item).toString());
             }
 
@@ -208,6 +232,8 @@ public class MenuItems extends WithSecureSocialController {
                 Ebean.rollbackTransaction();
             }
         } catch (Exception ex) {
+            logger.error("#createFromJson save error", ex);
+
             Ebean.rollbackTransaction();
         }
 
@@ -290,5 +316,36 @@ public class MenuItems extends WithSecureSocialController {
         }
 
         createFromCsv(csvText.toString());
+    }
+
+    private static void saveImage(MenuItem item, String base64Image) throws IOException {
+        logger.debug("#saveImage");
+
+        if (base64Image == null || base64Image.length() == 0 ) {
+            logger.debug("#saveImage image null");
+            return;
+        }
+
+        try {
+            MenuItemImage image = new MenuItemImage(item);
+            image.setImageBase64(base64Image);
+            image.save();
+        } catch (IOException ex) {
+            logger.error("#saveImage save image", ex);
+            throw ex;
+        }
+    }
+
+    private static String extractImage(JsonNode node) {
+        String base64Image = "";
+
+        if (node.has("image")) {
+            ObjectNode jsonObject = (ObjectNode)node;
+            base64Image = node.get("image").asText();
+            jsonObject.remove("image");
+            node = jsonObject;
+        }
+
+        return base64Image;
     }
 }

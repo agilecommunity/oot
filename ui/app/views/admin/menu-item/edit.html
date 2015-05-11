@@ -101,6 +101,14 @@
                 <span class="help-block" id="error.menuItem.comment">{{vm.errors.comment}}</span>
             </div>
         </div>
+        <div class="form-group" ng-if="vm.canPaste()">
+            <label class="col-sm-2 control-label">画像</label>
+            <div class="col-sm-10">
+                <canvas id="menuItem.image" style="background-color: white;border: 1px solid lightgrey;" ng-init="vm.setImage()" ng-click="vm.preparePaste()"></canvas>
+                <span class="help-block">四角の中をクリックした後、CTRL+Vで画像を貼り付けてください</span>
+                <div id="pasteCather" contenteditable="true" style="width:0px;height:0px;overflow:hidden;font-size:1px;position: absolute;top: 0px;left: 0px;margin-left: -10px;" ng-paste="vm.startPaste($event)"></div>
+            </div>
+        </div>
     </form>
 </div>
 <div class="modal-footer">
