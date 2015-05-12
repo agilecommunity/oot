@@ -43,6 +43,10 @@ public class Global extends GlobalSettings  {
 
         Configuration modifiedConfig = modifySmtpConfiguration(configuration);
 
+        modifiedConfig = modifyDBConfiguration(modifiedConfig);
+
+        modifiedConfig = modifyLoggerConfiguration(modifiedConfig);
+
         return modifiedConfig;
     }
 
@@ -127,6 +131,50 @@ public class Global extends GlobalSettings  {
         config = config.withValue("smtp.password", smtpPassword);
 
         return new Configuration(config);
+    }
+
+    private Configuration modifyDBConfiguration(Configuration configuration) {
+        if (configuration.keys().contains("db.default.driver") || configuration.keys().contains("db.default.url")) {
+            return configuration;
+        }
+
+        logger.debug("#modifyDBConfiguration set db.default");
+
+        Config config = configuration.getWrappedConfiguration().underlying();
+
+        config = setConfiguration(config, "db.default.driver", "org.h2.Driver");
+        config = setConfiguration(config, "db.default.url", "jdbc:h2:file:demo");
+
+        return new Configuration(config);
+    }
+
+    private Configuration modifyLoggerConfiguration(Configuration configuration) {
+
+        Config config = configuration.getWrappedConfiguration().underlying();
+
+        if (!configuration.keys().contains("logger.root")) {
+            logger.debug("#modifyLoggerConfiguration set logger.root");
+            config = setConfiguration(config, "logger.root", "ERROR");
+        }
+
+        if (!configuration.keys().contains("logger.play")) {
+            logger.debug("#modifyLoggerConfiguration set logger.play");
+            config = setConfiguration(config, "logger.play", "DEBUG");
+        }
+
+        if (!configuration.keys().contains("logger.application")) {
+            logger.debug("#modifyLoggerConfiguration set logger.application");
+            config = setConfiguration(config, "logger.application", "DEBUG");
+        }
+
+        return new Configuration(config);
+    }
+
+    private Config setConfiguration(Config config, String path, String value) {
+        config.withoutPath(path);
+        ConfigValue configValue = ConfigValueFactory.fromAnyRef(value);
+        config = config.withValue(path, configValue);
+        return config;
     }
 
     private void registerFormatters() {
