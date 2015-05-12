@@ -27,6 +27,8 @@ before_script:
 script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
+after_success:
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && cd ui; grunt prod && cd ..; activator dist
 notifications:
   slack: agilecom:dyFpi9UUyhS10BazKyNsSf13
 sudo: false
