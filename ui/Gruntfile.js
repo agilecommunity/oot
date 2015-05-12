@@ -121,6 +121,12 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/es5-shim/es5-shim.min.js'
                 ]
             },
+            stylesheets: {
+                dest: '<%= conf.dist.stylesheets %>/oot.css',
+                src: [
+                    '<%= conf.stylesheets %>/*.css'
+                ]
+            },
             constants: {
                 dest: '<%= conf.dist.javascripts %>/constants.js',
                 src: [
@@ -220,9 +226,7 @@ module.exports = function (grunt) {
                     '<%= conf.components %>/bootstrap/dist/css/bootstrap.min.css',
                     '<%= conf.components %>/angular-dialog-service/dist/dialogs.min.css',
                     '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload.css',
-                    '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload-ui.css',
-                    '<%= conf.stylesheets %>/common.css',
-                    '<%= conf.stylesheets %>/print.css'
+                    '<%= conf.components %>/jquery-file-upload/css/jquery.fileupload-ui.css'
                 ],
                 expand: true
             },

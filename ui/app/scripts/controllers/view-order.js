@@ -28,12 +28,12 @@
         vm.firstDayNextWeek = moment(vm.beginDate).add(1, "weeks");
         vm.firstDayThisWeek = moment().startOf('week').add(1, "days");
 
-        vm.renderTotalReducedOnOrder = function(order) {
-            var rendered = "";
-            if (order !== null) {
-                rendered = $filter('currencyNoFraction')(order.totalReducedOnOrder(), "") + "円";
-            }
-            return rendered;
+        vm.isCurrentDay = function(day) {
+            return day.valueOf() === vm.currentDate.valueOf();
+        };
+
+        vm.hasOrder = function(order) {
+            return (order !== undefined && order !== null && order.detailItems.length > 0);
         };
     }
 

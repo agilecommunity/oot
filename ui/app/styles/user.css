@@ -1,0 +1,181 @@
+
+/* タブ */
+.nav-user li a {
+    font-size: 1.2em;
+}
+
+/* 注文 */
+.category-header .label-category {
+    text-align: left;
+    padding: 0.3em 0.5em;
+    padding-left: 1.5em;
+}
+
+.category-body {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* ギャザリングの状況 */
+div.gathering-status {
+    padding: 3px 10px;
+    color: #ff5c34;
+    background-color: #ffee74;
+    font-size: 70%;
+
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+
+div.gathering-status .glyphicon {
+    font-size: 110%;
+}
+
+
+@media screen and (min-width: 769px) {
+    div.gathering-status {
+
+        position: absolute;
+        top: 0px;
+        right: 20px;
+
+        -webkit-transform: rotate(3deg);
+        -moz-transform: rotate(3deg);
+        -o-transform: rotate(3deg);
+        -ms-transform: rotate(3deg);
+        -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.9986295347545738, M12=-0.05233595624294437, M21=0.05233595624294437, M22=0.9986295347545738, SizingMethod='auto expand')";
+
+        z-index: 100;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    div.gathering-status {
+        float: right;
+    }
+}
+
+.gathering-status-discount,
+.gathering-status-remain,
+.gathering-status-achieved {
+    font-weight: bolder;
+}
+
+.gathering-status-min-orders,
+.gathering-status-current-orders {
+    font-size: 80%;
+}
+
+/* 注文の確認 */
+div.order-summary {
+    margin-bottom: 5px;
+}
+
+div.order-summary-body {
+    margin-bottom: 0;
+}
+
+.order-summary-title {
+    width: 100%;
+    background-color: #92D13D;
+    color: white;
+    font-size: 1.7em;
+    font-weight: bold;
+    padding: 0.2em 1em;
+    margin-bottom:5px;
+}
+
+.order-summary-title-everyone {
+    background-color: #F3BFD6;
+    color: #8D4536;
+}
+
+table.week-summary {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+table.week-summary > thead > tr > th,
+table.week-summary > tbody > tr > th,
+table.week-summary > tbody > tr > td {
+    padding: 8px;
+    vertical-align: top;
+    border: 2px solid white;
+}
+
+table.week-summary > thead > tr > th,
+table.week-summary > tbody > tr > th {
+    vertical-align: bottom;
+    background-color: #92d13d;
+}
+
+table.week-summary > tbody > tr > td {
+    background-color: #f0fab7;
+    padding-bottom: 0;
+    height: 80px;  /* 最小と言う意味でつけている */
+}
+
+table.week-summary .day {
+    color: white;
+    font-size: 120%;
+    text-decoration: underline;
+}
+
+table.week-summary .day-summary {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.week-summary .order-first-item {
+    overflow: hidden;
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+table.week-summary .order-first-item-image {
+    float: left;
+    margin-right: 5px;
+}
+
+table.week-summary .order-other-items,
+table.week-summary .order-item-reduced-on-order {
+    text-align:right;
+}
+
+table.week-summary .active {
+    background-color: #F3BFD6;
+}
+
+table.week-summary .active a {
+    color: #8D4536;
+}
+
+table.week-summary td.active {
+    color: #8D4536;
+}
+
+table.week-summary .day-cursor {
+    font-size: 200%;
+    background-color: white;
+    color: #8D4536;
+    height: auto;
+}
+
+.order-summary table.checklist {
+    font-size: 110%;
+}
+
+.order-summary table.checklist th {
+    background-color: #92d13d;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.order-summary table.checklist th,
+.order-summary table.checklist td {
+    border: 2px solid white;
+}
+
+.order-summary table.checklist td {
+    background-color: #f0fab7;
+}
