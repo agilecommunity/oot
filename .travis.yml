@@ -27,7 +27,7 @@ before_script:
 script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
-after_script:
+before_deploy:
 - test $TRAVIS_TEST_RESULT = 0 \
   && test $TRAVIS_PULL_REQUEST == "false" \
   && test $TRAVIS_BRANCH == "master" \
@@ -38,8 +38,10 @@ deploy:
   api_key:
     secure: VIplPeNwvG7XEgvlRHgemwXeQjK10fXWZC6x+PjPOLchm7d2/FzQXjiQhiDfkN3AowDhKMmNHCtI2e4zVPpNTKPkoXIcLqZ081DJaTx4iKr+5EKuu+O0GDY8a165T6I3zbJdIGsekc6qb9J3YQrKbax8/eC4QxaFE2Ws/iRsuPU=
   file: target/universal/oot-webapp-${APP_VERSION}.zip
+  skip_cleanup: true
   on:
-    branch: master
+    tag: true
+    all_branches: true
     repo: agilecommunity/oot
 notifications:
   slack: agilecom:dyFpi9UUyhS10BazKyNsSf13
