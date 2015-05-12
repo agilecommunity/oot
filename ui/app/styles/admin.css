@@ -1,0 +1,101 @@
+
+/* ダッシュボード */
+.dashboard .week-info.panel .panel-heading {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.table-day-status caption {
+    text-align: right;
+}
+
+.table-day-status .th-day {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table-day-status .th-day .day {
+    font-size: 130%;
+}
+
+.table-day-status .status,
+.table-day-status .gathering-status {
+    vertical-align: middle;
+}
+
+.label-menu-status {
+    font-size: 110%;
+}
+
+.label-menu-status-prepared {
+    background-color: #f0ad4e;
+}
+
+.label-menu-status-open {
+    background-color: #5cb85c;
+}
+
+.label-menu-status-closed {
+    background-color: #777;
+}
+
+.label-menu-status-none {
+    background-color: #d9534f;
+}
+
+.day-links {
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding: 0px;
+    list-style: outside none none;
+    text-align: right;
+}
+
+.day-link {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.day-link .btn {
+    padding: 1px;
+}
+
+/* 注文確認シート、注文シート */
+.purchase-order-confirmation,
+.purchase-order,
+.checklist,
+.cash-book {
+    margin-bottom: 20px;
+}
+
+.purchase-order-confirmation-header,
+.purchase-order-header,
+.checklist-header,
+.cash-book-header {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.purchase-order-confirmation-body,
+.purchase-order-body,
+.checklist-body,
+.cash-book-body, {
+    padding: 10px 0;
+}
+
+.purchase-order-confirmation-body .no-data,
+.purchase-order-body .no-data,
+.checklist-body .no-data,
+.cash-book-body .no-data {
+    margin: 0 1.5em;
+}
+
+.purchase-order-confirmation-body table thead tr,
+.purchase-order-body table thead tr {
+    background-color: #c9f18e;
+    color: #59920a;
+}
+
+tr.additional-item td.name {
+    text-align: right;
+}
