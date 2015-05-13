@@ -28,7 +28,8 @@ script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
 before_deploy:
-- activator dist
+- cd ui; grunt prod
+- cd ..; activator dist
 deploy:
   provider: releases
   api_key:
