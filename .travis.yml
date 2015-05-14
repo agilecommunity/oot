@@ -28,7 +28,8 @@ script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
 before_deploy:
-- git describe --tags | awk -v BUILD_ID="$TRAVIS_BUILD_NUMBER" '{print "{version: " $1 " build-" BUILD_ID "}" }' > target/scala-2.11/classes/app-meta.yaml
+- chmod +x generate-app-meta.sh
+- ./generate-app-meta.sh
 - cd ui; grunt prod
 - cd ..; activator dist
 deploy:
