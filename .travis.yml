@@ -28,7 +28,7 @@ script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
 before_deploy:
-- echo "{version: `git describe --tags`}" > target/scala-2.11/classes
+- echo "{version: `git describe --tags` build-$TRAVIS_BUILD_NUMBER}" > target/scala-2.11/classes
 - cd ui; grunt prod
 - cd ..; activator dist
 deploy:
