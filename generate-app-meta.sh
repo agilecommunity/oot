@@ -1,0 +1,1 @@
+echo "{version: $(git describe --tags) build-$TRAVIS_BUILD_NUMBER}" > target/scala-2.11/classes/app-meta.yaml

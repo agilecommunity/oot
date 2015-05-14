@@ -28,6 +28,8 @@ script:
 - activator -Dconfig.file=${CONF} test
 - activator -Dconfig.file=${CONF} -Dselenium.driver=firefox cucumber
 before_deploy:
+- chmod +x generate-app-meta.sh
+- ./generate-app-meta.sh
 - cd ui; grunt prod
 - cd ..; activator dist
 deploy:
