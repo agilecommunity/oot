@@ -330,14 +330,8 @@ td.number {
     right: 3px;
 }
 
-.menu-item-list .menu-item .num-orders .btn {
-    font-size: 80%;
-    padding: 3px 7px;
-    vertical-align: top;
-}
-
 .menu-item-list .menu-item .num-orders .badge {
-    font-size: 150%;
+    font-size: 130%;
     vertical-align: top;
 }
 

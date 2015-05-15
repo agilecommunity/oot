@@ -50,8 +50,7 @@
                                                 <div class="comment label" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
                                             </div>
                                             <div class="num-orders" ng-show="dayGroup.hasOrder(dailyMenuItem.menuItem)">
-                                                <span type="button" class="btn btn-primary" ng-click="vm.editNumOrders(dayGroup, dailyMenuItem.menuItem)">数変更</span>
-                                                <span class="badge badge-primary" ng-click="vm.editNumOrders(dayGroup, dailyMenuItem.menuItem)">{{dayGroup.numOrders(dailyMenuItem.menuItem)}}</span>
+                                                <span class="badge badge-primary" tooltip-placement="bottom" tooltip="数量変更" ng-click="vm.editNumOrders(dayGroup, dailyMenuItem.menuItem)">{{dayGroup.numOrders(dailyMenuItem.menuItem)}} <span class="glyphicon glyphicon-pencil"></span></span>
                                             </div>
                                         </div>
                                     </div>
