@@ -3,13 +3,13 @@
     angular.module('MyControllers')
         .controller('AdminIndexController', AdminIndexController);
 
-    AdminIndexController.$inject = ['$location', 'DailyMenu', 'DailyOrderStat', 'initialData'];
+    AdminIndexController.$inject = ['$scope', '$location', 'DailyMenu', 'DailyOrderStat', 'initialData'];
 
-    function AdminIndexController($location, DailyMenu, DailyOrderStat, initialData) {
+    function AdminIndexController($scope, $location, DailyMenu, DailyOrderStat, initialData) {
 
         var vm = this;
 
-        var createWeek = function(label, startDay, dailyMenus, orderStats, gatheringSetting) {
+        function createWeek(label, startDay, dailyMenus, orderStats, gatheringSetting) {
 
             var days = [];
             for(var index=0; index<5; index++) {
@@ -42,18 +42,71 @@
                 endDay: _.last(days).day,
                 days: days
             };
-        };
+        }
+
+        function toUTCDate(day) {
+            return moment(day).utc().add(9, "hours").toDate();
+        }
+
+        function showMe(day) {
+            $location.path("/admin/index/" + day.format('YYYY-MM-DD'));
+        }
+
+        vm.startDayOfThisWeek = moment().startOf('week').add(1, "days");
+        vm.startDayOfCurrentWeek = initialData.startDayOfCurrentWeek;
 
         vm.gatheringSetting = initialData.gatheringSetting;
 
         vm.weeks = [
             createWeek("来週", initialData.startDayOfNextWeek, initialData.dailyMenus, initialData.dailyOrderStats, initialData.gatheringSetting),
-            createWeek("今週", initialData.startDayOfThisWeek, initialData.dailyMenus, initialData.dailyOrderStats, initialData.gatheringSetting),
-            createWeek("先週", initialData.startDayOfLastWeek, initialData.dailyMenus, initialData.dailyOrderStats, initialData.gatheringSetting)
+            createWeek("今週", initialData.startDayOfCurrentWeek, initialData.dailyMenus, initialData.dailyOrderStats, initialData.gatheringSetting),
+            createWeek("先週", initialData.startDayOfPrevWeek, initialData.dailyMenus, initialData.dailyOrderStats, initialData.gatheringSetting)
         ];
+
+        vm.datePickerSettings = {
+            currentDay: toUTCDate(initialData.startDayOfCurrentWeek),
+            opened: false,
+            isUnavailableDay: function(day, mode) {
+                return ( mode === 'day' && ( day.getDay() !== 1 ) );
+            },
+            datePickerOptions: {
+                showWeeks: false
+            }
+        };
+
+        $scope.$watch(function(){
+            return vm.datePickerSettings.currentDay;
+        }, function(newVal, oldVal){
+            if (oldVal.valueOf() === newVal.valueOf()) {
+                return;
+            }
+
+            var localDate = moment({ year: newVal.getUTCFullYear(), month: newVal.getUTCMonth(), day: newVal.getUTCDate()});
+            $location.path("/admin/index/" + localDate.format("YYYY-MM-DD"));
+        });
+
+        // カレンダーを表示する
+        vm.showCalendar = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            vm.datePickerSettings.opened = true;
+        };
 
         vm.getStatusClass = function(menu) {
             return menu === null ? "none" : menu.status;
+        };
+
+        vm.showPrevious = function() {
+            showMe(moment(vm.startDayOfCurrentWeek).subtract(3, "w"));
+        };
+
+        vm.showNext = function() {
+            showMe(moment(vm.startDayOfCurrentWeek).add(3, "w"));
+        };
+
+        vm.showThis = function() {
+            showMe(vm.startDayOfThisWeek);
         };
 
         vm.showPurchaseOrderConfirmation = function (targetDay) {
@@ -83,20 +136,23 @@
     }
 
     app.my.resolvers.AdminIndexController = {
-        initialData: function($q, DailyMenu, DailyOrderStat, GatheringSetting) {
+        initialData: function($q, $route, DailyMenu, DailyOrderStat, GatheringSetting) {
 
-            var startDayOfThisWeek = moment().startOf('week').add(1, "days");
-            var startDayOfNextWeek = moment(startDayOfThisWeek).add(1, "weeks");
-            var startDayOfLastWeek = moment(startDayOfThisWeek).add(-1, "weeks");
+            var startDayOfCurrentWeek = moment().startOf('week').add(1, "days");
+            if ($route.current.params.startDate !== undefined) {
+                startDayOfCurrentWeek = moment.tz($route.current.params.startDate, moment.defaultZone.name);
+            }
+            var startDayOfNextWeek = moment(startDayOfCurrentWeek).add(1, "weeks");
+            var startDayOfPrevWeek = moment(startDayOfCurrentWeek).add(-1, "weeks");
 
             var deferred = $q.defer();
             var initialData = {};
 
-            initialData.startDayOfThisWeek = startDayOfThisWeek;
+            initialData.startDayOfCurrentWeek = startDayOfCurrentWeek;
             initialData.startDayOfNextWeek = startDayOfNextWeek;
-            initialData.startDayOfLastWeek = startDayOfLastWeek;
+            initialData.startDayOfPrevWeek = startDayOfPrevWeek;
 
-            var startDate = startDayOfLastWeek;
+            var startDate = startDayOfPrevWeek;
             var endDate = moment(startDayOfNextWeek).add(4, "days");
 
             DailyMenu.query({
