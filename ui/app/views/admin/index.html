@@ -6,6 +6,23 @@
 
     <div class="content-body dashboard row">
         <div class="col-xs-12 col-sm-12 col-md-12">
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-default btn-show-calendar pull-left" type="button" class="btn btn-default btn-show-calendar" tooltip="カレンダーで移動" ng-click="vm.showCalendar($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    <input type="date" class="form-control " datepicker-popup ng-model="vm.datePickerSettings.currentDay" is-open="vm.datePickerSettings.opened" date-disabled="vm.datePickerSettings.isUnavailableDay(date, mode)" datepicker-options="vm.datePickerSettings.datePickerOptions" current-text="今日" style="visibility:hidden;width:1px;height:1px;padding:0;"/>
+                </div>
+                <div class="col-md-11">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-default col-md-2" style="font-size: 120%;" ng-click="vm.showPrevious()"><span class="glyphicon glyphicon-arrow-left"></span> 前の3週間</button>
+                            <button class="btn btn-default col-md-2 col-md-offset-3" style="font-size: 120%;" ng-click="vm.showThis()">今週 - {{vm.startDayOfThisWeek.format("M/D (ddd)")}}</span></button>
+                            <button class="btn btn-default col-md-2 col-md-offset-3" style="font-size: 120%;" ng-click="vm.showNext()">次の3週間 <span class="glyphicon glyphicon-arrow-right"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="panel panel-success week-info" id="dashboard-panel-{{week.startDay.format('YYYYMMDD')}}" ng-repeat="week in vm.weeks">
                 <div class="panel-heading">
                     {{week.label}}

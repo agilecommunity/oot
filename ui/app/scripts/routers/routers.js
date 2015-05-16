@@ -60,7 +60,7 @@
             resolve: app.my.resolvers.ViewOrderController,
             access: AccessLevels.user
         })
-        .when('/admin/index', {
+        .when('/admin/index/:startDate?', {
             templateUrl: versionedTemplateUrl('/views/admin/index'),
             controller: 'AdminIndexController',
             controllerAs: 'vm',
