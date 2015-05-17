@@ -1,7 +1,6 @@
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -43,9 +42,7 @@ public class Global extends GlobalSettings  {
 
         Configuration modifiedConfig = modifySmtpConfiguration(configuration);
 
-        modifiedConfig = modifyDBConfiguration(modifiedConfig);
-
-        modifiedConfig = modifyLoggerConfiguration(modifiedConfig);
+        modifiedConfig = setDefault(modifiedConfig);
 
         return modifiedConfig;
     }
@@ -133,12 +130,21 @@ public class Global extends GlobalSettings  {
         return new Configuration(config);
     }
 
-    private Configuration modifyDBConfiguration(Configuration configuration) {
+    private Configuration setDefault(Configuration configuration) {
+
+        configuration = setDefaultDBConfiguration(configuration);
+        configuration = setDefaultLoggerConfiguration(configuration);
+        configuration = setDefaultRunEnvironmentConfiguration(configuration);
+
+        return configuration;
+    }
+
+    private Configuration setDefaultDBConfiguration(Configuration configuration) {
         if (configuration.keys().contains("db.default.driver") || configuration.keys().contains("db.default.url")) {
             return configuration;
         }
 
-        logger.debug("#modifyDBConfiguration set db.default");
+        logger.debug("#setDefaultDBConfiguration set db.default");
 
         Config config = configuration.getWrappedConfiguration().underlying();
 
@@ -148,27 +154,40 @@ public class Global extends GlobalSettings  {
         return new Configuration(config);
     }
 
-    private Configuration modifyLoggerConfiguration(Configuration configuration) {
+    private Configuration setDefaultLoggerConfiguration(Configuration configuration) {
 
         Config config = configuration.getWrappedConfiguration().underlying();
 
         if (!configuration.keys().contains("logger.root")) {
-            logger.debug("#modifyLoggerConfiguration set logger.root");
+            logger.debug("#setDefaultLoggerConfiguration set logger.root");
             config = setConfiguration(config, "logger.root", "ERROR");
         }
 
         if (!configuration.keys().contains("logger.play")) {
-            logger.debug("#modifyLoggerConfiguration set logger.play");
+            logger.debug("#setDefaultLoggerConfiguration set logger.play");
             config = setConfiguration(config, "logger.play", "DEBUG");
         }
 
         if (!configuration.keys().contains("logger.application")) {
-            logger.debug("#modifyLoggerConfiguration set logger.application");
+            logger.debug("#setDefaultLoggerConfiguration set logger.application");
             config = setConfiguration(config, "logger.application", "DEBUG");
         }
 
         return new Configuration(config);
     }
+
+    private Configuration setDefaultRunEnvironmentConfiguration(Configuration configuration) {
+
+        Config config = configuration.getWrappedConfiguration().underlying();
+
+        if (!configuration.keys().contains("run.environment")) {
+            logger.debug("#setDefaultRunEnvironmentConfiguration set run.environment");
+            config = setConfiguration(config, "run.environment", "default");
+        }
+
+        return new Configuration(config);
+    }
+
 
     private Config setConfiguration(Config config, String path, String value) {
         config.withoutPath(path);

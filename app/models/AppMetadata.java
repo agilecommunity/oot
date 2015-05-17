@@ -1,6 +1,7 @@
 package models;
 
 import org.yaml.snakeyaml.Yaml;
+import play.Play;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,5 +46,16 @@ public final class AppMetadata {
 
     public String getVersion() {
         return this.version;
+    }
+
+    public String getRunInfo() {
+        String appMode = Play.mode().toString();
+        String runEnv =  Play.application().configuration().getString("run.environment");
+        String runInfo = String.format("%s@%s", appMode, runEnv);
+        return runInfo;
+    }
+
+    public Boolean isRunInfoProdDefault() {
+        return "PROD@default".equals(this.getRunInfo());
     }
 }

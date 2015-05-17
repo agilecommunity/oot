@@ -43,6 +43,7 @@ ul.nav-pills li.divider {
 *{
     font-family: Meiryo;
 }
+
 body{
     margin: 0px;
     border: none;
@@ -445,3 +446,31 @@ td.number {
     border-bottom-color:#F3BFD6 !important;
 }
 
+/* 環境を見分けやすくするためのラベル */
+.run-environment {
+    display: inline-block;
+    height: 53px;
+    margin-top: 10px;
+    padding: 8px 25px;
+    text-align: center;
+    position:relative;
+    background:#f48881;
+
+    font-size: 20pt;
+    font-weight: bold;
+    color:#fff;
+}
+
+.run-environment:before{
+    content: '';
+    z-index: 1;
+    position: absolute;
+    border: 2px dashed #ffffff;
+    top: 7px;
+    bottom: 7px;
+    left: 7px;
+    right: 7px;
+    -moz-box-shadow: 0 0 0 3px #f48881;
+    -webkit-box-shadow: 0 0 0 3px #f48881;
+    box-shadow: 0 0 0 3px #f48881;
+}
