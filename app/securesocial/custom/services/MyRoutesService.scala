@@ -12,7 +12,7 @@ class MyRoutesService extends RoutesService.Default {
     if (!Play.isTest) {
       absoluteUrl(controllers.routes.Application.index(""))
     } else {
-      "http://localhost:3333"
+      "http://localhost:3333/"
     }
   }
 
@@ -23,13 +23,13 @@ class MyRoutesService extends RoutesService.Default {
   override def handleSignUpUrl(mailToken: String)(implicit req: RequestHeader): String = ???
 
   override def startSignUpUrl(implicit req: RequestHeader): String = {
-    baseUrl() + "/#/signup"
+    baseUrl() + "#/signup"
   }
 
   override def handleStartSignUpUrl(implicit req: RequestHeader): String = ???
 
   override def signUpUrl(mailToken: String)(implicit req: RequestHeader): String = {
-    baseUrl() + "/#/signup/" + mailToken
+    baseUrl() + "#/signup/" + mailToken
   }
 
   override def passwordChangeUrl(implicit req: RequestHeader): String = ???
@@ -37,13 +37,13 @@ class MyRoutesService extends RoutesService.Default {
   override def handlePasswordChangeUrl(implicit req: RequestHeader): String = ???
 
   override def startResetPasswordUrl(implicit req: RequestHeader): String = {
-    baseUrl() + "/#/reset"
+    baseUrl() + "#/reset"
   }
 
   override def handleStartResetPasswordUrl(implicit req: RequestHeader): String = ???
 
   override def resetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = {
-    baseUrl() + "/#/reset/" + mailToken
+    baseUrl() + "#/reset/" + mailToken
   }
 
   override def handleResetPasswordUrl(mailToken: String)(implicit req: RequestHeader): String = ???

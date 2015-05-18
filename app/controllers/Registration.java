@@ -88,7 +88,9 @@ public class Registration extends WithSecureSocialController {
             getMailer().sendAlreadyRegisteredEmail(mayBeUser.get(), Http.Context.current()._requestHeader(), lang());
         } else {
             Token token = MailTokenBasedOperations.createToken(email, true);
+            logger.debug("#startSignUp saveToken");
             getUserService().saveToken(token.toScala());
+            logger.debug("#startSignUp sendSinupEmail");
             getMailer().sendSignUpEmail(email, token.uuid, Http.Context.current()._requestHeader(), lang());
         }
 
