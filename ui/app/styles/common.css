@@ -104,29 +104,6 @@ td.number {
     float: left;
 }
 
-.page-header .right-ctrl {
-    margin: 0.5em;
-    float: right;
-}
-.page-header .right-ctrl > div{
-    float: left;
-}
-.page-header .right-ctrl .user-name{
-    margin-right: 1.5em;
-    line-height: 33px;
-}
-.page-header .right-ctrl .logout{
-    background-color: #92D13D;
-
-    font-size: 0.8em;
-    color: white;
-    padding: 0.5em 1em;
-    width: 80px;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 .page-footer {
     background-color: #454545;
 }
@@ -157,7 +134,7 @@ td.number {
 }
 
 .header-nav-item {
-    display: inline-block;
+    display: inline;
 }
 
 #user-links {
