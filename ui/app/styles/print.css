@@ -55,7 +55,6 @@
     /* http://blog.asial.co.jp/1280 より */
     .print-page {
         width: 172mm;
-        height: 251mm;
         page-break-after: always;
         position: relative; /* 固定ヘッダーの基準座標を定義 */
     }
