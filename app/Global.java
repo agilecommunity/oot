@@ -63,6 +63,8 @@ public class Global extends GlobalSettings  {
                 Ebean.save((List) YamlUtil.load("fixtures/dev/menu_item.yml"));
                 Ebean.save((List) YamlUtil.load("fixtures/dev/daily_menu.yml"));
                 Ebean.save((List) YamlUtil.load("fixtures/dev/daily_menu_item.yml"));
+                Ebean.save((List) YamlUtil.load("fixtures/dev/daily_order.yml"));
+                Ebean.save((List) YamlUtil.load("fixtures/dev/daily_order_item.yml"));
                 Ebean.save((List) YamlUtil.load("fixtures/dev/local_user.yml"));
             }
         }

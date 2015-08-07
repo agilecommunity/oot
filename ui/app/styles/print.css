@@ -52,15 +52,13 @@
         display: table-header-group;
     }
 
-    /* http://blog.asial.co.jp/1280 より */
-    .print-page {
-        page-break-after: always;
-        page-break-inside: avoid;
-        position: relative; /* 固定ヘッダーの基準座標を定義 */
+    tfoot {
+        display: table-footer-group;
     }
 
-    .print_page:last-child{
-        page-break-after: auto; /* 最後のページの改ページを防ぐ */
+    /* http://blog.asial.co.jp/1280 より */
+    .print-page {
+        position: relative; /* 固定ヘッダーの基準座標を定義 */
     }
 
     .print-page:before {
@@ -71,6 +69,25 @@
         font-weight: bold;
         content: "【" attr(print-title) "】";
     }
+}
 
 
+/* page-break-afterを使って改ページさせると、内容が複数ページにわたる場合に
+   適切に改行がされない場合がある。
+   この問題を回避するために、改ページ専用の要素を追加することにした(#252 に経緯あり)
+ */
+.page-break {
+    font-size: 1px;
+    margin: 0;
+    border: 0;
+}
+
+.page-break span {
+    visibility: hidden;
+}
+
+@media print {
+    .page-break {
+        page-break-after: always;
+    }
 }

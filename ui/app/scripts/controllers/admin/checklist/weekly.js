@@ -11,6 +11,41 @@
         vm.startDate = initialData.startDate;
         vm.endDate = initialData.endDate;
         vm.groupedList = initialData.groupedList;
+
+        vm.needPrint = function(group) {
+            if (group.dailyMenu.isEmpty()) {
+                return false;
+            }
+
+            if (group.dailyOrders.length === 0) {
+                return false;
+            }
+
+            return true;
+        };
+
+        vm.needPageBreak = function(last, group, currentIndex) {
+            if (last) {
+                return false;
+            }
+
+            if (!vm.needPrint(group)) {
+                return false;
+            }
+
+            var existsNextGroup = false;
+            for (var index=currentIndex; index<vm.groupedList.length; index++) {
+                if (vm.needPrint(vm.groupedList[index])) {
+                    existsNextGroup = true;
+                }
+            }
+
+            if (!existsNextGroup) {
+                return false;
+            }
+
+            return true;
+        };
     }
 
     app.my.resolvers.AdminChecklistWeeklyController = {

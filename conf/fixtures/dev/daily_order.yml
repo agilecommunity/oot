@@ -1,0 +1,190 @@
+# 以下、チェック表の印刷確認用データ
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user1@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user2@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user3@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user4@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user5@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user6@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user7@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user8@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user9@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user10@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user11@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-13T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user12@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-14T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user1@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user1@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user2@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user3@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user4@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user5@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user6@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user7@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user8@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user9@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user10@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user11@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-15T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user12@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user1@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user2@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user3@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user4@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user5@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user6@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user7@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user8@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user9@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user10@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user11@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-17T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user12@foo.bar
+
+- !!models.DailyOrder
+    orderDate:  2015-07-22T00:00:00.0+09:00
+    localUser:  !!models.LocalUser
+                  id: user1@foo.bar

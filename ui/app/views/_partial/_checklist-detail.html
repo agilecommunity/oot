@@ -1,8 +1,8 @@
-<div ng-show="menuOrOrderIsEmpty()">
+<div ng-if="menuOrOrderIsEmpty()">
     <p class="no-data">メニューまたは注文がありません。</p>
 </div>
 
-<div ng-show="!menuOrOrderIsEmpty()">
+<div ng-if="!menuOrOrderIsEmpty()">
     <div class="pull-right">総額: <span class="total-price-on-order">{{checklist.totalReducedOnOrder | currencyNoFraction:""}}円</span> (<span class="total-num-users">{{checklist.detailItems.length}}人</span>)</div>
     <div class="clearfix"></div>
     <table class="table table-bordered table-condensed checklist" id="checklist">

@@ -141,3 +141,197 @@
                   id: 4
     menuItem:  !!models.MenuItem
                   id: 19
+
+# 以下、チェック表の印刷確認用データ
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 1
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 2
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 3
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 4
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 5
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 6
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 7
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 8
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 9
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 5
+    menuItem:  !!models.MenuItem
+                  id: 10
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 6
+    menuItem:  !!models.MenuItem
+                  id: 1
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 1
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 2
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 3
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 4
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 5
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 6
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 7
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 8
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 9
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 7
+    menuItem:  !!models.MenuItem
+                  id: 10
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 1
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 2
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 3
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 4
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 5
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 6
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 7
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 8
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 9
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 9
+    menuItem:  !!models.MenuItem
+                  id: 10
+
+- !!models.DailyMenuItem
+    dailyMenu: !!models.DailyMenu
+                  id: 12
+    menuItem:  !!models.MenuItem
+                  id: 1
