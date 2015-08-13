@@ -56,21 +56,28 @@
         display: table-footer-group;
     }
 
-    /* http://blog.asial.co.jp/1280 より */
-    .print-page {
-        position: relative; /* 固定ヘッダーの基準座標を定義 */
+    .visible-print {
+        display: inherit;
     }
 
-    .print-page:before {
+    /* チェック表を印刷する際、右上にタイトルを表示させるための設定 */
+    .checklist-header {
+        position: relative;
+    }
+
+    .print-header-title {
         position: absolute;
         top: 0;
         right:0;
         font-size: 14pt;
         font-weight: bold;
-        content: "【" attr(print-title) "】";
     }
+
 }
 
+.visible-print {
+    display: none;
+}
 
 /* page-break-afterを使って改ページさせると、内容が複数ページにわたる場合に
    適切に改行がされない場合がある。
