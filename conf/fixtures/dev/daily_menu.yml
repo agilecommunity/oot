@@ -13,3 +13,46 @@
 - !!models.DailyMenu
     menuDate:   2015-03-02T00:00:00.0+09:00
     status:     prepared
+
+# 以下、チェック表の印刷確認用データ
+# 改ページあり、なし、印刷対象なしを混ぜる
+- !!models.DailyMenu
+    menuDate:   2015-07-13T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-14T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-15T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-16T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-17T00:00:00.0+09:00
+    status:     open
+
+# 1件だけ印刷対象にする(07-22)
+- !!models.DailyMenu
+    menuDate:   2015-07-20T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-21T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-22T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-23T00:00:00.0+09:00
+    status:     open
+
+- !!models.DailyMenu
+    menuDate:   2015-07-24T00:00:00.0+09:00
+    status:     open

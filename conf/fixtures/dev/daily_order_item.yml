@@ -1,0 +1,266 @@
+# 以下、チェック表の印刷確認用データ
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 1
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 2
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 3
+    menuItem:   !!models.MenuItem
+                  id: 3
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 4
+    menuItem:   !!models.MenuItem
+                  id: 4
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 5
+    menuItem:   !!models.MenuItem
+                  id: 5
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 6
+    menuItem:   !!models.MenuItem
+                  id: 6
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 7
+    menuItem:   !!models.MenuItem
+                  id: 7
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 8
+    menuItem:   !!models.MenuItem
+                  id: 8
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 9
+    menuItem:   !!models.MenuItem
+                  id: 9
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 10
+    menuItem:   !!models.MenuItem
+                  id: 10
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 11
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 12
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 13
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 14
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 15
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 16
+    menuItem:   !!models.MenuItem
+                  id: 3
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 17
+    menuItem:   !!models.MenuItem
+                  id: 4
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 18
+    menuItem:   !!models.MenuItem
+                  id: 5
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 19
+    menuItem:   !!models.MenuItem
+                  id: 6
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 20
+    menuItem:   !!models.MenuItem
+                  id: 7
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 21
+    menuItem:   !!models.MenuItem
+                  id: 8
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 22
+    menuItem:   !!models.MenuItem
+                  id: 9
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 23
+    menuItem:   !!models.MenuItem
+                  id: 10
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 24
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 25
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 26
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 27
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 28
+    menuItem:   !!models.MenuItem
+                  id: 3
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 29
+    menuItem:   !!models.MenuItem
+                  id: 4
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 30
+    menuItem:   !!models.MenuItem
+                  id: 5
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 31
+    menuItem:   !!models.MenuItem
+                  id: 6
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 32
+    menuItem:   !!models.MenuItem
+                  id: 7
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 33
+    menuItem:   !!models.MenuItem
+                  id: 8
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 34
+    menuItem:   !!models.MenuItem
+                  id: 9
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 35
+    menuItem:   !!models.MenuItem
+                  id: 10
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 36
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 37
+    menuItem:   !!models.MenuItem
+                  id: 2
+    numOrders:  1
+
+- !!models.DailyOrderItem
+    dailyOrder: !!models.DailyOrder
+                  id: 38
+    menuItem:   !!models.MenuItem
+                  id: 1
+    numOrders:  1

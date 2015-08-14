@@ -1,3 +1,4 @@
+# 全員パスワードは "hoehoehoe"
 - !!models.LocalUser
     id:         user1@foo.bar
     provider:   userpass
@@ -13,6 +14,168 @@
     email:      user2@foo.bar
     password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
     firstName:  一般ユーザ2
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user3@foo.bar
+    provider:   userpass
+    email:      user3@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ3
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user4@foo.bar
+    provider:   userpass
+    email:      user4@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ4
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user5@foo.bar
+    provider:   userpass
+    email:      user5@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ5
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user6@foo.bar
+    provider:   userpass
+    email:      user6@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ6
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user7@foo.bar
+    provider:   userpass
+    email:      user7@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ7
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user8@foo.bar
+    provider:   userpass
+    email:      user8@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ8
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user9@foo.bar
+    provider:   userpass
+    email:      user9@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ9
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user10@foo.bar
+    provider:   userpass
+    email:      user10@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ10
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user11@foo.bar
+    provider:   userpass
+    email:      user11@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ11
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user12@foo.bar
+    provider:   userpass
+    email:      user12@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ12
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user13@foo.bar
+    provider:   userpass
+    email:      user13@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ13
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user14@foo.bar
+    provider:   userpass
+    email:      user14@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ14
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user15@foo.bar
+    provider:   userpass
+    email:      user15@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ15
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user16@foo.bar
+    provider:   userpass
+    email:      user16@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ16
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user17@foo.bar
+    provider:   userpass
+    email:      user17@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ17
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user18@foo.bar
+    provider:   userpass
+    email:      user18@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ18
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user19@foo.bar
+    provider:   userpass
+    email:      user19@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ19
+    lastName:   アジャコ
+    isAdmin:    false
+
+- !!models.LocalUser
+    id:         user20@foo.bar
+    provider:   userpass
+    email:      user20@foo.bar
+    password:   $2a$10$HdjPd4bHDDRyiVjjRpj5deOdD5moBCXlSzmnf6BMbBk16H2oq/9jy
+    firstName:  一般ユーザ20
     lastName:   アジャコ
     isAdmin:    false
 

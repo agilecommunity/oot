@@ -8,11 +8,16 @@
     </div>
 
     <div class="content-body row">
-        <div class="checklist print-page col-xs-12 col-sm-12 col-md-12" ng-class="{'no-print' : group.dailyMenu.isEmpty() || group.dailyOrders.length === 0 }" print-title="チェック表" id="checklist-{{group.targetDate.format('YYYYMMDD')}}" ng-repeat="group in vm.groupedList">
-            <div class="checklist-header">{{group.targetDate.format("M月D日 (ddd曜日)")}}</div>
+        <div class="checklist print-page col-md-12" ng-class="{'no-print' : !vm.needPrint(group) }" id="checklist-{{group.targetDate.format('YYYYMMDD')}}" ng-repeat-start="group in vm.groupedList track by $index">
+            <div class="checklist-header">{{group.targetDate.format("M月D日 (ddd曜日)")}}
+                <span class="print-header-title visible-print">チェック表</span>
+            </div>
             <div class="checklist-body">
                 <div oot-checklist-detail dailymenu="group.dailyMenu" dailyorders="group.dailyOrders"></div>
             </div>
+        </div>
+        <div class="page-break" ng-repeat-end ng-if="vm.needPageBreak($last, group, $index)">
+            <span>---</span>
         </div>
     </div>
 
