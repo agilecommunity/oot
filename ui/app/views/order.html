@@ -41,7 +41,12 @@
                                             <div class="tile" ng-click="vm.order(dayGroup, dailyMenuItem.menuItem);">
                                                 <div class="caption">
                                                     <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                                                    <div class="food-name">{{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
+                                                    <div class="order-rank" style="float:left; margin-right: 10px; margin-top:10px; margin-left:5px;" ng-if="vm.inOrderRanking(dailyMenuItem.menuItem)">
+                                                        <img src="http://ec-yobiko.com/sozai/icon/download/i_rank1_41.jpg" width="35px;">
+                                                    </div>
+                                                    <div class="food-name">
+                                                        {{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span>
+                                                    </div>
                                                 </div>
                                                 <div class="food-image">
                                                     <a href="" class="thumbnail"><img oot-menu-item-image menu-item="dailyMenuItem.menuItem"/></a>

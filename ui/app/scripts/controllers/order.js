@@ -83,6 +83,7 @@
 
         vm.gatheringSetting = initialData.gatheringSetting;
         vm.dailyOrderStats = initialData.dailyOrderStats;
+        vm.orderRanking = initialData.orderRanking;
 
         vm.dayGroups = [];
         angular.forEach(initialData.dailyMenus, function(dailyMenu){
@@ -243,10 +244,22 @@
             }, function () {
             });
         };
+
+        vm.inOrderRanking = function(menuItem) {
+            return vm.orderRanking.getResult(menuItem) !== null;
+        };
+
+        vm.getRank = function(menuItem) {
+            var result = vm.orderRanking.getResult(menuItem);
+            if (result === null) {
+                return "";
+            }
+            return result.rank;
+        };
     }
 
     app.my.resolvers.OrderController = {
-        initialData: function($route, $q, DailyMenu, DailyOrder, GatheringSetting, DailyOrderStat) {
+        initialData: function($route, $q, DailyMenu, DailyOrder, GatheringSetting, DailyOrderStat, OrderRanking) {
 
             var deferred = $q.defer();
             var initialData = {};
@@ -276,6 +289,12 @@
             })
             .then(function(value) {
                 initialData.gatheringSetting = value;
+
+                return OrderRanking.getLastMonth({
+                }).$promise;
+            })
+            .then(function(value) {
+                initialData.orderRanking = value;
                 deferred.resolve(initialData);
             })
             ["catch"](function(responseHeaders) {

@@ -42,6 +42,8 @@ GET           /api/v1.0/daily-order-aggregates/order-date/:orderDate        cont
 
 GET           /api/v1.0/daily-order-stats                                   controllers.DailyOrderStats.index()
 
+GET           /api/v1.0/order-ranking/last-month                            controllers.OrderRanking.indexOfLastMonth()
+
 GET           /api/v1.0/settings/gathering                                  controllers.GatheringSettings.get()
 PUT           /api/v1.0/settings/gathering                                  controllers.GatheringSettings.update()
 
