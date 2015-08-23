@@ -215,12 +215,16 @@ td.number {
     top: -30px;
 }
 
-.caption .shop-name, .caption .food-name {
+.caption .shop-name,
+.caption .food-name,
+.caption .food-price {
     font-size: 1.3em;
     padding: 0.4em;
 }
+
 .caption .food-name {
     background-color: #dcf0c1;
+    font-weight: bold;
 }
 
 .label-category {
@@ -304,8 +308,8 @@ td.number {
 
 .menu-item-list .menu-item .num-orders {
     position: absolute;
-    top: 3px;
-    right: 3px;
+    top: 5px;
+    right: 5px;
 }
 
 .menu-item-list .menu-item .num-orders .badge {
@@ -364,16 +368,22 @@ td.number {
     border-color: #F3BFD6;
 }
 
+.order-rank {
+    position: absolute;
+    top:5px;
+    left:5px;
+}
+
 .ordered-mark {
     position: absolute;
-    top: 0;
+    top: 10px;
     left: 0;
     right: 0;
-    bottom: 0;
     margin: auto;
     width: 250px;
     height: 140px;
     z-index: 10;
+    vertical-align: top;
 }
 
 .selected-mark {

@@ -39,20 +39,21 @@
                                     <div class="menu-item-container col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-repeat-start="dailyMenuItem in dayGroup.getDetailItems(category.id) track by $index">
                                         <div class="menu-item" ng-class="{'ordered':dayGroup.hasOrder(dailyMenuItem.menuItem)}">
                                             <div class="tile" ng-click="vm.order(dayGroup, dailyMenuItem.menuItem);">
-                                                <div class="caption">
-                                                    <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
-                                                    <div class="order-rank" style="float:left; margin-right: 10px; margin-top:10px; margin-left:5px;" ng-if="vm.inOrderRanking(dailyMenuItem.menuItem)">
+                                                <div class="food-image">
+                                                    <div class="ordered-mark" ng-show="dayGroup.hasOrder(dailyMenuItem.menuItem)">
+                                                        <img src="/assets/images/ordered.png">
+                                                    </div>
+                                                    <a href="" class="thumbnail"><img oot-menu-item-image menu-item="dailyMenuItem.menuItem"/></a>
+                                                    <div class="comment label" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
+                                                    <div class="order-rank" ng-if="vm.inOrderRanking(dailyMenuItem.menuItem)">
                                                         <img src="http://ec-yobiko.com/sozai/icon/download/i_rank1_41.jpg" width="35px;">
                                                     </div>
-                                                    <div class="food-name">
-                                                        {{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}} <span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span>
-                                                    </div>
                                                 </div>
-                                                <div class="food-image">
-                                                    <a href="" class="thumbnail"><img oot-menu-item-image menu-item="dailyMenuItem.menuItem"/></a>
-                                                    <div class="ordered-mark" ng-show="dayGroup.hasOrder(dailyMenuItem.menuItem)"><img src="/assets/images/ordered.png"></div>
+                                                <div class="caption">
+                                                    <div class="shop-name">{{dailyMenuItem.menuItem.shopName}}</div>
+                                                    <div class="food-name">{{dailyMenuItem.menuItem.itemNumber}} {{dailyMenuItem.menuItem.name}}</div>
+                                                    <div class="food-price"><span oot-reduced-price menu-item="dailyMenuItem.menuItem"></span></div>
                                                 </div>
-                                                <div class="comment label" ng-class="{'hidden':(dailyMenuItem.menuItem.comment | isEmptyOrUndefined)}">{{dailyMenuItem.menuItem.comment}}</div>
                                             </div>
                                             <div class="num-orders" ng-show="dayGroup.hasOrder(dailyMenuItem.menuItem)">
                                                 <span class="badge badge-primary" tooltip-placement="bottom" tooltip="数量変更" ng-click="vm.editNumOrders(dayGroup, dailyMenuItem.menuItem)">{{dayGroup.numOrders(dailyMenuItem.menuItem)}} <span class="glyphicon glyphicon-pencil"></span></span>
